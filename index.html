@@ -5,26 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pawan Kumar | Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+  </script>
 </head>
-<body class="bg-white text-gray-800">
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
 
-  <header class="text-center py-10 bg-gray-100">
+  <header class="text-center py-10 bg-gray-100 dark:bg-gray-800">
     <h1 class="text-4xl font-bold">Pawan Kumar</h1>
     <p class="mt-2 text-xl">Assistant Professor, IIIT Hyderabad</p>
+    <button onclick="toggleDarkMode()" class="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
+      Toggle Dark Mode
+    </button>
   </header>
 
-  <nav class="flex flex-wrap justify-center gap-4 py-4 shadow px-2">
-    <a href="#about" class="text-blue-500 hover:text-blue-700">About</a>
-    <a href="#research" class="text-blue-500 hover:text-blue-700">Research</a>
-    <a href="#publications" class="text-blue-500 hover:text-blue-700">Publications</a>
-    <a href="#teaching" class="text-blue-500 hover:text-blue-700">Teaching</a>
-    <a href="#contact" class="text-blue-500 hover:text-blue-700">Contact</a>
+  <nav class="flex flex-wrap justify-center gap-4 py-4 shadow px-2 bg-white dark:bg-gray-800">
+    <a href="#about" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">About</a>
+    <a href="#research" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Research</a>
+    <a href="#publications" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Publications</a>
+    <a href="#teaching" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Teaching</a>
+    <a href="#contact" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Contact</a>
   </nav>
 
   <main class="max-w-4xl mx-auto py-10 px-4">
 
     <section id="about" class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200">About</h2>
+      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">About</h2>
       <p>My name is Pawan Kumar, and I have been serving as an Assistant Professor at IIIT Hyderabad since 2017. I lead the OPTIMAL group, a collaborative team comprising mathematicians and computer scientists dedicated to designing provably fast optimization and machine learning algorithms.
 
       Our work revolves around developing fast and robust algorithms through deep mathematical insights and innovative algorithmic designs. Specifically, we leverage numerical analysis and advanced data structures to create algorithms optimized for modern computing architectures, such as GPUs, FPGAs, and clusters. Our research bridges scientific computing and machine learning, emphasizing the synergy between robust numerical methods and high-performance computing.
@@ -41,7 +52,7 @@
 
   </main>
 
-  <footer class="text-center py-6 bg-gray-50">
+  <footer class="text-center py-6 bg-gray-50 dark:bg-gray-800">
     &copy; 2025 Pawan Kumar. All rights reserved.
   </footer>
 
