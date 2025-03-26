@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pawan Kumar | Publications</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+    function toggleDarkMode() { document.documentElement.classList.toggle('dark'); }
+  </script>
+</head>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+
+  <header class="text-center py-10 bg-gray-100 dark:bg-gray-800">
+    <h1 class="text-4xl font-bold">Publications</h1>
+    <button onclick="toggleDarkMode()" class="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">Toggle Dark Mode</button>
+    <p class="mt-4"><a href="index.html" class="text-blue-500 hover:underline">← Back to Home</a></p>
+  </header>
+
+  <main class="max-w-4xl mx-auto py-10 px-4">
+
+    <section id="publications">
+      <h2 class="text-2xl font-semibold mb-4">Complete List of Publications</h2>
+      <ul class="list-disc pl-5">
+        <li><strong>Ambiguous Medical Image Segmentation Using Diffusion Schrödinger Bridge</strong>, L. Baru, K. Dadi, B. Raju, P. Kumar, submitted, arXiv 2024.</li>
+        <li><strong>Review of Extreme Multilabel Classification</strong>, A. Dasgupta, S. Katyan, S. Das, P. Kumar, under submission, arXiv 2024.</li>
+        <li><strong>A Gauss-Newton Approach for min-max Problem in GAN</strong>, N. Mishra, P. Jawanpuria, B. Mishra, P. Kumar, IJCNN 2024. (Rank A)</li>
+        <li><strong>A label-free sensing of creatinine using radio frequency-driven lab-on-chip (loc) system</strong>, S. Sinha, et al., Engineering Express Journal, IOP Science, 2024. (IF=1.5)</li>
+        <li><strong>A Label-Free Low-Cost Radio Frequency Driven Noninvasive Lab-on-Chip System for Creatinine Detection</strong>, S. Sinha, et al., ICST 2024.</li>
+        <li><strong>Qualitative Data Augmentation for Performance Prediction in VLSI circuits</strong>, P. Srivastava, P. Kumar, Z. Abbas, Elsevier, VLSI Integration Journal, 2024 (IF: 1.9)</li>
+        <li><strong>Data Augmentation for Performance Prediction in VLSI circuits</strong>, P. Srivastava, P. Kumar, Z. Abbas, ISCAS, 2024.</li>
+        <li><strong>Enhancing ML model accuracy for Digital VLSI circuits using diffusion models</strong>, P. Srivastava, Z. Abbas, P. Kumar, NeurIPS-W, 2023.</li>
+        <li><strong>Riemannian Hamiltonian methods for min-max optimization on manifolds</strong>, A. Han, et al., SIAM J. Optimization, 2023 (IF: 2.8, Q1).</li>
+        <li><strong>alphaElimination: Using deep reinforcement learning for sparse Gaussian Elimination</strong>, A. Dasgupta, P. Kumar, ECML 2023.</li>
+        <li><strong>marl-jax: Multi-agent Reinforcement Learning framework for Social Generalization</strong>, K. Mehta, A. Mahajan, P. Kumar, ECML 2023.</li>
+        <li><strong>Light-weight Deep Extreme Multilabel Classification</strong>, I. Mishra, A. Dasgupta, B. Mishra, P. Jawanpuria, P. Kumar, IJCNN 2023.</li>
+        <li><strong>Effects of Spectral Normalization in Multi-agent Reinforcement Learning</strong>, K. Mehta, A. Mahajan, P. Kumar, IJCNN 2023.</li>
+        <li><strong>Angle based dynamic learning rate for gradient descent</strong>, N. Mishra, P. Kumar, IJCNN 2023.</li>
+        <li><strong>Adaptive Consensus Optimization Method for GANs</strong>, S. Danisetty, S. Mylaram, P. Kumar, IJCNN 2023.</li>
+        <li><strong>Hybrid Tokenization and Datasets for Solving Mathematics and Science Problems Using Transformers</strong>, P. Mandlecha, et al., SDM 2022.</li>
+        <li><strong>A Riemannian Approach to Extreme Classification Problems</strong>, J. Naram, T. Sinha, P. Kumar, CODS-COMAD, 2022.</li>
+        <li><strong>Nonnegative Low-Rank Tensor Completion via Dual Formulation</strong>, T. Sinha, J. Naram, P. Kumar, WACV, 2022.</li>
+        <li><strong>SCIMAT: Science and Mathematics Dataset</strong>, S. Chatakonda, N. Kollepara, P. Kumar, NeurIPS-W, 2021.</li>
+        <li><strong>Structured Low-Rank Tensor Learning</strong>, J. Naram, T. Sinha, P. Kumar, NeurIPS-W, 2021.</li>
+        <li><strong>A Fast Parameter-Free Preconditioner for Structured Grid Problems</strong>, A. Agarwal, S. Kakkar, P. Kumar, SC 2021.</li>
+        <!-- Continue similarly for all remaining publications -->
+      </ul>
+      <p class="mt-6">For citations and detailed records, please visit my <a href="#" class="text-blue-500">Google Scholar Profile</a>.</p>
+    </section>
+
+  </main>
+
+  <footer class="text-center py-6 bg-gray-50 dark:bg-gray-800">
+    &copy; 2025 Pawan Kumar. All rights reserved.
+  </footer>
+
+</body>
+</html>
