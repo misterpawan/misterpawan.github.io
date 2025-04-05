@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pawan Kumar | Teaching</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+
+  <header class="text-center py-10 bg-gray-100 dark:bg-gray-800">
+    <h1 class="text-4xl font-bold">Teaching</h1>
+    <p class="mt-4"><a href="index.html" class="text-blue-500 hover:underline">← Back to Home</a></p>
+  </header>
+
+  <main class="max-w-5xl mx-auto py-10 px-4" x-data="{ openCourse: null, openSemester: null }">
+    <!-- COURSE COMPONENT START -->
+    <template x-for="(course, index) in courses" :key="index">
+      <div class="mb-4">
+        <div @click="openCourse === index ? openCourse = null : openCourse = index; openSemester = null"
+             class="bg-gray-100 dark:bg-gray-800 p-4 rounded shadow cursor-pointer hover:shadow-lg transition-all">
+          <h2 class="text-xl font-semibold" x-text="course.name"></h2>
+        </div>
+
+        <div x-show="openCourse === index" x-transition class="mt-2 space-y-2 pl-6">
+          <template x-for="(sem, sidx) in course.semesters" :key="sidx">
+            <div>
+              <div @click="openSemester === sidx ? openSemester = null : openSemester = sidx"
+                   class="bg-gray-200 dark:bg-gray-700 p-2 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+                <span x-text="sem.semester"></span>
+              </div>
+
+              <div x-show="openSemester === sidx" x-transition class="pl-4 mt-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white dark:bg-gray-800 p-3 rounded shadow text-center">Lectures</div>
+                <div class="bg-white dark:bg-gray-800 p-3 rounded shadow text-center">Assignments</div>
+                <div class="bg-white dark:bg-gray-800 p-3 rounded shadow text-center">Videos</div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+    <!-- COURSE COMPONENT END -->
+  </main>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('courses', () => ({
+        courses: [
+          {
+            name: 'MA8.401 Topics in Applied Optimization',
+            semesters: [
+              { semester: 'Monsoon 2024' },
+              { semester: 'Monsoon 2022' },
+              { semester: 'Monsoon 2021' },
+              { semester: 'Monsoon 2020' },
+              { semester: 'Monsoon 2018' }
+            ]
+          },
+          {
+            name: 'MA6.302 PG-Linear Algebra',
+            semesters: [
+              { semester: 'Monsoon 2024' }
+            ]
+          },
+          {
+            name: 'MA8.401 Mathematics of Generative Models',
+            semesters: [
+              { semester: 'Spring 2024' },
+              { semester: 'Spring 2023' }
+            ]
+          },
+          {
+            name: 'CS1.306 Numerical Algorithms',
+            semesters: [
+              { semester: 'Spring 2024' }
+            ]
+          },
+          {
+            name: 'CS1.501 Advanced Optimization: Theory and Applications',
+            semesters: [
+              { semester: 'Spring 2023' },
+              { semester: 'Spring 2022' },
+              { semester: 'Spring 2021' }
+            ]
+          },
+          {
+            name: 'MA6.101 Probability and Statistics',
+            semesters: [
+              { semester: 'Monsoon 2021' },
+              { semester: 'Monsoon 2020' }
+            ]
+          },
+          {
+            name: 'MA01.101 Discrete Structures (2 sessions)',
+            semesters: [
+              { semester: 'Monsoon 2020' },
+              { semester: 'Monsoon 2019' }
+            ]
+          },
+          {
+            name: 'CSE504 Introduction to Parallel Scientific Computing',
+            semesters: [
+              { semester: 'Spring 2020' },
+              { semester: 'Spring 2019' },
+              { semester: 'Spring 2018' },
+              { semester: 'Spring 2017' }
+            ]
+          },
+          {
+            name: 'HV-II Human Values-II',
+            semesters: [
+              { semester: 'Spring 2019' },
+              { semester: 'Spring 2017' }
+            ]
+          },
+          {
+            name: 'CSE881 Topics in Optimization on Manifolds',
+            semesters: [
+              { semester: 'Spring 2019' }
+            ]
+          },
+          {
+            name: 'MA6.101 Discrete Structures (2 sessions)',
+            semesters: [
+              { semester: 'Monsoon 2018' }
+            ]
+          },
+          {
+            name: 'CSE611 Discrete Mathematics and Algorithms',
+            semesters: [
+              { semester: 'Monsoon 2017' }
+            ]
+          },
+          {
+            name: 'ICS211 Algorithms',
+            semesters: [
+              { semester: 'Monsoon 2017' }
+            ]
+          }
+        ]
+      }));
+    });
+  </script>
+
+</body>
+</html>
