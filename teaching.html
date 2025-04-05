@@ -14,6 +14,16 @@
     html {
       scroll-behavior: smooth;
     }
+    .shiny {
+      font-weight: bold;
+      color: #f59e0b;
+      animation: shine 1.5s infinite linear;
+    }
+    @keyframes shine {
+      0% { text-shadow: 0 0 2px #f59e0b; }
+      50% { text-shadow: 0 0 8px #fbbf24; }
+      100% { text-shadow: 0 0 2px #f59e0b; }
+    }
   </style>
 </head>
 <body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
@@ -28,6 +38,7 @@
   </main>
 
   <script>
+    const currentYear = new Date().getFullYear();
     const data = [
       { course: 'MA8.401 Topics in Applied Optimization', semesters: ['Monsoon 2024', 'Monsoon 2022', 'Monsoon 2021', 'Monsoon 2020', 'Monsoon 2018'] },
       { course: 'MA6.302 PG-Linear Algebra', semesters: ['Monsoon 2024'] },
@@ -46,30 +57,74 @@
 
     const container = document.getElementById('teaching-container');
 
+    // Sort courses by whether they contain current year semester first
+    data.sort((a, b) => {
+      const hasCurrentA = a.semesters.some(s => s.includes(currentYear));
+      const hasCurrentB = b.semesters.some(s => s.includes(currentYear));
+      return hasCurrentB - hasCurrentA;
+    });
+
     data.forEach((item, index) => {
       const courseDiv = document.createElement('div');
+      const isCurrent = item.semesters.some(s => s.includes(currentYear));
       courseDiv.className = 'mb-6';
 
       const header = document.createElement('div');
-      header.className = 'bg-gray-100 dark:bg-gray-800 p-4 rounded shadow cursor-pointer hover:shadow-lg transition';
+      header.className = `${isCurrent ? 'bg-green-100 dark:bg-green-900' : 'bg-gray-100 dark:bg-gray-800'} p-4 rounded shadow cursor-pointer hover:shadow-lg transition flex justify-between items-center`;
       header.innerHTML = `<h2 class="text-xl font-semibold">${item.course}</h2>`;
+      
+      if (isCurrent) {
+        const tag = document.createElement('span');
+        tag.className = 'text-sm bg-orange-200 text-orange-800 px-2 py-1 rounded shadow';
+        tag.textContent = 'Ongoing';
+        header.appendChild(tag);
+      }
 
       const semesterList = document.createElement('div');
       semesterList.className = 'hidden mt-2 pl-4 space-y-2';
 
-      item.semesters.forEach(semester => {
+      item.semesters.forEach((semester, sidx) => {
         const semDiv = document.createElement('div');
         semDiv.className = 'bg-gray-200 dark:bg-gray-700 p-2 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600';
         semDiv.textContent = semester;
 
         const contentDiv = document.createElement('div');
-        contentDiv.className = 'hidden mt-2 grid grid-cols-1 sm:grid-cols-3 gap-4 pl-4';
+        contentDiv.className = 'hidden mt-2 grid grid-cols-1 sm:grid-cols-4 gap-4 pl-4';
 
-        ['Lectures', 'Assignments', 'Videos'].forEach(section => {
-          const card = document.createElement('div');
-          card.className = 'bg-white dark:bg-gray-800 p-3 rounded shadow text-center';
-          card.textContent = section;
-          contentDiv.appendChild(card);
+        ['Lectures', 'Assignments', 'Videos', 'Syllabus'].forEach(section => {
+          const sectionWrapper = document.createElement('div');
+          sectionWrapper.className = 'bg-white dark:bg-gray-800 p-3 rounded shadow text-center cursor-pointer hover:shadow-lg transition';
+          sectionWrapper.textContent = section;
+
+          const dropdown = document.createElement('div');
+          dropdown.className = 'hidden mt-2 text-sm text-left space-y-1';
+
+          if (section === 'Lectures') {
+            for (let i = 1; i <= 24; i++) {
+              const slide = document.createElement('div');
+              slide.innerHTML = `Slides-${i} <span class="shiny">PDF</span>`;
+              dropdown.appendChild(slide);
+            }
+          } else if (section === 'Assignments') {
+            for (let i = 1; i <= 4; i++) {
+              const assign = document.createElement('div');
+              assign.textContent = `Assignment-${i}`;
+              dropdown.appendChild(assign);
+            }
+          } else {
+            const placeholder = document.createElement('div');
+            placeholder.textContent = `${section} Content Coming Soon...`;
+            dropdown.appendChild(placeholder);
+          }
+
+          sectionWrapper.addEventListener('click', () => {
+            dropdown.classList.toggle('hidden');
+          });
+
+          const sectionContainer = document.createElement('div');
+          sectionContainer.appendChild(sectionWrapper);
+          sectionContainer.appendChild(dropdown);
+          contentDiv.appendChild(sectionContainer);
         });
 
         semDiv.addEventListener('click', () => {
