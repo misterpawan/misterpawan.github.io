@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pawan Kumar | Home</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Typed.js -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function toggleResearch() {
+            const section = document.getElementById('research-section');
+            section.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new Typed('#typed', {
+                strings: ['Assistant Professor at IIIT Hyderabad', 'Leader of OPTIMAL Group', 'Researcher in Optimization and ML'],
+                typeSpeed: 40,
+                backSpeed: 30,
+                loop: true
+            });
+
+            AOS.init({
+                duration: 800,
+                once: true,
+            });
+        });
+    </script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+
+    <!-- Header -->
+    <header class="text-center py-10 bg-gray-100 dark:bg-gray-800" data-aos="fade-down">
+        <h1 class="text-4xl font-bold">Pawan Kumar</h1>
+        <p class="mt-2 text-xl"><span id="typed"></span></p>
+        <button onclick="toggleDarkMode()" class="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
+            Toggle Dark Mode
+        </button>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="flex flex-wrap justify-center gap-4 py-4 shadow px-2 bg-white dark:bg-gray-800" data-aos="fade-up">
+        <a href="#about" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">About</a>
+        <a href="#" onclick="toggleResearch()" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Research</a>
+        <a href="teaching" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Teaching</a>
+        <a href="#contact" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Contact</a>
+        <a href="blogs.html" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Blogs</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto py-10 px-4">
+
+        <section id="about" class="mb-12" data-aos="fade-up">
+            <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">About</h2>
+            <p>My name is Pawan Kumar, and I have been serving as an Assistant Professor at IIIT Hyderabad since 2017. I lead the OPTIMAL group, a collaborative team comprising mathematicians and computer scientists dedicated to designing provably fast optimization and machine learning algorithms.
+
+                Our work revolves around developing fast and robust algorithms through deep mathematical insights and innovative algorithmic designs. Specifically, we leverage numerical analysis and advanced data structures to create algorithms optimized for modern computing architectures, such as GPUs, FPGAs, and clusters. Our research bridges scientific computing and machine learning, emphasizing the synergy between robust numerical methods and high-performance computing.
+
+                I actively welcome bright undergraduate and graduate students with strong skills in mathematics, Python programming, or high-performance computing. Students from non-CS backgrounds who are passionate about intersecting scientific computing with machine learning are also encouraged to reach out.
+
+                <br><br>
+                <strong>Announcements:</strong><br>
+                - Full-time MS-by-Research (external applicants only for direct admission), PhD, or Postdoc positions available!<br>
+                - Consider applying to IIIT Hyderabad for our BTech and dual-degree (BTech+MS) programs to gain extensive research exposure.
+            </p>
+        </section>
+
+        <section id="research-section" class="hidden mb-12" data-aos="fade-up">
+            <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Research</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="publications.html" class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition">Publications</a>
+                <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Talks</div>
+                <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Projects</div>
+                <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Students</div>
+                <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Grants</div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 bg-gray-50 dark:bg-gray-800" data-aos="fade-up">
+        &copy; 2025 Pawan Kumar. All rights reserved.
+    </footer>
+
+</body>
+
+</html>
