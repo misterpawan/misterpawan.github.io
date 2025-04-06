@@ -6,10 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pawan Kumar | Home</title>
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- AOS (Animate on Scroll) -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
@@ -38,18 +35,18 @@
       });
     }
 
+    function toggleCardContent(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      AOS.init({
-        duration: 800,
-        once: true,
-      });
+      AOS.init({ duration: 800, once: true });
     });
   </script>
 
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
     .fade-in {
       animation: fadeIn 0.6s ease-out both;
     }
@@ -61,12 +58,10 @@
 </head>
 
 <body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
-
-  <!-- Header -->
   <header class="py-10 bg-gray-100 dark:bg-gray-800" data-aos="fade-down">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-8 px-4">
-      <div class="w-48 h-64 overflow-hidden shadow-md border border-gray-300 dark:border-gray-700">
-        <img src="pic.png" alt="Pawan Kumar" class="w-full h-full object-cover">
+      <div class="w-56 h-80 overflow-hidden shadow-md border border-gray-300 dark:border-gray-700 rounded-xl">
+        <img src="/mnt/data/A_semi-realistic,_anime-inspired_illustration_feat.png" alt="Pawan Kumar" class="w-full h-full object-cover">
       </div>
       <div class="text-center sm:text-left">
         <h1 class="text-4xl font-bold">Pawan Kumar</h1>
@@ -79,7 +74,6 @@
     </div>
   </header>
 
-  <!-- Navigation Cards Always Visible -->
   <div id="nav-cards" class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-4 py-6 px-4" data-aos="fade-down">
     <div onclick="showOnlySection('about')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">About</div>
     <div onclick="showOnlySection('news')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">News</div>
@@ -89,18 +83,36 @@
     <div onclick="showOnlySection('blogs-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Blogs</div>
   </div>
 
-  <!-- Main Content -->
   <main class="max-w-4xl mx-auto py-6 px-4">
-    <!-- sections go here -->
+    <section id="about" class="hidden mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">About</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div onclick="toggleCardContent('bio')" class="bg-gray-100 dark:bg-gray-700 p-4 rounded shadow cursor-pointer">Bio</div>
+        <div onclick="toggleCardContent('education')" class="bg-gray-100 dark:bg-gray-700 p-4 rounded shadow cursor-pointer">Education</div>
+        <div onclick="toggleCardContent('employment')" class="bg-gray-100 dark:bg-gray-700 p-4 rounded shadow cursor-pointer">Employment</div>
+      </div>
+      <div id="bio" class="hidden mt-4 text-sm leading-relaxed">
+        <p>Hi There! My name is Pawan Kumar. I am an assistant professor at IIIT-H since approximately 2017.</p>
+        <p class="mt-2">I lead the OPTIMAL group at IIIT-H. We are a group of mathematicians and computer scientists working together!</p>
+        <p class="mt-2">In my group, we are interested in designing provably fast optimization and machine learning algorithms...</p>
+        <p class="mt-2">Announcement: Full time MS-by-research (external applicants only for direct admission), PhD, or Postdoc positions available!</p>
+        <p class="mt-1">Announcement: Consider applying to IIIT-H for BTech, BTech+MS programs! Dual degree programs gives you awesome exposure to research!</p>
+      </div>
+      <div id="education" class="hidden mt-4 text-sm">
+        <p>PhD INRIA Saclay, Ile-de-France, Saclay, France.</p>
+        <p>MS IIT, Guwahati, India.</p>
+      </div>
+      <div id="employment" class="hidden mt-4 text-sm">
+        <p>Postdoc Department of Math and CS, FU Berlin, Einstein Center of Mathematics, Berlin, Germany.</p>
+        <p>Postdoc Fraunhofer ITWM, Funded by Marie Curie ERCIM Fellowship, Germany.</p>
+        <p>Postdoc KU Leuven and Intel Exascience Lab, Leuven, Belgium.</p>
+      </div>
+    </section>
   </main>
 
-  <!-- Footer -->
   <footer class="text-center py-6 bg-gray-50 dark:bg-gray-800 flex flex-col sm:flex-row justify-center items-center gap-4" data-aos="fade-up">
     <span>&copy; 2025 Pawan Kumar. All rights reserved.</span>
-    <button onclick="toggleDarkMode()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
-      Toggle Dark Mode
-    </button>
+    <button onclick="toggleDarkMode()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">Toggle Dark Mode</button>
   </footer>
-
 </body>
 </html>
