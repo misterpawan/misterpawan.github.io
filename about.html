@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Pawan Kumar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .fade-in { animation: fadeIn 0.6s ease-out both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <script>
+    function toggleContent(id) {
+      const contentBlocks = ['bio', 'education', 'employment'];
+      contentBlocks.forEach(block => {
+        const el = document.getElementById(block);
+        if (el) {
+          if (block === id) {
+            el.classList.remove('hidden');
+            el.classList.add('fade-in');
+          } else {
+            el.classList.add('hidden');
+            el.classList.remove('fade-in');
+          }
+        }
+      });
+    }
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold text-center mb-6 bg-gray-100 dark:bg-gray-800 py-2 rounded shadow">About</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div onclick="toggleContent('bio')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Bio</div>
+      <div onclick="toggleContent('education')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Education</div>
+      <div onclick="toggleContent('employment')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Employment</div>
+    </div>
+
+    <div id="bio" class="hidden text-sm leading-relaxed space-y-4">
+      <p>Hi There! My name is Pawan Kumar. I am an assistant professor at IIIT-H since approximately 2017.</p>
+      <p>I lead the OPTIMAL group at IIIT-H. We are a group of mathematicians and computer scientists working together!</p>
+      <p>In my group, we are interested in designing provably fast optimization and machine learning algorithms.</p>
+      <p>The fast and robust algorithms for the problems mentioned above are obtained either by important mathematical insight, or via clever algorithm design. More specifically, in machine learning as well as in scientific computing, newer insights via numerical analysis for optimization algorithms, which are at the core of most of these domains, can lead to robust and fast algorithms. On the other hand, a clever use of data structures, and a mapping to parallel architectures (FPGA, GPU, Clusters, etc) for the existing algorithms can lead to algorithms that run fast on modern day hardware. In general, I believe that robust numerical algorithm and high performance algorithm design go hand in hand, and they can't be developed in isolation.</p>
+      <p>In my group that comprises of bright undergraduate and graduate students, we are trying to explore various approaches for fast and robust numerical algorithms mostly for deep learning. Generally, two types of students join my group: those who are very good with mathematics or good with python programming, or have strong interest in learning HPC skills, and applying it to develop algorithms for ML and scientific computing. I am particularly interested in students who want to work in the interface of scientific computing and machine learning. I am also interested in students from non-CS background. If you are one of these, then feel free to write to me.</p>
+    </div>
+
+    <div id="education" class="hidden text-sm space-y-2">
+      <p>PhD INRIA Saclay, Ile-de-France, Saclay, France.</p>
+      <p>MS IIT, Guwahati, India.</p>
+    </div>
+
+    <div id="employment" class="hidden text-sm space-y-2">
+      <p>Postdoc Department of Math and CS, FU Berlin, Einstein Center of Mathematics, Berlin, Germany.</p>
+      <p>Postdoc Fraunhofer ITWM, Funded by Marie Curie ERCIM Fellowship, Germany.</p>
+      <p>Postdoc KU Leuven and Intel Exascience Lab, Leuven, Belgium.</p>
+    </div>
+  </main>
+</body>
+</html>
