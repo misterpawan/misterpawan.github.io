@@ -9,9 +9,6 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Typed.js -->
-  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-
   <!-- AOS (Animate on Scroll) -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -42,13 +39,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      new Typed('#typed', {
-        strings: ['Assistant Professor at IIIT Hyderabad', 'Leader of OPTIMAL Group', 'Researcher in Optimization and ML'],
-        typeSpeed: 40,
-        backSpeed: 30,
-        loop: true
-      });
-
       AOS.init({
         duration: 800,
         once: true,
@@ -75,12 +65,16 @@
   <!-- Header -->
   <header class="py-10 bg-gray-100 dark:bg-gray-800" data-aos="fade-down">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-8 px-4">
-      <div class="w-40 h-40 rounded-full overflow-hidden shadow-md">
-        <img src="pic.png" alt="Pawan Kumar" class="w-full h-full object-cover">
+      <div class="w-48 h-64 overflow-hidden shadow-md border border-gray-300 dark:border-gray-700">
+        <img src="/mnt/data/A_semi-realistic,_anime-inspired_illustration_feat.png" alt="Pawan Kumar" class="w-full h-full object-cover">
       </div>
       <div class="text-center sm:text-left">
         <h1 class="text-4xl font-bold">Pawan Kumar</h1>
-        <p class="mt-2 text-xl"><span id="typed"></span></p>
+        <div class="mt-4 space-y-2">
+          <div class="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-4 py-2 rounded shadow">Assistant Professor at IIIT Hyderabad</div>
+          <div class="bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 px-4 py-2 rounded shadow">Leader of OPTIMAL Group</div>
+          <div class="bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 px-4 py-2 rounded shadow">Researcher in Optimization and ML</div>
+        </div>
         <button onclick="toggleDarkMode()" class="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
           Toggle Dark Mode
         </button>
