@@ -26,7 +26,7 @@
     }
 
     function showOnlySection(id) {
-      const sections = ['about', 'news', 'research-section', 'teaching-section', 'contact-section'];
+      const sections = ['about', 'news', 'research-section', 'teaching-section', 'contact-section', 'blogs-section'];
       sections.forEach(sectionId => {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -84,10 +84,11 @@
   <!-- Animated Dropdown Navigation Cards -->
   <div id="nav-cards" class="hidden max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-4 py-6 px-4" data-aos="fade-down">
     <div onclick="showOnlySection('about')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">About</div>
+    <div onclick="showOnlySection('news')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">News</div>
     <div onclick="showOnlySection('research-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Research</div>
     <div onclick="showOnlySection('teaching-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Teaching</div>
     <div onclick="showOnlySection('contact-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Contact</div>
-    <div onclick="window.location.href='blogs.html'" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Blogs</div>
+    <div onclick="showOnlySection('blogs-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Blogs</div>
   </div>
 
   <!-- Main Content -->
@@ -95,16 +96,7 @@
 
     <section id="about" class="hidden mb-12">
       <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">About</h2>
-      <p>My name is Pawan Kumar, and I have been serving as an Assistant Professor at IIIT Hyderabad since 2017. I lead the OPTIMAL group, a collaborative team comprising mathematicians and computer scientists dedicated to designing provably fast optimization and machine learning algorithms.
-        <br><br>
-        Our work revolves around developing fast and robust algorithms through deep mathematical insights and innovative algorithmic designs. Specifically, we leverage numerical analysis and advanced data structures to create algorithms optimized for modern computing architectures, such as GPUs, FPGAs, and clusters. Our research bridges scientific computing and machine learning, emphasizing the synergy between robust numerical methods and high-performance computing.
-        <br><br>
-        I actively welcome bright undergraduate and graduate students with strong skills in mathematics, Python programming, or high-performance computing. Students from non-CS backgrounds who are passionate about intersecting scientific computing with machine learning are also encouraged to reach out.
-        <br><br>
-        <strong>Announcements:</strong><br>
-        - Full-time MS-by-Research (external applicants only for direct admission), PhD, or Postdoc positions available!<br>
-        - Consider applying to IIIT Hyderabad for our BTech and dual-degree (BTech+MS) programs to gain extensive research exposure.
-      </p>
+      <p>My name is Pawan Kumar, and I have been serving as an Assistant Professor at IIIT Hyderabad since 2017...</p>
     </section>
 
     <section id="news" class="hidden mb-12">
@@ -131,6 +123,47 @@
     <section id="contact-section" class="hidden mb-12">
       <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Contact</h2>
       <p>You can reach out to me via email at <a href="mailto:pawan@iiit.ac.in" class="text-blue-500 hover:underline">pawan@iiit.ac.in</a>.</p>
+    </section>
+
+    <section id="blogs-section" class="hidden mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Blogs</h2>
+      <div class="space-y-4">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <h3 class="text-lg font-bold">My First Python CLI Tool</h3>
+            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">Python</span>
+          </div>
+          <div class="hidden mt-2">I built a CLI app using argparse. Great fun!</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <h3 class="text-lg font-bold">Matrix Tricks in Matlab</h3>
+            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">Matlab</span>
+          </div>
+          <div class="hidden mt-2">A few useful matrix manipulations every Matlab user should know.</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <h3 class="text-lg font-bold">Using MPI for Distributed Training</h3>
+            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">MPI</span>
+          </div>
+          <div class="hidden mt-2">Learned how to train models using MPI and Python.</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <h3 class="text-lg font-bold">Writing Papers in LaTeX</h3>
+            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">LaTeX</span>
+          </div>
+          <div class="hidden mt-2">My template and hacks for faster writing in LaTeX.</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <h3 class="text-lg font-bold">Review: RLHF in LLMs</h3>
+            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">RL</span>
+          </div>
+          <div class="hidden mt-2">Key papers and open questions in Reinforcement Learning with Human Feedback.</div>
+        </div>
+      </div>
     </section>
 
   </main>
