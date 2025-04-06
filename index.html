@@ -73,12 +73,19 @@
 <body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
 
   <!-- Header -->
-  <header class="text-center py-10 bg-gray-100 dark:bg-gray-800" data-aos="fade-down">
-    <h1 class="text-4xl font-bold">Pawan Kumar</h1>
-    <p class="mt-2 text-xl"><span id="typed"></span></p>
-    <button onclick="toggleDarkMode()" class="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
-      Toggle Dark Mode
-    </button>
+  <header class="py-10 bg-gray-100 dark:bg-gray-800" data-aos="fade-down">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-8 px-4">
+      <div class="w-40 h-40 rounded-full overflow-hidden shadow-md">
+        <img src="pic.png" alt="Pawan Kumar" class="w-full h-full object-cover">
+      </div>
+      <div class="text-center sm:text-left">
+        <h1 class="text-4xl font-bold">Pawan Kumar</h1>
+        <p class="mt-2 text-xl"><span id="typed"></span></p>
+        <button onclick="toggleDarkMode()" class="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">
+          Toggle Dark Mode
+        </button>
+      </div>
+    </div>
   </header>
 
   <!-- Navigation Cards Always Visible -->
@@ -93,79 +100,7 @@
 
   <!-- Main Content -->
   <main class="max-w-4xl mx-auto py-6 px-4">
-
-    <section id="about" class="hidden mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">About</h2>
-      <p>My name is Pawan Kumar, and I have been serving as an Assistant Professor at IIIT Hyderabad since 2017...</p>
-    </section>
-
-    <section id="news" class="hidden mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">News</h2>
-      <p>📰 Coming soon: latest updates on publications, conference talks, new projects, and student achievements!</p>
-    </section>
-
-    <section id="research-section" class="hidden mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Research</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <a href="publications.html" class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition">Publications</a>
-        <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Talks</div>
-        <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Projects</div>
-        <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Students</div>
-        <div class="bg-white dark:bg-gray-800 shadow p-4 rounded hover:shadow-lg transition cursor-pointer">Grants</div>
-      </div>
-    </section>
-
-    <section id="teaching-section" class="hidden mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Teaching</h2>
-      <p>📘 A detailed list of courses taught will appear here. Please explore the "Teaching" section for complete archives.</p>
-    </section>
-
-    <section id="contact-section" class="hidden mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Contact</h2>
-      <p>You can reach out to me via email at <a href="mailto:pawan@iiit.ac.in" class="text-blue-500 hover:underline">pawan@iiit.ac.in</a>.</p>
-    </section>
-
-    <section id="blogs-section" class="hidden mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Blogs</h2>
-      <div class="space-y-4">
-        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <h3 class="text-lg font-bold">My First Python CLI Tool</h3>
-            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">Python</span>
-          </div>
-          <div class="hidden mt-2">I built a CLI app using argparse. Great fun!</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <h3 class="text-lg font-bold">Matrix Tricks in Matlab</h3>
-            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">Matlab</span>
-          </div>
-          <div class="hidden mt-2">A few useful matrix manipulations every Matlab user should know.</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <h3 class="text-lg font-bold">Using MPI for Distributed Training</h3>
-            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">MPI</span>
-          </div>
-          <div class="hidden mt-2">Learned how to train models using MPI and Python.</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <h3 class="text-lg font-bold">Writing Papers in LaTeX</h3>
-            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">LaTeX</span>
-          </div>
-          <div class="hidden mt-2">My template and hacks for faster writing in LaTeX.</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <div class="flex justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-            <h3 class="text-lg font-bold">Review: RLHF in LLMs</h3>
-            <span class="bg-yellow-300 text-black px-2 py-1 rounded text-sm">RL</span>
-          </div>
-          <div class="hidden mt-2">Key papers and open questions in Reinforcement Learning with Human Feedback.</div>
-        </div>
-      </div>
-    </section>
-
+    <!-- sections go here -->
   </main>
 
   <!-- Footer -->
@@ -174,5 +109,4 @@
   </footer>
 
 </body>
-
 </html>
