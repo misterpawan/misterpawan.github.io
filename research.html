@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research | Pawan Kumar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .fade-in { animation: fadeIn 0.6s ease-out both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <script>
+    function toggleIframe(id, src) {
+      const targets = ['publications-box', 'talks-box', 'projects-box', 'students-box', 'grants-box'];
+      targets.forEach(target => {
+        const el = document.getElementById(target);
+        if (el) {
+          if (target === id) {
+            el.classList.remove('hidden');
+            el.classList.add('fade-in');
+            el.querySelector('iframe').src = src;
+          } else {
+            el.classList.add('hidden');
+            el.classList.remove('fade-in');
+          }
+        }
+      });
+    }
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold text-center mb-6 bg-gray-100 dark:bg-gray-800 py-2 rounded shadow">Research</h2>
 
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div onclick="toggleIframe('publications-box', 'publications.html')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Publications</div>
+      <div onclick="toggleIframe('talks-box', 'talks.html')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Talks</div>
+      <div onclick="toggleIframe('projects-box', 'projects.html')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Projects</div>
+      <div onclick="toggleIframe('students-box', 'students.html')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Students</div>
+      <div onclick="toggleIframe('grants-box', 'grants.html')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Grants</div>
+    </div>
+
+    <div id="publications-box" class="hidden mb-8">
+      <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
+    </div>
+    <div id="talks-box" class="hidden mb-8">
+      <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
+    </div>
+    <div id="projects-box" class="hidden mb-8">
+      <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
+    </div>
+    <div id="students-box" class="hidden mb-8">
+      <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
+    </div>
+    <div id="grants-box" class="hidden mb-8">
+      <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
+    </div>
+  </main>
+</body>
+</html>
