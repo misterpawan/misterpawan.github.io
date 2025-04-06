@@ -11,9 +11,7 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
+    tailwind.config = { darkMode: 'class' };
 
     function toggleDarkMode() {
       document.documentElement.classList.toggle('dark');
@@ -84,28 +82,14 @@
   </div>
 
   <main class="max-w-4xl mx-auto py-6 px-4">
-    <section id="about" class="hidden mb-12">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">About</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div onclick="toggleCardContent('bio')" class="bg-gray-100 dark:bg-gray-700 p-4 rounded shadow cursor-pointer">Bio</div>
-        <div onclick="toggleCardContent('education')" class="bg-gray-100 dark:bg-gray-700 p-4 rounded shadow cursor-pointer">Education</div>
-        <div onclick="toggleCardContent('employment')" class="bg-gray-100 dark:bg-gray-700 p-4 rounded shadow cursor-pointer">Employment</div>
-      </div>
-      <div id="bio" class="hidden mt-4 text-sm leading-relaxed">
-        <p>Hi There! My name is Pawan Kumar. I am an assistant professor at IIIT-H since approximately 2017.</p>
-        <p class="mt-2">I lead the OPTIMAL group at IIIT-H. We are a group of mathematicians and computer scientists working together!</p>
-        <p class="mt-2">In my group, we are interested in designing provably fast optimization and machine learning algorithms...</p>
-        <p class="mt-2">Announcement: Full time MS-by-research (external applicants only for direct admission), PhD, or Postdoc positions available!</p>
-        <p class="mt-1">Announcement: Consider applying to IIIT-H for BTech, BTech+MS programs! Dual degree programs gives you awesome exposure to research!</p>
-      </div>
-      <div id="education" class="hidden mt-4 text-sm">
-        <p>PhD INRIA Saclay, Ile-de-France, Saclay, France.</p>
-        <p>MS IIT, Guwahati, India.</p>
-      </div>
-      <div id="employment" class="hidden mt-4 text-sm">
-        <p>Postdoc Department of Math and CS, FU Berlin, Einstein Center of Mathematics, Berlin, Germany.</p>
-        <p>Postdoc Fraunhofer ITWM, Funded by Marie Curie ERCIM Fellowship, Germany.</p>
-        <p>Postdoc KU Leuven and Intel Exascience Lab, Leuven, Belgium.</p>
+    <section id="blogs-section" class="hidden mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Blogs</h2>
+      <p class="text-gray-500 dark:text-gray-400 mb-4">(Content loaded from blogs.html)</p>
+      <div class="grid gap-4">
+        <div class="bg-gray-100 dark:bg-gray-800 rounded shadow p-4 animate-slide-down">
+          <h3 class="font-bold text-lg mb-2">Blog entries are being dynamically included from <code>blogs.html</code>.</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300">Visit <a href="blogs.html" class="text-blue-500 underline">blogs.html</a> to view full blog listings or to edit content.</p>
+        </div>
       </div>
     </section>
   </main>
