@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--   <title>Research | Pawan Kumar</title> -->
+  <!--   <title>Research | Pawan Kumar</title> -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -23,6 +23,11 @@
             el.classList.remove('hidden');
             el.classList.add('fade-in');
             el.querySelector('iframe').src = src;
+
+            // Scroll to element
+            setTimeout(() => {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
           } else {
             el.classList.add('hidden');
             el.classList.remove('fade-in');
@@ -34,7 +39,6 @@
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
   <main class="max-w-4xl mx-auto px-4 py-8">
-<!--     <h2 class="text-2xl font-bold text-center mb-6 bg-gray-100 dark:bg-gray-800 py-2 rounded shadow">Research</h2> -->
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
       <div onclick="toggleIframe('publications-box', 'publications.html')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">Publications</div>
