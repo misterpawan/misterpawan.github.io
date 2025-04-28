@@ -261,5 +261,40 @@
     <span>&copy; 2025 Pawan Kumar. All rights reserved.</span>
 <!--     <button onclick="toggleDarkMode()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">Toggle Dark Mode</button> -->
   </footer>
+
+ <div
+    id="back-to-top"
+    class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow-lg cursor-pointer hover:bg-gray-200 transition hidden"
+    title="Back to Top"
+  >
+    <!-- Heroicon “chevron-up” -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="w-6 h-6 text-gray-700"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor"
+         stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+    </svg>
+  </div>
+
+  <script>
+    // Show after scrolling down 200px, hide if near top
+    const btn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 200) {
+        btn.classList.remove('hidden');
+      } else {
+        btn.classList.add('hidden');
+      }
+    });
+
+    // Smooth scroll to top of index.html
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>  
+  
 </body>
 </html>
