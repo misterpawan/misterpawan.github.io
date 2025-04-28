@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- AOS (Animate on Scroll) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    tailwind.config = { darkMode: 'class' };
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+    function toggleAudio(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ duration: 800, once: true });
+    });
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    #publications li {
+      background-color: rgb(243 244 246);
+      padding: 0.75rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    #publications li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    html.dark #publications li {
+      background-color: rgb(31 41 55);
+      color: rgb(229 231 235);
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+  <main class="max-w-4xl mx-auto py-10 px-4">
+    <section id="publications" data-aos="fade-up">
+      <h2 class="text-2xl font-semibold mb-4">Selected List of Publications</h2>
+      <ul class="list-decimal list-inside space-y-4">
+        
+        <!-- 1 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Review of Extreme Multilabel Classification</strong>, A. Dasgupta, S. Katyan, S. Das, P. Kumar, under submission, arXiv 2024.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" target="_blank"
+                 class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">Code</a>
+              <a href="https://www.arxiv.org" target="_blank"
+                 class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">PDF</a>
+              <button onclick="toggleAudio('audio-1')"
+                      class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" target="_blank"
+                 class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded">More</a>
+            </div>
+          </div>
+          <div id="audio-1" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-1.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </li>
+
+        <!-- 2 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>A Gauss-Newton Approach for min-max Problem in GAN</strong>, N. Mishra, P. Jawanpuria, B. Mishra, P. Kumar, IJCNN 2024. (Rank A)
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" target="_blank"
+                 class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">Code</a>
+              <a href="https://www.arxiv.org" target="_blank"
+                 class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">PDF</a>
+              <button onclick="toggleAudio('audio-2')"
+                      class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" target="_blank"
+                 class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded">More</a>
+            </div>
+          </div>
+          <div id="audio-2" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-2.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 3 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>A label-free sensing of creatinine using radio frequency-driven lab-on-chip (LOC) system</strong>, S. Sinha, et al., Engineering Express Journal, IOP Science, 2024. (IF=1.5)
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" target="_blank"
+                 class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">Code</a>
+              <a href="https://www.arxiv.org" target="_blank"
+                 class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">PDF</a>
+              <button onclick="toggleAudio('audio-3')"
+                      class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" target="_blank"
+                 class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded">More</a>
+            </div>
+          </div>
+          <div id="audio-3" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-3.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 4 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>A Label-Free Low-Cost Radio Frequency Driven Noninvasive Lab-on-Chip System for Creatinine Detection</strong>, S. Sinha, et al., ICST 2024.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-4')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-4" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-4.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 5 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Qualitative Data Augmentation for Performance Prediction in VLSI circuits</strong>, P. Srivastava, P. Kumar, Z. Abbas, Elsevier, VLSI Integration Journal, 2024 (IF: 1.9).
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-5')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-5" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-5.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 6 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Data Augmentation for Performance Prediction in VLSI circuits</strong>, P. Srivastava, P. Kumar, Z. Abbas, ISCAS 2024.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-6')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-6" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-6.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 7 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Enhancing ML model accuracy for Digital VLSI circuits using diffusion models</strong>, P. Srivastava, Z. Abbas, P. Kumar, NeurIPS-W 2023.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-7')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-7" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-7.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 8 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Riemannian Hamiltonian methods for min-max optimization on manifolds</strong>, A. Han, et al., SIAM J. Optimization 2023 (IF: 2.8, Q1).
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-8')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-8" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-8.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 9 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>alphaElimination: Using deep reinforcement learning for sparse Gaussian Elimination</strong>, A. Dasgupta, P. Kumar, ECML 2023.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-9')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-9" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-9.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 10 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">  
+              <strong>marl-jax: Multi-agent Reinforcement Learning framework for Social Generalization</strong>, K. Mehta, A. Mahajan, P. Kumar, ECML 2023.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-10')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1-rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-10" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-10.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 11 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Light-weight Deep Extreme Multilabel Classification</strong>, I. Mishra, A. Dasgupta, B. Mishra, P. Jawanpuria, P. Kumar, IJCNN 2023.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-11')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-11" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-11.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 12 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Effects of Spectral Normalization in Multi-agent Reinforcement Learning</strong>, K. Mehta, A. Mahajan, P. Kumar, IJCNN 2023.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-12')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-12" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-12.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 13 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Angle based dynamic learning rate for gradient descent</strong>, N. Mishra, P. Kumar, IJCNN 2023.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-13')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-13" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-13.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 14 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Adaptive Consensus Optimization Method for GANs</strong>, S. Danisetty, S. Mylaram, P. Kumar, IJCNN 2023.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-14')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1-rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-14" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-14.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 15 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">  
+              <strong>Hybrid Tokenization and Datasets for Solving Mathematics and Science Problems Using Transformers</strong>, P. Mandlecha, et al., SDM 2022.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1-rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-15')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-15" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-15.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 16 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>A Riemannian Approach to Extreme Classification Problems</strong>, J. Naram, T. Sinha, P. Kumar, CODS-COMAD 2022.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-16')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1-rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-16" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-16.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 17 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Nonnegative Low-Rank Tensor Completion via Dual Formulation</strong>, T. Sinha, J. Naram, P. Kumar, WACV 2022.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1-rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1-rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-17')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1-rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-17" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-17.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 18 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>SCIMAT: Science and Mathematics Dataset</strong>, S. Chatakonda, N. Kollepara, P. Kumar, NeurIPS-W 2021.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1-rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1-rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-18')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1-rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-18" class="hidden mt-2">
+            <audio controls class="w-full">
+              <source src="audio-18.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 19 -->
+        <li>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Structured Low-Rank Tensor Learning</strong>, J. Naram, T. Sinha, P. Kumar, NeurIPS-W 2021.
+            </div>
+            <div class="flex flex-wrap gap-2 mt-2	sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600	text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600	text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-19')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500	text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-19" class="hidden	mt-2">
+            <audio controls class="w-full">
+              <source src="audio-19.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 20 -->
+        <li>
+          <div class="flex flex-col sm:flex-row	sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>A Fast Parameter-Free Preconditioner for Structured Grid Problems</strong>, A. Agarwal, S. Kakkar, P. Kumar, SC 2021.
+            </div>
+            <div class="flex flex-wrap gap-2	mt-2 sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600	text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600	text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-20')" class="bg-purple-500 hover:bg-purple-600	text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500	text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-20" class="hidden	mt-2">
+            <audio controls class="w-full">
+              <source src="audio-20.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+        <!-- 21 -->
+        <li>
+          <div class="flex flex-col sm:flex-row	sm:justify-between sm:items-center">
+            <div class="flex-1 pr-4">
+              <strong>Structured Low-Rank Tensor Learning</strong>, J. Naram, T. Sinha, P. Kumar, NeurIPS-W 2021.
+            </div>
+            <div class="flex flex-wrap gap-2	mt-2	sm:mt-0">
+              <a href="https://github.com/misterpawan" class="bg-green-500 hover:bg-green-600	text-white px-3 py-1 rounded" target="_blank">Code</a>
+              <a href="https://www.arxiv.org" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" target="_blank">PDF</a>
+              <button onclick="toggleAudio('audio-21')" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded">Audio</button>
+              <a href="https://alpha.github.io" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded" target="_blank">More</a>
+            </div>
+          </div>
+          <div id="audio-21" class="hidden	mt-2">
+            <audio controls class="w-full">
+              <source src="audio-21.mp3" type="audio/mpeg">
+            </audio>
+          </div>
+        </li>
+
+      </ul>
+
+      <p class="mt-6">
+        For citations and detailed records, please visit my
+        <a href="#" class="text-blue-500 hover:underline">Google Scholar Profile</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer class="text-center py-6 bg-gray-50 dark:bg-gray-800" data-aos="fade-up">
+    &copy; 2025 Pawan Kumar. All rights reserved.
+  </footer>
+</body>
+</html>
