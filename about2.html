@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CDN (no config needed here if you’re inheriting from index) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* smooth scrolling & fade-in animation */
+    html { scroll-behavior: smooth; }
+    .fade-in { animation: fadeIn 0.6s ease-out both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
+  <script>
+    // toggle between bio / education / employment
+    function toggleContent(id) {
+      const contentBlocks = ['bio', 'education', 'employment'];
+      contentBlocks.forEach(block => {
+        const el = document.getElementById(block);
+        if (!el) return;
+        if (block === id) {
+          el.classList.remove('hidden');
+          el.classList.add('fade-in');
+        } else {
+          el.classList.add('hidden');
+          el.classList.remove('fade-in');
+        }
+      });
+    }
+  </script>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div onclick="toggleContent('bio')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">
+        Bio
+      </div>
+      <div onclick="toggleContent('education')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">
+        Education
+      </div>
+      <div onclick="toggleContent('employment')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">
+        Employment
+      </div>
+    </div>
+
+    <div id="bio" class="hidden text-sm leading-relaxed space-y-4">
+      <p>Hi There! My name is Pawan Kumar. I am an assistant professor at IIIT-H since approximately 2017.</p>
+      <p>I lead the OPTIMAL group at IIIT-H. We are a group of mathematicians and computer scientists working together!</p>
+      <p>In my group, we are interested in designing provably fast optimization and machine learning algorithms.</p>
+      <p>The fast and robust algorithms for the problems mentioned above are obtained either by important mathematical insight, or via clever algorithm design. More specifically, in machine learning as well as in scientific computing, newer insights via numerical analysis for optimization algorithms, which are at the core of most of these domains, can lead to robust and fast algorithms. On the other hand, a clever use of data structures, and a mapping to parallel architectures (FPGA, GPU, Clusters, etc) for the existing algorithms can lead to algorithms that run fast on modern day hardware. In general, I believe that robust numerical algorithm and high performance algorithm design go hand in hand, and they can't be developed in isolation.</p>
+      <p>In my group that comprises of bright undergraduate and graduate students, we are trying to explore various approaches for fast and robust numerical algorithms mostly for deep learning. Generally, two types of students join my group: those who are very good with mathematics or good with python programming, or have strong interest in learning HPC skills, and applying it to develop algorithms for ML and scientific computing. I am particularly interested in students who want to work in the interface of scientific computing and machine learning. I am also interested in students from non-CS background. If you are one of these, then feel free to write to me.</p>
+    </div>
+
+    <div id="education" class="hidden text-sm space-y-8">
+      <!-- PhD at INRIA Saclay -->
+      <div class="flex flex-col items-center">
+        <img
+          src="inria-saclay-page.png"
+          alt="INRIA Saclay logo"
+          class="w-64 h-64 object-contain rounded shadow"
+        />
+        <p class="mt-2 text-center">
+          PhD INRIA Saclay, Ile-de-France, Saclay, France.
+        </p>
+      </div>
+
+      <!-- MS at IIT Guwahati -->
+      <div class="flex flex-col items-center">
+        <img
+          src="iitg-page.png"
+          alt="IIT Guwahati logo"
+          class="w-64 h-64 object-contain rounded shadow"
+        />
+        <p class="mt-2 text-center">
+          MS IIT, Guwahati, India.
+        </p>
+      </div>
+    </div>
+
+    <div id="employment" class="hidden text-sm space-y-8">
+      <!-- FU Berlin -->
+      <div class="flex flex-col items-center">
+        <img
+          src="fu-berlin-page.png"
+          alt="FU Berlin logo"
+          class="w-64 h-64 object-contain rounded shadow"
+        />
+        <p class="mt-2 text-center">
+          Department of Math and CS, FU Berlin, Einstein Center of Mathematics, Berlin, Germany.
+        </p>
+      </div>
+
+      <!-- Fraunhofer ITWM -->
+      <div class="flex flex-col items-center">
+        <img
+          src="fraunhofer-itwm-page.png"
+          alt="Fraunhofer ITWM logo"
+          class="w-64 h-64 object-contain rounded shadow"
+        />
+        <p class="mt-2 text-center">
+          Fraunhofer ITWM, funded by Marie Curie ERCIM Fellowship, Germany.
+        </p>
+      </div>
+
+      <!-- KU Leuven & Intel Exascience -->
+      <div class="flex flex-col items-center">
+        <img
+          src="ku-leuven-page.png"
+          alt="KU Leuven & Intel Exascience Lab logo"
+          class="w-64 h-64 object-contain rounded shadow"
+        />
+        <p class="mt-2 text-center">
+          KU Leuven and Intel Exascience Lab, Leuven, Belgium.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Back to Top button -->
+  <div
+    id="back-to-top"
+    class="fixed bottom-6 right-6 hidden items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow-lg cursor-pointer hover:bg-gray-200 transition"
+    onclick="scrollToTop()"
+    title="Back to Top"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="w-6 h-6 text-gray-700"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor"
+         stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+    </svg>
+  </div>
+
+  <script>
+    // scroll-to-top logic
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 200) {
+        backToTopBtn.classList.remove('hidden');
+      } else {
+        backToTopBtn.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
