@@ -49,9 +49,20 @@
       <div onclick="toggleIframe('people-box', 'people.html')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg text-center">People</div>
     </div>
 
-    <div id="publications-box" class="hidden mb-8">
+    <!-- <div id="publications-box" class="hidden mb-8">
       <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
+    </div> -->
+
+    <div id="publications-box" class="hidden mb-8">
+      <iframe
+        src=""
+        class="w-full rounded shadow border border-gray-300 dark:border-gray-700"
+        frameborder="0"
+        loading="lazy"
+        onload="resizeIframe(this)"
+      ></iframe>
     </div>
+
     <div id="talks-box" class="hidden mb-8">
       <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
     </div>
@@ -68,5 +79,19 @@
       <iframe class="w-full h-[800px] rounded shadow border border-gray-300 dark:border-gray-700" src=""></iframe>
     </div>
   </main>
+
+  <script>
+    function resizeIframe(iframe) {
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.documentElement.style.overflow = 'hidden';
+      doc.body.style.overflow = 'hidden';
+      iframe.style.height = doc.documentElement.scrollHeight + 'px';
+    }
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('iframe[onload="resizeIframe(this)"]')
+              .forEach(f => resizeIframe(f));
+    });
+  </script>
+  
 </body>
 </html>
