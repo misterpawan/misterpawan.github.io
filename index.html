@@ -1,330 +1,540 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pawan Kumar | Home</title>
+  
+  <!-- Preload optimized image -->
+  <link rel="preload" as="image" href="mypic2.webp">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: '#f97316', // Orange-500
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- AOS Animation -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-<!--   <script>
-    tailwind.config = { darkMode: 'false' };
-
-    function toggleDarkMode() {
-      document.documentElement.classList.toggle('dark');
-    }
-
-  function showOnlySection(id) {
-  const sections = ['about-section', 'news-section', 'research-section', 'teaching-section', 'software-section', 'blogs-section'];
-  sections.forEach(sectionId => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      if (sectionId === id) {
-        el.classList.remove('hidden');
-        el.classList.add('fade-in');
-        setTimeout(() => {
-          const yOffset = -80; // adjust scroll offset to leave space for browser UI
-          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }, 50);
-      } else {
-        el.classList.add('hidden');
-        el.classList.remove('fade-in');
-      }
-    }
-  });
-}
-
-    
-    function toggleCardContent(id) {
-      const el = document.getElementById(id);
-      el.classList.toggle('hidden');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      AOS.init({ duration: 800, once: true });
-    });
-  </script> -->
-
-
-<!-- 1) Tailwind config: disable ALL dark-mode variants -->
-<script>
-  tailwind.config = {
-    darkMode: false   /* ← boolean false, not the string "false" */
-  };
-</script>
-
-<!-- 2) Load Tailwind (reads the above config) -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- 3) Load AOS (you already have its CSS link above) -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-<!-- 4) Your page’s custom JS -->
-<script>
-  function toggleDarkMode() {
-    document.documentElement.classList.toggle('dark');
-  }
-
-  function showOnlySection(id) {
-    const sections = [
-      'about-section','news-section','research-section',
-      'teaching-section','software-section','blogs-section'
-    ];
-    sections.forEach(sectionId => {
-      const el = document.getElementById(sectionId);
-      if (!el) return;
-      if (sectionId === id) {
-        el.classList.remove('hidden');
-        el.classList.add('fade-in');
-        setTimeout(() => {
-          const yOffset = -80;
-          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }, 50);
-      } else {
-        el.classList.add('hidden');
-        el.classList.remove('fade-in');
-      }
-    });
-  }
-
-  function toggleCardContent(id) {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('hidden');
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    AOS.init({ duration: 800, once: true });
-  });
-</script>
-  
-
-  
-
   <style>
-    html { scroll-behavior: smooth; }
-    .fade-in {
-      animation: fadeIn 0.6s ease-out both;
+    /* Glassmorphism utilities */
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
     }
+    .dark .glass {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    .shiny {
+      font-weight: bold;
+      color: #f59e0b;
+      animation: shine 1.5s infinite linear;
+    }
+    @keyframes shine {
+      0% { text-shadow: 0 0 2px #f59e0b; }
+      50% { text-shadow: 0 0 8px #fbbf24; }
+      100% { text-shadow: 0 0 2px #f59e0b; }
+    }
   </style>
 </head>
 
-<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
-<!--   <header class="py-10 bg-gray-100 dark:bg-gray-800" data-aos="fade-down">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-8 px-4">
-      <div class="w-80 h-96 overflow-hidden shadow-md border border-gray-300 dark:border-gray-700 rounded-xl">
-        <img src="mypic2.png" alt="Pawan Kumar" class="w-full h-full object-cover">
-      </div>
-      <div class="text-center sm:text-left">
-        <h1 class="text-4xl font-bold">Pawan Kumar</h1>
-        <div class="mt-4 space-y-2">
-          <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Assistant Professor at IIIT Hyderabad</div>
-          <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Leader of OPTIMAL Research Group</div>
-          <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Researcher in Optimization and ML</div>
-          <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Educator and Technical Content Creator</div>
-          <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Email: pawan.kumar@iiit.ac.in </div>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased selection:bg-orange-200 selection:text-orange-900">
+
+  <!-- Header / Profile -->
+  <header class="py-12 relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-30 pointer-events-none">
+        <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+        <div class="absolute top-[-10%] left-[-5%] w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-10 px-6" data-aos="fade-down">
+      <!-- Profile Image -->
+      <div class="relative group">
+        <div class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+        <div class="relative w-72 h-80 sm:w-80 sm:h-96 overflow-hidden rounded-xl shadow-2xl ring-1 ring-gray-900/5">
+          <img src="mypic2.webp" alt="Pawan Kumar" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" fetchpriority="high">
         </div>
       </div>
-    </div>
-  </header> -->
 
-  <header class="py-10 bg-gray-100 dark:bg-gray-800" data-aos="fade-down">
-  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-8 px-4">
-    <div class="w-80 h-96 overflow-hidden shadow-md border border-gray-300 dark:border-gray-700 rounded-xl">
-      <img src="mypic2.png" alt="Pawan Kumar" class="w-full h-full object-cover">
-    </div>
-    <div class="text-center sm:text-left">
-      <h1 class="text-4xl font-bold">Pawan Kumar</h1>
-      <div class="mt-4 space-y-2">
-        <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Assistant Professor at IIIT Hyderabad</div>
-        <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Leader of OPTIMAL Research Group</div>
-        <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Researcher in Optimization and ML</div>
-        <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Educator and Technical Content Creator</div>
-        <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded shadow">Email: pawan.kumar@iiit.ac.in</div>
+      <!-- Info -->
+      <div class="text-center md:text-left max-w-lg">
+        <h1 class="text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">Pawan Kumar</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-6 font-medium">Assistant Professor @ IIIT Hyderabad</p>
         
-        <!-- Social links -->
-        <div class="flex flex-wrap gap-2 mt-4 justify-center sm:justify-start">
-          <a href="https://x.com/nagiiit1" target="_blank"
-             class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-orange-900 px-4 py-2 rounded shadow transition">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/x.svg" alt="Twitter" class="w-5 h-5">
-            Twitter / X
+        <div class="space-y-3 text-sm sm:text-base">
+          <div class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200">
+            🚀 Leader of <span class="font-semibold text-orange-600 dark:text-orange-400">OPTIMAL Research Group</span>
+          </div>
+          <div class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200">
+            🧠 Researcher in <span class="font-semibold">Optimization & ML</span>
+          </div>
+          <div class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200">
+            🎓 Educator & Technical Content Creator
+          </div>
+          <div class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200 flex items-center justify-center md:justify-start gap-2">
+            📧 <a href="mailto:pawan.kumar@iiit.ac.in" class="hover:text-orange-600 transition">pawan.kumar@iiit.ac.in</a>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
+          <a href="https://x.com/nagiiit1" target="_blank" class="glass hover:bg-white hover:text-orange-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/x.svg" alt="X" class="w-4 h-4">
+            <span class="font-medium">Twitter</span>
           </a>
-          <a href="https://www.linkedin.com/in/pawann-k-15b642223/" target="_blank"
-             class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-orange-900 px-4 py-2 rounded shadow transition">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/linkedin.svg" alt="LinkedIn" class="w-5 h-5">
-            LinkedIn
+          <a href="https://www.linkedin.com/in/pawann-k-15b642223/" target="_blank" class="glass hover:bg-white hover:text-blue-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/linkedin.svg" alt="LinkedIn" class="w-4 h-4">
+            <span class="font-medium">LinkedIn</span>
           </a>
-          <a href="https://www.youtube.com/@optimal-iiit" target="_blank"
-             class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-orange-900 px-4 py-2 rounded shadow transition">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/youtube.svg" alt="YouTube" class="w-5 h-5">
-            YouTube
+          <a href="https://www.youtube.com/@optimal-iiit" target="_blank" class="glass hover:bg-white hover:text-red-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/youtube.svg" alt="YouTube" class="w-4 h-4">
+            <span class="font-medium">YouTube</span>
           </a>
         </div>
       </div>
     </div>
-  </div>
-</header>
+  </header>
 
-  <div id="nav-cards" class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-4 py-6 px-4" data-aos="fade-down">
-    <div onclick="showOnlySection('about-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">About</div>
-    <div onclick="showOnlySection('news-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">News</div>
-    <div onclick="showOnlySection('research-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Research</div>
-    <div onclick="showOnlySection('teaching-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Teaching</div>
-    <div onclick="showOnlySection('software-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Software</div>
-    <div onclick="showOnlySection('blogs-section')" class="bg-white dark:bg-gray-800 p-4 rounded shadow hover:shadow-lg transition cursor-pointer text-center">Blogs</div>
-  </div>
+  <!-- Navigation -->
+  <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-12" data-aos="fade-up" data-aos-delay="100">
+    <div class="glass rounded-2xl shadow-lg p-2 flex flex-wrap justify-center gap-2 sm:gap-4">
+      <button onclick="showSection('about')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">About</button>
+      <button onclick="showSection('news')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">News</button>
+      <button onclick="showSection('research')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Research</button>
+      <button onclick="showSection('teaching')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Teaching</button>
+      <button onclick="showSection('software')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Software</button>
+      <button onclick="showSection('blogs')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Blogs</button>
+    </div>
+  </nav>
 
-<!--   <main class="max-w-4xl mx-auto py-6 px-4">
-    <section id="blogs-section" class="hidden mb-12 fade-in">
-      <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 dark:border-gray-700">Blogs</h2>
-      <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-      <iframe src="blogs.html" class="w-full h-[900px] rounded" loading="lazy"></iframe>
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-4 pb-20 min-h-[50vh]">
+    
+    <!-- ABOUT SECTION -->
+    <section id="about-section" class="content-section hidden fade-in">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div onclick="toggleAboutContent('bio')" class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
+          📜 Bio
+        </div>
+        <div onclick="toggleAboutContent('education')" class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
+          🎓 Education
+        </div>
+        <div onclick="toggleAboutContent('employment')" class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
+          💼 Employment
+        </div>
+      </div>
+
+      <div id="bio" class="about-content hidden glass p-8 rounded-2xl shadow-sm text-lg leading-relaxed space-y-4 text-gray-700 dark:text-gray-300">
+        <p>Hi There! My name is <span class="font-bold text-gray-900 dark:text-white">Pawan Kumar</span>. I am an assistant professor at IIIT-H since approximately 2017.</p>
+        <p>I lead the <span class="font-bold text-orange-600">OPTIMAL group</span> at IIIT-H. We are a group of mathematicians and computer scientists working together!</p>
+        <p>In my group, we are interested in designing provably fast optimization and machine learning algorithms.</p>
+        <p>The fast and robust algorithms for the problems mentioned above are obtained either by important mathematical insight, or via clever algorithm design. More specifically, in machine learning as well as in scientific computing, newer insights via numerical analysis for optimization algorithms, which are at the core of most of these domains, can lead to robust and fast algorithms. On the other hand, a clever use of data structures, and a mapping to parallel architectures (FPGA, GPU, Clusters, etc) for the existing algorithms can lead to algorithms that run fast on modern day hardware.</p>
+        <p>In general, I believe that robust numerical algorithm and high performance algorithm design go hand in hand, and they can't be developed in isolation.</p>
+      </div>
+
+      <div id="education" class="about-content hidden space-y-8">
+        <div class="glass p-8 rounded-2xl shadow-sm flex flex-col items-center text-center">
+          <img src="inria-saclay-page.png" alt="INRIA" class="h-32 object-contain mb-4">
+          <h3 class="text-xl font-bold">PhD INRIA Saclay</h3>
+          <p class="text-gray-600 dark:text-gray-400">Ile-de-France, Saclay, France</p>
+        </div>
+        <div class="glass p-8 rounded-2xl shadow-sm flex flex-col items-center text-center">
+          <img src="iitg-page.png" alt="IITG" class="h-32 object-contain mb-4">
+          <h3 class="text-xl font-bold">MS IIT Guwahati</h3>
+          <p class="text-gray-600 dark:text-gray-400">Guwahati, India</p>
+        </div>
+      </div>
+
+      <div id="employment" class="about-content hidden space-y-8">
+        <div class="glass p-8 rounded-2xl shadow-sm flex flex-col items-center text-center">
+          <img src="fu-berlin-page.png" alt="FU Berlin" class="h-32 object-contain mb-4">
+          <h3 class="text-xl font-bold">FU Berlin</h3>
+          <p class="text-gray-600 dark:text-gray-400">Department of Math and CS, Einstein Center of Mathematics, Berlin, Germany</p>
+        </div>
+        <div class="glass p-8 rounded-2xl shadow-sm flex flex-col items-center text-center">
+          <img src="fraunhofer-itwm-page.png" alt="Fraunhofer" class="h-32 object-contain mb-4">
+          <h3 class="text-xl font-bold">Fraunhofer ITWM</h3>
+          <p class="text-gray-600 dark:text-gray-400">Marie Curie ERCIM Fellowship, Germany</p>
+        </div>
+        <div class="glass p-8 rounded-2xl shadow-sm flex flex-col items-center text-center">
+          <img src="ku-leuven-page.png" alt="KU Leuven" class="h-32 object-contain mb-4">
+          <h3 class="text-xl font-bold">KU Leuven & Intel Exascience Lab</h3>
+          <p class="text-gray-600 dark:text-gray-400">Leuven, Belgium</p>
+        </div>
       </div>
     </section>
-  </main> -->
 
-  <main class="max-w-4xl mx-auto py-6 px-4">
-  <section id="blogs-section" class="hidden mb-12 fade-in">
-    <h2 class="text-2xl font-semibold mb-4 text-center bg-gray-100 dark:bg-gray-800 py-2 px-4 rounded shadow">
-      Blogs
-    </h2>
-    <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-      <iframe src="blogs.html" class="w-full h-[900px] rounded" loading="lazy"></iframe>
-    </div>
-  </section>
-</main>
+    <!-- NEWS SECTION -->
+    <section id="news-section" class="content-section hidden fade-in">
+      <div class="glass p-12 rounded-2xl shadow-sm text-center">
+        <h2 class="text-2xl font-bold text-gray-400">News Section</h2>
+        <p class="mt-2 text-gray-500">Updates coming soon...</p>
+      </div>
+    </section>
 
+    <!-- RESEARCH SECTION -->
+    <section id="research-section" class="content-section hidden fade-in">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <div onclick="toggleResearchFrame('publications-box', 'publications.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">📄 Publications</div>
+        <div onclick="toggleResearchFrame('talks-box', 'talks.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">🎤 Talks</div>
+        <div onclick="toggleResearchFrame('projects-box', 'projects.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">💡 Projects</div>
+        <div onclick="toggleResearchFrame('students-box', 'students.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">👨‍🎓 Students</div>
+        <div onclick="toggleResearchFrame('grants-box', 'grants.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">💰 Grants</div>
+        <div onclick="toggleResearchFrame('people-box', 'people.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">👥 People</div>
+      </div>
 
-  <main class="max-w-4xl mx-auto py-6 px-4">
-  <section id="research-section" class="hidden mb-12 fade-in">
-    <h2 class="text-2xl font-semibold mb-4 text-center bg-gray-100 dark:bg-gray-800 py-2 px-4 rounded shadow">
-      Research
-    </h2>
-    <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-      <iframe src="research.html" class="w-full h-[900px] rounded" loading="lazy"></iframe>
-    </div>
-  </section>
-</main>
+      <div id="research-frames" class="glass p-2 rounded-2xl shadow-sm min-h-[600px]">
+        <div id="publications-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
+        <div id="talks-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
+        <div id="projects-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
+        <div id="students-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
+        <div id="grants-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
+        <div id="people-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
+        
+        <!-- Default placeholder -->
+        <div id="research-placeholder" class="flex items-center justify-center h-[400px] text-gray-400">
+          Select a category above to view details
+        </div>
+      </div>
+    </section>
 
-<!-- <main class="max-w-4xl mx-auto py-6 px-4">
-  <section id="research-section" class="hidden mb-12 fade-in">
-    <h2 class="text-2xl font-semibold mb-4 text-center bg-gray-100 dark:bg-gray-800 py-2 px-4 rounded shadow">
-      Research
-    </h2>
-    <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-      <iframe
-        src="research.html"
-        class="w-full rounded"
-        frameborder="0"
-        loading="lazy"
-        onload="resizeIframe(this)"
-      ></iframe>
-    </div>
-  </section>
-</main> -->
+    <!-- TEACHING SECTION -->
+    <section id="teaching-section" class="content-section hidden fade-in">
+      <div id="teaching-container">
+        <!-- Populated by JS -->
+      </div>
+    </section>
 
-  <main class="max-w-4xl mx-auto py-6 px-4">
-  <section id="software-section" class="hidden mb-12 fade-in">
-    <h2 class="text-2xl font-semibold mb-4 text-center bg-gray-100 dark:bg-gray-800 py-2 px-4 rounded shadow">
-      Software
-    </h2>
-    <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-      <iframe src="software.html" class="w-full h-[900px] rounded" loading="lazy"></iframe>
-    </div>
-  </section>
-</main>
+    <!-- SOFTWARE SECTION -->
+    <section id="software-section" class="content-section hidden fade-in">
+      <div class="glass p-8 rounded-2xl shadow-sm">
+        <h2 class="text-2xl font-bold mb-6">Software Projects</h2>
+        <div class="space-y-4">
+          <a href="https://www.github.com/misterpawan" target="_blank"
+             class="block bg-gradient-to-r from-orange-100 to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:from-orange-200 hover:to-orange-100 p-6 rounded-xl shadow-sm hover:shadow-md transition group">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-700">Solver for Bundle Adjustment</h3>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">Efficient optimization solver implementation.</p>
+          </a>
+          <!-- Add more software links here -->
+        </div>
+      </div>
+    </section>
 
-  <section id="software-section" class="hidden mb-12 fade-in">
-  <h2 class="text-2xl font-semibold mb-4 text-center bg-gray-100 dark:bg-gray-800 py-2 px-4 rounded shadow">
-    Software
-  </h2>
-  <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-    <iframe src="software.html" class="w-full h-[600px] rounded" loading="lazy"></iframe>
-  </div>
-</section>
+    <!-- BLOGS SECTION -->
+    <section id="blogs-section" class="content-section hidden fade-in">
+      <div id="blog-app">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+          <div v-for="category in mainCategories" :key="category.name"
+               class="glass p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition transform hover:-translate-y-1"
+               @click="selectCategory(category.name)">
+            <h2 class="text-xl font-bold text-gray-800 dark:text-white">{{ category.name }}</h2>
+            <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">{{ category.desc }}</p>
+          </div>
+        </div>
 
+        <div v-if="selectedCategory" class="fade-in">
+          <div class="flex items-center gap-4 mb-6">
+            <button @click="selectedCategory = null" class="text-sm text-gray-500 hover:text-orange-500">← Back</button>
+            <h2 class="text-2xl font-bold">{{ selectedCategory }}</h2>
+          </div>
 
-  <main class="max-w-4xl mx-auto py-6 px-4">
-  <section id="teaching-section" class="hidden mb-12 fade-in">
-    <h2 class="text-2xl font-semibold mb-4 text-center bg-gray-100 dark:bg-gray-800 py-2 px-4 rounded shadow">
-      Teaching
-    </h2>
-    <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-      <iframe src="teaching.html" class="w-full h-[900px] rounded" loading="lazy"></iframe>
-    </div>
-  </section>
-</main>
+          <div v-if="subCategories[selectedCategory]" class="flex flex-wrap gap-3 mb-6">
+            <span v-for="sub in subCategories[selectedCategory]" :key="sub"
+                  class="px-4 py-2 rounded-full text-sm cursor-pointer transition"
+                  :class="selectedSub === sub ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'"
+                  @click="selectSubCategory(sub)">{{ sub }}</span>
+          </div>
 
-   <main class="max-w-4xl mx-auto py-6 px-4">
-  <section id="about-section" class="hidden mb-12 fade-in">
-    <h2 class="text-2xl font-semibold mb-4 text-center bg-gray-100 dark:bg-gray-800 py-2 px-4 rounded shadow">
-      About
-    </h2>
-    <div class="rounded overflow-hidden shadow border border-gray-200 dark:border-gray-700">
-      <iframe src="about.html" class="w-full h-[900px] rounded" loading="lazy"></iframe>
-    </div>
-  </section>
-</main>
+          <div class="space-y-4">
+            <div v-for="blog in filteredBlogs" :key="blog.title"
+                 class="glass p-6 rounded-xl shadow-sm">
+              <div class="flex justify-between items-start gap-4 cursor-pointer" @click="blog.open = !blog.open">
+                <h3 class="text-xl font-semibold hover:text-orange-600 transition">{{ blog.title }}</h3>
+                <span class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-1 rounded-full whitespace-nowrap">{{ blog.category }}</span>
+              </div>
+              <div v-show="blog.open" class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed border-t pt-4 border-gray-200 dark:border-gray-700">
+                <p>{{ blog.content }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <footer class="text-center py-6 bg-gray-50 dark:bg-gray-800 flex flex-col sm:flex-row justify-center items-center gap-4" data-aos="fade-up">
-    <span>&copy; 2025 Pawan Kumar. All rights reserved.</span>
-<!--     <button onclick="toggleDarkMode()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded">Toggle Dark Mode</button> -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 text-gray-500 text-sm">
+    &copy; 2025 Pawan Kumar. All rights reserved.
   </footer>
 
- <div
-    id="back-to-top"
-    class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow-lg cursor-pointer hover:bg-gray-200 transition hidden"
-    title="Back to Top"
-  >
-    <!-- Heroicon “chevron-up” -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         class="w-6 h-6 text-gray-700"
-         fill="none"
-         viewBox="0 0 24 24"
-         stroke="currentColor"
-         stroke-width="2"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-    </svg>
+  <!-- Back to Top -->
+  <div id="back-to-top" class="fixed bottom-6 right-6 z-50 hidden">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg transition transform hover:scale-110">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
   </div>
 
-  <script>
-    // Show after scrolling down 200px, hide if near top
-    const btn = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 200) {
-        btn.classList.remove('hidden');
-      } else {
-        btn.classList.add('hidden');
-      }
-    });
-
-    // Smooth scroll to top of index.html
-    btn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  </script>  
-
-<!-- <script>
-  function resizeIframe(iframe) {
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.documentElement.style.overflow = 'hidden';
-    doc.body.style.overflow = 'hidden';
-    iframe.style.height = doc.documentElement.scrollHeight + 'px';
-  }
-  window.addEventListener('resize', () => {
-    document.querySelectorAll('iframe[onload="resizeIframe(this)"]')
-            .forEach(f => resizeIframe(f));
-  });
-</script> -->
+  <!-- SCRIPTS -->
   
+  <!-- 1. Main Navigation -->
+  <script>
+    function showSection(id) {
+      // Hide all sections
+      document.querySelectorAll('.content-section').forEach(el => {
+        el.classList.add('hidden');
+      });
+      
+      // Show target
+      const target = document.getElementById(id + '-section');
+      if (target) {
+        target.classList.remove('hidden');
+        // Scroll slightly if needed, or just to top of main
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Update active state on buttons
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.getAttribute('onclick').includes(id)) {
+          btn.classList.add('bg-orange-500', 'text-white', 'shadow-md');
+          btn.classList.remove('hover:bg-orange-100', 'dark:hover:bg-gray-700');
+        } else {
+          btn.classList.remove('bg-orange-500', 'text-white', 'shadow-md');
+          btn.classList.add('hover:bg-orange-100', 'dark:hover:bg-gray-700');
+        }
+      });
+    }
+
+    // Initialize AOS
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ duration: 800, once: true });
+      // Show About by default
+      showSection('about');
+      
+      // Back to top visibility
+      window.addEventListener('scroll', () => {
+        const btn = document.getElementById('back-to-top');
+        if (window.pageYOffset > 300) btn.classList.remove('hidden');
+        else btn.classList.add('hidden');
+      });
+    });
+  </script>
+
+  <!-- 2. About Section Logic -->
+  <script>
+    function toggleAboutContent(id) {
+      // Hide all about contents
+      document.querySelectorAll('.about-content').forEach(el => el.classList.add('hidden'));
+      // Show target
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('fade-in');
+      }
+    }
+    // Show bio by default
+    document.addEventListener('DOMContentLoaded', () => toggleAboutContent('bio'));
+  </script>
+
+  <!-- 3. Research Section Logic -->
+  <script>
+    function toggleResearchFrame(id, src) {
+      // Hide placeholder
+      document.getElementById('research-placeholder').classList.add('hidden');
+      
+      // Hide all frames
+      document.querySelectorAll('.research-frame').forEach(el => el.classList.add('hidden'));
+      
+      // Show target
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        const iframe = el.querySelector('iframe');
+        if (iframe && !iframe.src) {
+          iframe.src = src; // Lazy load
+        }
+      }
+    }
+  </script>
+
+  <!-- 4. Teaching Section Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentYear = new Date().getFullYear();
+      const data = [
+        { course: 'MA8.401 Topics in Applied Optimization', semesters: ['Monsoon 2024', 'Monsoon 2022', 'Monsoon 2021', 'Monsoon 2020', 'Monsoon 2018'] },
+        { course: 'MA6.302 PG-Linear Algebra', semesters: ['Monsoon 2024'] },
+        { course: 'MA8.401 Mathematics of Generative Models', semesters: ['Spring 2024', 'Spring 2023'] },
+        { course: 'CS1.306 Numerical Algorithms', semesters: ['Spring 2025','Spring 2024'] },
+        { course: 'CS1.501 Advanced Optimization: Theory and Applications', semesters: ['Spring 2025','Spring 2023', 'Spring 2022', 'Spring 2021'] },
+        { course: 'MA6.101 Probability and Statistics', semesters: ['Monsoon 2021', 'Monsoon 2020'] },
+        { course: 'MA01.101 Discrete Structures (2 sessions)', semesters: ['Monsoon 2020', 'Monsoon 2019'] },
+        { course: 'CSE504 Introduction to Parallel Scientific Computing', semesters: ['Spring 2020', 'Spring 2019', 'Spring 2018', 'Spring 2017'] },
+        { course: 'HV-II Human Values-II', semesters: ['Spring 2019', 'Spring 2017'] },
+        { course: 'CSE881 Topics in Optimization on Manifolds', semesters: ['Spring 2019'] },
+        { course: 'MA6.101 Discrete Structures (2 sessions)', semesters: ['Monsoon 2018'] },
+        { course: 'CSE611 Discrete Mathematics and Algorithms', semesters: ['Monsoon 2017'] },
+        { course: 'ICS211 Algorithms', semesters: ['Monsoon 2017'] },
+      ];
+
+      const container = document.getElementById('teaching-container');
+      if (!container) return;
+
+      data.sort((a, b) => {
+        const hasCurrentA = a.semesters.some(s => s.includes(currentYear));
+        const hasCurrentB = b.semesters.some(s => s.includes(currentYear));
+        return hasCurrentB - hasCurrentA;
+      });
+
+      data.forEach((item) => {
+        const courseDiv = document.createElement('div');
+        const isCurrent = item.semesters.some(s => s.includes(currentYear));
+        courseDiv.className = 'mb-6';
+
+        const header = document.createElement('div');
+        header.className = `glass p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition flex justify-between items-center ${isCurrent ? 'border-l-4 border-green-500' : ''}`;
+        header.innerHTML = `<h2 class="text-lg font-semibold">${item.course}</h2>`;
+        
+        if (isCurrent) {
+          const tag = document.createElement('span');
+          tag.className = 'text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded-full';
+          tag.textContent = 'Ongoing';
+          header.appendChild(tag);
+        }
+
+        const semesterList = document.createElement('div');
+        semesterList.className = 'hidden mt-3 pl-4 space-y-2';
+
+        item.semesters.forEach((semester) => {
+          const semDiv = document.createElement('div');
+          semDiv.className = 'bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition border border-gray-100 dark:border-gray-700';
+          semDiv.textContent = semester;
+
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'hidden mt-2 grid grid-cols-1 sm:grid-cols-4 gap-4 pl-2';
+
+          ['Lectures', 'Assignments', 'Videos', 'Syllabus'].forEach(section => {
+            const sectionWrapper = document.createElement('div');
+            sectionWrapper.className = 'bg-gray-50 dark:bg-gray-900 p-2 rounded text-center cursor-pointer hover:shadow transition text-sm';
+            sectionWrapper.textContent = section;
+            
+            // Placeholder dropdown
+            const dropdown = document.createElement('div');
+            dropdown.className = 'hidden mt-2 text-xs text-left space-y-1 p-2 bg-white dark:bg-gray-800 rounded shadow absolute z-10';
+            dropdown.textContent = "Coming soon...";
+            
+            sectionWrapper.addEventListener('click', (e) => {
+              e.stopPropagation();
+              alert(section + ' content for ' + semester);
+            });
+            
+            contentDiv.appendChild(sectionWrapper);
+          });
+
+          semDiv.addEventListener('click', () => {
+            contentDiv.classList.toggle('hidden');
+          });
+
+          semesterList.appendChild(semDiv);
+          semesterList.appendChild(contentDiv);
+        });
+
+        header.addEventListener('click', () => {
+          semesterList.classList.toggle('hidden');
+        });
+
+        courseDiv.appendChild(header);
+        courseDiv.appendChild(semesterList);
+        container.appendChild(courseDiv);
+      });
+    });
+  </script>
+
+  <!-- 5. Blogs Logic (Vue) -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.4.15/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          selectedCategory: null,
+          selectedSub: null,
+          mainCategories: [
+            { name: 'Coding', desc: 'Python, C/C++, Matlab, MPI' },
+            { name: 'Productivity', desc: 'VS Code, LaTeX, Organization' },
+            { name: 'Review', desc: 'Papers on RL, Diffusion, LLMs' },
+            { name: 'Travel', desc: 'Conferences and Explorations' },
+            { name: 'Career', desc: 'Academia, Industry, Advice' },
+          ],
+          subCategories: {
+            Coding: ['Python', 'C/C++', 'MPI', 'Matlab'],
+            Productivity: ['VS Code', 'LaTeX', 'Time Management'],
+            Review: ['Optimization', 'Diffusion', 'RL', 'Federated', 'LLM', 'Safety'],
+            Travel: ['Conferences', 'Trekking'],
+            Career: ['Academia', 'Industry']
+          },
+          blogs: [
+            { title: 'My First Python CLI Tool', content: 'I built a CLI app using argparse. Great fun!', category: 'Python', open: false },
+            { title: 'Matrix Tricks in Matlab', content: 'A few useful matrix manipulations every Matlab user should know.', category: 'Matlab', open: false },
+            { title: 'Using MPI for Distributed Training', content: 'Learned how to train models using MPI and Python.', category: 'MPI', open: false },
+            { title: 'Writing Papers in LaTeX', content: 'My template and hacks for faster writing in LaTeX.', category: 'LaTeX', open: false },
+            { title: 'Review: RLHF in LLMs', content: 'Key papers and open questions in Reinforcement Learning with Human Feedback.', category: 'RL', open: false }
+          ]
+        };
+      },
+      computed: {
+        filteredBlogs() {
+          if (!this.selectedSub) return this.blogs.filter(b => b.category.toLowerCase().includes(this.selectedCategory.toLowerCase()));
+          return this.blogs.filter(b => b.category === this.selectedSub);
+        }
+      },
+      methods: {
+        selectCategory(name) {
+          this.selectedCategory = name;
+          this.selectedSub = null;
+        },
+        selectSubCategory(name) {
+          this.selectedSub = name;
+        }
+      }
+    }).mount('#blog-app');
+  </script>
+
 </body>
 </html>
