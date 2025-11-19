@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pawan Kumar | Home</title>
-  
+
   <!-- Preload optimized image -->
   <link rel="preload" as="image" href="mypic2.webp">
-  
+
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,18 +44,26 @@
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.18);
     }
+
     .dark .glass {
       background: rgba(17, 24, 39, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
-    
+
     .fade-in {
       animation: fadeIn 0.5s ease-out forwards;
     }
-    
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .shiny {
@@ -62,31 +71,52 @@
       color: #f59e0b;
       animation: shine 1.5s infinite linear;
     }
+
     @keyframes shine {
-      0% { text-shadow: 0 0 2px #f59e0b; }
-      50% { text-shadow: 0 0 8px #fbbf24; }
-      100% { text-shadow: 0 0 2px #f59e0b; }
+      0% {
+        text-shadow: 0 0 2px #f59e0b;
+      }
+
+      50% {
+        text-shadow: 0 0 8px #fbbf24;
+      }
+
+      100% {
+        text-shadow: 0 0 2px #f59e0b;
+      }
     }
   </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased selection:bg-orange-200 selection:text-orange-900">
+<body
+  class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased selection:bg-orange-200 selection:text-orange-900">
 
   <!-- Header / Profile -->
   <header class="py-12 relative overflow-hidden">
     <!-- Background decoration -->
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-30 pointer-events-none">
-        <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
-        <div class="absolute top-[-10%] left-[-5%] w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+      <div
+        class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob">
+      </div>
+      <div
+        class="absolute top-[-10%] left-[-5%] w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000">
+      </div>
+      <div
+        class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000">
+      </div>
     </div>
 
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-10 px-6" data-aos="fade-down">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-10 px-6"
+      data-aos="fade-down">
       <!-- Profile Image -->
       <div class="relative group">
-        <div class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+        <div
+          class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200">
+        </div>
         <div class="relative w-72 h-80 sm:w-80 sm:h-96 overflow-hidden rounded-xl shadow-2xl ring-1 ring-gray-900/5">
-          <img src="mypic2.webp" alt="Pawan Kumar" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" fetchpriority="high">
+          <img src="mypic2.webp" alt="Pawan Kumar"
+            class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500"
+            fetchpriority="high">
         </div>
       </div>
 
@@ -94,7 +124,7 @@
       <div class="text-center md:text-left max-w-lg">
         <h1 class="text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">Pawan Kumar</h1>
         <p class="text-lg text-gray-600 dark:text-gray-400 mb-6 font-medium">Assistant Professor @ IIIT Hyderabad</p>
-        
+
         <div class="space-y-3 text-sm sm:text-base">
           <div class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200">
             🚀 Leader of <span class="font-semibold text-orange-600 dark:text-orange-400">OPTIMAL Research Group</span>
@@ -105,22 +135,27 @@
           <div class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200">
             🎓 Educator & Technical Content Creator
           </div>
-          <div class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200 flex items-center justify-center md:justify-start gap-2">
-            📧 <a href="mailto:pawan.kumar@iiit.ac.in" class="hover:text-orange-600 transition">pawan.kumar@iiit.ac.in</a>
+          <div
+            class="glass px-4 py-2 rounded-lg shadow-sm text-gray-700 dark:text-gray-200 flex items-center justify-center md:justify-start gap-2">
+            📧 <a href="mailto:pawan.kumar@iiit.ac.in"
+              class="hover:text-orange-600 transition">pawan.kumar@iiit.ac.in</a>
           </div>
         </div>
 
         <!-- Social Links -->
         <div class="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
-          <a href="https://x.com/nagiiit1" target="_blank" class="glass hover:bg-white hover:text-orange-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
+          <a href="https://x.com/nagiiit1" target="_blank"
+            class="glass hover:bg-white hover:text-orange-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/x.svg" alt="X" class="w-4 h-4">
             <span class="font-medium">Twitter</span>
           </a>
-          <a href="https://www.linkedin.com/in/pawann-k-15b642223/" target="_blank" class="glass hover:bg-white hover:text-blue-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
+          <a href="https://www.linkedin.com/in/pawann-k-15b642223/" target="_blank"
+            class="glass hover:bg-white hover:text-blue-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/linkedin.svg" alt="LinkedIn" class="w-4 h-4">
             <span class="font-medium">LinkedIn</span>
           </a>
-          <a href="https://www.youtube.com/@optimal-iiit" target="_blank" class="glass hover:bg-white hover:text-red-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
+          <a href="https://www.youtube.com/@optimal-iiit" target="_blank"
+            class="glass hover:bg-white hover:text-red-600 px-4 py-2 rounded-full shadow-sm transition flex items-center gap-2">
             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/youtube.svg" alt="YouTube" class="w-4 h-4">
             <span class="font-medium">YouTube</span>
           </a>
@@ -132,38 +167,56 @@
   <!-- Navigation -->
   <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-12" data-aos="fade-up" data-aos-delay="100">
     <div class="glass rounded-2xl shadow-lg p-2 flex flex-wrap justify-center gap-2 sm:gap-4">
-      <button onclick="showSection('about')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">About</button>
-      <button onclick="showSection('news')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">News</button>
-      <button onclick="showSection('research')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Research</button>
-      <button onclick="showSection('teaching')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Teaching</button>
-      <button onclick="showSection('software')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Software</button>
-      <button onclick="showSection('blogs')" class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Blogs</button>
+      <button onclick="showSection('about')"
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">About</button>
+      <button onclick="showSection('news')"
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">News</button>
+      <button onclick="showSection('research')"
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Research</button>
+      <button onclick="showSection('teaching')"
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Teaching</button>
+      <button onclick="showSection('software')"
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Software</button>
+      <button onclick="showSection('blogs')"
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Blogs</button>
     </div>
   </nav>
 
   <!-- Main Content -->
   <main class="max-w-5xl mx-auto px-4 pb-20 min-h-[50vh]">
-    
+
     <!-- ABOUT SECTION -->
     <section id="about-section" class="content-section hidden fade-in">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div onclick="toggleAboutContent('bio')" class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
+        <div onclick="toggleAboutContent('bio')"
+          class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
           📜 Bio
         </div>
-        <div onclick="toggleAboutContent('education')" class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
+        <div onclick="toggleAboutContent('education')"
+          class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
           🎓 Education
         </div>
-        <div onclick="toggleAboutContent('employment')" class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
+        <div onclick="toggleAboutContent('employment')"
+          class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-semibold text-gray-700 dark:text-gray-200 border-l-4 border-transparent hover:border-orange-500">
           💼 Employment
         </div>
       </div>
 
-      <div id="bio" class="about-content hidden glass p-8 rounded-2xl shadow-sm text-lg leading-relaxed space-y-4 text-gray-700 dark:text-gray-300">
-        <p>Hi There! My name is <span class="font-bold text-gray-900 dark:text-white">Pawan Kumar</span>. I am an assistant professor at IIIT-H since approximately 2017.</p>
-        <p>I lead the <span class="font-bold text-orange-600">OPTIMAL group</span> at IIIT-H. We are a group of mathematicians and computer scientists working together!</p>
+      <div id="bio"
+        class="about-content hidden glass p-8 rounded-2xl shadow-sm text-lg leading-relaxed space-y-4 text-gray-700 dark:text-gray-300">
+        <p>Hi There! My name is <span class="font-bold text-gray-900 dark:text-white">Pawan Kumar</span>. I am an
+          assistant professor at IIIT-H since approximately 2017.</p>
+        <p>I lead the <span class="font-bold text-orange-600">OPTIMAL group</span> at IIIT-H. We are a group of
+          mathematicians and computer scientists working together!</p>
         <p>In my group, we are interested in designing provably fast optimization and machine learning algorithms.</p>
-        <p>The fast and robust algorithms for the problems mentioned above are obtained either by important mathematical insight, or via clever algorithm design. More specifically, in machine learning as well as in scientific computing, newer insights via numerical analysis for optimization algorithms, which are at the core of most of these domains, can lead to robust and fast algorithms. On the other hand, a clever use of data structures, and a mapping to parallel architectures (FPGA, GPU, Clusters, etc) for the existing algorithms can lead to algorithms that run fast on modern day hardware.</p>
-        <p>In general, I believe that robust numerical algorithm and high performance algorithm design go hand in hand, and they can't be developed in isolation.</p>
+        <p>The fast and robust algorithms for the problems mentioned above are obtained either by important mathematical
+          insight, or via clever algorithm design. More specifically, in machine learning as well as in scientific
+          computing, newer insights via numerical analysis for optimization algorithms, which are at the core of most of
+          these domains, can lead to robust and fast algorithms. On the other hand, a clever use of data structures, and
+          a mapping to parallel architectures (FPGA, GPU, Clusters, etc) for the existing algorithms can lead to
+          algorithms that run fast on modern day hardware.</p>
+        <p>In general, I believe that robust numerical algorithm and high performance algorithm design go hand in hand,
+          and they can't be developed in isolation.</p>
       </div>
 
       <div id="education" class="about-content hidden space-y-8">
@@ -183,7 +236,8 @@
         <div class="glass p-8 rounded-2xl shadow-sm flex flex-col items-center text-center">
           <img src="fu-berlin-page.png" alt="FU Berlin" class="h-32 object-contain mb-4">
           <h3 class="text-xl font-bold">FU Berlin</h3>
-          <p class="text-gray-600 dark:text-gray-400">Department of Math and CS, Einstein Center of Mathematics, Berlin, Germany</p>
+          <p class="text-gray-600 dark:text-gray-400">Department of Math and CS, Einstein Center of Mathematics, Berlin,
+            Germany</p>
         </div>
         <div class="glass p-8 rounded-2xl shadow-sm flex flex-col items-center text-center">
           <img src="fraunhofer-itwm-page.png" alt="Fraunhofer" class="h-32 object-contain mb-4">
@@ -209,22 +263,296 @@
     <!-- RESEARCH SECTION -->
     <section id="research-section" class="content-section hidden fade-in">
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <div onclick="toggleResearchFrame('publications-box', 'publications.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">📄 Publications</div>
-        <div onclick="toggleResearchFrame('talks-box', 'talks.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">🎤 Talks</div>
-        <div onclick="toggleResearchFrame('projects-box', 'projects.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">💡 Projects</div>
-        <div onclick="toggleResearchFrame('students-box', 'students.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">👨‍🎓 Students</div>
-        <div onclick="toggleResearchFrame('grants-box', 'grants.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">💰 Grants</div>
-        <div onclick="toggleResearchFrame('people-box', 'people.html')" class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">👥 People</div>
+        <div onclick="toggleResearchFrame('publications-box', 'publications.html')"
+          class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
+          📄 Publications</div>
+        <div onclick="toggleResearchFrame('talks-box', 'talks.html')"
+          class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
+          🎤 Talks</div>
+        <div onclick="toggleResearchFrame('projects-box', 'projects.html')"
+          class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
+          💡 Projects</div>
+        <div onclick="toggleResearchFrame('students-box', 'students.html')"
+          class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
+          👨‍🎓 Students</div>
+        <div onclick="toggleResearchFrame('grants-box', 'grants.html')"
+          class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
+          💰 Grants</div>
+        <div onclick="toggleResearchFrame('people-box', 'people.html')"
+          class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
+          👥 People</div>
       </div>
 
       <div id="research-frames" class="glass p-2 rounded-2xl shadow-sm min-h-[600px]">
-        <div id="publications-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
-        <div id="talks-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
-        <div id="projects-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
-        <div id="students-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
-        <div id="grants-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
-        <div id="people-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl" src=""></iframe></div>
-        
+        <div id="publications-box" class="research-frame hidden h-full overflow-y-auto">
+          <ul class="space-y-4">
+            <!-- 1 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">Hierarchical Sparse Plus Low Rank Compression of
+                    LLM</strong>, Aditi Gupta, et. al., CODS 2025.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-1')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-1" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio/review-xmlc.m4a" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            </li>
+
+            <!-- 2 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">Fast and Efficient Modern BERT based
+                    Text-Conditioned Diffusion Model for Medical Image Segmentation</strong>, Siddharth, et. al., CVIP
+                  2025.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-2')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-2" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio-2.mp3" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 3 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">Alignment and Safety of Diffusion Models via
+                    Reinforcement Learning and Reward Modeling: A Survey</strong>, P. Lamba, et. al., under submission,
+                  arXiv 2025.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-3')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-3" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio/review-xmlc.m4a" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 4 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">A Survey of Safe Reinforcement Learning and
+                    Constrained MDPs</strong>, A. Kushwaha, et. al., under submission, arXiv 2025.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-4')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-4" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio/review-xmlc.m4a" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 5 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">Review of Extreme Multilabel
+                    Classification</strong>, A. Dasgupta, S. Katyan, S. Das, P. Kumar, under submission, arXiv 2024.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-5')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-5" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio/review-xmlc.m4a" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 6 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">A Gauss-Newton Approach for min-max Problem in
+                    GAN</strong>, N. Mishra, P. Jawanpuria, B. Mishra, P. Kumar, IJCNN 2024. (Rank A)
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-6')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-6" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio-2.mp3" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 7 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">A label-free sensing of creatinine using radio
+                    frequency-driven lab-on-chip (LOC) system</strong>, S. Sinha, et al., Engineering Express Journal,
+                  IOP Science, 2024.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-7')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-7" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio-3.mp3" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 8 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">Qualitative Data Augmentation for Performance
+                    Prediction in VLSI circuits</strong>, P. Srivastava, P. Kumar, Z. Abbas, Elsevier, VLSI Integration
+                  Journal, 2024.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-8')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-8" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio-5.mp3" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 9 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">Riemannian Hamiltonian methods for min-max
+                    optimization on manifolds</strong>, A. Han, et al., SIAM J. Optimization 2023.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-9')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-9" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="audio/min-max-riemannian.m4a" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+
+            <!-- 10 -->
+            <li class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <div class="flex-1 text-gray-800 dark:text-gray-200">
+                  <strong class="text-orange-600 dark:text-orange-400">alphaElimination: Using deep reinforcement
+                    learning for sparse Gaussian Elimination</strong>, A. Dasgupta, P. Kumar, ECML 2023.
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="https://github.com/misterpawan" target="_blank"
+                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold hover:bg-green-200 transition">Code</a>
+                  <a href="https://www.arxiv.org" target="_blank"
+                    class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold hover:bg-blue-200 transition">PDF</a>
+                  <button onclick="toggleAudio('audio-10')"
+                    class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold hover:bg-purple-200 transition">Audio</button>
+                  <a href="https://alpha.github.io" target="_blank"
+                    class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold hover:bg-yellow-200 transition">More</a>
+                </div>
+              </div>
+              <div id="audio-10" class="hidden mt-4">
+                <audio controls class="w-full rounded-lg bg-gray-100 dark:bg-gray-700 p-2">
+                  <source src="alpha-elimination2.m4a" type="audio/mpeg">
+                </audio>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div id="talks-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl"
+            src=""></iframe></div>
+        <div id="projects-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl"
+            src=""></iframe></div>
+        <div id="students-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl"
+            src=""></iframe></div>
+        <div id="grants-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl"
+            src=""></iframe></div>
+        <div id="people-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl"
+            src=""></iframe></div>
+
         <!-- Default placeholder -->
         <div id="research-placeholder" class="flex items-center justify-center h-[400px] text-gray-400">
           Select a category above to view details
@@ -245,8 +573,9 @@
         <h2 class="text-2xl font-bold mb-6">Software Projects</h2>
         <div class="space-y-4">
           <a href="https://www.github.com/misterpawan" target="_blank"
-             class="block bg-gradient-to-r from-orange-100 to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:from-orange-200 hover:to-orange-100 p-6 rounded-xl shadow-sm hover:shadow-md transition group">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-700">Solver for Bundle Adjustment</h3>
+            class="block bg-gradient-to-r from-orange-100 to-orange-50 dark:from-gray-800 dark:to-gray-700 hover:from-orange-200 hover:to-orange-100 p-6 rounded-xl shadow-sm hover:shadow-md transition group">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-700">Solver for Bundle
+              Adjustment</h3>
             <p class="text-gray-600 dark:text-gray-400 mt-1">Efficient optimization solver implementation.</p>
           </a>
           <!-- Add more software links here -->
@@ -259,8 +588,8 @@
       <div id="blog-app">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
           <div v-for="category in mainCategories" :key="category.name"
-               class="glass p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition transform hover:-translate-y-1"
-               @click="selectCategory(category.name)">
+            class="glass p-6 rounded-xl shadow-sm hover:shadow-lg cursor-pointer transition transform hover:-translate-y-1"
+            @click="selectCategory(category.name)">
             <h2 class="text-xl font-bold text-gray-800 dark:text-white">{{ category.name }}</h2>
             <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">{{ category.desc }}</p>
           </div>
@@ -274,19 +603,21 @@
 
           <div v-if="subCategories[selectedCategory]" class="flex flex-wrap gap-3 mb-6">
             <span v-for="sub in subCategories[selectedCategory]" :key="sub"
-                  class="px-4 py-2 rounded-full text-sm cursor-pointer transition"
-                  :class="selectedSub === sub ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'"
-                  @click="selectSubCategory(sub)">{{ sub }}</span>
+              class="px-4 py-2 rounded-full text-sm cursor-pointer transition"
+              :class="selectedSub === sub ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'"
+              @click="selectSubCategory(sub)">{{ sub }}</span>
           </div>
 
           <div class="space-y-4">
-            <div v-for="blog in filteredBlogs" :key="blog.title"
-                 class="glass p-6 rounded-xl shadow-sm">
+            <div v-for="blog in filteredBlogs" :key="blog.title" class="glass p-6 rounded-xl shadow-sm">
               <div class="flex justify-between items-start gap-4 cursor-pointer" @click="blog.open = !blog.open">
                 <h3 class="text-xl font-semibold hover:text-orange-600 transition">{{ blog.title }}</h3>
-                <span class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-1 rounded-full whitespace-nowrap">{{ blog.category }}</span>
+                <span
+                  class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-1 rounded-full whitespace-nowrap">{{
+                  blog.category }}</span>
               </div>
-              <div v-show="blog.open" class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed border-t pt-4 border-gray-200 dark:border-gray-700">
+              <div v-show="blog.open"
+                class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed border-t pt-4 border-gray-200 dark:border-gray-700">
                 <p>{{ blog.content }}</p>
               </div>
             </div>
@@ -304,7 +635,8 @@
 
   <!-- Back to Top -->
   <div id="back-to-top" class="fixed bottom-6 right-6 z-50 hidden">
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg transition transform hover:scale-110">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+      class="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg transition transform hover:scale-110">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
       </svg>
@@ -312,7 +644,7 @@
   </div>
 
   <!-- SCRIPTS -->
-  
+
   <!-- 1. Main Navigation -->
   <script>
     function showSection(id) {
@@ -320,7 +652,7 @@
       document.querySelectorAll('.content-section').forEach(el => {
         el.classList.add('hidden');
       });
-      
+
       // Show target
       const target = document.getElementById(id + '-section');
       if (target) {
@@ -346,7 +678,7 @@
       AOS.init({ duration: 800, once: true });
       // Show About by default
       showSection('about');
-      
+
       // Back to top visibility
       window.addEventListener('scroll', () => {
         const btn = document.getElementById('back-to-top');
@@ -377,10 +709,10 @@
     function toggleResearchFrame(id, src) {
       // Hide placeholder
       document.getElementById('research-placeholder').classList.add('hidden');
-      
+
       // Hide all frames
       document.querySelectorAll('.research-frame').forEach(el => el.classList.add('hidden'));
-      
+
       // Show target
       const el = document.getElementById(id);
       if (el) {
@@ -401,8 +733,8 @@
         { course: 'MA8.401 Topics in Applied Optimization', semesters: ['Monsoon 2024', 'Monsoon 2022', 'Monsoon 2021', 'Monsoon 2020', 'Monsoon 2018'] },
         { course: 'MA6.302 PG-Linear Algebra', semesters: ['Monsoon 2024'] },
         { course: 'MA8.401 Mathematics of Generative Models', semesters: ['Spring 2024', 'Spring 2023'] },
-        { course: 'CS1.306 Numerical Algorithms', semesters: ['Spring 2025','Spring 2024'] },
-        { course: 'CS1.501 Advanced Optimization: Theory and Applications', semesters: ['Spring 2025','Spring 2023', 'Spring 2022', 'Spring 2021'] },
+        { course: 'CS1.306 Numerical Algorithms', semesters: ['Spring 2025', 'Spring 2024'] },
+        { course: 'CS1.501 Advanced Optimization: Theory and Applications', semesters: ['Spring 2025', 'Spring 2023', 'Spring 2022', 'Spring 2021'] },
         { course: 'MA6.101 Probability and Statistics', semesters: ['Monsoon 2021', 'Monsoon 2020'] },
         { course: 'MA01.101 Discrete Structures (2 sessions)', semesters: ['Monsoon 2020', 'Monsoon 2019'] },
         { course: 'CSE504 Introduction to Parallel Scientific Computing', semesters: ['Spring 2020', 'Spring 2019', 'Spring 2018', 'Spring 2017'] },
@@ -430,7 +762,7 @@
         const header = document.createElement('div');
         header.className = `glass p-4 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition flex justify-between items-center ${isCurrent ? 'border-l-4 border-green-500' : ''}`;
         header.innerHTML = `<h2 class="text-lg font-semibold">${item.course}</h2>`;
-        
+
         if (isCurrent) {
           const tag = document.createElement('span');
           tag.className = 'text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded-full';
@@ -453,17 +785,17 @@
             const sectionWrapper = document.createElement('div');
             sectionWrapper.className = 'bg-gray-50 dark:bg-gray-900 p-2 rounded text-center cursor-pointer hover:shadow transition text-sm';
             sectionWrapper.textContent = section;
-            
+
             // Placeholder dropdown
             const dropdown = document.createElement('div');
             dropdown.className = 'hidden mt-2 text-xs text-left space-y-1 p-2 bg-white dark:bg-gray-800 rounded shadow absolute z-10';
             dropdown.textContent = "Coming soon...";
-            
+
             sectionWrapper.addEventListener('click', (e) => {
               e.stopPropagation();
               alert(section + ' content for ' + semester);
             });
-            
+
             contentDiv.appendChild(sectionWrapper);
           });
 
@@ -537,4 +869,5 @@
   </script>
 
 </body>
+
 </html>
