@@ -915,18 +915,37 @@
             sectionWrapper.className = 'bg-gray-50 dark:bg-gray-900 p-2 rounded text-center cursor-pointer hover:shadow transition text-sm';
             sectionWrapper.textContent = section;
 
-            // Placeholder dropdown
+            // Create dropdown container
             const dropdown = document.createElement('div');
-            dropdown.className = 'hidden mt-2 text-xs text-left space-y-1 p-2 bg-white dark:bg-gray-800 rounded shadow absolute z-10';
-            dropdown.textContent = "Coming soon...";
+            dropdown.className = 'hidden mt-2 text-xs text-left space-y-1 p-2 bg-white dark:bg-gray-800 rounded shadow absolute z-10 min-w-[150px] border border-gray-200 dark:border-gray-700';
+
+            if (section === 'Illustrations' && item.illustrations) {
+              item.illustrations.forEach(ill => {
+                const link = document.createElement('a');
+                link.href = ill.url;
+                link.target = '_blank';
+                link.className = 'block px-2 py-1 hover:bg-orange-50 dark:hover:bg-gray-700 rounded text-gray-700 dark:text-gray-300';
+                link.textContent = ill.title;
+                dropdown.appendChild(link);
+              });
+            } else {
+              dropdown.textContent = "Coming soon...";
+            }
+
+            sectionWrapper.appendChild(dropdown);
 
             sectionWrapper.addEventListener('click', (e) => {
               e.stopPropagation();
-              if (section === 'Illustrations' && item.illustrations) {
-                window.open(item.illustrations[0].url, '_blank');
-                return;
+              // Toggle this dropdown
+              const isHidden = dropdown.classList.contains('hidden');
+              // Hide all other dropdowns first (optional, but good for UX)
+              document.querySelectorAll('.section-dropdown').forEach(d => d.classList.add('hidden'));
+
+              if (isHidden) {
+                dropdown.classList.remove('hidden');
+              } else {
+                dropdown.classList.add('hidden');
               }
-              alert(section + ' content for ' + semester);
             });
 
             contentDiv.appendChild(sectionWrapper);
