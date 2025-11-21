@@ -275,7 +275,7 @@
         <div onclick="toggleResearchFrame('students-box', 'students.html')"
           class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
           👨‍🎓 Students</div>
-        <div onclick="toggleResearchFrame('grants-box', 'grants.html')"
+        <div onclick="toggleResearchFrame('grants-box')"
           class="glass p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer text-center font-medium hover:bg-orange-50 dark:hover:bg-gray-800">
           💰 Grants</div>
         <div onclick="toggleResearchFrame('people-box')"
@@ -548,8 +548,39 @@
             src=""></iframe></div>
         <div id="students-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl"
             src=""></iframe></div>
-        <div id="grants-box" class="research-frame hidden h-full"><iframe class="w-full h-[800px] rounded-xl"
-            src=""></iframe></div>
+        <div id="grants-box" class="research-frame hidden h-full overflow-y-auto">
+          <div class="p-6 text-sm leading-relaxed space-y-4 fade-in">
+            <div class="text-center">
+              <p
+                class="bg-orange-100 dark:bg-orange-900/30 text-orange-900 dark:text-orange-100 px-4 py-2 rounded-lg shadow inline-block font-semibold">
+                <strong>Total:</strong> 2.9 Crores (350K USD)! PI/Co-PI Combined
+              </p>
+            </div>
+
+            <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
+              <li><strong>Fellowships:</strong> CSIR/UGC PhD Fellowships (by Students) (Machine Learning and
+                Optimization), 2022-now.</li>
+              <li><strong>Research Grant:</strong> Qualcomm Innovation Fellowship Grant (Deep Learning), 2022-now.</li>
+              <li><strong>Research Grant:</strong> KCIS Challange Main Grant (Optimization methods and ML for
+                Biosensing), 2021-now.</li>
+              <li><strong>Research Grant:</strong> IHUB-Data (Optimization methods for Healthcare and Transportation),
+                2021-now.</li>
+              <li><strong>Research Grant:</strong> IHUB-Data (Diffusion Models for Healthcare Applications), 2022-now.
+              </li>
+              <li><strong>Research Grant:</strong> MAPG (Microsoft Academic Partnership) (Optimization methods for Deep
+                Learning), 2021-now.</li>
+              <li><strong>Research Grant:</strong> Kohli Seed Grant (with Dr. Abbas, et. al.) (BioSensing chip with
+                AI/ML), 2021-now.</li>
+              <li><strong>Research Grant:</strong> Ripple Center of Excellence Grant (Distributed Optimization, RL, and
+                Blockchain), 2021-now.</li>
+              <li><strong>Travel Grant:</strong> INAE Travel Grant, 2020.</li>
+              <li><strong>Research Grant:</strong> DST MATRICS: Mathematical Research Impact Centric Support
+                (Optimization Methods and Solvers for Saddle Point Problems), 2018-2021.</li>
+              <li><strong>Research Grant:</strong> ERCIM: European Research Consortium for Informatics and Mathematics
+                (High Performance Computing), 2012-2013.</li>
+            </ul>
+          </div>
+        </div>
         <div id="people-box" class="research-frame hidden h-full overflow-y-auto">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2">
             <a href="https://odi.inf.ethz.ch/publication" target="_blank"
@@ -819,7 +850,14 @@
       const currentYear = new Date().getFullYear();
       const data = [
         { course: 'MA8.401 Topics in Applied Optimization', semesters: ['Monsoon 2024', 'Monsoon 2022', 'Monsoon 2021', 'Monsoon 2020', 'Monsoon 2018'] },
-        { course: 'MA6.302 PG-Linear Algebra', semesters: ['Monsoon 2024'] },
+        {
+          course: 'MA6.302 PG-Linear Algebra',
+          semesters: ['Monsoon 2024'],
+          illustrations: [{
+            title: 'Gaussian Elimination',
+            url: 'teaching/illustrations/linear-algebra/gaussian.html'
+          }]
+        },
         { course: 'MA8.401 Mathematics of Generative Models', semesters: ['Spring 2024', 'Spring 2023'] },
         { course: 'CS1.306 Numerical Algorithms', semesters: ['Spring 2025', 'Spring 2024'] },
         { course: 'CS1.501 Advanced Optimization: Theory and Applications', semesters: ['Spring 2025', 'Spring 2023', 'Spring 2022', 'Spring 2021'] },
@@ -869,7 +907,10 @@
           const contentDiv = document.createElement('div');
           contentDiv.className = 'hidden mt-2 grid grid-cols-1 sm:grid-cols-4 gap-4 pl-2';
 
-          ['Lectures', 'Assignments', 'Videos', 'Syllabus'].forEach(section => {
+          const sections = ['Lectures', 'Assignments', 'Videos', 'Syllabus'];
+          if (item.illustrations) sections.push('Illustrations');
+
+          sections.forEach(section => {
             const sectionWrapper = document.createElement('div');
             sectionWrapper.className = 'bg-gray-50 dark:bg-gray-900 p-2 rounded text-center cursor-pointer hover:shadow transition text-sm';
             sectionWrapper.textContent = section;
@@ -881,6 +922,10 @@
 
             sectionWrapper.addEventListener('click', (e) => {
               e.stopPropagation();
+              if (section === 'Illustrations' && item.illustrations) {
+                window.open(item.illustrations[0].url, '_blank');
+                return;
+              }
               alert(section + ' content for ' + semester);
             });
 
