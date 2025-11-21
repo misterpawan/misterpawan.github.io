@@ -27,9 +27,383 @@
 
     <!-- Load and Render the Component -->
     <script type="text/babel" data-type="module">
-        import React from 'react';
+        import React, { useState, useEffect, useRef } from 'react';
         import { createRoot } from 'react-dom/client';
-        import App from './gaussian.js';
+        import { ArrowRight, RefreshCw, Check, Calculator, BookOpen, Play, RotateCcw, ChevronRight, ChevronLeft } from 'lucide-react';
+
+        // Utility to deep copy matrix
+        const copyMatrix = (m) => m.map(row => [...row]);
+
+        // Initial solvable system (x=1, y=2, z=3)
+        const INITIAL_MATRIX = [
+            [1, 1, 1, 6],
+            [2, 1, -1, 1],
+            [2, -3, 1, -1]
+        ];
+
+        // Tutorial steps data
+        const TUTORIAL_STEPS = [
+            {
+                title: "Welcome to Gaussian Elimination!",
+                description: "Imagine you have three equations with three unknowns (x, y, z). Our goal is to simplify these equations step-by-step until the answers reveal themselves. We do this by manipulating a 'Matrix' - a grid of numbers representing the equations.",
+                hint: "Click 'Next' to start the mission.",
+                targetState: null
+            },
+            {
+                title: "The Goal: The Staircase",
+                description: "We want to create a 'staircase' of zeros in the bottom-left corner (Row Echelon Form). Once we have zeros in these positions, solving for z, then y, then x becomes easy!",
+                hint: "Observe the target zeros highlighted in red.",
+                highlightIndices: [[1, 0], [2, 0], [2, 1]],
+                targetState: null
+            },
+            {
+                title: "Step 1: Target Row 2, Column 1",
+                description: "We need to turn the '2' in Row 2, Column 1 into a zero. We can do this by subtracting 2 times Row 1 from Row 2.",
+                hint: "Use the row operation controls to set R2 = R2 - 2 * R1.",
+                targetOperation: { targetRow: 1, sourceRow: 0, multiplier: -2 }, // 0-indexed
+                highlightIndices: [[1, 0]]
+            },
+            {
+                title: "Step 2: Target Row 3, Column 1",
+                description: "Great! Now we need to eliminate the '2' in Row 3, Column 1. Let's use Row 1 again.",
+                hint: "Set R3 = R3 - 2 * R1.",
+                targetOperation: { targetRow: 2, sourceRow: 0, multiplier: -2 },
+                highlightIndices: [[2, 0]]
+            },
+            {
+                title: "Step 3: Target Row 3, Column 2",
+                description: "Almost there! We have a column of zeros. Now look at Row 3, Column 2. We need to zero out that '-5' using Row 2.",
+                hint: "Notice Row 2 has a '-1' in that column. If we multiply Row 2 by -5 and add it to Row 3, what happens? Set R3 = R3 - 5 * R2.",
+                targetOperation: { targetRow: 2, sourceRow: 1, multiplier: -5 },
+                highlightIndices: [[2, 1]]
+            },
+            {
+                title: "Mission Accomplished: Back Substitution",
+                description: "Look at the last row: [0, 0, 14, 42]. This means 14z = 42, so z = 3! Now we can work backwards to find y and x. This is called Back Substitution.",
+                hint: "You've converted the matrix to Row Echelon Form. Calculating final answers...",
+                isComplete: true
+            }
+        ];
+
+        function App() {
+            const [matrix, setMatrix] = useState(copyMatrix(INITIAL_MATRIX));
+            const [step, setStep] = useState(0);
+            const [feedback, setFeedback] = useState("");
+            const [showConfetti, setShowConfetti] = useState(false);
+
+            // Operation State
+            const [targetRow, setTargetRow] = useState(1); // 0, 1, 2
+            const [sourceRow, setSourceRow] = useState(0); // 0, 1, 2
+            const [multiplier, setMultiplier] = useState(-2);
+
+            const containerRef = useRef(null);
+
+            const currentTutorial = TUTORIAL_STEPS[step];
+
+            const resetMatrix = () => {
+                setMatrix(copyMatrix(INITIAL_MATRIX));
+                setStep(0);
+                setFeedback("");
+                setShowConfetti(false);
+                // Reset inputs
+                setTargetRow(1);
+                setSourceRow(0);
+                setMultiplier(-2);
+            };
+
+            const performOperation = () => {
+                if (targetRow === sourceRow) {
+                    setFeedback("Target and Source rows cannot be the same.");
+                    return;
+                }
+
+                const newMatrix = copyMatrix(matrix);
+                const targetR = parseInt(targetRow);
+                const sourceR = parseInt(sourceRow);
+                const mult = parseFloat(multiplier);
+
+                for (let i = 0; i < 4; i++) {
+                    newMatrix[targetR][i] = newMatrix[targetR][i] + (mult * newMatrix[sourceR][i]);
+                }
+
+                setMatrix(newMatrix);
+
+                // Check if this move matches the tutorial expectation
+                if (currentTutorial.targetOperation) {
+                    const { targetRow: t, sourceRow: s, multiplier: m } = currentTutorial.targetOperation;
+                    if (targetR === t && sourceR === s && mult === m) {
+                        setFeedback("Correct! Moving to next step...");
+                        setTimeout(() => {
+                            const nextStep = step + 1;
+                            setStep(nextStep);
+                            setFeedback("");
+
+                            // Auto-set controls for the next step
+                            const nextTutorial = TUTORIAL_STEPS[nextStep];
+                            if (nextTutorial && nextTutorial.targetOperation) {
+                                setTargetRow(nextTutorial.targetOperation.targetRow);
+                                setSourceRow(nextTutorial.targetOperation.sourceRow);
+                                setMultiplier(nextTutorial.targetOperation.multiplier);
+                            }
+                        }, 1500);
+                    } else {
+                        setFeedback("That operation worked mathematically, but it wasn't the specific move requested by the tutorial. Try resetting if you get stuck!");
+                    }
+                }
+            };
+
+            // Helper to format numbers nicely (avoid floating point mess)
+            const formatNumber = (num) => {
+                if (Number.isInteger(num)) return num;
+                return num.toFixed(1);
+            };
+
+            const handleNext = () => {
+                if (step < TUTORIAL_STEPS.length - 1) {
+                    const nextStep = step + 1;
+                    setStep(nextStep);
+
+                    // Smartly pre-set controls for the next step if the user skips ahead
+                    const nextTutorial = TUTORIAL_STEPS[nextStep];
+                    if (nextTutorial && nextTutorial.targetOperation) {
+                        setTargetRow(nextTutorial.targetOperation.targetRow);
+                        setSourceRow(nextTutorial.targetOperation.sourceRow);
+                        setMultiplier(nextTutorial.targetOperation.multiplier);
+                    }
+                }
+            };
+
+            const handlePrev = () => {
+                if (step > 0) setStep(step - 1);
+            };
+
+            const isHighlighted = (r, c) => {
+                if (!currentTutorial.highlightIndices) return false;
+                return currentTutorial.highlightIndices.some(([hr, hc]) => hr === r && hc === c);
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200">
+
+                    {/* Header */}
+                    <header className="bg-blue-600 text-white p-4 shadow-lg">
+                        <div className="max-w-5xl mx-auto flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                                <Calculator className="w-8 h-8" />
+                                <h1 className="text-2xl font-bold tracking-tight">Gaussian Elimination Master Class</h1>
+                            </div>
+                            <button
+                                onClick={resetMatrix}
+                                className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-full transition-colors text-sm font-medium"
+                            >
+                                <RotateCcw className="w-4 h-4" />
+                                <span>Restart Tutorial</span>
+                            </button>
+                        </div>
+                    </header>
+
+                    <main className="max-w-5xl mx-auto p-4 md:p-8 flex flex-col lg:flex-row gap-8">
+
+                        {/* Left Panel: Matrix Visualization */}
+                        <div className="flex-1 order-2 lg:order-1">
+                            <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                                <div className="bg-slate-100 p-4 border-b border-slate-200 flex justify-between items-center">
+                                    <h2 className="font-semibold text-slate-700 flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded-full bg-red-500" />
+                                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                                        <div className="w-3 h-3 rounded-full bg-green-500" />
+                                        <span className="ml-2">Current System Matrix</span>
+                                    </h2>
+                                    <span className="text-xs font-mono text-slate-500">Augmented Matrix [A|B]</span>
+                                </div>
+
+                                <div className="p-8 flex justify-center bg-slate-50 relative">
+                                    {/* Brackets */}
+                                    <div className="absolute top-8 bottom-8 left-10 w-4 border-l-4 border-t-4 border-b-4 border-slate-800 rounded-l-xl"></div>
+                                    <div className="absolute top-8 bottom-8 right-10 w-4 border-r-4 border-t-4 border-b-4 border-slate-800 rounded-r-xl"></div>
+
+                                    <div className="grid grid-cols-4 gap-4 md:gap-6 relative z-10">
+                                        {/* Column Headers (Implicit variables) */}
+                                        <div className="text-center text-slate-400 font-mono text-sm mb-2">x</div>
+                                        <div className="text-center text-slate-400 font-mono text-sm mb-2">y</div>
+                                        <div className="text-center text-slate-400 font-mono text-sm mb-2">z</div>
+                                        <div className="text-center text-slate-400 font-mono text-sm mb-2 border-l border-dashed border-slate-300 pl-2">=</div>
+
+                                        {matrix.map((row, rIndex) => (
+                                            <React.Fragment key={rIndex}>
+                                                {row.map((val, cIndex) => {
+                                                    const highlight = isHighlighted(rIndex, cIndex);
+                                                    const isResultCol = cIndex === 3;
+                                                    return (
+                                                        <div
+                                                            key={`${rIndex}-${cIndex}`}
+                                                            className={`
+                                    w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-lg md:text-xl font-bold rounded-lg transition-all duration-500
+                                    ${highlight ? 'bg-red-100 text-red-600 ring-2 ring-red-400 scale-110' : 'bg-white text-slate-700 shadow-sm'}
+                                    ${isResultCol ? 'border-l-2 border-slate-200' : ''}
+                                  `}
+                                                        >
+                                                            {formatNumber(val)}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Equation Translation */}
+                                <div className="p-4 bg-white border-t border-slate-100 text-center">
+                                    <p className="text-sm text-slate-500 mb-2 font-medium">Translates to equations:</p>
+                                    <div className="space-y-1 text-sm font-mono text-slate-600">
+                                        {matrix.map((row, i) => (
+                                            <div key={i} className={i === step ? "opacity-100 font-bold text-blue-600" : "opacity-60"}>
+                                                {`${formatNumber(row[0])}x + ${formatNumber(row[1])}y + ${formatNumber(row[2])}z = ${formatNumber(row[3])}`}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Panel: Controls & Tutorial */}
+                        <div className="w-full lg:w-96 flex flex-col gap-6 order-1 lg:order-2">
+
+                            {/* Tutorial Card */}
+                            <div className="bg-gradient-to-br from-indigo-600 to-blue-700 text-white rounded-2xl shadow-xl p-6 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-10">
+                                    <BookOpen className="w-24 h-24" />
+                                </div>
+
+                                {/* Added 'relative z-10' here to ensure buttons are above the background icon */}
+                                <div className="flex justify-between items-start mb-4 relative z-10">
+                                    <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+                                        Step {step + 1} / {TUTORIAL_STEPS.length}
+                                    </span>
+                                    <div className="flex gap-2">
+                                        <button onClick={handlePrev} disabled={step === 0} className="p-1 hover:bg-white/20 rounded disabled:opacity-30">
+                                            <ChevronLeft className="w-5 h-5" />
+                                        </button>
+                                        <button onClick={handleNext} disabled={step === TUTORIAL_STEPS.length - 1} className="p-1 hover:bg-white/20 rounded disabled:opacity-30">
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <h2 className="text-xl font-bold mb-2 relative z-10">{currentTutorial.title}</h2>
+                                <p className="text-blue-100 text-sm leading-relaxed mb-4 relative z-10">
+                                    {currentTutorial.description}
+                                </p>
+
+                                <div className="bg-blue-800/50 rounded-lg p-3 flex items-start gap-3 border border-blue-400/30 relative z-10">
+                                    <div className="bg-yellow-400 rounded-full p-1 mt-0.5 shrink-0">
+                                        <div className="w-2 h-2 bg-yellow-600 rounded-full" />
+                                    </div>
+                                    <p className="text-xs font-medium text-yellow-100 italic">
+                                        Hint: {currentTutorial.hint}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Controls */}
+                            {currentTutorial.targetOperation && !currentTutorial.isComplete && (
+                                <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+                                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Row Operations</h3>
+
+                                    <div className="space-y-4">
+                                        {/* Operation Builder */}
+                                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                            <label className="block text-xs font-semibold text-slate-500 mb-3 text-center">
+                                                Operation: <span className="text-blue-600">Row {parseInt(targetRow) + 1}</span> = <span className="text-blue-600">Row {parseInt(targetRow) + 1}</span> + ( <span className="text-green-600">k</span> × <span className="text-purple-600">Row {parseInt(sourceRow) + 1}</span> )
+                                            </label>
+
+                                            <div className="flex items-center justify-center gap-2 mb-4">
+                                                {/* Target Row */}
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-[10px] text-slate-400 font-bold mb-1">TARGET</span>
+                                                    <select
+                                                        value={targetRow}
+                                                        onChange={(e) => setTargetRow(e.target.value)}
+                                                        className="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-16 p-2.5 font-bold text-center"
+                                                    >
+                                                        <option value={0}>R1</option>
+                                                        <option value={1}>R2</option>
+                                                        <option value={2}>R3</option>
+                                                    </select>
+                                                </div>
+
+                                                <span className="text-slate-400 text-xl font-light">+</span>
+
+                                                {/* Multiplier Input */}
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-[10px] text-green-500 font-bold mb-1">MULTIPLIER (k)</span>
+                                                    <input
+                                                        type="number"
+                                                        value={multiplier}
+                                                        onChange={(e) => setMultiplier(e.target.value)}
+                                                        className="bg-white border border-green-200 text-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-20 p-2.5 font-bold text-center"
+                                                    />
+                                                </div>
+
+                                                <span className="text-slate-400 text-xl font-light">×</span>
+
+                                                {/* Source Row */}
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-[10px] text-purple-500 font-bold mb-1">SOURCE</span>
+                                                    <select
+                                                        value={sourceRow}
+                                                        onChange={(e) => setSourceRow(e.target.value)}
+                                                        className="bg-white border border-purple-200 text-purple-700 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-16 p-2.5 font-bold text-center"
+                                                    >
+                                                        <option value={0}>R1</option>
+                                                        <option value={1}>R2</option>
+                                                        <option value={2}>R3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <button
+                                                onClick={performOperation}
+                                                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-slate-200 transition-transform active:scale-95 flex items-center justify-center gap-2"
+                                            >
+                                                <Play className="w-4 h-4 fill-current" />
+                                                Execute Operation
+                                            </button>
+                                        </div>
+
+                                        {feedback && (
+                                            <div className={`p-3 rounded-lg text-sm font-medium animate-pulse ${feedback.includes("Correct") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                                                {feedback}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Completion View */}
+                            {currentTutorial.isComplete && (
+                                <div className="bg-green-50 rounded-2xl shadow-lg border border-green-200 p-6 text-center">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-600 mb-4">
+                                        <Check className="w-8 h-8" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-green-800 mb-2">System Solved!</h3>
+                                    <div className="bg-white rounded-xl p-4 inline-block text-left shadow-sm mb-4">
+                                        <div className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-lg">
+                                            <span className="text-slate-400">z = 42/14</span> <span className="font-bold text-green-600">= 3</span>
+                                            <span className="text-slate-400">y = (-11 - (-3)(3))/-1</span> <span className="font-bold text-green-600">= 2</span>
+                                            <span className="text-slate-400">x = 6 - 2 - 3</span> <span className="font-bold text-green-600">= 1</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-green-700 text-sm">
+                                        You successfully transformed the matrix into Row Echelon form and solved for the variables.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </main>
+                </div>
+            );
+        }
 
         const root = createRoot(document.getElementById('root'));
         root.render(<App />);
