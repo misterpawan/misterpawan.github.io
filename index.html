@@ -179,6 +179,8 @@
         class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Software</button>
       <button onclick="showSection('blogs')"
         class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Blogs</button>
+      <button onclick="showSection('apps')"
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Apps</button>
     </div>
   </nav>
 
@@ -741,6 +743,42 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPS SECTION -->
+    <section id="apps-section" class="content-section hidden fade-in">
+      <div class="glass p-8 rounded-2xl shadow-sm">
+        <h2 class="text-2xl font-bold mb-6">My Apps</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <a href="https://flowread-pdf-290024433506.us-west1.run.app/" target="_blank"
+            class="group block glass overflow-hidden rounded-xl hover:shadow-xl transition transform hover:-translate-y-1">
+            <div class="relative h-48 overflow-hidden">
+              <img src="flowread-teaser.jpg" alt="FlowRead"
+                class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+              <div
+                class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition duration-300 flex items-center justify-center">
+                <span
+                  class="opacity-0 group-hover:opacity-100 bg-white text-orange-600 px-4 py-2 rounded-full font-bold shadow-lg transform scale-90 group-hover:scale-100 transition">Launch
+                  App 🚀</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-orange-600 transition">
+                FlowRead</h3>
+              <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                Navigate. Annotate. Organize. Your PDF Workflow, Reimagined.
+              </p>
+              <div class="flex items-center gap-2 text-sm font-medium text-orange-600">
+                <span>Try it now</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-1 transition"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </section>
