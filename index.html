@@ -1019,37 +1019,47 @@
   <!-- 1. Main Navigation -->
   <script>
     function showSection(id) {
-      // Hide all sections
+      const target = document.getElementById(id + '-section');
+      if (!target) return;
+
+      const isHidden = target.classList.contains('hidden');
+
+      // 1. Collapse ALL sections
       document.querySelectorAll('.content-section').forEach(el => {
         el.classList.add('hidden');
       });
 
-      // Show target
-      const target = document.getElementById(id + '-section');
-      if (target) {
-        target.classList.remove('hidden');
-        // Scroll slightly if needed, or just to top of main
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      // Update active state on buttons
+      // 2. Reset ALL buttons
       document.querySelectorAll('.nav-btn').forEach(btn => {
-        if (btn.getAttribute('onclick').includes(id)) {
-          btn.classList.add('bg-orange-500', 'text-white', 'shadow-md');
-          btn.classList.remove('hover:bg-orange-100', 'dark:hover:bg-gray-700');
-        } else {
-          btn.classList.remove('bg-orange-500', 'text-white', 'shadow-md');
-          btn.classList.add('hover:bg-orange-100', 'dark:hover:bg-gray-700');
-        }
+        btn.classList.remove('bg-orange-500', 'text-white', 'shadow-md');
+        btn.classList.add('hover:bg-orange-100', 'dark:hover:bg-gray-700');
       });
+
+      // 3. If it was hidden, Expand it (Toggle behavior)
+      if (isHidden) {
+        target.classList.remove('hidden');
+
+        // Activate Button
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          if (btn.getAttribute('onclick').includes(`'${id}'`)) {
+            btn.classList.add('bg-orange-500', 'text-white', 'shadow-md');
+            btn.classList.remove('hover:bg-orange-100', 'dark:hover:bg-gray-700');
+          }
+        });
+
+        // Scroll to focus
+        setTimeout(() => {
+          const yOffset = -120; // Offset for sticky header/nav
+          const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }, 50);
+      }
     }
 
     // Initialize AOS
     document.addEventListener('DOMContentLoaded', () => {
       AOS.init({ duration: 800, once: true });
-      // Show About by default
-      showSection('about');
-
+      // All sections collapsed by default
       // Back to top visibility
       window.addEventListener('scroll', () => {
         const btn = document.getElementById('back-to-top');
