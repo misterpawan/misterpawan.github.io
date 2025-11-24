@@ -1728,7 +1728,7 @@
 
         // Scroll to focus
         setTimeout(() => {
-          const yOffset = -120; // Offset for sticky header/nav
+          const yOffset = -180; // Offset for sticky header/nav (increased for top-20 nav)
           const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
           window.scrollTo({ top: y, behavior: 'smooth' });
         }, 50);
