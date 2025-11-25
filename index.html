@@ -1681,7 +1681,7 @@
               </div>
               <div v-show="blog.open"
                 class="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed border-t pt-4 border-gray-200 dark:border-gray-700">
-                <p>{{ blog.content }}</p>
+                <p v-html="blog.content"></p>
               </div>
             </div>
           </div>
