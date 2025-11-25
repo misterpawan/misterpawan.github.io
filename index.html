@@ -2258,7 +2258,10 @@
       },
       computed: {
         filteredBlogs() {
-          if (!this.selectedSub) return this.blogs.filter(b => b.category.toLowerCase().includes(this.selectedCategory.toLowerCase()));
+          if (!this.selectedSub) {
+            const subs = this.subCategories[this.selectedCategory];
+            return this.blogs.filter(b => subs && subs.includes(b.category));
+          }
           return this.blogs.filter(b => b.category === this.selectedSub);
         }
       },
