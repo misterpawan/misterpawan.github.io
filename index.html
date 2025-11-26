@@ -1747,12 +1747,12 @@
             </div>
 
             <script>
-              let bundleInterval;
-              let currentBundleSlide = 0;
+              let marlInterval;
+              let currentMarlSlide = 0;
 
-              function showBundleSlide(index) {
-                const slides = document.querySelectorAll('.bundle-slide');
-                const dots = document.querySelectorAll('.bundle-dot');
+              function showMarlSlide(index) {
+                const slides = document.querySelectorAll('.marl-slide');
+                const dots = document.querySelectorAll('.marl-dot');
 
                 if (!slides.length) return;
 
@@ -1760,7 +1760,7 @@
                 if (index >= slides.length) index = 0;
                 if (index < 0) index = slides.length - 1;
 
-                currentBundleSlide = index;
+                currentMarlSlide = index;
 
                 // Update Slides
                 slides.forEach((slide, i) => {
@@ -1777,36 +1777,36 @@
                 dots.forEach((dot, i) => {
                   if (i === index) {
                     dot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
-                    dot.classList.add('bg-orange-500');
+                    dot.classList.add('bg-purple-500');
                   } else {
-                    dot.classList.remove('bg-orange-500');
+                    dot.classList.remove('bg-purple-500');
                     dot.classList.add('bg-gray-300', 'dark:bg-gray-600');
                   }
                 });
               }
 
-              function nextBundleSlide() {
-                showBundleSlide(currentBundleSlide + 1);
+              function nextMarlSlide() {
+                showMarlSlide(currentMarlSlide + 1);
               }
 
-              function setBundleSlide(index) {
-                clearInterval(bundleInterval);
-                showBundleSlide(index);
-                startBundleCarousel(); // Restart timer
+              function setMarlSlide(index) {
+                clearInterval(marlInterval);
+                showMarlSlide(index);
+                startMarlCarousel(); // Restart timer
               }
 
-              function startBundleCarousel() {
-                bundleInterval = setInterval(nextBundleSlide, 5000);
+              function startMarlCarousel() {
+                marlInterval = setInterval(nextMarlSlide, 5000);
               }
 
               document.addEventListener('DOMContentLoaded', () => {
-                startBundleCarousel();
+                startMarlCarousel();
 
                 // Pause on hover
-                const container = document.getElementById('bundle-carousel');
+                const container = document.getElementById('marl-carousel');
                 if (container) {
-                  container.addEventListener('mouseenter', () => clearInterval(bundleInterval));
-                  container.addEventListener('mouseleave', startBundleCarousel);
+                  container.addEventListener('mouseenter', () => clearInterval(marlInterval));
+                  container.addEventListener('mouseleave', startMarlCarousel);
                 }
               });
             </script>
