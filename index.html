@@ -264,9 +264,23 @@
 
     <!-- NEWS SECTION -->
     <section id="news-section" class="content-section hidden fade-in">
-      <div class="glass p-12 rounded-2xl shadow-sm text-center">
-        <h2 class="text-2xl font-bold text-gray-400">News Section</h2>
-        <p class="mt-2 text-gray-500">Updates coming soon...</p>
+      <div class="space-y-4">
+        <div class="glass p-6 rounded-xl shadow-sm hover:shadow-md transition">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white">New Blog Post: AI Wrangler</h3>
+              <p class="text-gray-600 dark:text-gray-300 mt-1">Check out my latest thoughts on being an AI Wrangler.</p>
+            </div>
+            <a href="https://misterpawan.github.io/blogs/ai-wrangler.html" target="_blank"
+              class="px-4 py-2 bg-orange-100 text-orange-700 hover:bg-orange-200 rounded-lg font-semibold transition flex items-center gap-2 shrink-0">
+              Read More
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3">
+                </path>
+              </svg>
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -296,7 +310,7 @@
               class="max-h-full max-w-full object-contain rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-500">
           </div>
           <div class="w-2/3 p-8 text-white">
-            <h3 class="text-2xl font-bold mb-2 text-pink-300">🎨 Excited about GenAI?</h3>
+            <h3 class="text-2xl font-bold mb-2 text-pink-300">🎨 Generative AI</h3>
             <p class="text-lg leading-relaxed">How to improve accuracy? 🎯 Align for aesthetics & safety? 🛡️<br>Check
               out our work on <span class="font-bold text-yellow-300">Robust Generative Models</span>!</p>
           </div>
@@ -1785,16 +1799,7 @@
               </div>
 
               <!-- Dots Navigation -->
-              <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-                <button class="w-3 h-3 rounded-full bg-orange-500 transition-all duration-300 bundle-dot"
-                  onclick="setBundleSlide(0)"></button>
-                <button
-                  class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-orange-300 transition-all duration-300 bundle-dot"
-                  onclick="setBundleSlide(1)"></button>
-                <button
-                  class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-orange-300 transition-all duration-300 bundle-dot"
-                  onclick="setBundleSlide(2)"></button>
-              </div>
+
             </div>
 
             <script>
@@ -1961,16 +1966,7 @@
               </div>
 
               <!-- Dots Navigation -->
-              <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-                <button class="w-3 h-3 rounded-full bg-purple-500 transition-all duration-300 marl-dot"
-                  onclick="setMarlSlide(0)"></button>
-                <button
-                  class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-purple-300 transition-all duration-300 marl-dot"
-                  onclick="setMarlSlide(1)"></button>
-                <button
-                  class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-purple-300 transition-all duration-300 marl-dot"
-                  onclick="setMarlSlide(2)"></button>
-              </div>
+
             </div>
 
             <script>
