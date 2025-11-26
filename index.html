@@ -1660,71 +1660,156 @@
               </a>
             </div>
 
-            <!-- Infographics Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+            <!-- Infographics Carousel -->
+            <div class="relative h-80 bg-gray-50 dark:bg-gray-800/50" id="bundle-carousel">
+              <!-- Slides Container -->
+              <div class="relative w-full h-full overflow-hidden">
 
-              <!-- Card 1: What is it? -->
-              <div
-                class="bg-blue-50 dark:bg-gray-700/50 rounded-xl p-4 flex flex-col items-center text-center hover:shadow-md transition group">
+                <!-- Slide 1: What is it? -->
                 <div
-                  class="h-40 w-full mb-4 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden shadow-sm">
-                  <img src="images/bundle_adjustment_concept.png" alt="Bundle Adjustment Concept"
-                    class="w-full h-full object-contain p-2 group-hover:scale-105 transition duration-500">
-                </div>
-                <h3 class="font-bold text-lg text-blue-900 dark:text-blue-300 mb-2">What is Bundle Adjustment?</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300">
-                  Optimizing 3D structure and camera parameters simultaneously. Minimizing reprojection error for
-                  precise reconstruction.
-                </p>
-              </div>
-
-              <!-- Card 2: Fast Solvers -->
-              <div
-                class="bg-green-50 dark:bg-gray-700/50 rounded-xl p-4 flex flex-col items-center text-center hover:shadow-md transition group">
-                <div
-                  class="h-40 w-full mb-4 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden shadow-sm relative">
-                  <!-- Fallback/CSS representation since image gen failed -->
-                  <div class="absolute inset-0 flex items-center justify-center opacity-10">
-                    <svg class="w-32 h-32 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                      </path>
-                    </svg>
-                  </div>
-                  <div class="z-10 text-4xl">⚡️ 📉 🚀</div>
-                </div>
-                <h3 class="font-bold text-lg text-green-900 dark:text-green-300 mb-2">Why Fast Solvers?</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300">
-                  Using <strong>Deflation</strong> and <strong>Multigrid</strong> methods to solve massive linear
-                  systems efficiently. Speeding up convergence!
-                </p>
-              </div>
-
-              <!-- Card 3: Tech Stack -->
-              <div
-                class="bg-orange-50 dark:bg-gray-700/50 rounded-xl p-4 flex flex-col items-center text-center hover:shadow-md transition group">
-                <div
-                  class="h-40 w-full mb-4 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden shadow-sm">
-                  <div class="flex gap-4 items-center justify-center">
-                    <div class="text-center">
-                      <span class="block text-3xl font-bold text-blue-600">C++</span>
-                      <span class="text-xs text-gray-500">Core</span>
+                  class="absolute inset-0 transition-opacity duration-1000 opacity-100 bundle-slide flex items-center justify-center p-6">
+                  <div class="text-center max-w-lg">
+                    <div
+                      class="h-48 w-full mb-4 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center overflow-hidden shadow-sm mx-auto">
+                      <img src="images/bundle_adjustment_concept.png" alt="Bundle Adjustment Concept"
+                        class="h-full object-contain p-2">
                     </div>
-                    <div class="text-2xl text-gray-400">+</div>
-                    <div class="text-center">
-                      <span class="block text-3xl">⚙️</span>
-                      <span class="text-xs text-gray-500">Ceres</span>
-                    </div>
+                    <h3 class="font-bold text-xl text-blue-900 dark:text-blue-300 mb-2">What is Bundle Adjustment?</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                      Optimizing 3D structure and camera parameters simultaneously. Minimizing reprojection error for
+                      precise reconstruction.
+                    </p>
                   </div>
                 </div>
-                <h3 class="font-bold text-lg text-orange-900 dark:text-orange-300 mb-2">The Tech Stack</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300">
-                  Written in high-performance <strong>C++</strong>. Seamlessly integrates with Google's <strong>Ceres
-                    Solver</strong> for robust optimization.
-                </p>
+
+                <!-- Slide 2: Fast Solvers -->
+                <div
+                  class="absolute inset-0 transition-opacity duration-1000 opacity-0 bundle-slide flex items-center justify-center p-6">
+                  <div class="text-center max-w-lg">
+                    <div
+                      class="h-48 w-full mb-4 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center overflow-hidden shadow-sm mx-auto relative">
+                      <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                        <svg class="w-32 h-32 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                          </path>
+                        </svg>
+                      </div>
+                      <div class="z-10 text-5xl">⚡️ 📉 🚀</div>
+                    </div>
+                    <h3 class="font-bold text-xl text-green-900 dark:text-green-300 mb-2">Why Fast Solvers?</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                      Using <strong>Deflation</strong> and <strong>Multigrid</strong> methods to solve massive linear
+                      systems efficiently. Speeding up convergence!
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Slide 3: Tech Stack -->
+                <div
+                  class="absolute inset-0 transition-opacity duration-1000 opacity-0 bundle-slide flex items-center justify-center p-6">
+                  <div class="text-center max-w-lg">
+                    <div
+                      class="h-48 w-full mb-4 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center overflow-hidden shadow-sm mx-auto">
+                      <div class="flex gap-6 items-center justify-center">
+                        <div class="text-center">
+                          <span class="block text-4xl font-bold text-blue-600">C++</span>
+                          <span class="text-sm text-gray-500">Core</span>
+                        </div>
+                        <div class="text-3xl text-gray-400">+</div>
+                        <div class="text-center">
+                          <span class="block text-4xl">⚙️</span>
+                          <span class="text-sm text-gray-500">Ceres</span>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="font-bold text-xl text-orange-900 dark:text-orange-300 mb-2">The Tech Stack</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                      Written in high-performance <strong>C++</strong>. Seamlessly integrates with Google's
+                      <strong>Ceres Solver</strong> for robust optimization.
+                    </p>
+                  </div>
+                </div>
+
               </div>
 
+              <!-- Dots Navigation -->
+              <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+                <button class="w-3 h-3 rounded-full bg-orange-500 transition-all duration-300 bundle-dot"
+                  onclick="setBundleSlide(0)"></button>
+                <button
+                  class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-orange-300 transition-all duration-300 bundle-dot"
+                  onclick="setBundleSlide(1)"></button>
+                <button
+                  class="w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-orange-300 transition-all duration-300 bundle-dot"
+                  onclick="setBundleSlide(2)"></button>
+              </div>
             </div>
+
+            <script>
+              let bundleInterval;
+              let currentBundleSlide = 0;
+
+              function showBundleSlide(index) {
+                const slides = document.querySelectorAll('.bundle-slide');
+                const dots = document.querySelectorAll('.bundle-dot');
+
+                if (!slides.length) return;
+
+                // Wrap index
+                if (index >= slides.length) index = 0;
+                if (index < 0) index = slides.length - 1;
+
+                currentBundleSlide = index;
+
+                // Update Slides
+                slides.forEach((slide, i) => {
+                  if (i === index) {
+                    slide.classList.remove('opacity-0', 'pointer-events-none');
+                    slide.classList.add('opacity-100', 'pointer-events-auto');
+                  } else {
+                    slide.classList.remove('opacity-100', 'pointer-events-auto');
+                    slide.classList.add('opacity-0', 'pointer-events-none');
+                  }
+                });
+
+                // Update Dots
+                dots.forEach((dot, i) => {
+                  if (i === index) {
+                    dot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                    dot.classList.add('bg-orange-500');
+                  } else {
+                    dot.classList.remove('bg-orange-500');
+                    dot.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                  }
+                });
+              }
+
+              function nextBundleSlide() {
+                showBundleSlide(currentBundleSlide + 1);
+              }
+
+              function setBundleSlide(index) {
+                clearInterval(bundleInterval);
+                showBundleSlide(index);
+                startBundleCarousel(); // Restart timer
+              }
+
+              function startBundleCarousel() {
+                bundleInterval = setInterval(nextBundleSlide, 5000);
+              }
+
+              document.addEventListener('DOMContentLoaded', () => {
+                startBundleCarousel();
+
+                // Pause on hover
+                const container = document.getElementById('bundle-carousel');
+                if (container) {
+                  container.addEventListener('mouseenter', () => clearInterval(bundleInterval));
+                  container.addEventListener('mouseleave', startBundleCarousel);
+                }
+              });
+            </script>
           </div>
 
           <!-- Add more software projects here following the same pattern -->
