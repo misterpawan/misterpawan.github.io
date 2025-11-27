@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cofactor Expansion | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    rank: "\\operatorname{rank}",
+                    det: "\\operatorname{det}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                The Cofactor Expansion
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 3 &bull; Section 3-1</p>
+            <p class="mt-4 text-lg italic">"Unlocking the determinant, one submatrix at a time! 🗝️"</p>
+        </header>
+
+        <!-- Section 1: Determinant Basics -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>📦</span> The Determinant
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200">
+                    <h3 class="font-bold mb-2 text-blue-800 dark:text-blue-300">2x2 Matrix</h3>
+                    <p class="mb-2">For $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$:</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ \det A = ad - bc $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Area of the parallelogram!</p>
+                </div>
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                    <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-300">Notation</h3>
+                    <p class="mb-2">We use vertical bars:</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ \det A = |A| $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Not absolute value!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Calculator -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-green-600 flex items-center gap-2">
+                <span>🧮</span> Interactive Calculator
+            </h2>
+
+            <div class="flex justify-center gap-4 mb-6">
+                <button onclick="setDim(2)" id="btn-2x2"
+                    class="px-4 py-2 rounded-lg bg-orange-500 text-white font-bold shadow-md transition transform hover:scale-105">2x2</button>
+                <button onclick="setDim(3)" id="btn-3x3"
+                    class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold shadow-md transition transform hover:scale-105">3x3</button>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div id="matrix-container"
+                    class="grid gap-2 mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-xl shadow-inner">
+                    <!-- Inputs generated by JS -->
+                </div>
+
+                <div class="text-2xl font-bold flex items-center gap-4">
+                    <span>Determinant = </span>
+                    <span id="det-result" class="text-orange-600 bg-orange-100 px-4 py-2 rounded-lg shadow-sm">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Cofactor Expansion -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">The Cofactor Expansion</h2>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200 mb-6">
+                <h3 class="font-bold mb-4 text-yellow-800 dark:text-yellow-300">The Recipe</h3>
+                <p class="mb-4">To find the determinant of any $n \times n$ matrix:</p>
+                <ol class="list-decimal list-inside space-y-2 mb-4">
+                    <li>Pick <strong>any</strong> row or column (pick the one with the most zeros!).</li>
+                    <li>For each entry $a_{ij}$ in that row/col:
+                        <ul class="list-disc list-inside ml-6 text-sm text-gray-600 dark:text-gray-400">
+                            <li>Find its <strong>Sign</strong>: $(-1)^{i+j}$ (Checkerboard pattern).</li>
+                            <li>Find its <strong>Minor</strong>: Determinant of the submatrix leaving out row $i$ and
+                                col $j$.</li>
+                            <li>Multiply: Entry $\times$ Sign $\times$ Minor.</li>
+                        </ul>
+                    </li>
+                    <li>Sum them up!</li>
+                </ol>
+                <div class="latex-content text-center font-bold bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ \det A = \sum_{j=1}^n a_{ij} C_{ij} $$
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
+                    <p class="font-bold mb-2">Checkerboard Pattern</p>
+                    <div class="font-mono text-lg">
+                        + - + - <br>
+                        - + - + <br>
+                        + - + - <br>
+                        - + - +
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Smart Choice <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">Which row or column would you expand along for $A = \begin{bmatrix} 1 & 2 & 3 \\ 0 & 5 & 0
+                \\ 7 & 8 & 9 \end{bmatrix}$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Row
+                    1 (1, 2, 3)</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Row
+                    2 (0, 5, 0) - It has two zeros!</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Column
+                    1 (1, 0, 7)</button>
+            </div>
+        </div>
+
+        <!-- Section 3: Properties -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Row Operations & Properties</h2>
+
+            <div class="space-y-4">
+                <div class="flex items-center gap-4 bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-200">
+                    <div class="text-2xl">🔄</div>
+                    <div>
+                        <h3 class="font-bold text-red-800 dark:text-red-300">Row Swap</h3>
+                        <p class="text-sm">Swapping two rows flips the sign: $\det B = -\det A$.</p>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center gap-4 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-200">
+                    <div class="text-2xl">✖️</div>
+                    <div>
+                        <h3 class="font-bold text-blue-800 dark:text-blue-300">Scalar Multiply</h3>
+                        <p class="text-sm">Multiplying a row by $k$ scales determinant by $k$: $\det B = k \det A$.</p>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center gap-4 bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-200">
+                    <div class="text-2xl">➕</div>
+                    <div>
+                        <h3 class="font-bold text-green-800 dark:text-green-300">Add Multiple of Row</h3>
+                        <p class="text-sm">Adding a multiple of one row to another <strong>does not change</strong> the
+                            determinant! $\det B = \det A$.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
+                <h3 class="font-bold mb-2">Triangular Matrices</h3>
+                <p class="mb-2">If $A$ is Upper or Lower Triangular (zeros below/above diagonal):</p>
+                <div class="latex-content font-bold">
+                    $$ \det A = a_{11} \times a_{22} \times \dots \times a_{nn} $$
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Just multiply the diagonal!</p>
+            </div>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Logic Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">If $\det A = 5$, what is $\det(2A)$ for a $3 \times 3$ matrix?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">10
+                    (Just $2 \times 5$)</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">40
+                    ($2^3 \times 5$ because each of the 3 rows is scaled)</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">5
+                    (Scalar doesn't matter)</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Determinant Calculator Logic
+        let currentDim = 2;
+        const matrixContainer = document.getElementById('matrix-container');
+        const detResult = document.getElementById('det-result');
+        const btn2 = document.getElementById('btn-2x2');
+        const btn3 = document.getElementById('btn-3x3');
+
+        function setDim(n) {
+            currentDim = n;
+            renderMatrix();
+            calculateDet();
+
+            if (n === 2) {
+                btn2.classList.add('bg-orange-500', 'text-white');
+                btn2.classList.remove('bg-gray-200', 'text-gray-600', 'dark:bg-gray-700', 'dark:text-gray-300');
+                btn3.classList.remove('bg-orange-500', 'text-white');
+                btn3.classList.add('bg-gray-200', 'text-gray-600', 'dark:bg-gray-700', 'dark:text-gray-300');
+            } else {
+                btn3.classList.add('bg-orange-500', 'text-white');
+                btn3.classList.remove('bg-gray-200', 'text-gray-600', 'dark:bg-gray-700', 'dark:text-gray-300');
+                btn2.classList.remove('bg-orange-500', 'text-white');
+                btn2.classList.add('bg-gray-200', 'text-gray-600', 'dark:bg-gray-700', 'dark:text-gray-300');
+            }
+        }
+
+        function renderMatrix() {
+            matrixContainer.style.gridTemplateColumns = `repeat(${currentDim}, minmax(0, 1fr))`;
+            matrixContainer.innerHTML = '';
+
+            for (let i = 0; i < currentDim * currentDim; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.value = Math.floor(Math.random() * 10);
+                input.className = 'w-full p-2 text-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-orange-500 outline-none transition';
+                input.oninput = calculateDet;
+                matrixContainer.appendChild(input);
+            }
+        }
+
+        function calculateDet() {
+            const inputs = Array.from(matrixContainer.querySelectorAll('input')).map(i => parseFloat(i.value) || 0);
+            let det = 0;
+
+            if (currentDim === 2) {
+                // | a b |
+                // | c d |
+                // ad - bc
+                det = inputs[0] * inputs[3] - inputs[1] * inputs[2];
+            } else {
+                // | a b c |
+                // | d e f |
+                // | g h i |
+                // a(ei - fh) - b(di - fg) + c(dh - eg)
+                const [a, b, c, d, e, f, g, h, i] = inputs;
+                det = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+            }
+
+            detResult.innerText = det;
+        }
+
+        // Initialize
+        setDim(2);
+    </script>
+</body>
+
+</html>

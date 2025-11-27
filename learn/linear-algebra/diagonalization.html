@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagonalization | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    rank: "\\operatorname{rank}",
+                    det: "\\operatorname{det}",
+                    lambda: "\\lambda"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        #eigen-canvas {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Diagonalization
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 3 &bull; Section 3-3</p>
+            <p class="mt-4 text-lg italic">"Finding the 'natural' axes of a matrix. 📏"</p>
+        </header>
+
+        <!-- Section 1: Eigenvalues & Eigenvectors -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>✨</span> Eigen-Things
+            </h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <h3 class="font-bold mb-4">The Definition</h3>
+                <p class="mb-4">An <strong>eigenvector</strong> of $A$ is a non-zero vector $\vec{x}$ such that
+                    $A\vec{x}$ is just a scalar multiple of $\vec{x}$.</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ A\vec{x} = \lambda \vec{x} $$
+                </div>
+                <p class="mt-4 text-center text-sm">$\lambda$ is the <strong>eigenvalue</strong>.</p>
+            </div>
+
+            <!-- Interactive Eigen Visualizer -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                <h3 class="font-bold mb-4 text-center">Visualizer: $A = \begin{bmatrix} 2 & 0 \\ 0 & 0.5 \end{bmatrix}$
+                </h3>
+                <p class="text-center text-sm text-gray-500 mb-4">Move your mouse to change $\vec{x}$ (blue). See
+                    $A\vec{x}$ (red).</p>
+                <div class="flex justify-center">
+                    <canvas id="eigen-canvas" width="300" height="300" class="bg-gray-50 dark:bg-gray-900"></canvas>
+                </div>
+                <p id="eigen-status" class="text-center mt-4 font-bold text-orange-600 h-6"></p>
+            </div>
+        </section>
+
+        <!-- Section 2: Finding Them -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">How to Find Them?</h2>
+
+            <div class="space-y-4">
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-200">
+                    <h3 class="font-bold text-purple-800 dark:text-purple-300">Step 1: Characteristic Equation</h3>
+                    <p class="mb-2">Solve for $\lambda$:</p>
+                    <div class="latex-content text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ \det(A - \lambda I) = 0 $$
+                    </div>
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-200">
+                    <h3 class="font-bold text-green-800 dark:text-green-300">Step 2: Find Eigenvectors</h3>
+                    <p class="mb-2">For each $\lambda$, find the null space of $(A - \lambda I)$:</p>
+                    <div class="latex-content text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ (A - \lambda I)\vec{x} = \vec{0} $$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Quick Calc <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">Find the eigenvalues of $A = \begin{bmatrix} 3 & 0 \\ 0 & 5 \end{bmatrix}$.</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">3
+                    and 5</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">0
+                    and 0</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">15
+                    and 1</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Hint: For diagonal matrices, it's easy!</p>
+        </div>
+
+        <!-- Section 3: Diagonalization -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Diagonalization</h2>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200 mb-6">
+                <h3 class="font-bold mb-4 text-yellow-800 dark:text-yellow-300">The Theorem</h3>
+                <p class="mb-4">If an $n \times n$ matrix $A$ has $n$ linearly independent eigenvectors, we can write:
+                </p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ A = PDP^{-1} $$
+                </div>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-sm">
+                    <li>$D$ is a <strong>diagonal</strong> matrix of eigenvalues.</li>
+                    <li>$P$ is a matrix with eigenvectors as <strong>columns</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
+                <h3 class="font-bold mb-2">Why do we care?</h3>
+                <p class="mb-2">It makes computing powers super fast!</p>
+                <div class="latex-content font-bold">
+                    $$ A^k = P D^k P^{-1} $$
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Computing $D^k$ is trivial (just power the diagonal entries).</p>
+            </div>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🤔 Logic Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">Can the matrix $A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ be diagonalized?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    all matrices can be diagonalized.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    it only has one independent eigenvector.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    because it's triangular.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Eigen Visualizer
+        const canvas = document.getElementById('eigen-canvas');
+        const ctx = canvas.getContext('2d');
+        const status = document.getElementById('eigen-status');
+        const width = canvas.width;
+        const height = canvas.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const scale = 40; // pixels per unit
+
+        // Matrix A = [[2, 0], [0, 0.5]]
+        const A = { a: 2, b: 0, c: 0, d: 0.5 };
+
+        function drawVector(x, y, color, label) {
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + x * scale, centerY - y * scale);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Arrowhead
+            const angle = Math.atan2(-y, x);
+            ctx.beginPath();
+            ctx.moveTo(centerX + x * scale, centerY - y * scale);
+            ctx.lineTo(centerX + x * scale - 10 * Math.cos(angle - Math.PI / 6), centerY - y * scale + 10 * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(centerX + x * scale - 10 * Math.cos(angle + Math.PI / 6), centerY - y * scale + 10 * Math.sin(angle + Math.PI / 6));
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#9ca3af';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(width, centerY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, height);
+            ctx.stroke();
+        }
+
+        function update(mouseX, mouseY) {
+            drawGrid();
+
+            const vecX = (mouseX - centerX) / scale;
+            const vecY = -(mouseY - centerY) / scale;
+
+            // Calculate Ax
+            const resX = A.a * vecX + A.b * vecY;
+            const resY = A.c * vecX + A.d * vecY;
+
+            drawVector(vecX, vecY, '#3b82f6', 'x'); // Blue
+            drawVector(resX, resY, '#ef4444', 'Ax'); // Red
+
+            // Check if eigenvector (collinear)
+            // Cross product in 2D is x1*y2 - x2*y1
+            const cross = vecX * resY - vecY * resX;
+            if (Math.abs(cross) < 0.5 && (vecX * vecX + vecY * vecY) > 0.1) {
+                status.innerText = "EIGENVECTOR FOUND! 🎉";
+            } else {
+                status.innerText = "";
+            }
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            update(e.clientX - rect.left, e.clientY - rect.top);
+        });
+
+        // Initial draw
+        update(centerX + 50, centerY - 50);
+
+    </script>
+</body>
+
+</html>
