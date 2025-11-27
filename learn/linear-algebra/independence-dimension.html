@@ -147,7 +147,8 @@
                     $$ c_1\vec{v}_1 + \dots + c_k\vec{v}_k = \vec{0} \implies c_1 = \dots = c_k = 0 $$
                 </div>
                 <p class="text-sm text-gray-600 dark:text-gray-400">If there is a non-trivial solution, the set is
-                    <strong>dependent</strong>.</p>
+                    <strong>dependent</strong>.
+                </p>
             </div>
 
             <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
@@ -186,6 +187,34 @@
                 Independence</button>
 
             <div id="independence-result" class="hidden p-4 rounded-xl text-center font-bold"></div>
+        </section>
+
+        <!-- Section 1.5: Fundamental Theorems -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-green-600 flex items-center gap-2">
+                <span>🏛️</span> Fundamental Theorems
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold mb-2 text-green-800 dark:text-green-300">Fundamental Theorem</h3>
+                    <p class="text-sm">If $V$ is spanned by $n$ vectors, then any independent set in $V$ has at most $n$
+                        vectors.</p>
+                    <p class="text-xs text-gray-500 mt-2">Implication: You can't have more independent vectors than
+                        spanning vectors.</p>
+                </div>
+                <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl border border-emerald-200">
+                    <h3 class="font-bold mb-2 text-emerald-800 dark:text-emerald-300">Invariance Theorem</h3>
+                    <p class="text-sm">If $V$ has a basis of $n$ vectors, then every basis of $V$ has exactly $n$
+                        vectors.</p>
+                    <p class="text-xs text-gray-500 mt-2">This is why "dimension" is a well-defined number!</p>
+                </div>
+            </div>
+            <div class="bg-lime-50 dark:bg-lime-900/20 p-6 rounded-xl border border-lime-200 mt-6">
+                <h3 class="font-bold mb-2 text-lime-800 dark:text-lime-300">Unique Representation Theorem</h3>
+                <p class="text-sm">If $B = \{\vec{b}_1, \dots, \vec{b}_n\}$ is a basis for $V$, then every vector
+                    $\vec{v} \in V$ can be written as a linear combination of $B$ in exactly <strong>one</strong> way.
+                </p>
+            </div>
         </section>
 
         <!-- Section 2: Dimension -->

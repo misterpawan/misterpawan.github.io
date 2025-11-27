@@ -201,6 +201,28 @@
             </div>
         </section>
 
+        <!-- Section 1.5: Linear Combinations -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>🔗</span> Linear Combinations
+            </h2>
+            <div class="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl border border-orange-200 mb-6">
+                <p class="mb-4">A vector $\vec{w}$ is a <strong>linear combination</strong> of vectors $\vec{v}_1,
+                    \dots, \vec{v}_k$ if there exist scalars $c_1, \dots, c_k$ such that:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg mb-4">
+                    $$ \vec{w} = c_1\vec{v}_1 + c_2\vec{v}_2 + \dots + c_k\vec{v}_k $$
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold text-lg mb-2">Example: Is $x^2+1$ a combination?</h3>
+                <p class="mb-2">Is $x^2+1$ a linear combination of $\{x+1, x^2+x, x^2+2\}$?</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">We set up the equation:</p>
+                <p class="mb-2">$$ x^2+1 = a(x+1) + b(x^2+x) + c(x^2+2) $$</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Comparing coefficients leads to a system. If
+                    consistent, the answer is Yes!</p>
+            </div>
+        </section>
+
         <!-- Section 2: Spanning Sets -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-blue-600">Spanning Sets</h2>
@@ -223,6 +245,17 @@
                     $$ \left\{ \begin{bmatrix}1&0\\0&0\end{bmatrix}, \begin{bmatrix}0&1\\0&0\end{bmatrix},
                     \begin{bmatrix}0&0\\1&0\end{bmatrix}, \begin{bmatrix}0&0\\0&1\end{bmatrix} \right\} $$
                 </div>
+            </div>
+
+            <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200 mt-6">
+                <h3 class="font-bold text-lg mb-2 text-teal-800 dark:text-teal-300">Theorem: Smallest Subspace</h3>
+                <p class="mb-2">Let $U = \span\{\vec{v}_1, \dots, \vec{v}_k\}$. Then:</p>
+                <ul class="list-disc list-inside space-y-1 ml-4 text-sm">
+                    <li>$U$ is a subspace of $V$ containing each $\vec{v}_i$.</li>
+                    <li>If $W$ is any subspace containing each $\vec{v}_i$, then $U \subseteq W$.</li>
+                </ul>
+                <p class="text-xs text-gray-500 mt-2">In other words, the span is the "smallest" subspace containing the
+                    vectors.</p>
             </div>
         </section>
 

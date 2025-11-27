@@ -144,13 +144,51 @@
                 <div class="bg-cyan-50 dark:bg-cyan-900/20 p-6 rounded-xl border border-cyan-200">
                     <h3 class="font-bold mb-2 text-cyan-800 dark:text-cyan-300">Extending Independent Sets</h3>
                     <p class="text-sm">Any linearly independent set in a finite dimensional space can be
-                        <strong>extended</strong> to a basis.</p>
+                        <strong>extended</strong> to a basis.
+                    </p>
                 </div>
                 <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200">
                     <h3 class="font-bold mb-2 text-teal-800 dark:text-teal-300">Reducing Spanning Sets</h3>
                     <p class="text-sm">Any spanning set in a finite dimensional space can be <strong>reduced</strong> to
                         a basis.</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- Section 1.5: Basis Construction -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+                <span>🛠️</span> Building a Basis
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200">
+                    <h3 class="font-bold mb-2 text-blue-800 dark:text-blue-300">Algorithm 1: Extending</h3>
+                    <p class="text-sm mb-2">Start with an <strong>independent</strong> set $S$.</p>
+                    <ol class="list-decimal list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <li>If $\span(S) = V$, stop. $S$ is a basis.</li>
+                        <li>Else, pick $\vec{v} \notin \span(S)$.</li>
+                        <li>Add $\vec{v}$ to $S$. Repeat.</li>
+                    </ol>
+                </div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                    <h3 class="font-bold mb-2 text-indigo-800 dark:text-indigo-300">Algorithm 2: Reducing</h3>
+                    <p class="text-sm mb-2">Start with a <strong>spanning</strong> set $S$.</p>
+                    <ol class="list-decimal list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <li>If $S$ is independent, stop. $S$ is a basis.</li>
+                        <li>Else, find $\vec{v}$ that is a combo of others.</li>
+                        <li>Remove $\vec{v}$ from $S$. Repeat.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200 mt-6">
+                <h3 class="font-bold text-lg mb-2 text-yellow-800 dark:text-yellow-300">The "n Vectors" Theorem</h3>
+                <p class="mb-2">Let $\dim(V) = n$. If a set $S$ has exactly $n$ vectors, then:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ S \text{ is independent} \iff S \text{ spans } V \iff S \text{ is a basis} $$
+                </div>
+                <p class="text-xs text-gray-500 mt-2">This is a huge shortcut! You only need to check ONE condition if
+                    the count is right.</p>
             </div>
         </section>
 
