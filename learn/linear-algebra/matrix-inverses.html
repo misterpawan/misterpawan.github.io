@@ -143,14 +143,22 @@
                 <div class="latex-content text-center font-bold bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                     $$ AB = I_n \quad \text{and} \quad BA = I_n $$
                 </div>
-                <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">We denote this inverse as $A^{-1}$. It's
-                    unique!</p>
+                unique!</p>
+
+                <div class="mt-4 bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <h4 class="font-bold text-sm mb-2">Theorem: Uniqueness of Inverse</h4>
+                    <p class="text-sm">If $A$ has an inverse, it is unique. <br>
+                        <em>Proof:</em> Suppose $B$ and $C$ are both inverses of $A$. Then $AB = I$ and $CA = I$. <br>
+                        $B = IB = (CA)B = C(AB) = CI = C$. Thus $B = C$. $\blacksquare$
+                    </p>
+                </div>
             </div>
 
             <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-200">
                 <h3 class="font-bold text-red-800 dark:text-red-300 mb-2">Warning</h3>
                 <p>Not all square matrices have inverses. A matrix without an inverse is called
-                    <strong>singular</strong> or <strong>non-invertible</strong>.</p>
+                    <strong>singular</strong> or <strong>non-invertible</strong>.
+                </p>
                 <p class="mt-2 text-sm">Example: The zero matrix is singular.</p>
             </div>
         </section>
@@ -237,6 +245,23 @@
             </div>
         </section>
 
+        <!-- Concept Check -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Concept Check</h2>
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                <h3 class="font-bold mb-4">Problem</h3>
+                <p class="mb-4">True or False: If $A^3 = 4I$, then $A$ is invertible.</p>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
+                    <p class="font-bold text-green-600">True!</p>
+                    <p class="mt-2 text-sm">We need to find a matrix $B$ such that $AB = I$ and $BA = I$.</p>
+                    <p class="text-sm">Given $A^3 = 4I$, we can rearrange it:</p>
+                    <p class="text-center my-2 text-sm">$A( \frac{1}{4} A^2 ) = I$ and $(\frac{1}{4} A^2) A = I$</p>
+                    <p class="text-sm">Thus, $A$ is invertible and $A^{-1} = \frac{1}{4}A^2$.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Section 4: Properties -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-orange-600">Key Properties</h2>
@@ -257,6 +282,11 @@
                     </div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">You can swap the order of inverse and transpose.
                     </p>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <em>Proof:</em> We want to show $(A^{-1})^T$ is the inverse of $A^T$. <br>
+                        $A^T (A^{-1})^T = (A^{-1} A)^T = I^T = I$. <br>
+                        $(A^{-1})^T A^T = (A A^{-1})^T = I^T = I$. $\blacksquare$
+                    </div>
                 </div>
             </div>
         </section>

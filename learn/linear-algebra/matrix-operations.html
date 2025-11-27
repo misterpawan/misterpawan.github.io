@@ -189,11 +189,32 @@
                         Multiplication
                     </h3>
                     <p class="mb-2">Multiply <em>every</em> entry by the scalar $k$.</p>
-                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl overflow-x-auto">
+                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl overflow-x-auto mb-4">
                         <div class="latex-content">
                             $$ 3 \begin{bmatrix} 2 & 0 \\ 3 & 1 \end{bmatrix} = \begin{bmatrix} 3(2) & 3(0) \\ 3(3) &
                             3(1) \end{bmatrix} = \begin{bmatrix} 6 & 0 \\ 9 & 3 \end{bmatrix} $$
                         </div>
+                    </div>
+
+                    <!-- Properties -->
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl border border-yellow-200 mb-4">
+                        <h4 class="font-bold mb-2 text-sm text-yellow-800 dark:text-yellow-300">Properties</h4>
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li>$k(A + B) = kA + kB$ (Distributive)</li>
+                            <li>$(k + p)A = kA + pA$ (Distributive)</li>
+                            <li>$k(pA) = (kp)A$ (Associative)</li>
+                            <li>$1A = A$ (Identity)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Example -->
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                        <h4 class="font-bold mb-2 text-sm">Example: Simplify</h4>
+                        <p class="text-sm mb-2">Simplify $2(A - 3B) + 3(2B + A)$.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            $= 2A - 6B + 6B + 3A$ <br>
+                            $= 5A$
+                        </p>
                     </div>
                 </div>
             </div>
@@ -248,6 +269,7 @@
                     <li>$(A^T)^T = A$ (Flipping twice gets you back)</li>
                     <li>$(A+B)^T = A^T + B^T$ (Transpose distributes over addition)</li>
                     <li>$(kA)^T = kA^T$ (Scalars don't care about transpose)</li>
+                    <li>$(AB)^T = B^T A^T$ (The "Shoe-Sock" Rule: Reverse the order!)</li>
                 </ul>
             </div>
         </section>

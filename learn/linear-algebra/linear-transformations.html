@@ -138,7 +138,7 @@
                 class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
                 Linear Transformations
             </h1>
-            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 7 &bull; Section 7-1</p>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 2 &bull; Section 2-6</p>
             <p class="mt-4 text-lg italic">"Functions that preserve the structure of space. 🔄"</p>
         </header>
 
@@ -172,6 +172,35 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-2">The columns of $A$ are simply where the basis vectors land: $A =
                     [T(\vec{e}_1) \dots T(\vec{e}_n)]$.</p>
+            </div>
+        </section>
+
+        <!-- Section: Finding the Matrix -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Finding the Standard Matrix</h2>
+            <p class="mb-4">To find the matrix $A$ for a transformation $T$, just see what $T$ does to the standard
+                basis vectors $\vec{e}_1, \vec{e}_2, \dots$.</p>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold mb-4">Example</h3>
+                <p class="mb-2">Let $T: \mathbb{R}^2 \to \mathbb{R}^2$ be a transformation that rotates points 90°
+                    counter-clockwise.</p>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="font-bold">1. Transform $\vec{e}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$</p>
+                        <p>Rotated 90°, it becomes $\begin{bmatrix} 0 \\ 1 \end{bmatrix}$.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold">2. Transform $\vec{e}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$</p>
+                        <p>Rotated 90°, it becomes $\begin{bmatrix} -1 \\ 0 \end{bmatrix}$.</p>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <p class="mb-2">Thus, the matrix $A$ is:</p>
+                    <div class="latex-content">
+                        $$ A = [T(\vec{e}_1) \ \ T(\vec{e}_2)] = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} $$
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -246,6 +275,11 @@
                     <p class="text-center font-bold my-2">$T(c_1\vec{v}_1 + \dots + c_k\vec{v}_k) = c_1T(\vec{v}_1) +
                         \dots + c_kT(\vec{v}_k)$</p>
                 </div>
+            </div>
+
+            <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200 mt-6">
+                <h3 class="font-bold mb-2 text-teal-800 dark:text-teal-300">Preserves Negatives</h3>
+                <p class="text-center font-bold">$T(-\vec{x}) = -T(\vec{x})$</p>
             </div>
         </section>
 
