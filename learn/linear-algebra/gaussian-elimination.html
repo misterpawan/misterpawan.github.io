@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Elimination | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    rank: "\\operatorname{rank}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        .matrix-highlight {
+            background-color: rgba(251, 191, 36, 0.2);
+            border-radius: 4px;
+            padding: 2px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Gaussian Elimination
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 1 &bull; Section 1-2</p>
+            <p class="mt-4 text-lg italic">"Why was the matrix sad? Because it had too many problems (equations)! 😂"
+            </p>
+        </header>
+
+        <!-- Section 1: Row-Echelon Form -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>🪜</span> Row-Echelon Form (REF)
+            </h2>
+            <p class="mb-4">Before we solve systems, we need to tidy up our matrices. Think of this as organizing your
+                room before you can find your lost socks.</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl border border-yellow-200">
+                        <h3 class="font-bold mb-2">A matrix is in REF if:</h3>
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li>Zero rows are at the bottom. 📉</li>
+                            <li>First nonzero entry in a row is <strong>1</strong> (Leading 1). 🥇</li>
+                            <li>Each Leading 1 is to the right of the one above it. ➡️</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-200">
+                        <h3 class="font-bold mb-2">Reduced REF (RREF) adds:</h3>
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li>It's already in REF.</li>
+                            <li>Leading 1 is the <strong>ONLY</strong> nonzero entry in its column. 🦄</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
+                    <p class="font-bold mb-2">Visualizing RREF</p>
+                    <div class="latex-content">
+                        $$
+                        \left[\begin{array}{rrrr}
+                        1 & 0 & 2 & 0 \\
+                        0 & 1 & 1 & 2 \\
+                        0 & 0 & 0 & 0
+                        \end{array}\right]
+                        $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Clean, organized, beautiful. ✨</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🕵️ Spot the RREF <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">Which of these matrices is in <strong>Reduced Row-Echelon Form (RREF)</strong>?</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition flex flex-col items-center gap-2">
+                    <span class="latex-content">$$ \left[\begin{array}{rr} 1 & 2 \\ 0 & 1 \end{array}\right] $$</span>
+                    <span class="text-xs text-gray-500">Option A</span>
+                </button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition flex flex-col items-center gap-2">
+                    <span class="latex-content">$$ \left[\begin{array}{rr} 1 & 0 \\ 0 & 1 \end{array}\right] $$</span>
+                    <span class="text-xs text-gray-500">Option B</span>
+                </button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition flex flex-col items-center gap-2">
+                    <span class="latex-content">$$ \left[\begin{array}{rr} 0 & 1 \\ 1 & 0 \end{array}\right] $$</span>
+                    <span class="text-xs text-gray-500">Option C</span>
+                </button>
+            </div>
+            <div id="quiz1-feedback" class="hidden mt-3 text-sm font-medium"></div>
+        </div>
+
+        <!-- Section 2: Gaussian Elimination Algorithm -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>🧹</span> Gaussian Elimination Algorithm
+            </h2>
+            <p class="mb-6">The ultimate algorithm to solve ANY linear system. It's like a recipe for success! 🍳</p>
+
+            <div class="space-y-6">
+                <div class="flex items-start gap-4">
+                    <div
+                        class="bg-blue-100 text-blue-600 font-bold w-8 h-8 flex items-center justify-center rounded-full shrink-0">
+                        1</div>
+                    <div>
+                        <h3 class="font-bold text-lg">Transform to RREF</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Use elementary row operations to turn your augmented
+                            matrix into a Reduced Row-Echelon Matrix.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div
+                        class="bg-blue-100 text-blue-600 font-bold w-8 h-8 flex items-center justify-center rounded-full shrink-0">
+                        2</div>
+                    <div>
+                        <h3 class="font-bold text-lg">Check for Inconsistency</h3>
+                        <p class="text-gray-600 dark:text-gray-400">If you see a row like $[0 \dots 0 \mid 1]$, STOP! 🛑
+                            The system has <strong>no solution</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div
+                        class="bg-blue-100 text-blue-600 font-bold w-8 h-8 flex items-center justify-center rounded-full shrink-0">
+                        3</div>
+                    <div>
+                        <h3 class="font-bold text-lg">Solve for Variables</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Assign <strong>parameters</strong> ($s, t, \dots$)
+                            to non-leading variables. Express leading variables in terms of these parameters.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Examples -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Let's Solve Some Problems! 🧠</h2>
+
+            <!-- Tabs -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="showTab('unique')"
+                    class="tab-btn active px-4 py-2 rounded-lg bg-orange-100 text-orange-700 font-bold transition">Unique
+                    Solution</button>
+                <button onclick="showTab('infinite')"
+                    class="tab-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Infinite
+                    Solutions</button>
+                <button onclick="showTab('none')"
+                    class="tab-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition">No
+                    Solution</button>
+            </div>
+
+            <!-- Unique Solution Tab -->
+            <div id="unique" class="tab-content block animate-fade-in">
+                <h3 class="text-xl font-bold mb-4">Case 1: Unique Solution</h3>
+                <p class="mb-4">System:</p>
+                <div class="latex-content mb-4">
+                    $$ \begin{cases} x + y + 2z = -1 \\ y + 2x + 3z = 0 \\ z - 2y = 2 \end{cases} $$
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-200 mb-4">
+                    <p class="font-bold">Resulting RREF:</p>
+                    <div class="latex-content">
+                        $$ \left[\begin{array}{rrr|r} 1 & 0 & 0 & 5/3 \\ 0 & 1 & 0 & -4/3 \\ 0 & 0 & 1 & -2/3
+                        \end{array}\right] $$
+                    </div>
+                </div>
+                <p><strong>Solution:</strong> $x = 5/3, y = -4/3, z = -2/3$. Simple and clean! 😎</p>
+            </div>
+
+            <!-- Infinite Solutions Tab -->
+            <div id="infinite" class="tab-content hidden animate-fade-in">
+                <h3 class="text-xl font-bold mb-4">Case 2: Infinitely Many Solutions</h3>
+                <p class="mb-4">System:</p>
+                <div class="latex-content mb-4">
+                    $$ \begin{cases} 2x + y + 3z = 1 \\ 2y - z + x = 0 \\ 9z + x - 4y = 2 \end{cases} $$
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-200 mb-4">
+                    <p class="font-bold">Resulting RREF:</p>
+                    <div class="latex-content">
+                        $$ \left[\begin{array}{rrr|r} 1 & 0 & 7/3 & 2/3 \\ 0 & 1 & -5/3 & -1/3 \\ 0 & 0 & 0 & 0
+                        \end{array}\right] $$
+                    </div>
+                </div>
+                <p class="mb-2">Notice the row of zeros? $z$ is a <strong>free variable</strong> (non-leading). Let $z =
+                    s$.</p>
+                <p><strong>Solution:</strong> $x = 2/3 - 7/3s, \quad y = -1/3 + 5/3s, \quad z = s$. (For any $s \in
+                    \mathbb{R}$)</p>
+            </div>
+
+            <!-- No Solution Tab -->
+            <div id="none" class="tab-content hidden animate-fade-in">
+                <h3 class="text-xl font-bold mb-4">Case 3: No Solution (Inconsistent)</h3>
+                <p class="mb-4">System:</p>
+                <div class="latex-content mb-4">
+                    $$ \begin{cases} -3x - 9y + z = -9 \\ 2x + 6y - z = 6 \\ x + 3y - z = 2 \end{cases} $$
+                </div>
+                <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-200 mb-4">
+                    <p class="font-bold">Resulting REF:</p>
+                    <div class="latex-content">
+                        $$ \left[\begin{array}{rrr|r} 1 & 3 & 0 & 4 \\ 0 & 0 & 1 & 2 \\ 0 & 0 & 0 & 1 \end{array}\right]
+                        $$
+                    </div>
+                </div>
+                <p>Look at the last row: $0x + 0y + 0z = 1$. That means $0 = 1$. Impossible! 😱</p>
+                <p class="font-bold text-red-600">System is Inconsistent.</p>
+            </div>
+        </section>
+
+        <!-- Quiz 2 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🤔 Logic Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">If a system has a row $[0 \ 0 \ 0 \mid 0]$ in its RREF, what does it imply?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    has no solution.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    has a unique solution.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    depends on other rows (could be infinite solutions).</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Rank -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Rank of a Matrix 🎖️</h2>
+            <p class="mb-4">The <strong>rank</strong> of a matrix $A$, denoted $\operatorname{rank} A$, is simply the
+                number of <strong>leading 1's</strong> in its REF.</p>
+
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200 mb-6">
+                <h3 class="font-bold mb-2">The Rank Theorem for $n$ variables:</h3>
+                <ul class="space-y-2">
+                    <li>If $\operatorname{rank} A < n$ (and consistent) $\rightarrow$ <strong>Infinitely many
+                            solutions</strong> (parameters = $n - \operatorname{rank} A$). ♾️</li>
+                    <li>If $\operatorname{rank} A = n$ (and consistent) $\rightarrow$ <strong>Unique solution</strong>.
+                        1️⃣</li>
+                </ul>
+            </div>
+
+            <div class="latex-content">
+                <p><strong>Example:</strong> Find the rank.</p>
+                $$ A = \left[\begin{array}{rrr} 1 & -2 & 1 \\ 0 & 3 & 2 \end{array}\right] $$
+                <p>There are 2 leading terms (the 1 and the 3). So, $\operatorname{rank} A = 2$.</p>
+            </div>
+        </section>
+
+        <!-- Section 5: Application -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Application: Sum of Powers ⚡</h2>
+            <p class="mb-4">Ever wondered how to find the formula for $1^3 + 2^3 + \dots + n^3$? We can use linear
+                algebra!</p>
+
+            <div class="space-y-4">
+                <p>Assume it's a polynomial of degree 4: $S(n) = a_0 + a_1 n + a_2 n^2 + a_3 n^3 + a_4 n^4$.</p>
+                <p>Since $S(0) = 0$, we know $a_0 = 0$. We need to find $a_1, a_2, a_3, a_4$.</p>
+                <p>Plug in $n=1, 2, 3, 4$ to get a system of 4 equations!</p>
+
+                <div class="overflow-x-auto">
+                    <div class="latex-content min-w-[300px]">
+                        $$ \left[\begin{array}{cccc|c} 1 & 1 & 1 & 1 & 1 \\ 2 & 4 & 8 & 16 & 9 \\ 3 & 9 & 27 & 81 & 36
+                        \\ 4 & 16 & 64 & 256 & 100 \end{array}\right] $$
+                    </div>
+                </div>
+
+                <p>Solving this gives: $a_1=0, a_2=1/4, a_3=1/2, a_4=1/4$.</p>
+                <div class="bg-yellow-100 dark:bg-yellow-900/30 p-4 rounded-xl text-center font-bold text-lg">
+                    $$ \sum_{i=1}^n i^3 = \frac{n^2(n+1)^2}{4} $$
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-2">Mind = Blown 🤯</p>
+            </div>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🏆 Final Boss <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $50</span></h3>
+            </div>
+            <p class="mb-4">Does the Reduced Row-Echelon Form of a matrix depend on the sequence of operations used to
+                get there?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    different paths lead to different RREFs.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    the RREF is UNIQUE.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Tab Logic
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            // Show selected tab
+            const selected = document.getElementById(tabId);
+            selected.classList.remove('hidden');
+            selected.classList.add('block');
+
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-orange-100', 'text-orange-700');
+                btn.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            const activeBtn = document.querySelector(`button[onclick="showTab('${tabId}')"]`);
+            activeBtn.classList.remove('bg-gray-100', 'text-gray-600');
+            activeBtn.classList.add('bg-orange-100', 'text-orange-700');
+        }
+    </script>
+</body>
+
+</html>
