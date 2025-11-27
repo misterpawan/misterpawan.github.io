@@ -173,6 +173,42 @@
                 <p class="text-sm text-gray-500">The singular values $\sigma_i$ are the square roots of the eigenvalues
                     of $A^T A$.</p>
             </div>
+
+            <div class="mt-6 bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl border border-violet-200">
+                <h3 class="font-bold text-lg mb-2">Eigenvalue Theorem</h3>
+                <p class="mb-2">For any $m \times n$ matrix $A$, the matrices $A^T A$ and $A A^T$ have the same
+                    <strong>nonzero</strong> eigenvalues.</p>
+                <p class="text-sm text-gray-500">This ensures that the singular values are well-defined regardless of
+                    which product we use.</p>
+            </div>
+        </section>
+
+        <!-- Section 1.5: Computing SVD -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-fuchsia-600 flex items-center gap-2">
+                <span>🧮</span> Computing the SVD
+            </h2>
+            <p class="mb-4">To find $A = U \Sigma V^T$:</p>
+            <ol class="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
+                <li>Find eigenvalues $\lambda_i$ of $A^T A$. Singular values $\sigma_i = \sqrt{\lambda_i}$.</li>
+                <li>Find orthonormal eigenvectors $\vec{v}_i$ of $A^T A$. These form $V$.</li>
+                <li>Compute $\vec{u}_i = \frac{1}{\sigma_i} A \vec{v}_i$. These form the first $r$ columns of $U$.</li>
+                <li>If needed, extend $\{\vec{u}_1, \dots, \vec{u}_r\}$ to an orthonormal basis for $\mathbb{R}^m$ to
+                    get the rest of $U$.</li>
+            </ol>
+
+            <div class="bg-fuchsia-50 dark:bg-fuchsia-900/20 p-6 rounded-xl border border-fuchsia-200">
+                <h3 class="font-bold text-lg mb-2 text-fuchsia-800 dark:text-fuchsia-300">Example</h3>
+                <p class="mb-2">Let $A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$.</p>
+                <p class="text-sm mb-2">1. $A^T A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$. Eigenvalues: 3, 1.
+                    Singular values: $\sqrt{3}, 1$.</p>
+                <p class="text-sm mb-2">2. Eigenvectors of $A^T A$: $\vec{v}_1 = \frac{1}{\sqrt{2}}(1, 1)$, $\vec{v}_2 =
+                    \frac{1}{\sqrt{2}}(-1, 1)$.</p>
+                <p class="text-sm mb-2">3. $\vec{u}_1 = \frac{1}{\sqrt{3}} A \vec{v}_1 = \frac{1}{\sqrt{6}}(2, 1, 1)$.
+                    $\vec{u}_2 = \frac{1}{1} A \vec{v}_2 = \frac{1}{\sqrt{2}}(0, 1, -1)$.</p>
+                <p class="text-sm">4. Extend $U$: Find $\vec{u}_3$ orthogonal to $\vec{u}_1, \vec{u}_2$. $\vec{u}_3 =
+                    \frac{1}{\sqrt{3}}(-1, 1, 1)$.</p>
+            </div>
         </section>
 
         <!-- Section 1.5: Fundamental Subspaces -->
@@ -216,6 +252,34 @@
                     <li>$S$: Positive semi-definite symmetric matrix (Stretching).</li>
                 </ul>
                 <p class="text-sm text-gray-500 mt-2">We can find this from SVD: $A = (UV^T)(V \Sigma V^T) = Q S$.</p>
+            </div>
+        </section>
+
+        <!-- Section 1.7: Applications -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>🚀</span> Applications
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-orange-600">Generalized Inverse</h3>
+                    <p class="text-sm mb-2">For non-square matrices, we can define a "pseudoinverse" $A^+$:</p>
+                    <div class="latex-content font-bold text-center text-sm">
+                        $$ A^+ = V \Sigma^+ U^T $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Where $\Sigma^+$ takes reciprocals of non-zero singular
+                        values.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-orange-600">Unit Ball Mapping</h3>
+                    <p class="text-sm">The image of the unit ball $\{\vec{x} : \|\vec{x}\| \le 1\}$ under $A$ is an
+                        ellipsoid.</p>
+                    <ul class="list-disc list-inside text-xs mt-2 space-y-1 text-gray-500">
+                        <li>Principal axes are $\sigma_i \vec{u}_i$.</li>
+                        <li>Lengths are the singular values $\sigma_i$.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 

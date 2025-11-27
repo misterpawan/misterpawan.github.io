@@ -154,6 +154,85 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="mt-6 bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200">
+                <h3 class="font-bold text-lg mb-2">Existence Theorem</h3>
+                <p class="mb-2">Let $A$ be an $m \times n$ matrix with linearly independent columns. Then $A$ can be
+                    factored as $A=QR$, where:</p>
+                <ul class="list-disc list-inside text-sm space-y-1">
+                    <li>$Q$ is an $m \times n$ matrix with orthonormal columns.</li>
+                    <li>$R$ is an $n \times n$ upper triangular matrix with positive diagonal entries.</li>
+                </ul>
+                <p class="text-xs text-gray-500 mt-2">Note: If $A$ is square ($m=n$), then $Q$ is orthogonal.</p>
+            </div>
+        </section>
+
+        <!-- Section 1.5: The Algorithm -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-emerald-600 flex items-center gap-2">
+                <span>⚙️</span> The QR Algorithm
+            </h2>
+            <p class="mb-4">We use the Gram-Schmidt process on the columns of $A = [\vec{c}_1, \dots, \vec{c}_n]$.</p>
+
+            <div class="space-y-4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold text-emerald-600 mb-2">Step 1: Find Q</h3>
+                    <p class="text-sm mb-2">Apply Gram-Schmidt to $\{\vec{c}_1, \dots, \vec{c}_n\}$ to get orthogonal
+                        vectors $\{\vec{f}_1, \dots, \vec{f}_n\}$.</p>
+                    <p class="text-sm mb-2">Normalize them to get orthonormal vectors $\{\vec{q}_1, \dots, \vec{q}_n\}$.
+                    </p>
+                    <div class="latex-content font-bold text-center">
+                        $$ Q = [\vec{q}_1 \quad \vec{q}_2 \quad \dots \quad \vec{q}_n] $$
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold text-emerald-600 mb-2">Step 2: Find R</h3>
+                    <p class="text-sm mb-2">Since $A = QR$, we have $R = Q^T A$. The entries $r_{ij}$ are given by:</p>
+                    <div class="latex-content font-bold text-center">
+                        $$ r_{ij} = \vec{q}_i \cdot \vec{c}_j \quad (\text{for } i \le j) $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Entries below the diagonal ($i > j$) are 0.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1.6: Example -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-600 flex items-center gap-2">
+                <span>📝</span> Worked Example
+            </h2>
+            <div class="bg-cyan-50 dark:bg-cyan-900/20 p-6 rounded-xl border border-cyan-200">
+                <p class="mb-4">Find the QR factorization of $A = \begin{bmatrix} 4 & 1 \\ 2 & 3 \\ 0 & 1
+                    \end{bmatrix}$.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-bold text-sm text-cyan-800 dark:text-cyan-300">1. Gram-Schmidt on Columns</h4>
+                        <p class="text-sm">$\vec{c}_1 = (4, 2, 0)$. Let $\vec{f}_1 = \vec{c}_1$. $\|\vec{f}_1\| =
+                            \sqrt{20}$.</p>
+                        <p class="text-sm">$\vec{q}_1 = \frac{1}{\sqrt{20}}(4, 2, 0)$.</p>
+                        <p class="text-sm mt-2">$\vec{c}_2 = (1, 3, 1)$.</p>
+                        <p class="text-sm">$\vec{f}_2 = \vec{c}_2 - \text{proj}_{\vec{f}_1}(\vec{c}_2) = (1, 3, 1) -
+                            \frac{10}{20}(4, 2, 0) = (-1, 2, 1)$.</p>
+                        <p class="text-sm">$\|\vec{f}_2\| = \sqrt{6}$. $\vec{q}_2 = \frac{1}{\sqrt{6}}(-1, 2, 1)$.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-cyan-800 dark:text-cyan-300">2. Construct Q and R</h4>
+                        <div class="latex-content text-center text-sm">
+                            $$ Q = \begin{bmatrix} \frac{4}{\sqrt{20}} & \frac{-1}{\sqrt{6}} \\ \frac{2}{\sqrt{20}} &
+                            \frac{2}{\sqrt{6}} \\ 0 & \frac{1}{\sqrt{6}} \end{bmatrix} $$
+                        </div>
+                        <div class="latex-content text-center text-sm mt-2">
+                            $$ r_{11} = \|\vec{f}_1\| = \sqrt{20}, \quad r_{12} = \vec{q}_1 \cdot \vec{c}_2 = \sqrt{5},
+                            \quad r_{22} = \|\vec{f}_2\| = \sqrt{6} $$
+                        </div>
+                        <div class="latex-content text-center text-sm mt-2">
+                            $$ R = \begin{bmatrix} \sqrt{20} & \sqrt{5} \\ 0 & \sqrt{6} \end{bmatrix} $$
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Interactive QR Explorer -->
