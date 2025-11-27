@@ -166,6 +166,40 @@
             </div>
         </section>
 
+        <!-- Section 1.5: Theorems & Coordinates -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-violet-600 flex items-center gap-2">
+                <span>🌐</span> Isomorphism Theorems
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl border border-violet-200">
+                    <h3 class="font-bold mb-2 text-violet-800 dark:text-violet-300">Dimension Theorem</h3>
+                    <p class="text-sm">Two finite-dimensional vector spaces are isomorphic <strong>if and only
+                            if</strong> they have the same dimension.</p>
+                    <p class="text-center font-bold my-2">$V \cong W \iff \dim(V) = \dim(W)$</p>
+                </div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                    <h3 class="font-bold mb-2 text-indigo-800 dark:text-indigo-300">Invertibility Theorem</h3>
+                    <p class="text-sm">A linear transformation $T$ is an isomorphism <strong>if and only if</strong> it
+                        is invertible.</p>
+                    <p class="text-xs text-gray-500 mt-2">$T^{-1}$ is also a linear transformation!</p>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 mt-6">
+                <h3 class="font-bold text-lg mb-2">Coordinate Isomorphism</h3>
+                <p class="mb-2">Every vector space $V$ of dimension $n$ is isomorphic to $\mathbb{R}^n$.</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">If $B = \{\vec{b}_1, \dots, \vec{b}_n\}$ is a
+                    basis, the map $C_B: V \to \mathbb{R}^n$ sends a vector to its coordinates:</p>
+                <div class="latex-content font-bold text-center">
+                    $$ [\vec{v}]_B = \begin{bmatrix} c_1 \\ \vdots \\ c_n \end{bmatrix} $$
+                </div>
+                <p class="text-xs text-gray-500 mt-2">This is why we can solve almost any problem using $\mathbb{R}^n$!
+                </p>
+            </div>
+        </section>
+
         <!-- Interactive Composition Machine -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-blue-600">Composition Machine</h2>

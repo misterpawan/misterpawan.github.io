@@ -204,6 +204,48 @@
             </div>
         </section>
 
+        <!-- Section 1.5: More Examples & Operators -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+                <span>🔧</span> Linear Operators & Examples
+            </h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <h3 class="font-bold text-lg mb-2 text-blue-800 dark:text-blue-300">Linear Operators</h3>
+                <p class="mb-2">A linear transformation $T: V \to V$ (from a space to itself) is called a <strong>linear
+                        operator</strong>.</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Example: Rotation in $\mathbb{R}^2$ is an operator.
+                    Projection is an operator.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Differentiation ($D$)</h3>
+                    <p class="text-sm mb-2">Map $D: \calP_n \to \calP_{n-1}$ defined by $D(p(x)) = p'(x)$.</p>
+                    <p class="text-xs text-gray-500">Derivative of a sum is sum of derivatives!</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Integration ($I$)</h3>
+                    <p class="text-sm mb-2">Map $I: \calP_n \to \calP_{n+1}$ defined by $I(p(x)) = \int_0^x p(t)dt$.</p>
+                    <p class="text-xs text-gray-500">Integrals are linear too.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Transpose ($T$)</h3>
+                    <p class="text-sm mb-2">Map $T: \M_{nn} \to \M_{nn}$ defined by $T(A) = A^T$.</p>
+                    <p class="text-xs text-gray-500">$(A+B)^T = A^T + B^T$.</p>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200 mt-6">
+                <h3 class="font-bold text-lg mb-2 text-indigo-800 dark:text-indigo-300">Theorem: Determined by Basis
+                </h3>
+                <p class="mb-2">A linear transformation is <strong>completely determined</strong> by its action on a
+                    basis.</p>
+                <p class="text-sm">If you know $T(\vec{b}_1), \dots, T(\vec{b}_n)$ for a basis, you know $T(\vec{v})$
+                    for <strong>any</strong> vector $\vec{v}$!</p>
+            </div>
+        </section>
+
         <!-- Interactive 2D Visualizer -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-indigo-600">2D Transformation Visualizer</h2>
