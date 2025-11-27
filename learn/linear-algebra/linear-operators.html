@@ -176,6 +176,40 @@
             </div>
         </section>
 
+        <!-- Section 3: Composition -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+                <span>🔗</span> Multiple Actions (Composition)
+            </h2>
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <p class="mb-4">If we apply transformation $A$ then transformation $B$, the combined transformation is
+                    $BA$.</p>
+                <p class="mb-4 text-sm"><strong>Order matters!</strong> The matrix on the right acts first.</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ \text{Action}(\vec{x}) = B(A\vec{x}) = (BA)\vec{x} $$
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Two Rotations</h3>
+                    <p class="text-sm mb-2">Rotating by $\alpha$ then $\beta$ is the same as rotating by $\alpha +
+                        \beta$.</p>
+                    <div class="latex-content text-center text-sm">
+                        $$ R_\beta R_\alpha = R_{\alpha+\beta} $$
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Two Reflections</h3>
+                    <p class="text-sm mb-2">Reflecting across line $L_1$ then $L_2$ (angle $\theta$ between them) is a
+                        rotation by $2\theta$.</p>
+                    <div class="latex-content text-center text-sm">
+                        $$ Q_2 Q_1 = R_{2\theta} $$
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Interactive Transformation Playground -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-green-600">Transformation Playground</h2>

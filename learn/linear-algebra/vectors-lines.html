@@ -175,6 +175,86 @@
                     </div>
                 </div>
             </div>
+
+            <div class="mt-6 bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200">
+                <h3 class="font-bold mb-2 text-yellow-800 dark:text-yellow-300">Parallel Vectors</h3>
+                <p class="mb-2">Two vectors are <strong>parallel</strong> if they lie on the same line. Equivalently,
+                    one is a scalar multiple of the other.</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ \vec{v} = k\vec{u} $$
+                </div>
+                <p class="mt-2 text-sm">Example: $\vec{u}=(1, 2)$ and $\vec{v}=(2, 4)$ are parallel because $\vec{v} =
+                    2\vec{u}$.</p>
+            </div>
+        </section>
+
+        <!-- Section 1.5: Geometric Vectors -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600 flex items-center gap-2">
+                <span>📐</span> Geometric Vectors
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-4">Parallelogram Law</h3>
+                    <p class="mb-4">Vector addition $\vec{u} + \vec{v}$ corresponds to the diagonal of the parallelogram
+                        formed by $\vec{u}$ and $\vec{v}$.</p>
+                    <div class="flex justify-center">
+                        <!-- Simple SVG for Parallelogram Law -->
+                        <svg width="200" height="150" viewBox="0 0 200 150">
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5"
+                                    orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
+                                </marker>
+                            </defs>
+                            <line x1="20" y1="130" x2="100" y2="130" stroke="#3b82f6" stroke-width="2"
+                                marker-end="url(#arrowhead)" />
+                            <text x="60" y="145" font-size="12" fill="#3b82f6">u</text>
+                            <line x1="20" y1="130" x2="50" y2="50" stroke="#3b82f6" stroke-width="2"
+                                marker-end="url(#arrowhead)" />
+                            <text x="25" y="90" font-size="12" fill="#3b82f6">v</text>
+                            <line x1="100" y1="130" x2="130" y2="50" stroke="#9ca3af" stroke-width="1"
+                                stroke-dasharray="4" />
+                            <line x1="50" y1="50" x2="130" y2="50" stroke="#9ca3af" stroke-width="1"
+                                stroke-dasharray="4" />
+                            <line x1="20" y1="130" x2="130" y2="50" stroke="#ef4444" stroke-width="2"
+                                marker-end="url(#arrowhead)" />
+                            <text x="80" y="80" font-size="12" fill="#ef4444">u + v</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-4">Vector Subtraction</h3>
+                    <p class="mb-4">$\vec{u} - \vec{v}$ is the vector from the tip of $\vec{v}$ to the tip of $\vec{u}$.
+                    </p>
+                    <div class="flex justify-center">
+                        <!-- Simple SVG for Subtraction -->
+                        <svg width="200" height="150" viewBox="0 0 200 150">
+                            <line x1="20" y1="130" x2="100" y2="130" stroke="#3b82f6" stroke-width="2"
+                                marker-end="url(#arrowhead)" />
+                            <text x="60" y="145" font-size="12" fill="#3b82f6">u</text>
+                            <line x1="20" y1="130" x2="50" y2="50" stroke="#3b82f6" stroke-width="2"
+                                marker-end="url(#arrowhead)" />
+                            <text x="25" y="90" font-size="12" fill="#3b82f6">v</text>
+                            <line x1="50" y1="50" x2="100" y2="130" stroke="#ef4444" stroke-width="2"
+                                marker-end="url(#arrowhead)" />
+                            <text x="80" y="80" font-size="12" fill="#ef4444">u - v</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                <h3 class="font-bold mb-4 text-indigo-800 dark:text-indigo-300">Example: Midpoint</h3>
+                <p class="mb-2">Find the midpoint $M$ between $P_1(-1, -4, 3)$ and $P_2(5, 0, -3)$.</p>
+                <p class="mb-2">The midpoint is the average of the coordinates:</p>
+                <div class="latex-content text-center text-sm">
+                    $$ M = \frac{P_1 + P_2}{2} = \left( \frac{-1+5}{2}, \frac{-4+0}{2}, \frac{3+(-3)}{2} \right) = (2,
+                    -2, 0) $$
+                </div>
+            </div>
         </section>
 
         <!-- Interactive Calculator -->
