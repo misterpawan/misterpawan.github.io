@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Operators on R3 | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    mat: "\\mathbf"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Linear Operators
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 4 &bull; Section 4-4</p>
+            <p class="mt-4 text-lg italic">"Spin it, flip it, stretch it... matrices in action! 🔄"</p>
+        </header>
+
+        <!-- Section 1: Rotations -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>🔄</span> Rotations in $\mathbb{R}^2$
+            </h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <h3 class="font-bold mb-4 text-blue-800 dark:text-blue-300">Rotation Matrix $R_\theta$</h3>
+                <p class="mb-4">To rotate a vector counterclockwise by angle $\theta$:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ R_\theta = \begin{bmatrix} \cos \theta & -\sin \theta \\ \sin \theta & \cos \theta \end{bmatrix}
+                    $$
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Reflections -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600 flex items-center gap-2">
+                <span>🪞</span> Reflections
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                    <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-300">X-Axis Reflection</h3>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ Q_x = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} $$
+                    </div>
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold mb-2 text-green-800 dark:text-green-300">Y-Axis Reflection</h3>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ Q_y = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix} $$
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200">
+                <h3 class="font-bold mb-2 text-yellow-800 dark:text-yellow-300">Reflection across line $y=mx$</h3>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ Q_m = \frac{1}{1+m^2} \begin{bmatrix} 1-m^2 & 2m \\ 2m & m^2-1 \end{bmatrix} $$
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Transformation Playground -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-green-600">Transformation Playground</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">Apply transformations to the "F" shape.</p>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center justify-center">
+                <canvas id="trans-canvas" width="300" height="300"
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-inner border border-gray-200 dark:border-gray-700"></canvas>
+
+                <div class="space-y-4">
+                    <button onclick="applyTransform('rotate90')"
+                        class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">Rotate
+                        90° CCW</button>
+                    <button onclick="applyTransform('reflectX')"
+                        class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg shadow hover:bg-purple-600 transition">Reflect
+                        X-Axis</button>
+                    <button onclick="applyTransform('reflectY')"
+                        class="w-full bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition">Reflect
+                        Y-Axis</button>
+                    <button onclick="resetTransform()"
+                        class="w-full bg-gray-500 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-600 transition">Reset</button>
+                </div>
+            </div>
+            <p class="text-center mt-4 font-mono text-sm text-gray-500" id="matrix-display">Current Matrix: Identity</p>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🤔 Logic Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">What is the result of reflecting across the X-axis followed by reflecting across the Y-axis?
+            </p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Identity
+                    (No change)</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Rotation
+                    by 180° ($R_\pi$)</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Reflection
+                    across $y=x$</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Transformation Playground
+        const canvas = document.getElementById('trans-canvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const scale = 40;
+
+        // The "F" shape points
+        const shape = [
+            { x: 0, y: 0 }, { x: 0, y: 2 }, { x: 1, y: 2 },
+            { x: 1, y: 1 }, { x: 0.5, y: 1 }, { x: 0.5, y: 0 } // Simplified F
+        ];
+        // Actually let's do a simpler F
+        // (0,0) -> (0,2) -> (1,2) -> (1,1.5) -> (0.5, 1.5) -> (0.5, 1) -> (1,1) -> (1, 0.5) -> (0.5, 0.5) -> (0.5, 0)
+        // Let's just draw lines
+        const fLines = [
+            [{ x: 0, y: 0 }, { x: 0, y: 2 }],
+            [{ x: 0, y: 2 }, { x: 1.5, y: 2 }],
+            [{ x: 0, y: 1 }, { x: 1, y: 1 }]
+        ];
+
+        let currentMatrix = [1, 0, 0, 1]; // Identity
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= w; i += scale) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke(); }
+            for (let i = 0; i <= h; i += scale) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke(); }
+
+            ctx.strokeStyle = '#9ca3af';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
+        }
+
+        function toCanvas(x, y) {
+            return { x: cx + x * scale, y: cy - y * scale };
+        }
+
+        function transformPoint(x, y, m) {
+            return {
+                x: m[0] * x + m[1] * y,
+                y: m[2] * x + m[3] * y
+            };
+        }
+
+        function drawShape() {
+            drawGrid();
+
+            ctx.strokeStyle = '#f97316'; // Orange
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+
+            fLines.forEach(line => {
+                const p1 = transformPoint(line[0].x, line[0].y, currentMatrix);
+                const p2 = transformPoint(line[1].x, line[1].y, currentMatrix);
+
+                const c1 = toCanvas(p1.x, p1.y);
+                const c2 = toCanvas(p2.x, p2.y);
+
+                ctx.beginPath();
+                ctx.moveTo(c1.x, c1.y);
+                ctx.lineTo(c2.x, c2.y);
+                ctx.stroke();
+            });
+        }
+
+        function matMul(A, B) {
+            // A * B (2x2 matrices flattened)
+            return [
+                A[0] * B[0] + A[1] * B[2], A[0] * B[1] + A[1] * B[3],
+                A[2] * B[0] + A[3] * B[2], A[2] * B[1] + A[3] * B[3]
+            ];
+        }
+
+        function applyTransform(type) {
+            let m = [1, 0, 0, 1];
+            if (type === 'rotate90') m = [0, -1, 1, 0];
+            if (type === 'reflectX') m = [1, 0, 0, -1];
+            if (type === 'reflectY') m = [-1, 0, 0, 1];
+
+            currentMatrix = matMul(m, currentMatrix);
+            drawShape();
+            updateMatrixDisplay();
+        }
+
+        function resetTransform() {
+            currentMatrix = [1, 0, 0, 1];
+            drawShape();
+            updateMatrixDisplay();
+        }
+
+        function updateMatrixDisplay() {
+            const m = currentMatrix.map(v => Math.round(v * 100) / 100);
+            document.getElementById('matrix-display').innerText = `Current Matrix: [${m[0]}, ${m[1]}; ${m[2]}, ${m[3]}]`;
+        }
+
+        // Init
+        drawShape();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vectors and Lines | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    norm: ["\\left\\lVert#1\\right\\rVert", 1]
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Vectors and Lines
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 4 &bull; Section 4-1</p>
+            <p class="mt-4 text-lg italic">"Direction and Magnitude... the DNA of geometry! 🧬"</p>
+        </header>
+
+        <!-- Section 1: Vector Norms -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>📏</span> Vector Norms (Length)
+            </h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <h3 class="font-bold mb-4 text-blue-800 dark:text-blue-300">The Euclidean Norm</h3>
+                <p class="mb-4">The length (or magnitude) of a vector $\vec{v} = (v_1, v_2, \dots, v_n)$ is:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ \norm{\vec{v}} = \sqrt{v_1^2 + v_2^2 + \dots + v_n^2} $$
+                </div>
+                <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">This is just the Pythagorean theorem in $n$
+                    dimensions!</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                    <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-300">Unit Vectors</h3>
+                    <p class="mb-2">A vector with length 1.</p>
+                    <p class="mb-2">To normalize any non-zero vector $\vec{v}$:</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ \vec{u} = \frac{1}{\norm{\vec{v}}} \vec{v} $$
+                    </div>
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold mb-2 text-green-800 dark:text-green-300">Distance</h3>
+                    <p class="mb-2">Distance between points $P$ and $Q$ (vectors $\vec{u}$ and $\vec{v}$):</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ \text{dist}(\vec{u}, \vec{v}) = \norm{\vec{u} - \vec{v}} $$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Calculator -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-green-600 flex items-center gap-2">
+                <span>🧮</span> Vector Calculator
+            </h2>
+
+            <div class="flex flex-col items-center">
+                <div class="flex gap-2 mb-4">
+                    <input type="number" id="v-x" placeholder="x"
+                        class="w-20 p-2 text-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                    <input type="number" id="v-y" placeholder="y"
+                        class="w-20 p-2 text-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                    <input type="number" id="v-z" placeholder="z"
+                        class="w-20 p-2 text-center rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                </div>
+                <button onclick="calcNorm()"
+                    class="bg-orange-500 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-orange-600 transition mb-6">Calculate</button>
+
+                <div id="calc-result" class="text-center hidden w-full">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                            <p class="text-sm text-gray-500">Norm $\norm{\vec{v}}$</p>
+                            <p class="text-xl font-bold text-blue-600" id="res-norm"></p>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                            <p class="text-sm text-gray-500">Unit Vector $\vec{u}$</p>
+                            <p class="text-lg font-mono text-green-600" id="res-unit"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Quick Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">What is the length of vector $\vec{v} = (3, 4)$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">7</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">5</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">25</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Lines in Space -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Lines in Space</h2>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200 mb-6">
+                <h3 class="font-bold mb-4 text-yellow-800 dark:text-yellow-300">Vector Equation</h3>
+                <p class="mb-4">A line through point $P_0$ with direction $\vec{d}$ is given by:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ \vec{p} = \vec{p}_0 + t\vec{d} $$
+                </div>
+                <p class="mt-4 text-center text-sm">where $t$ is any real number (scalar).</p>
+            </div>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
+                <h3 class="font-bold mb-2">Parametric Equations</h3>
+                <p class="mb-2">Breaking it down by component:</p>
+                <div class="latex-content font-bold">
+                    $$ \begin{cases} x = x_0 + at \\ y = y_0 + bt \\ z = z_0 + ct \end{cases} $$
+                </div>
+                <p class="text-xs text-gray-500 mt-2">where $\vec{d} = (a, b, c)$.</p>
+            </div>
+        </section>
+
+        <!-- Interactive Line Visualizer (2D Projection) -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600">Line Visualizer (2D)</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">Visualize $\vec{p} = \vec{p}_0 + t\vec{d}$. Drag the slider
+                to change $t$.</p>
+
+            <div class="flex justify-center mb-6">
+                <canvas id="line-canvas" width="400" height="300"
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-inner border border-gray-200 dark:border-gray-700"></canvas>
+            </div>
+
+            <div class="flex items-center gap-4 justify-center">
+                <span class="font-mono">t = <span id="t-val">0</span></span>
+                <input type="range" id="t-slider" min="-5" max="5" step="0.1" value="0" class="w-64 accent-orange-500"
+                    oninput="updateLine()">
+            </div>
+            <p class="text-center mt-2 text-sm text-gray-500">$\vec{p}_0 = (1, 1)$, $\vec{d} = (2, 1)$</p>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🤔 Logic Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">Are the vectors $\vec{u} = (2, -4, 1)$ and $\vec{v} = (-6, 12, -3)$ parallel?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    $\vec{v} = -3\vec{u}$.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    they point in opposite directions.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    their lengths are different.</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Hint: Check if one is a scalar multiple of the other.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Vector Calculator
+        function calcNorm() {
+            const x = parseFloat(document.getElementById('v-x').value) || 0;
+            const y = parseFloat(document.getElementById('v-y').value) || 0;
+            const z = parseFloat(document.getElementById('v-z').value) || 0;
+
+            const norm = Math.sqrt(x * x + y * y + z * z);
+            const unit = norm === 0 ? "(0, 0, 0)" : `(${(x / norm).toFixed(2)}, ${(y / norm).toFixed(2)}, ${(z / norm).toFixed(2)})`;
+
+            document.getElementById('res-norm').innerText = norm.toFixed(4);
+            document.getElementById('res-unit').innerText = unit;
+            document.getElementById('calc-result').classList.remove('hidden');
+        }
+
+        // Line Visualizer
+        const canvas = document.getElementById('line-canvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const scale = 40;
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // Line params: P0(1, 1), d(2, 1)
+        const p0 = { x: 1, y: 1 };
+        const d = { x: 2, y: 1 };
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+
+            // Grid
+            for (let i = 0; i <= width; i += scale) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+            }
+            for (let i = 0; i <= height; i += scale) {
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#9ca3af';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, centerY); ctx.lineTo(width, centerY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height); ctx.stroke();
+        }
+
+        function toCanvas(x, y) {
+            return {
+                x: centerX + x * scale,
+                y: centerY - y * scale
+            };
+        }
+
+        function updateLine() {
+            const t = parseFloat(document.getElementById('t-slider').value);
+            document.getElementById('t-val').innerText = t;
+
+            drawGrid();
+
+            // Draw Line (infinite)
+            const start = toCanvas(p0.x + (-10) * d.x, p0.y + (-10) * d.y);
+            const end = toCanvas(p0.x + (10) * d.x, p0.y + (10) * d.y);
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#3b82f6'; // Blue
+            ctx.lineWidth = 2;
+            ctx.moveTo(start.x, start.y);
+            ctx.lineTo(end.x, end.y);
+            ctx.stroke();
+
+            // Draw P0
+            const cP0 = toCanvas(p0.x, p0.y);
+            ctx.fillStyle = '#ef4444'; // Red
+            ctx.beginPath();
+            ctx.arc(cP0.x, cP0.y, 5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.fillText("P0", cP0.x + 10, cP0.y - 10);
+
+            // Draw Current Point P(t)
+            const px = p0.x + t * d.x;
+            const py = p0.y + t * d.y;
+            const cP = toCanvas(px, py);
+
+            ctx.fillStyle = '#10b981'; // Green
+            ctx.beginPath();
+            ctx.arc(cP.x, cP.y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.fillText(`P(t=${t})`, cP.x + 10, cP.y - 10);
+        }
+
+        // Init
+        updateLine();
+
+    </script>
+</body>
+
+</html>

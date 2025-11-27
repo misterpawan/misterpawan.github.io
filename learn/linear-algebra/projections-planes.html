@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projections and Planes | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    norm: ["\\left\\lVert#1\\right\\rVert", 1],
+                    proj: "\\text{proj}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Projections and Planes
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 4 &bull; Section 4-2</p>
+            <p class="mt-4 text-lg italic">"Shadows and Surfaces... where geometry meets algebra! 📐"</p>
+        </header>
+
+        <!-- Section 1: Dot Product -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>⚫</span> The Dot Product
+            </h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <h3 class="font-bold mb-4 text-blue-800 dark:text-blue-300">Definition</h3>
+                <p class="mb-4">For $\vec{u} = (u_1, \dots, u_n)$ and $\vec{v} = (v_1, \dots, v_n)$:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ \vec{u} \cdot \vec{v} = u_1v_1 + u_2v_2 + \dots + u_nv_n $$
+                </div>
+            </div>
+
+            <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200 mb-6">
+                <h3 class="font-bold mb-4 text-purple-800 dark:text-purple-300">Geometric Meaning</h3>
+                <p class="mb-4">The dot product relates to the angle $\theta$ between vectors:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ \vec{u} \cdot \vec{v} = \norm{\vec{u}} \norm{\vec{v}} \cos \theta $$
+                </div>
+                <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                    If $\vec{u} \cdot \vec{v} = 0$, the vectors are <strong>orthogonal</strong> (perpendicular).
+                </p>
+            </div>
+        </section>
+
+        <!-- Interactive Angle Calculator -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-green-600">Angle Calculator</h2>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-bold mb-2">Vector $\vec{u}$</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="u-x" placeholder="x"
+                            class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                        <input type="number" id="u-y" placeholder="y"
+                            class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                        <input type="number" id="u-z" placeholder="z"
+                            class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-2">Vector $\vec{v}$</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="v-x" placeholder="x"
+                            class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                        <input type="number" id="v-y" placeholder="y"
+                            class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                        <input type="number" id="v-z" placeholder="z"
+                            class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                    </div>
+                </div>
+            </div>
+            <button onclick="calcAngle()"
+                class="bg-green-500 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-green-600 transition mb-6">Calculate
+                Angle</button>
+            <div id="angle-res"
+                class="hidden text-center text-xl font-bold text-blue-600 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+            </div>
+        </section>
+
+        <!-- Section 2: Projections -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Projections</h2>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="mb-4">The projection of $\vec{u}$ onto $\vec{d}$ is the "shadow" of $\vec{u}$ on the line
+                        along $\vec{d}$.</p>
+                    <div class="latex-content font-bold bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-4">
+                        $$ \proj_{\vec{d}} \vec{u} = \frac{\vec{u} \cdot \vec{d}}{\norm{\vec{d}}^2} \vec{d} $$
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner flex justify-center">
+                    <canvas id="proj-canvas" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Planes -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600">Planes in $\mathbb{R}^3$</h2>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200 mb-6">
+                <h3 class="font-bold mb-4 text-yellow-800 dark:text-yellow-300">Scalar Equation</h3>
+                <p class="mb-4">A plane with normal vector $\vec{n} = (a, b, c)$ passing through point $P_0(x_0, y_0,
+                    z_0)$ has the equation:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ a(x - x_0) + b(y - y_0) + c(z - z_0) = 0 $$
+                </div>
+                <p class="text-center mt-2 font-mono text-gray-600">or $ax + by + cz = d$</p>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">Find the equation of the plane passing through $(1, 0, 0)$ with normal vector $\vec{n} = (2,
+                3, -1)$.</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$2x
+                    + 3y - z = 0$</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$2x
+                    + 3y - z = 2$</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$x
+                    + y + z = 2$</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Angle Calculator
+        function calcAngle() {
+            const u = [
+                parseFloat(document.getElementById('u-x').value) || 0,
+                parseFloat(document.getElementById('u-y').value) || 0,
+                parseFloat(document.getElementById('u-z').value) || 0
+            ];
+            const v = [
+                parseFloat(document.getElementById('v-x').value) || 0,
+                parseFloat(document.getElementById('v-y').value) || 0,
+                parseFloat(document.getElementById('v-z').value) || 0
+            ];
+
+            const dot = u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
+            const normU = Math.sqrt(u[0] ** 2 + u[1] ** 2 + u[2] ** 2);
+            const normV = Math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2);
+
+            if (normU === 0 || normV === 0) {
+                document.getElementById('angle-res').innerText = "Vectors must be non-zero.";
+                document.getElementById('angle-res').classList.remove('hidden');
+                return;
+            }
+
+            const cosTheta = dot / (normU * normV);
+            // Clamp for floating point errors
+            const clampedCos = Math.max(-1, Math.min(1, cosTheta));
+            const thetaRad = Math.acos(clampedCos);
+            const thetaDeg = (thetaRad * 180 / Math.PI).toFixed(2);
+
+            document.getElementById('angle-res').innerText = `Angle: ${thetaDeg}° (${thetaRad.toFixed(2)} rad)`;
+            document.getElementById('angle-res').classList.remove('hidden');
+        }
+
+        // Projection Visualizer (Static for now, but drawn on canvas)
+        const canvas = document.getElementById('proj-canvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // Draw a simple projection diagram
+        ctx.translate(50, 150);
+        ctx.scale(1, -1); // Flip Y
+
+        // d vector
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(200, 0);
+        ctx.strokeStyle = '#3b82f6'; // Blue
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.fillText("d", 210, 0);
+
+        // u vector
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(150, 100);
+        ctx.strokeStyle = '#ef4444'; // Red
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.fillText("u", 160, 110);
+
+        // Projection
+        ctx.beginPath();
+        ctx.moveTo(150, 100);
+        ctx.lineTo(150, 0);
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = '#9ca3af';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(150, 0);
+        ctx.setLineDash([]);
+        ctx.strokeStyle = '#10b981'; // Green
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // Reset transform for text
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.font = "14px Inter";
+        ctx.fillStyle = "#3b82f6"; ctx.fillText("d", 260, 155);
+        ctx.fillStyle = "#ef4444"; ctx.fillText("u", 210, 40);
+        ctx.fillStyle = "#10b981"; ctx.fillText("proj u", 120, 170);
+
+    </script>
+</body>
+
+</html>
