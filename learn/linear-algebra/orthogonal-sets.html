@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orthogonal Sets | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    dotprod: "\\cdot",
+                    norm: ["\\left\\lVert#1\\right\\rVert", 1]
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#059669', // Emerald
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #ecfdf5;
+            /* emerald-50 */
+            border-color: #059669;
+            /* emerald-600 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #059669;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-emerald-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-emerald-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">
+                Orthogonal Sets
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 5 &bull; Section 5-3</p>
+            <p class="mt-4 text-lg italic">"When vectors meet at 90 degrees, magic happens. ✨"</p>
+        </header>
+
+        <!-- Section 1: Orthogonality -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-emerald-600 flex items-center gap-2">
+                <span>📐</span> Orthogonal & Orthonormal Sets
+            </h2>
+
+            <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl border border-emerald-200 mb-6">
+                <h3 class="font-bold text-lg mb-2">Definitions</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Two vectors $\vec{u}, \vec{v}$ are <strong>orthogonal</strong> if $\vec{u} \cdot \vec{v} = 0$.
+                    </li>
+                    <li>A set $\{\vec{u}_1, \dots, \vec{u}_k\}$ is an <strong>orthogonal set</strong> if every pair is
+                        orthogonal.</li>
+                    <li>It is an <strong>orthonormal set</strong> if it is orthogonal AND every vector is a unit vector
+                        ($\norm{\vec{u}_i} = 1$).</li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-bold text-lg mb-2">Theorem</h3>
+                <p>An orthogonal set of non-zero vectors is always <strong>linearly independent</strong>.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Fourier Expansion -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-teal-600">Fourier Expansion</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                If $\{\vec{f}_1, \dots, \vec{f}_n\}$ is an orthogonal basis for $\mathbb{R}^n$, then any vector
+                $\vec{x}$ can be written as:
+            </p>
+            <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-xl mb-6 shadow-inner">
+                $$ \vec{x} = \frac{\vec{x} \cdot \vec{f}_1}{\norm{\vec{f}_1}^2}\vec{f}_1 + \dots + \frac{\vec{x} \cdot
+                \vec{f}_n}{\norm{\vec{f}_n}^2}\vec{f}_n $$
+            </div>
+            <p class="text-sm text-gray-500">The coefficients are called <strong>Fourier coefficients</strong>. This is
+                much easier than solving a system of equations!</p>
+        </section>
+
+        <!-- Interactive Fourier Calculator -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600">Fourier Expansion Calculator (2D)</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                Given an orthogonal basis $\{\vec{f}_1, \vec{f}_2\}$ and a target vector $\vec{x}$, calculate the
+                coefficients.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                    <label class="block text-sm font-bold mb-2 text-emerald-600">Basis Vector $\vec{f}_1$</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="f1x" value="1" class="w-full p-2 rounded border dark:bg-gray-700">
+                        <input type="number" id="f1y" value="1" class="w-full p-2 rounded border dark:bg-gray-700">
+                    </div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                    <label class="block text-sm font-bold mb-2 text-emerald-600">Basis Vector $\vec{f}_2$</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="f2x" value="-1" class="w-full p-2 rounded border dark:bg-gray-700">
+                        <input type="number" id="f2y" value="1" class="w-full p-2 rounded border dark:bg-gray-700">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Must be orthogonal to $\vec{f}_1$!</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                    <label class="block text-sm font-bold mb-2 text-blue-600">Target Vector $\vec{x}$</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="xx" value="2" class="w-full p-2 rounded border dark:bg-gray-700">
+                        <input type="number" id="xy" value="4" class="w-full p-2 rounded border dark:bg-gray-700">
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="calculateFourier()"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-xl transition w-full mb-4">Calculate
+                Expansion</button>
+
+            <div id="fourier-result"
+                class="hidden p-6 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 text-center">
+                <!-- Result will be injected here -->
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-emerald-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-emerald-100 text-emerald-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">If $\{\vec{u}_1, \vec{u}_2\}$ is an <strong>orthonormal</strong> set, what is
+                $\norm{\vec{u}_1}$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">0</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">1</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    depends on the vector.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Fourier Calculator Logic
+        function calculateFourier() {
+            const f1x = parseFloat(document.getElementById('f1x').value);
+            const f1y = parseFloat(document.getElementById('f1y').value);
+            const f2x = parseFloat(document.getElementById('f2x').value);
+            const f2y = parseFloat(document.getElementById('f2y').value);
+            const xx = parseFloat(document.getElementById('xx').value);
+            const xy = parseFloat(document.getElementById('xy').value);
+
+            const resultEl = document.getElementById('fourier-result');
+            resultEl.classList.remove('hidden');
+
+            // Check orthogonality
+            const dotProd = f1x * f2x + f1y * f2y;
+            if (Math.abs(dotProd) > 0.0001) {
+                resultEl.innerHTML = `<span class="text-red-600 font-bold">Error:</span> Basis vectors are not orthogonal ($\vec{f}_1 \cdot \vec{f}_2 = ${dotProd}$).`;
+                return;
+            }
+
+            // Calculate coefficients
+            const c1 = (xx * f1x + xy * f1y) / (f1x ** 2 + f1y ** 2);
+            const c2 = (xx * f2x + xy * f2y) / (f2x ** 2 + f2y ** 2);
+
+            resultEl.innerHTML = `
+            <h3 class="font-bold text-lg mb-2">Expansion Result</h3>
+            <div class="latex-content">
+                $$ \\vec{x} = ${parseFloat(c1.toFixed(2))} \\vec{f}_1 + ${parseFloat(c2.toFixed(2))} \\vec{f}_2 $$
+            </div>
+            <p class="text-sm text-gray-500 mt-2">
+                $c_1 = \\frac{${(xx * f1x + xy * f1y)}}{${(f1x ** 2 + f1y ** 2)}} = ${parseFloat(c1.toFixed(2))}$, 
+                $c_2 = \\frac{${(xx * f2x + xy * f2y)}}{${(f2x ** 2 + f2y ** 2)}} = ${parseFloat(c2.toFixed(2))}$
+            </p>
+        `;
+            MathJax.typesetPromise([resultEl]);
+        }
+
+    </script>
+</body>
+
+</html>

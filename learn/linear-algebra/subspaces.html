@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subspaces of R^n | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    nul: "\\text{nul}",
+                    im: "\\text{im}",
+                    col: "\\text{col}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Subspaces of $\mathbb{R}^n$
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 5 &bull; Section 5-1</p>
+            <p class="mt-4 text-lg italic">"Not all sets are created equal... some are spaces! 🌌"</p>
+        </header>
+
+        <!-- Section 1: Definition -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>📦</span> Definition of a Subspace
+            </h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <p class="mb-4">A subset $U$ of $\mathbb{R}^n$ is a <strong>subspace</strong> if it satisfies three
+                    conditions:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li><strong>S1. Zero Vector:</strong> $\vec{0} \in U$.</li>
+                    <li><strong>S2. Closed under Addition:</strong> If $\vec{u}, \vec{v} \in U$, then $\vec{u} + \vec{v}
+                        \in U$.</li>
+                    <li><strong>S3. Closed under Scalar Multiplication:</strong> If $\vec{u} \in U$ and $c \in
+                        \mathbb{R}$, then $c\vec{u} \in U$.</li>
+                </ul>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold mb-2 text-green-800 dark:text-green-300">Examples (Subspaces)</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>The set $\{\vec{0}\}$ (Zero subspace).</li>
+                        <li>$\mathbb{R}^n$ itself.</li>
+                        <li>Any line through the origin.</li>
+                        <li>Any plane through the origin.</li>
+                    </ul>
+                </div>
+                <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-xl border border-red-200">
+                    <h3 class="font-bold mb-2 text-red-800 dark:text-red-300">Non-Examples</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>A line NOT through the origin (fails S1).</li>
+                        <li>The set of integers $\mathbb{Z}^n$ (fails S3).</li>
+                        <li>The first quadrant (fails S3 with negative scalars).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Subspace Checker -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600">Subspace Visualizer</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                Visualize why a line must pass through the origin to be a subspace.
+                Try moving the line away from the origin and see if $2\vec{v}$ stays on the line!
+            </p>
+
+            <div class="flex flex-col items-center">
+                <canvas id="subspace-canvas" width="400" height="300"
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-inner border border-gray-200 dark:border-gray-700 mb-4"></canvas>
+
+                <div class="flex items-center gap-4">
+                    <span class="font-bold">Y-Intercept:</span>
+                    <input type="range" id="intercept-slider" min="-3" max="3" step="0.1" value="0"
+                        class="w-48 accent-purple-500" oninput="updateVisualizer()">
+                    <span id="intercept-val" class="font-mono w-12 text-center">0</span>
+                </div>
+                <p id="status-text" class="mt-4 font-bold text-green-600">Is a Subspace! (Passes through origin)</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Null Space and Image Space -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600">Null Space and Image Space</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200">
+                    <h3 class="font-bold mb-2 text-yellow-800 dark:text-yellow-300">Null Space ($\nul A$)</h3>
+                    <p class="mb-2 text-sm">The set of all solutions to $A\vec{x} = \vec{0}$.</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg mb-2">
+                        $$ \nul(A) = \{ \vec{x} \in \mathbb{R}^n \mid A\vec{x} = \vec{0} \} $$
+                    </div>
+                    <p class="text-xs text-gray-500">Subspace of $\mathbb{R}^n$.</p>
+                </div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                    <h3 class="font-bold mb-2 text-indigo-800 dark:text-indigo-300">Image Space ($\im A$)</h3>
+                    <p class="mb-2 text-sm">Also called Column Space ($\col A$). The set of all possible outputs
+                        $A\vec{x}$.</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg mb-2">
+                        $$ \im(A) = \{ A\vec{x} \mid \vec{x} \in \mathbb{R}^n \} $$
+                    </div>
+                    <p class="text-xs text-gray-500">Subspace of $\mathbb{R}^m$.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">Which of the following is <strong>NOT</strong> a subspace of $\mathbb{R}^2$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
+                    set of all vectors $(x, y)$ where $x = y$.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
+                    set of all vectors $(x, y)$ where $x + y = 1$.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
+                    set $\{(0, 0)\}$.</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Hint: Check if the zero vector is included.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Subspace Visualizer
+        const canvas = document.getElementById('subspace-canvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const scale = 40;
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= w; i += scale) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke(); }
+            for (let i = 0; i <= h; i += scale) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke(); }
+
+            ctx.strokeStyle = '#9ca3af';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
+        }
+
+        function toCanvas(x, y) {
+            return { x: cx + x * scale, y: cy - y * scale };
+        }
+
+        function updateVisualizer() {
+            const b = parseFloat(document.getElementById('intercept-slider').value);
+            document.getElementById('intercept-val').innerText = b;
+
+            drawGrid();
+
+            // Draw Line y = x + b
+            // Points: (-5, -5+b), (5, 5+b)
+            const p1 = toCanvas(-5, -5 + b);
+            const p2 = toCanvas(5, 5 + b);
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#3b82f6'; // Blue
+            ctx.lineWidth = 3;
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+
+            // Check subspace condition
+            const statusEl = document.getElementById('status-text');
+            if (Math.abs(b) < 0.1) {
+                statusEl.innerText = "Is a Subspace! (Passes through origin)";
+                statusEl.className = "mt-4 font-bold text-green-600";
+
+                // Draw origin point
+                const o = toCanvas(0, 0);
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath(); ctx.arc(o.x, o.y, 6, 0, 2 * Math.PI); ctx.fill();
+            } else {
+                statusEl.innerText = "Not a Subspace! (Does not contain zero vector)";
+                statusEl.className = "mt-4 font-bold text-red-600";
+
+                // Draw origin point as missing
+                const o = toCanvas(0, 0);
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(o.x, o.y, 6, 0, 2 * Math.PI); ctx.stroke();
+            }
+        }
+
+        // Init
+        updateVisualizer();
+
+    </script>
+</body>
+
+</html>
