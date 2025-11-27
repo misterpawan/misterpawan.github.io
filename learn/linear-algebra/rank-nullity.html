@@ -152,6 +152,32 @@
             </div>
         </section>
 
+        <!-- Section: Finding Bases for Spaces -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600 flex items-center gap-2">
+                <span>🔍</span> Finding Bases
+            </h2>
+            <p class="mb-4">Given a matrix $A$, how do we find bases for its fundamental subspaces?</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                    <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-300">Basis for Row Space</h3>
+                    <p class="mb-2">1. Row reduce $A$ to REF.</p>
+                    <p class="mb-2">2. The <strong>non-zero rows</strong> of the REF form a basis for $\text{row}(A)$.
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Note: Use the rows of the REF, not the original
+                        matrix.</p>
+                </div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                    <h3 class="font-bold mb-2 text-indigo-800 dark:text-indigo-300">Basis for Column Space</h3>
+                    <p class="mb-2">1. Row reduce $A$ to REF.</p>
+                    <p class="mb-2">2. Identify the <strong>pivot columns</strong>.</p>
+                    <p class="mb-2">3. The corresponding columns in the <strong>original matrix $A$</strong> form a
+                        basis for $\text{col}(A)$.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Section 2: Rank-Nullity Theorem -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-rose-600">The Rank-Nullity Theorem</h2>
@@ -165,6 +191,33 @@
                 <p class="text-center text-sm text-gray-600 dark:text-gray-400">
                     (Dimension of Image) + (Dimension of Kernel) = (Dimension of Domain)
                 </p>
+            </div>
+        </section>
+
+        <!-- Section: Full Rank Cases -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-teal-600 flex items-center gap-2">
+                <span>💎</span> Full Rank Matrices
+            </h2>
+            <div class="space-y-4">
+                <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200">
+                    <h3 class="font-bold text-lg mb-2 text-teal-800 dark:text-teal-300">Full Column Rank ($\rank A = n$)
+                    </h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Columns are linearly independent.</li>
+                        <li>$\nullity(A) = 0$ (Kernel is only $\{\vec{0}\}$).</li>
+                        <li>$A\vec{x}=\vec{b}$ has at most one solution.</li>
+                    </ul>
+                </div>
+                <div class="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl border border-orange-200">
+                    <h3 class="font-bold text-lg mb-2 text-orange-800 dark:text-orange-300">Full Row Rank ($\rank A =
+                        m$)</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Rows are linearly independent.</li>
+                        <li>$\text{col}(A) = \mathbb{R}^m$ (Columns span the whole codomain).</li>
+                        <li>$A\vec{x}=\vec{b}$ has at least one solution for every $\vec{b}$.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 

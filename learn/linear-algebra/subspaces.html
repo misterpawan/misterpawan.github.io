@@ -172,6 +172,72 @@
             </div>
         </section>
 
+        <!-- Section: Spanning Sets -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600 flex items-center gap-2">
+                <span>🕸️</span> Spanning Sets
+            </h2>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-gray-200">Linear Combinations</h3>
+                <p class="mb-4">
+                    A vector $\vec{w}$ is a <strong>linear combination</strong> of vectors $\vec{v}_1, \dots, \vec{v}_k$
+                    if there exist scalars $c_1, \dots, c_k$ such that:
+                </p>
+                <div
+                    class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-xl mb-4 shadow-inner">
+                    $$ \vec{w} = c_1\vec{v}_1 + c_2\vec{v}_2 + \dots + c_k\vec{v}_k $$
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200 mb-6">
+                <h3 class="font-bold mb-2 text-indigo-800 dark:text-indigo-300">Definition: Span</h3>
+                <p class="mb-4">
+                    The set of all possible linear combinations of a set of vectors $\{\vec{v}_1, \dots, \vec{v}_k\}$ is
+                    called the <strong>span</strong> of those vectors, denoted by $\text{span}\{\vec{v}_1, \dots,
+                    \vec{v}_k\}$.
+                </p>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg border-l-4 border-indigo-500">
+                    <p class="font-bold text-indigo-600 mb-1">Theorem</p>
+                    <p>If $\vec{v}_1, \dots, \vec{v}_k$ are in $\mathbb{R}^n$, then $\text{span}\{\vec{v}_1, \dots,
+                        \vec{v}_k\}$ is a subspace of $\mathbb{R}^n$.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Subspace Test Example -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-teal-600 flex items-center gap-2">
+                <span>📝</span> Example: Subspace Test
+            </h2>
+            <p class="mb-4">Let $W$ be the set of all vectors in $\mathbb{R}^3$ of the form $(a, b, a+b)$. Is $W$ a
+                subspace?</p>
+
+            <div class="space-y-4">
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-lg mb-2 text-teal-600">Solution</h3>
+                    <p class="mb-2">We can write any vector in $W$ as:</p>
+                    <div class="latex-content text-center mb-4">
+                        $$ \begin{bmatrix} a \\ b \\ a+b \end{bmatrix} = a \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + b
+                        \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix} $$
+                    </div>
+                    <p class="mb-2">
+                        Since every vector in $W$ is a linear combination of $\vec{v}_1 = (1,0,1)$ and $\vec{v}_2 =
+                        (0,1,1)$, we have:
+                    </p>
+                    <div class="latex-content text-center mb-4 font-bold">
+                        $$ W = \text{span}\left\{ \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \\ 1
+                        \end{bmatrix} \right\} $$
+                    </div>
+                    <p>
+                        By the theorem above, since $W$ is a span of vectors, <strong>$W$ is a subspace</strong> of
+                        $\mathbb{R}^3$.
+                    </p>
+                </div>
+            </div>
+        </section>
+
         <!-- Interactive Subspace Checker -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-purple-600">Subspace Visualizer</h2>

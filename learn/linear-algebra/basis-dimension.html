@@ -153,6 +153,29 @@
             </div>
         </section>
 
+        <!-- Section: Geometric Meaning of Independence -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-green-600 flex items-center gap-2">
+                <span>📐</span> Geometric Meaning
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold mb-2 text-green-800 dark:text-green-300">In $\mathbb{R}^2$</h3>
+                    <p class="mb-2">Two vectors are linearly dependent if and only if they lie on the same line through
+                        the origin (i.e., they are parallel).</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">If independent, they span the entire plane
+                        $\mathbb{R}^2$.</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200">
+                    <h3 class="font-bold mb-2 text-blue-800 dark:text-blue-300">In $\mathbb{R}^3$</h3>
+                    <p class="mb-2">Three vectors are linearly dependent if and only if they lie on the same plane
+                        through the origin (i.e., they are coplanar).</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">If independent, they span the entire space
+                        $\mathbb{R}^3$.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Interactive Independence Checker -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-blue-600">Independence Checker (2D)</h2>
@@ -191,7 +214,8 @@
             <div class="bg-pink-50 dark:bg-pink-900/20 p-6 rounded-xl border border-pink-200 mb-6">
                 <h3 class="font-bold text-lg mb-2">Definition: Basis</h3>
                 <p class="mb-2">A set of vectors $\mathcal{B} = \{\vec{v}_1, \dots, \vec{v}_k\}$ is a
-                    <strong>basis</strong> for a subspace $U$ if:</p>
+                    <strong>basis</strong> for a subspace $U$ if:
+                </p>
                 <ol class="list-decimal list-inside ml-4 space-y-1">
                     <li>$\mathcal{B}$ is linearly independent.</li>
                     <li>$\mathcal{B}$ spans $U$ (i.e., $\span(\mathcal{B}) = U$).</li>
@@ -204,6 +228,41 @@
                     vectors in any basis of $U$.</p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Example: The standard basis for $\mathbb{R}^3$ is
                     $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$, so $\dim(\mathbb{R}^3) = 3$.</p>
+            </div>
+        </section>
+
+        <!-- Section: Finding a Basis -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>🔍</span> Finding a Basis
+            </h2>
+            <p class="mb-4">How do we find a basis for the span of a set of vectors? We use the <strong>Column Space
+                    Algorithm</strong>.</p>
+
+            <div class="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl border border-orange-200 mb-6">
+                <h3 class="font-bold text-lg mb-2 text-orange-800 dark:text-orange-300">Algorithm</h3>
+                <ol class="list-decimal list-inside space-y-2 ml-2">
+                    <li>Form a matrix $A$ with the given vectors as its columns.</li>
+                    <li>Row reduce $A$ to Row Echelon Form (REF).</li>
+                    <li>Identify the <strong>pivot columns</strong> in the REF matrix.</li>
+                    <li>The corresponding columns in the <strong>original matrix $A$</strong> form a basis for
+                        $\text{span}\{\vec{v}_1, \dots, \vec{v}_k\}$.</li>
+                </ol>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <h3 class="font-bold text-lg mb-2">Example</h3>
+                <p class="mb-2">Find a basis for $U = \text{span}\{(1,2,3), (2,4,6), (1,0,1)\}$.</p>
+                <p class="mb-2">1. Form matrix $A$:</p>
+                <div class="latex-content text-center mb-2">
+                    $$ A = \begin{bmatrix} 1 & 2 & 1 \\ 2 & 4 & 0 \\ 3 & 6 & 1 \end{bmatrix} $$
+                </div>
+                <p class="mb-2">2. Row reduce to REF:</p>
+                <div class="latex-content text-center mb-2">
+                    $$ \sim \begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & -2 \\ 0 & 0 & 0 \end{bmatrix} $$
+                </div>
+                <p class="mb-2">3. Pivots are in columns 1 and 3.</p>
+                <p>4. Basis is $\{\vec{v}_1, \vec{v}_3\} = \{(1,2,3), (1,0,1)\}$.</p>
             </div>
         </section>
 
