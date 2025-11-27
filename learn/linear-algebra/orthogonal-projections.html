@@ -173,6 +173,66 @@
             </div>
         </section>
 
+        <!-- Section 1.5: Important Lemmas -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-teal-600 flex items-center gap-2">
+                <span>📜</span> Fundamental Lemmas
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200">
+                    <h3 class="font-bold mb-2 text-teal-800 dark:text-teal-300">Independent Lemma</h3>
+                    <p class="text-sm mb-2">Let $S = \{\vec{x}_1, \dots, \vec{x}_k\}$ be an independent set in
+                        $\mathbb{R}^n$.</p>
+                    <p class="text-sm italic">If $\vec{u} \notin \text{Span}(S)$, then $S \cup \{\vec{u}\}$ is also
+                        independent.</p>
+                </div>
+                <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl border border-emerald-200">
+                    <h3 class="font-bold mb-2 text-emerald-800 dark:text-emerald-300">Orthogonal Lemma</h3>
+                    <p class="text-sm mb-2">Let $\{\vec{f}_1, \dots, \vec{f}_k\}$ be an orthogonal set of non-zero
+                        vectors.</p>
+                    <p class="text-sm italic">Then the set is linearly independent.</p>
+                    <details class="mt-2 text-xs cursor-pointer text-emerald-600">
+                        <summary>Proof Idea</summary>
+                        <p class="mt-1">Assume $c_1\vec{f}_1 + \dots + c_k\vec{f}_k = \vec{0}$. Dot product with
+                            $\vec{f}_i$ gives $c_i \|\vec{f}_i\|^2 = 0$, so $c_i = 0$.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1.6: Gram-Schmidt Algorithm -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600 flex items-center gap-2">
+                <span>🔨</span> The Gram-Schmidt Algorithm
+            </h2>
+            <p class="mb-4">An algorithm to construct an orthogonal basis $\{\vec{f}_1, \dots, \vec{f}_k\}$ from any
+                basis $\{\vec{x}_1, \dots, \vec{x}_k\}$.</p>
+
+            <div class="space-y-4">
+                <div class="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    <div class="font-bold text-indigo-500 text-xl">1</div>
+                    <div class="latex-content">$\vec{f}_1 = \vec{x}_1$</div>
+                </div>
+                <div class="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    <div class="font-bold text-indigo-500 text-xl">2</div>
+                    <div class="latex-content">$\vec{f}_2 = \vec{x}_2 - \frac{\vec{x}_2 \cdot
+                        \vec{f}_1}{\|\vec{f}_1\|^2}\vec{f}_1$</div>
+                </div>
+                <div class="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    <div class="font-bold text-indigo-500 text-xl">3</div>
+                    <div class="latex-content">$\vec{f}_3 = \vec{x}_3 - \frac{\vec{x}_3 \cdot
+                        \vec{f}_1}{\|\vec{f}_1\|^2}\vec{f}_1 - \frac{\vec{x}_3 \cdot
+                        \vec{f}_2}{\|\vec{f}_2\|^2}\vec{f}_2$</div>
+                </div>
+                <div class="text-center text-gray-500 font-bold">...</div>
+                <div class="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    <div class="font-bold text-indigo-500 text-xl">k</div>
+                    <div class="latex-content">$\vec{f}_k = \vec{x}_k - \text{proj}_{U_{k-1}}(\vec{x}_k)$</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Interactive Gram-Schmidt Visualizer -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-indigo-600">Gram-Schmidt Visualizer</h2>
@@ -224,6 +284,31 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-2">Where $\{\vec{f}_1, \dots, \vec{f}_k\}$ is an orthogonal basis for
                     $U$.</p>
+            </div>
+        </section>
+
+        <!-- Section 2.5: Projection Theorem -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600 flex items-center gap-2">
+                <span>🎯</span> The Projection Theorem
+            </h2>
+            <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                <p class="mb-4">Let $U$ be a subspace of $\mathbb{R}^n$. Then every vector $\vec{x} \in \mathbb{R}^n$
+                    can be written <strong>uniquely</strong> as:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg mb-4">
+                    $$ \vec{x} = \vec{p} + \vec{z} $$
+                </div>
+                <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                    <li>$\vec{p} = \text{proj}_U(\vec{x})$ is in $U$.</li>
+                    <li>$\vec{z} = \vec{x} - \vec{p}$ is in $U^\perp$ (orthogonal to $U$).</li>
+                </ul>
+                <div class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg border-l-4 border-purple-500">
+                    <p class="font-bold text-purple-700 dark:text-purple-400">Best Approximation Property</p>
+                    <p class="text-sm mt-1">The projection $\vec{p}$ is the vector in $U$ that is
+                        <strong>closest</strong> to $\vec{x}$.</p>
+                    <p class="text-center font-bold my-2">$\|\vec{x} - \vec{p}\| < \|\vec{x} - \vec{u}\|$ for all other
+                            $\vec{u} \in U$</p>
+                </div>
             </div>
         </section>
 

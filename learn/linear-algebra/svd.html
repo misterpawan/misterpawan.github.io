@@ -165,6 +165,58 @@
                 This tells us that <strong>any</strong> linear transformation is just a rotation ($V^T$), followed by a
                 stretch ($\Sigma$), followed by another rotation ($U$).
             </p>
+            <div class="mt-6 bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl border border-violet-200">
+                <h3 class="font-bold text-lg mb-2">SVD Existence Theorem</h3>
+                <p class="mb-2">Let $A$ be an $m \times n$ matrix with rank $r$. Then there exists an $m \times n$
+                    matrix $\Sigma$ as defined above, and orthogonal matrices $U$ ($m \times m$) and $V$ ($n \times n$)
+                    such that $A = U \Sigma V^T$.</p>
+                <p class="text-sm text-gray-500">The singular values $\sigma_i$ are the square roots of the eigenvalues
+                    of $A^T A$.</p>
+            </div>
+        </section>
+
+        <!-- Section 1.5: Fundamental Subspaces -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-fuchsia-600 flex items-center gap-2">
+                <span>🧩</span> The Four Fundamental Subspaces
+            </h2>
+            <p class="mb-4">SVD perfectly reveals the geometry of the four subspaces.</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-fuchsia-600">Row Space & Null Space (in $V$)</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>The first $r$ columns of $V$ span the <strong>Row Space</strong> of $A$.</li>
+                        <li>The last $n-r$ columns of $V$ span the <strong>Null Space</strong> of $A$.</li>
+                    </ul>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-fuchsia-600">Col Space & Left Null Space (in $U$)</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>The first $r$ columns of $U$ span the <strong>Column Space</strong> (Image) of $A$.</li>
+                        <li>The last $m-r$ columns of $U$ span the <strong>Left Null Space</strong> of $A$.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1.6: Polar Decomposition -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600 flex items-center gap-2">
+                <span>❄️</span> Polar Decomposition
+            </h2>
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200">
+                <p class="mb-4">Just as a complex number $z$ can be written as $z = re^{i\theta}$ (scale $\times$
+                    rotation), any square matrix $A$ can be factored as:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ A = Q S $$
+                </div>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700 dark:text-gray-300">
+                    <li>$Q$: Orthogonal matrix (Rotation/Reflection).</li>
+                    <li>$S$: Positive semi-definite symmetric matrix (Stretching).</li>
+                </ul>
+                <p class="text-sm text-gray-500 mt-2">We can find this from SVD: $A = (UV^T)(V \Sigma V^T) = Q S$.</p>
+            </div>
         </section>
 
         <!-- Interactive SVD Image Compression -->

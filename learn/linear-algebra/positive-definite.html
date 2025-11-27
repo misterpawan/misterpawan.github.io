@@ -157,6 +157,13 @@
                     <p class="text-sm">All leading principal submatrices have positive determinants.</p>
                 </div>
             </div>
+
+            <div class="mt-6 bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold text-lg mb-2">Principal Submatrices Lemma</h3>
+                <p class="mb-2">If $A$ is positive definite, then <strong>every</strong> principal submatrix of $A$ is
+                    also positive definite.</p>
+                <p class="text-sm text-gray-500">This means any square block centered on the diagonal must be PD.</p>
+            </div>
         </section>
 
         <!-- Interactive Definiteness Checker -->
@@ -205,6 +212,22 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-2">Where $U$ is an upper triangular matrix with positive diagonal
                     entries. This is like the "square root" of a matrix!</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold text-lg mb-4 text-purple-600">Algorithm (Row Operations)</h3>
+                <p class="mb-4">We can find $U$ by reducing $A$ to upper triangular form using only row operations of
+                    type 3 (adding a multiple of one row to another), but with a twist: we do the same operation to
+                    columns!</p>
+                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                    <li>Perform row operations to zero out entries below the pivot.</li>
+                    <li>Simultaneously perform the <strong>same</strong> column operations to zero out entries to the
+                        right of the pivot.</li>
+                    <li>Since $A$ is symmetric, this preserves symmetry.</li>
+                    <li>The resulting diagonal matrix $D$ will have positive entries.</li>
+                    <li>$U = \sqrt{D} L^{-1}$, where $L$ tracks the operations. (Or simply use the formula $u_{ii} =
+                        \sqrt{a_{ii} - \sum u_{ki}^2}$).</li>
+                </ol>
             </div>
         </section>
 
