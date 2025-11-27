@@ -173,6 +173,18 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold mb-4">Example: When is it Invertible?</h3>
+                <p class="mb-2 text-sm">Find $c$ so $A = \begin{bmatrix} c & 1 & 0 \\ 0 & 2 & c \\ -1 & c & 5
+                    \end{bmatrix}$ is invertible.</p>
+                <p class="text-sm mb-2">Calculate $\det A$ and set $\neq 0$:</p>
+                <div class="latex-content text-center text-sm">
+                    $$ \det A = c(10-c^2) - (-1)(c) = 10c - c^3 + c = c(11-c^2) $$
+                </div>
+                <p class="text-sm mt-2">So $A$ is invertible if $c \neq 0$ and $c \neq \pm\sqrt{11}$.</p>
+            </div>
         </section>
 
         <!-- Quiz 1 -->
@@ -270,6 +282,19 @@
                     </div>
                     <p class="text-xs text-gray-500">Non-zero if all $x_i$ are distinct.</p>
                 </div>
+            </div>
+
+            <div class="mt-6 bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                <h3 class="font-bold mb-4 text-indigo-800 dark:text-indigo-300">Example: Polynomial Interpolation</h3>
+                <p class="mb-2 text-sm">Find a polynomial $p(x) = r_0 + r_1 x + r_2 x^2$ passing through $(0,1), (1,2),
+                    (2,5)$.</p>
+                <p class="text-sm mb-2">Set up the system $V\vec{r} = \vec{y}$ where $V$ is Vandermonde:</p>
+                <div class="latex-content text-center text-sm mb-4">
+                    $$ \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 1 \\ 1 & 2 & 4 \end{bmatrix} \begin{bmatrix} r_0 \\ r_1 \\
+                    r_2 \end{bmatrix} = \begin{bmatrix} 1 \\ 2 \\ 5 \end{bmatrix} $$
+                </div>
+                <p class="text-sm">Solving gives $r_0=1, r_1=0, r_2=1$. So $p(x) = 1 + x^2$.</p>
+            </div>
             </div>
         </section>
 

@@ -290,6 +290,22 @@
                 </div>
                 <p class="text-xs text-gray-500 mt-2">Just multiply the diagonal!</p>
             </div>
+            <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold mb-4">Example: Simplify Before Expanding</h3>
+                <p class="mb-2 text-sm">Compute $\det A = \begin{vmatrix} 2 & 0 & -3 \\ 0 & 4 & 0 \\ 1 & 0 & -2
+                    \end{vmatrix}$.</p>
+                <p class="text-sm mb-2"><strong>Strategy:</strong> Use row ops to get more zeros!</p>
+                <ol class="list-decimal list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                    <li>$R_3 \leftarrow 2R_3 - R_1$: $\begin{vmatrix} 2 & 0 & -3 \\ 0 & 4 & 0 \\ 0 & 0 & -1
+                        \end{vmatrix}$ (Careful! We scaled a row, so we must divide by 2 later, or track the factor).
+                    </li>
+                    <li>Actually, let's just expand along Row 2 (it already has two zeros!):</li>
+                </ol>
+                <div class="latex-content text-center text-sm mt-2">
+                    $$ \det A = 4 \cdot (-1)^{2+2} \begin{vmatrix} 2 & -3 \\ 1 & -2 \end{vmatrix} = 4(1)(-4 - (-3)) =
+                    4(-1) = -4 $$
+                </div>
+            </div>
         </section>
 
         <!-- Final Quiz -->

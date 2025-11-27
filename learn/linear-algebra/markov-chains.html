@@ -207,6 +207,28 @@
                 <p class="text-sm">This is just finding the eigenvector for $\lambda = 1$! Don't forget to scale it so
                     entries sum to 1.</p>
             </div>
+            </div>
+
+            <div class="mt-6 bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-300">Regular Matrices</h3>
+                <p class="mb-2 text-sm">A stochastic matrix $P$ is <strong>regular</strong> if some power $P^k$ contains
+                    only strictly positive entries.</p>
+                <p class="text-sm"><strong>Theorem:</strong> If $P$ is regular, a unique steady state vector exists.</p>
+            </div>
+
+            <div class="mt-6 bg-gray-100 dark:bg-gray-800 p-6 rounded-xl">
+                <h3 class="font-bold mb-4">Example: The Wolf Pack</h3>
+                <p class="mb-2 text-sm">A wolf pack hunts in 3 regions ($R_1, R_2, R_3$). Transition matrix:</p>
+                <div class="latex-content text-center text-sm mb-4">
+                    $$ P = \begin{bmatrix} 0.5 & 0.25 & 0.25 \\ 0 & 0.5 & 0.25 \\ 0.5 & 0.25 & 0.5 \end{bmatrix} $$
+                </div>
+                <p class="text-sm mb-2">Is it regular? Yes, calculate $P^2$ and you'll see all entries are positive.</p>
+                <p class="text-sm">Steady State $S$ (where $PS=S$):</p>
+                <div class="latex-content text-center text-sm">
+                    $$ S = \begin{bmatrix} 3/9 \\ 2/9 \\ 5/9 \end{bmatrix} \approx \begin{bmatrix} 0.33 \\ 0.22 \\ 0.55
+                    \end{bmatrix} $$
+                </div>
+            </div>
         </section>
 
         <!-- Final Quiz -->

@@ -188,6 +188,22 @@
                 </div>
                 <p class="text-xs text-gray-500 mt-2">Derived from $A = PDP^{-1}$!</p>
             </div>
+            <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold mb-4">Example: Solving $x_{k+2} = 5x_{k+1} - 6x_k$</h3>
+                <p class="mb-2 text-sm">Initial values: $x_0=0, x_1=1$.</p>
+                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <li><strong>Matrix:</strong> $A = \begin{bmatrix} 0 & 1 \\ -6 & 5 \end{bmatrix}$.</li>
+                    <li><strong>Eigenvalues:</strong> $\lambda^2 - 5\lambda + 6 = 0 \implies (\lambda-2)(\lambda-3)=0$.
+                        So $\lambda_1=2, \lambda_2=3$.</li>
+                    <li><strong>Eigenvectors:</strong> $\vec{v}_1 = \begin{bmatrix} 1 \\ 2 \end{bmatrix}, \vec{v}_2 =
+                        \begin{bmatrix} 1 \\ 3 \end{bmatrix}$.</li>
+                    <li><strong>General Solution:</strong> $\vec{v}_k = c_1 2^k \vec{v}_1 + c_2 3^k \vec{v}_2$.</li>
+                    <li><strong>Solve for Constants:</strong> At $k=0$, $\begin{bmatrix} 0 \\ 1 \end{bmatrix} = c_1
+                        \begin{bmatrix} 1 \\ 2 \end{bmatrix} + c_2 \begin{bmatrix} 1 \\ 3 \end{bmatrix}$. Solution:
+                        $c_1=-1, c_2=1$.</li>
+                    <li><strong>Final Formula:</strong> $x_k = 3^k - 2^k$.</li>
+                </ol>
+            </div>
         </section>
 
         <!-- Quiz 1 -->
