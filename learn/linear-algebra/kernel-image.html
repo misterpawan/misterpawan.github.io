@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kernel and Image | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    calP: "{\\mathcal{P}}",
+                    M: "{\\mathbf{M}}",
+                    ker: "\\text{ker}",
+                    im: "\\text{im}",
+                    rank: "\\text{rank}",
+                    nullity: "\\text{nullity}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#10b981', // Emerald
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #ecfdf5;
+            /* emerald-50 */
+            border-color: #10b981;
+            /* emerald-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #10b981;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-emerald-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-emerald-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-600">
+                Kernel and Image
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 7 &bull; Section 7-2</p>
+            <p class="mt-4 text-lg italic">"Where vectors go to die (zero), and where they can live. 💀🌍"</p>
+        </header>
+
+        <!-- Section 1: Definitions -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-emerald-600 flex items-center gap-2">
+                <span>🎯</span> Core Concepts
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-xl border border-red-200">
+                    <h3 class="font-bold mb-2 text-red-800 dark:text-red-300">Kernel (Null Space)</h3>
+                    <p class="text-sm mb-2">The set of all vectors in $V$ that map to the zero vector in $W$.</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ \ker(T) = \{ \vec{v} \in V \mid T(\vec{v}) = \vec{0} \} $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Corresponds to solutions of $A\vec{x}=\vec{0}$.</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200">
+                    <h3 class="font-bold mb-2 text-blue-800 dark:text-blue-300">Image (Range)</h3>
+                    <p class="text-sm mb-2">The set of all possible output vectors in $W$.</p>
+                    <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                        $$ \im(T) = \{ T(\vec{v}) \mid \vec{v} \in V \} $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Corresponds to the column space of $A$.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Rank-Nullity Balancer -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600">Rank-Nullity Visualizer</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                The Rank-Nullity Theorem states: $\dim(V) = \rank(T) + \nullity(T)$.
+                <br>
+                Adjust the slider to see how Rank and Nullity trade off for a fixed dimension $n$.
+            </p>
+
+            <div class="mb-6">
+                <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Dimension of Domain ($n$):
+                    <span id="n-val">5</span></label>
+                <input type="range" id="n-slider" min="1" max="10" value="5"
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                    oninput="updateRankNullity()">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Rank ($r$): <span
+                        id="r-val">3</span></label>
+                <input type="range" id="r-slider" min="0" max="5" value="3"
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                    oninput="updateRankNullity()">
+            </div>
+
+            <div
+                class="flex h-16 rounded-xl overflow-hidden text-white font-bold text-center leading-[4rem] text-lg shadow-lg">
+                <div id="rank-bar" class="bg-blue-500 transition-all duration-500" style="width: 60%">Rank</div>
+                <div id="nullity-bar" class="bg-red-500 transition-all duration-500" style="width: 40%">Nullity</div>
+            </div>
+            <p class="text-center mt-2 font-bold text-gray-600 dark:text-gray-400">
+                Rank (<span id="rank-disp">3</span>) + Nullity (<span id="nullity-disp">2</span>) = <span
+                    id="total-disp">5</span>
+            </p>
+        </section>
+
+        <!-- Section 2: One-to-One and Onto -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600">Types of Mappings</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                    <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-300">One-to-One (Injective)</h3>
+                    <p class="text-sm mb-2">Distinct inputs map to distinct outputs.</p>
+                    <p class="text-center font-bold text-purple-600 bg-white dark:bg-gray-800 p-2 rounded">$\ker(T) =
+                        \{\vec{0}\}$</p>
+                    <p class="text-xs text-gray-500 mt-2">Nullity is 0. Full column rank.</p>
+                </div>
+                <div class="bg-pink-50 dark:bg-pink-900/20 p-6 rounded-xl border border-pink-200">
+                    <h3 class="font-bold mb-2 text-pink-800 dark:text-pink-300">Onto (Surjective)</h3>
+                    <p class="text-sm mb-2">Every vector in $W$ is hit by at least one input.</p>
+                    <p class="text-center font-bold text-pink-600 bg-white dark:bg-gray-800 p-2 rounded">$\im(T) = W$
+                    </p>
+                    <p class="text-xs text-gray-500 mt-2">Rank equals $\dim(W)$. Full row rank.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-emerald-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-emerald-100 text-emerald-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">If $T: \mathbb{R}^5 \to \mathbb{R}^3$ is onto, what is the dimension of its kernel
+                (nullity)?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">0</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">2</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">3</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Hint: Use Rank-Nullity Theorem. $n=5$, Rank=3 (since onto
+                $\mathbb{R}^3$).</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Rank-Nullity Logic
+        function updateRankNullity() {
+            const nSlider = document.getElementById('n-slider');
+            const rSlider = document.getElementById('r-slider');
+
+            let n = parseInt(nSlider.value);
+            let r = parseInt(rSlider.value);
+
+            // Constrain r <= n
+            if (r > n) {
+                r = n;
+                rSlider.value = n;
+            }
+            rSlider.max = n;
+
+            const nullity = n - r;
+
+            document.getElementById('n-val').innerText = n;
+            document.getElementById('r-val').innerText = r;
+
+            document.getElementById('rank-disp').innerText = r;
+            document.getElementById('nullity-disp').innerText = nullity;
+            document.getElementById('total-disp').innerText = n;
+
+            const rankPercent = (r / n) * 100;
+            const nullityPercent = (nullity / n) * 100;
+
+            const rankBar = document.getElementById('rank-bar');
+            const nullityBar = document.getElementById('nullity-bar');
+
+            rankBar.style.width = rankPercent + '%';
+            nullityBar.style.width = nullityPercent + '%';
+
+            if (r === 0) rankBar.style.display = 'none'; else rankBar.style.display = 'block';
+            if (nullity === 0) nullityBar.style.display = 'none'; else nullityBar.style.display = 'block';
+        }
+
+        // Initial update
+        updateRankNullity();
+
+    </script>
+</body>
+
+</html>

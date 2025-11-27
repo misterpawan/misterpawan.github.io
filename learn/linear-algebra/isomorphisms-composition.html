@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isomorphisms and Composition | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    calP: "{\\mathcal{P}}",
+                    M: "{\\mathbf{M}}",
+                    ker: "\\text{ker}",
+                    im: "\\text{im}",
+                    rank: "\\text{rank}",
+                    nullity: "\\text{nullity}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#8b5cf6', // Violet
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #f5f3ff;
+            /* violet-50 */
+            border-color: #8b5cf6;
+            /* violet-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #8b5cf6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-violet-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-violet-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-indigo-600">
+                Isomorphisms and Composition
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 7 &bull; Section 7-3</p>
+            <p class="mt-4 text-lg italic">"When two spaces are effectively the same, just dressed differently. 👯"</p>
+        </header>
+
+        <!-- Section 1: Isomorphisms -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-violet-600 flex items-center gap-2">
+                <span>🤝</span> Isomorphisms
+            </h2>
+
+            <div class="bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl border border-violet-200 mb-6">
+                <p class="mb-4">An <strong>isomorphism</strong> is a linear transformation $T: V \to W$ that is both:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li><strong>One-to-One:</strong> No information is lost.</li>
+                    <li><strong>Onto:</strong> The entire target space is covered.</li>
+                </ul>
+                <p class="mt-4 text-sm">If an isomorphism exists, we say $V \cong W$. They have the same dimension and
+                    structure.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-indigo-600">Example: $\calP_2 \cong \mathbb{R}^3$</h3>
+                    <p class="text-sm">The map $a + bx + cx^2 \mapsto (a, b, c)$ is an isomorphism.</p>
+                    <p class="text-xs text-gray-500 mt-2">Polynomials act just like 3D vectors!</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-indigo-600">Example: $\M_{22} \cong \mathbb{R}^4$</h3>
+                    <p class="text-sm">Mapping a $2 \times 2$ matrix to a vector of its 4 entries is an isomorphism.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Composition Machine -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600">Composition Machine</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                See how applying two transformations in sequence works. Order matters!
+                <br>
+                Start with vector $\vec{v} = (1, 0)$.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="space-y-4">
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
+                        <label class="block text-sm font-bold mb-2 text-blue-600">Transformation $S$ (First)</label>
+                        <select id="transS" class="w-full p-2 rounded border" onchange="updateComp()">
+                            <option value="rotate90">Rotate 90°</option>
+                            <option value="scale2">Scale 2x</option>
+                            <option value="shearX">Shear X</option>
+                        </select>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
+                        <label class="block text-sm font-bold mb-2 text-blue-600">Transformation $T$ (Second)</label>
+                        <select id="transT" class="w-full p-2 rounded border" onchange="updateComp()">
+                            <option value="scale2">Scale 2x</option>
+                            <option value="rotate90">Rotate 90°</option>
+                            <option value="shearX">Shear X</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-gray-100 dark:bg-gray-800 p-6 rounded-xl flex flex-col justify-center items-center text-center">
+                    <div class="text-lg font-bold mb-4">Result: $T(S(\vec{v}))$</div>
+                    <div id="comp-result" class="text-4xl font-mono text-blue-600 mb-2">(0, 2)</div>
+                    <p class="text-sm text-gray-500" id="comp-steps">
+                        Step 1: (1, 0) → (0, 1) <br>
+                        Step 2: (0, 1) → (0, 2)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Inverses -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-pink-600">Inverse Transformations</h2>
+
+            <div class="bg-pink-50 dark:bg-pink-900/20 p-6 rounded-xl border border-pink-200 mb-6">
+                <p class="mb-4">If $T$ is an isomorphism, it has an inverse $T^{-1}$ such that:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ T^{-1}(T(\vec{v})) = \vec{v} \quad \text{and} \quad T(T^{-1}(\vec{w})) = \vec{w} $$
+                </div>
+                <p class="text-sm text-gray-500 mt-2">It's like an "undo" button for the transformation.</p>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-violet-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-violet-100 text-violet-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">Is the space of $2 \times 3$ matrices isomorphic to $\mathbb{R}^5$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    they are both vector spaces.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    because $2+3=5$.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    $\dim(\M_{23}) = 6 \neq 5$.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Composition Logic
+        function applyTrans(v, type) {
+            if (type === 'rotate90') return { x: -v.y, y: v.x };
+            if (type === 'scale2') return { x: 2 * v.x, y: 2 * v.y };
+            if (type === 'shearX') return { x: v.x + v.y, y: v.y };
+            return v;
+        }
+
+        function updateComp() {
+            const sType = document.getElementById('transS').value;
+            const tType = document.getElementById('transT').value;
+
+            const v = { x: 1, y: 0 };
+            const sv = applyTrans(v, sType);
+            const tsv = applyTrans(sv, tType);
+
+            document.getElementById('comp-result').innerText = `(${tsv.x}, ${tsv.y})`;
+            document.getElementById('comp-steps').innerHTML = `
+            Step 1: (${v.x}, ${v.y}) → (${sv.x}, ${sv.y}) <br>
+            Step 2: (${sv.x}, ${sv.y}) → (${tsv.x}, ${tsv.y})
+        `;
+        }
+
+        // Initial update
+        updateComp();
+
+    </script>
+</body>
+
+</html>
