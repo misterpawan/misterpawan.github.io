@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions and Elementary Operations | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Solutions and Elementary Operations
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 1 &bull; Section 1-1</p>
+        </header>
+
+        <!-- Section 1: Solutions of Linear Equations -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Solutions of Linear Equations</h2>
+            <div class="latex-content space-y-6">
+                <div class="bg-blue-50 dark:bg-gray-800 p-6 rounded-xl border-l-4 border-blue-500">
+                    <p class="font-semibold mb-2">Example</p>
+                    <p>Find all solutions of the linear equation in one variable: $$ax=b$$</p>
+                </div>
+
+                <div class="space-y-2">
+                    <p><strong>Solution:</strong></p>
+                    <ul class="list-disc list-inside space-y-2 ml-4">
+                        <li>If $a \neq 0$, there is a <strong>unique solution</strong> $x=b/a$.</li>
+                        <li>Else if $a = 0$ and $b \neq 0$, there is <strong>no solution</strong>.</li>
+                        <li>Else if $a = 0$ and $b = 0$, there are <strong>infinitely many solutions</strong> (any $x
+                            \in \mathbb{R}$).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Quick Quiz <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">How many solutions does the equation $0x = 5$ have?</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">One
+                    unique solution</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No
+                    solution</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Infinitely
+                    many</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Definitions -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Definitions</h2>
+            <div class="latex-content space-y-4">
+                <p>A <strong>linear equation</strong> is an expression of the form:
+                    $$ a_1 x_1 + a_2 x_2 + \dots + a_n x_n = b $$
+                    where $a_i$ are real numbers (not all zero) and $b$ is a real number.
+                </p>
+                <p>A <strong>system of linear equations</strong> is a set of $m \geq 1$ linear equations.</p>
+                <p>A <strong>solution</strong> is an $n$-tuple that satisfies <em>each</em> equation.</p>
+                <p>To <strong>solve a system</strong> means to find <span class="text-blue-600 font-bold">all</span>
+                    solutions.</p>
+            </div>
+        </section>
+
+        <!-- Section 3: Example System -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Example System</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <p class="mb-4">Consider the system:</p>
+                    $$ \begin{aligned} x_1 - 2x_2 - 7x_3 &= -1 \\ -x_1 + 3x_2 + 6x_3 &= 0 \end{aligned} $$
+                    <div class="mt-6 space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                        <p><strong>Variables:</strong> $x_1, x_2, x_3$</p>
+                        <p><strong>Coefficients:</strong> $1, -2, -7$ and $-1, 3, 6$</p>
+                        <p><strong>Constants:</strong> $-1, 0$</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                    <h3 class="font-bold mb-4">Verifying Solutions</h3>
+                    <p class="mb-2">Is $(-3, -1, 0)$ a solution?</p>
+                    <div class="text-sm font-mono bg-white dark:bg-gray-900 p-3 rounded mb-4">
+                        (-3) - 2(-1) - 7(0) = -1 + 2 = -1 ✅<br>
+                        -(-3) + 3(-1) + 6(0) = 3 - 3 = 0 ✅
+                    </div>
+                    <p class="text-green-600 font-bold">Yes! It satisfies both equations.</p>
+
+                    <p class="mt-4 mb-2">Is $(-1, 0, 0)$ a solution?</p>
+                    <div class="text-sm font-mono bg-white dark:bg-gray-900 p-3 rounded">
+                        (-1) - 0 - 0 = -1 ✅<br>
+                        -(-1) + 0 + 0 = 1 ≠ 0 ❌
+                    </div>
+                    <p class="text-red-600 font-bold mt-2">No! It fails the second equation.</p>
+                </div>
+            </div>
+            <div
+                class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700">
+                <p><strong>Consistent System:</strong> A system that has <em>at least one</em> solution.</p>
+                <p><strong>Inconsistent System:</strong> A system with <em>no</em> solutions (e.g., $x+y=0, x+y=1$).</p>
+            </div>
+        </section>
+
+        <!-- Quiz 2 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Quick Quiz <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">If a system has a solution $(1, 2)$ but fails for $(3, 4)$, is it consistent?</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    because it has at least one solution.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    because not all points are solutions.</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Geometric Interpretation -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Geometric Interpretation</h2>
+            <p class="mb-6">For a system of 2 variables, each equation represents a line. The solution is the
+                intersection.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    $$ \begin{cases} x + y = 3 \\ y - x = 5 \end{cases} $$
+                    <p class="mt-4">Rearranging:</p>
+                    <p class="text-blue-600">$y = -x + 3$</p>
+                    <p class="text-red-600">$y = x + 5$</p>
+                    <p class="mt-4 font-bold">Intersection: $(-1, 4)$</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner">
+                    <canvas id="linesChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div class="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200">
+                    <div class="text-2xl mb-2">❌</div>
+                    <h4 class="font-bold">Intersecting</h4>
+                    <p class="text-sm">One unique solution</p>
+                    <p class="text-xs text-green-600 font-bold uppercase mt-1">Consistent</p>
+                </div>
+                <div class="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200">
+                    <div class="text-2xl mb-2">⏸️</div>
+                    <h4 class="font-bold">Parallel</h4>
+                    <p class="text-sm">No solutions</p>
+                    <p class="text-xs text-red-600 font-bold uppercase mt-1">Inconsistent</p>
+                </div>
+                <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200">
+                    <div class="text-2xl mb-2">🔗</div>
+                    <h4 class="font-bold">Coincident</h4>
+                    <p class="text-sm">Infinitely many solutions</p>
+                    <p class="text-xs text-green-600 font-bold uppercase mt-1">Consistent</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Elementary Operations -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Elementary Operations</h2>
+            <p class="mb-4">To solve systems, we transform them into simpler, <strong>equivalent</strong> systems (same
+                solutions) using three operations:</p>
+
+            <div class="space-y-4">
+                <div
+                    class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-orange-50 transition">
+                    <div class="bg-orange-100 text-orange-600 font-bold p-2 rounded-lg">I</div>
+                    <div>
+                        <h4 class="font-bold">Interchange two equations</h4>
+                        <p class="font-mono text-sm text-gray-500">$r_1 \leftrightarrow r_2$</p>
+                    </div>
+                </div>
+                <div
+                    class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-orange-50 transition">
+                    <div class="bg-orange-100 text-orange-600 font-bold p-2 rounded-lg">II</div>
+                    <div>
+                        <h4 class="font-bold">Multiply an equation by a nonzero number</h4>
+                        <p class="font-mono text-sm text-gray-500">$k \cdot r_i$ (where $k \neq 0$)</p>
+                    </div>
+                </div>
+                <div
+                    class="flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-orange-50 transition">
+                    <div class="bg-orange-100 text-orange-600 font-bold p-2 rounded-lg">III</div>
+                    <div>
+                        <h4 class="font-bold">Add a multiple of one equation to another</h4>
+                        <p class="font-mono text-sm text-gray-500">$r_i + k \cdot r_j \to r_i$</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-l-4 border-blue-500">
+                <p class="font-bold">Theorem</p>
+                <p>Performing elementary operations results in an equivalent system. The solutions do not change!</p>
+            </div>
+        </section>
+
+        <!-- Section 6: Augmented Matrix -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">The Augmented Matrix</h2>
+            <p class="mb-6">We can represent a system compactly using a matrix.</p>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                <div class="text-center">
+                    <p class="font-bold mb-2">System</p>
+                    $$ \begin{aligned} x_1 - 2x_2 - 7x_3 &= -1 \\ -x_1 + 3x_2 + 6x_3 &= 0 \end{aligned} $$
+                </div>
+                <div class="text-4xl text-gray-300">➜</div>
+                <div class="text-center">
+                    <p class="font-bold mb-2">Augmented Matrix</p>
+                    $$ \left[\begin{array}{rrr|r} 1 & -2 & -7 & -1 \\ -1 & 3 & 6 & 0 \end{array}\right] $$
+                </div>
+            </div>
+
+            <p class="mt-8">We perform <strong>Elementary Row Operations</strong> on the matrix, which correspond
+                exactly to the operations on equations.</p>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">Which of the following is NOT a valid elementary row operation?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Swap
+                    Row 1 and Row 2</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Square
+                    every element in Row 1</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Add
+                    5 times Row 1 to Row 2</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                // Determine reward based on quiz type (simple heuristic)
+                const reward = parent.parentElement.querySelector('span').innerText.includes('$20') ? 20 : 10;
+                updateWallet(reward);
+
+                // Confetti effect (simple emoji shower)
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight correct answer
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Chart.js Visualization for Lines
+        const ctx = document.getElementById('linesChart').getContext('2d');
+
+        // Generate points
+        const xValues = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+        const data1 = xValues.map(x => ({ x: x, y: 3 - x }));
+        const data2 = xValues.map(x => ({ x: x, y: x + 5 }));
+
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'x + y = 3',
+                    data: data1,
+                    borderColor: 'rgb(59, 130, 246)', // Blue
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    showLine: true
+                }, {
+                    label: 'y - x = 5',
+                    data: data2,
+                    borderColor: 'rgb(239, 68, 68)', // Red
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    showLine: true
+                }, {
+                    label: 'Intersection (-1, 4)',
+                    data: [{ x: -1, y: 4 }],
+                    backgroundColor: 'black',
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `(${context.parsed.x}, ${context.parsed.y})`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'center',
+                        grid: { color: 'rgba(0,0,0,0.1)' },
+                        title: { display: true, text: 'x' }
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'center',
+                        grid: { color: 'rgba(0,0,0,0.1)' },
+                        title: { display: true, text: 'y' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

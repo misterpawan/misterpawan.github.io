@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn | Pawan Kumar</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316', // Orange-500
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        /* Glassmorphism utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-7xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 font-bold text-xl hover:text-orange-600 transition">
+                <span>←</span> Home
+            </a>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-purple-600">
+                Learning Hub
+            </h1>
+            <div class="w-20"></div> <!-- Spacer for centering -->
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Linear Algebra -->
+            <a href="linear-algebra/index.html"
+                class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer block"
+                data-aos="fade-up">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-6xl shadow-inner">
+                    📐
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Linear Algebra</h2>
+                <p class="text-gray-600 dark:text-gray-400">Master vectors, matrices, and linear transformations. The
+                    foundation of ML.</p>
+            </a>
+
+            <!-- Probability and Statistics -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="100">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-green-500 to-emerald-400 flex items-center justify-center text-6xl shadow-inner">
+                    🎲
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Probability & Statistics</h2>
+                <p class="text-gray-600 dark:text-gray-400">Understand uncertainty, distributions, and data analysis.
+                </p>
+            </div>
+
+            <!-- Machine Learning -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="200">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center text-6xl shadow-inner">
+                    🤖
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Machine Learning</h2>
+                <p class="text-gray-600 dark:text-gray-400">From regression to deep neural networks.</p>
+            </div>
+
+            <!-- Generative Modelling -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="300">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-pink-500 to-rose-400 flex items-center justify-center text-6xl shadow-inner">
+                    🎨
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Generative Modelling</h2>
+                <p class="text-gray-600 dark:text-gray-400">Create new data with GANs, VAEs, and Diffusion models.</p>
+            </div>
+
+            <!-- Optimization Methods -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="400">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-400 flex items-center justify-center text-6xl shadow-inner">
+                    📉
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Optimization Methods</h2>
+                <p class="text-gray-600 dark:text-gray-400">Convex optimization, gradient descent, and beyond.</p>
+            </div>
+
+            <!-- Optimization on Manifolds -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="500">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-400 flex items-center justify-center text-6xl shadow-inner">
+                    🌐
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Optimization on Manifolds
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400">Optimization on curved spaces and Riemannian geometry.</p>
+            </div>
+
+            <!-- Parallel Computing -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="600">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-gray-600 to-gray-400 flex items-center justify-center text-6xl shadow-inner">
+                    ⚡
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Parallel Computing</h2>
+                <p class="text-gray-600 dark:text-gray-400">HPC, GPU programming, and distributed systems.</p>
+            </div>
+
+            <!-- Physics Inspired Neural Networks -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="700">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-teal-500 to-green-400 flex items-center justify-center text-6xl shadow-inner">
+                    ⚛️
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Physics Inspired NN</h2>
+                <p class="text-gray-600 dark:text-gray-400">Solving differential equations with deep learning.</p>
+            </div>
+
+            <!-- Reasoning Models -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="800">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-red-500 to-orange-400 flex items-center justify-center text-6xl shadow-inner">
+                    🧠
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Reasoning Models</h2>
+                <p class="text-gray-600 dark:text-gray-400">Chain of thought, logical reasoning, and planning in AI.</p>
+            </div>
+
+            <!-- Safety and Alignment of AI -->
+            <div class="glass p-6 rounded-2xl shadow-sm transition card-hover group cursor-pointer" data-aos="fade-up"
+                data-aos-delay="900">
+                <div
+                    class="h-40 mb-4 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-500 flex items-center justify-center text-6xl shadow-inner">
+                    🛡️
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-orange-600 transition">Safety & Alignment</h2>
+                <p class="text-gray-600 dark:text-gray-400">Ensuring AI systems are safe, robust, and aligned with human
+                    values.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        AOS.init();
+    </script>
+</body>
+
+</html>
