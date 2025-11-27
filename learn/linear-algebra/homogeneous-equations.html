@@ -137,7 +137,8 @@
             </h2>
             <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
                 <p class="mb-4">A <strong>homogeneous linear equation</strong> is one where the constant term is
-                    <strong>ZERO</strong>.</p>
+                    <strong>ZERO</strong>.
+                </p>
                 <div class="latex-content text-center">
                     $$ a_1 x_1 + a_2 x_2 + \dots + a_n x_n = 0 $$
                 </div>
@@ -156,6 +157,16 @@
                     <p>We are interested in finding solutions where <strong>at least one</strong> variable is NOT zero.
                         These are the interesting ones!</p>
                 </div>
+            </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border-l-4 border-yellow-500">
+                <h3 class="font-bold text-yellow-700 dark:text-yellow-300">Theorem: Existence of Nontrivial Solutions
+                </h3>
+                <p>If a homogeneous system has more variables than equations ($n > m$), then it has a <strong>nontrivial
+                        solution</strong> (in fact, infinitely many).</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Why? Because there must be at least one free
+                    variable!</p>
             </div>
         </section>
 
@@ -234,6 +245,16 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-l-4 border-blue-500">
+                <h3 class="font-bold text-blue-700 dark:text-blue-300">Theorem: Structure of Solutions</h3>
+                <p>Let $A$ be an $m \times n$ matrix of rank $r$. Then:</p>
+                <ol class="list-decimal list-inside mt-2 space-y-1">
+                    <li>The system has exactly $n-r$ basic solutions.</li>
+                    <li><strong>Every</strong> solution is a linear combination of these basic solutions.</li>
+                </ol>
+            </div>
         </section>
 
         <!-- Quiz 2 -->
@@ -281,6 +302,62 @@
                             $\mathbf{0}$).</p>
                     </div>
                 </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Advanced Problem -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Advanced Problem: Parameter Hunt 🕵️‍♂️</h2>
+            <p class="mb-4">Find all values of $a$ for which the system has <strong>nontrivial solutions</strong>, and
+                determine the solutions.</p>
+
+            <div class="latex-content mb-6">
+                $$ \begin{cases} x + y = 0 \\ ay + z = 0 \\ x + y + az = 0 \end{cases} $$
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                <h3 class="font-bold mb-4">Solution Steps</h3>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>
+                        <strong>Augmented Matrix:</strong>
+                        <div class="latex-content mt-2 ml-4">
+                            $$ \left[\begin{array}{rrr|r} 1 & 1 & 0 & 0 \\ 0 & a & 1 & 0 \\ 1 & 1 & a & 0
+                            \end{array}\right] $$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Row Reduce:</strong> Subtract Row 1 from Row 3:
+                        <div class="latex-content mt-2 ml-4">
+                            $$ \to \left[\begin{array}{rrr|r} 1 & 1 & 0 & 0 \\ 0 & a & 1 & 0 \\ 0 & 0 & a & 0
+                            \end{array}\right] $$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Analyze for Nontrivial Solutions:</strong>
+                        <p class="mt-2">For nontrivial solutions, we need a <strong>free variable</strong>. This happens
+                            if the rank is less than the number of variables ($3$).</p>
+                        <p class="mt-1">Looking at the matrix, we need a row of zeros (or a missing pivot).</p>
+                        <ul class="list-disc list-inside ml-4 mt-2">
+                            <li>If $a \neq 0$, we have 3 pivots ($1, a, a$). Rank = 3. Unique solution (Trivial).</li>
+                            <li>If $a = 0$, the matrix becomes:
+                                <div class="latex-content mt-1">
+                                    $$ \left[\begin{array}{rrr|r} 1 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0
+                                    \end{array}\right] $$
+                                </div>
+                                Rank = 2. Free variable exists!
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Find Solutions when $a=0$:</strong>
+                        <p class="mt-2">From RREF: $x+y=0 \implies x=-y$. And $z=0$. Let $y=s$.</p>
+                        <div class="latex-content mt-2 font-bold">
+                            $$ \begin{bmatrix} x \\ y \\ z \end{bmatrix} = s \begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix}
+                            $$
+                        </div>
+                    </li>
+                </ol>
             </div>
         </section>
 

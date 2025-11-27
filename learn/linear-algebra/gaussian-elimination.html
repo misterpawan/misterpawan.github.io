@@ -148,18 +148,21 @@
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="space-y-4">
                     <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl border border-yellow-200">
-                        <h3 class="font-bold mb-2">A matrix is in REF if:</h3>
+                        <h3 class="font-bold mb-2">Definition: Row-Echelon Matrix</h3>
+                        <p class="text-sm mb-2">A matrix is in <strong>Row-Echelon Form (REF)</strong> if:</p>
                         <ul class="list-disc list-inside space-y-1 text-sm">
-                            <li>Zero rows are at the bottom. 📉</li>
-                            <li>First nonzero entry in a row is <strong>1</strong> (Leading 1). 🥇</li>
-                            <li>Each Leading 1 is to the right of the one above it. ➡️</li>
+                            <li>All zero rows are at the bottom. 📉</li>
+                            <li>The first nonzero entry in each nonzero row is a <strong>1</strong> (called the
+                                <strong>leading 1</strong>). 🥇</li>
+                            <li>Each leading 1 is to the right of all leading 1's in the rows above it. ➡️</li>
                         </ul>
                     </div>
                     <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl border border-green-200">
-                        <h3 class="font-bold mb-2">Reduced REF (RREF) adds:</h3>
+                        <h3 class="font-bold mb-2">Definition: Reduced Row-Echelon Matrix</h3>
+                        <p class="text-sm mb-2">A matrix is in <strong>Reduced Row-Echelon Form (RREF)</strong> if:</p>
                         <ul class="list-disc list-inside space-y-1 text-sm">
-                            <li>It's already in REF.</li>
-                            <li>Leading 1 is the <strong>ONLY</strong> nonzero entry in its column. 🦄</li>
+                            <li>It is in Row-Echelon Form.</li>
+                            <li>Each leading 1 is the <strong>only</strong> nonzero entry in its column. 🦄</li>
                         </ul>
                     </div>
                 </div>
@@ -248,6 +251,14 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border-l-4 border-purple-500">
+                <h3 class="font-bold text-purple-700 dark:text-purple-300">Theorem: Uniqueness of RREF</h3>
+                <p>Every matrix is row equivalent to a <strong>unique</strong> reduced row-echelon matrix.</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">This means no matter which row operations you
+                    use, you will always end up with the same RREF!</p>
+            </div>
         </section>
 
         <!-- Section 3: Examples -->
@@ -320,6 +331,53 @@
                 </div>
                 <p>Look at the last row: $0x + 0y + 0z = 1$. That means $0 = 1$. Impossible! 😱</p>
                 <p class="font-bold text-red-600">System is Inconsistent.</p>
+            </div>
+            </div>
+        </section>
+
+        <!-- Section 3.5: Advanced Problem -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Advanced Problem: General Patterns</h2>
+            <p class="mb-4">Find conditions on $a, b, c$ such that the system has (i) a unique solution, (ii) no
+                solution, or (iii) infinitely many solutions.</p>
+
+            <div class="latex-content mb-6">
+                $$ \begin{cases} 2x + 3y + az = b \\ -y + 2z = c \\ x + 3y - 2z = 1 \end{cases} $$
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                <h3 class="font-bold mb-4">Solution Steps</h3>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>
+                        <strong>Augmented Matrix:</strong>
+                        <div class="latex-content mt-2 ml-4">
+                            $$ \left[\begin{array}{rrr|r} 2 & 3 & a & b \\ 0 & -1 & 2 & c \\ 1 & 3 & -2 & 1
+                            \end{array}\right] $$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Row Reduce:</strong> After several operations (swapping rows, eliminating), we get:
+                        <div class="latex-content mt-2 ml-4">
+                            $$ \left[\begin{array}{rrr|c} 1 & 0 & 4 & 1+3c \\ 0 & 1 & -2 & -c \\ 0 & 0 & a-2 & b-2-3c
+                            \end{array}\right] $$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Analyze Cases:</strong>
+                        <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+                            <li><strong>Case 1 ($a-2 \neq 0$):</strong> If $a \neq 2$, we can divide by $(a-2)$ to get a
+                                leading 1 in the last row. $\implies$ <strong>Unique Solution</strong>.</li>
+                            <li><strong>Case 2 ($a=2$):</strong> The last row becomes $[0 \ 0 \ 0 \mid b-2-3c]$.
+                                <ul class="list-circle list-inside ml-4 mt-1">
+                                    <li>If $b-2-3c \neq 0$, we have $0 = \text{nonzero}$. $\implies$ <strong>No
+                                            Solution</strong>.</li>
+                                    <li>If $b-2-3c = 0$, we have $0 = 0$. $\implies$ <strong>Infinitely Many
+                                            Solutions</strong>.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
             </div>
         </section>
 

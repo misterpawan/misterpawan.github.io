@@ -224,6 +224,47 @@
             </div>
         </section>
 
+        <!-- Section 3.5: Parametric Solutions -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Parametric Solutions</h2>
+            <p class="mb-4">When a system has infinitely many solutions, we can't list them all! Instead, we describe
+                them using <strong>parameters</strong> (like $s, t$).</p>
+
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200 mb-6">
+                <h3 class="font-bold mb-2">Example</h3>
+                <p class="mb-2">Consider the equation: $x - y = 2$.</p>
+                <p class="mb-2">We can choose <em>any</em> value for $y$. Let $y = t$ (where $t$ is any real number).
+                </p>
+                <p>Then $x = 2 + t$.</p>
+                <div class="mt-4 p-3 bg-white dark:bg-gray-800 rounded-lg font-mono text-center">
+                    $$ \begin{cases} x = 2 + t \\ y = t \end{cases} \quad \text{for any } t \in \mathbb{R} $$
+                </div>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Here, $t$ is the <strong>parameter</strong>.
+                    For each value of $t$, we get a specific solution (e.g., $t=0 \implies (2,0)$, $t=1 \implies
+                    (3,1)$).</p>
+            </div>
+        </section>
+
+        <!-- Quiz 2.5 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🤔 Parameter Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">If $x + 2y = 0$, and we let $y = s$, what is $x$?</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-center">$x
+                    = s$</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-center">$x
+                    = -2s$</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-center">$x
+                    = 2s$</button>
+            </div>
+        </div>
+
         <!-- Quiz 2 -->
         <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
             <div class="flex justify-between items-center mb-4">
@@ -340,6 +381,45 @@
 
             <p class="mt-8">We perform <strong>Elementary Row Operations</strong> on the matrix, which correspond
                 exactly to the operations on equations.</p>
+        </section>
+
+        <!-- Section 7: Back Substitution -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Back Substitution</h2>
+            <p class="mb-4">Once a system is in a simple "triangular" form, we can solve it easily using <strong>Back
+                    Substitution</strong>.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="latex-content">
+                    <p class="mb-2">Consider this system:</p>
+                    $$ \begin{aligned} x + 2y + z &= 3 \\ y - z &= 2 \\ z &= 1 \end{aligned} $$
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="bg-green-100 text-green-800 font-bold w-8 h-8 flex items-center justify-center rounded-full shrink-0">
+                            1</div>
+                        <p>We already know <strong class="text-blue-600">$z = 1$</strong>.</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="bg-green-100 text-green-800 font-bold w-8 h-8 flex items-center justify-center rounded-full shrink-0">
+                            2</div>
+                        <p>Substitute $z=1$ into the second equation:<br>
+                            $y - 1 = 2 \implies \strong{y = 3}$.</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="bg-green-100 text-green-800 font-bold w-8 h-8 flex items-center justify-center rounded-full shrink-0">
+                            3</div>
+                        <p>Substitute $y=3, z=1$ into the first equation:<br>
+                            $x + 2(3) + 1 = 3 \implies x + 7 = 3 \implies \strong{x = -4}$.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 bg-green-50 dark:bg-green-900/20 p-4 rounded-xl text-center">
+                <p class="font-bold text-lg">Solution: $(-4, 3, 1)$</p>
+            </div>
         </section>
 
         <!-- Final Quiz -->
