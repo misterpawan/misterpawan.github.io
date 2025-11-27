@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finite Dimensional Spaces | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    calP: "{\\mathcal{P}}",
+                    M: "{\\mathbf{M}}",
+                    span: "\\text{span}",
+                    dim: "\\text{dim}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#06b6d4', // Cyan
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #ecfeff;
+            /* cyan-50 */
+            border-color: #06b6d4;
+            /* cyan-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #06b6d4;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-cyan-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-cyan-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-teal-600">
+                Finite Dimensional Spaces
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 6 &bull; Section 6-4</p>
+            <p class="mt-4 text-lg italic">"Extending, reducing, and combining spaces. 🏗️"</p>
+        </header>
+
+        <!-- Section 1: Fundamental Theorems -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-600 flex items-center gap-2">
+                <span>📜</span> Fundamental Theorems
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-cyan-50 dark:bg-cyan-900/20 p-6 rounded-xl border border-cyan-200">
+                    <h3 class="font-bold mb-2 text-cyan-800 dark:text-cyan-300">Extending Independent Sets</h3>
+                    <p class="text-sm">Any linearly independent set in a finite dimensional space can be
+                        <strong>extended</strong> to a basis.</p>
+                </div>
+                <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200">
+                    <h3 class="font-bold mb-2 text-teal-800 dark:text-teal-300">Reducing Spanning Sets</h3>
+                    <p class="text-sm">Any spanning set in a finite dimensional space can be <strong>reduced</strong> to
+                        a basis.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Sums and Intersections -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600">Sums and Intersections</h2>
+
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200 mb-6">
+                <p class="mb-4">If $U$ and $W$ are subspaces of $V$, then:</p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>$U \cap W$ is a subspace.</li>
+                    <li>$U + W = \{ \vec{u} + \vec{w} \mid \vec{u} \in U, \vec{w} \in W \}$ is a subspace.</li>
+                </ul>
+            </div>
+
+            <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                <h3 class="font-bold text-lg mb-2 text-purple-800 dark:text-purple-300">The Dimension Formula</h3>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-4 rounded-lg mb-4">
+                    $$ \dim(U+W) = \dim(U) + \dim(W) - \dim(U \cap W) $$
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">This is like the inclusion-exclusion principle for
+                    vector spaces!</p>
+            </div>
+        </section>
+
+        <!-- Interactive Dimension Calculator -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-pink-600">Dimension Formula Calculator</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                Calculate the dimension of the sum $U+W$ given the dimensions of $U$, $W$, and their intersection.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 items-center">
+                <div class="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-xl">
+                    <label class="block text-sm font-bold mb-2 text-pink-600">$\dim(U)$</label>
+                    <input type="number" id="dimU" value="3" class="w-full p-2 rounded border text-center">
+                </div>
+                <div class="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-xl">
+                    <label class="block text-sm font-bold mb-2 text-pink-600">$\dim(W)$</label>
+                    <input type="number" id="dimW" value="2" class="w-full p-2 rounded border text-center">
+                </div>
+                <div class="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-xl">
+                    <label class="block text-sm font-bold mb-2 text-pink-600">$\dim(U \cap W)$</label>
+                    <input type="number" id="dimInter" value="1" class="w-full p-2 rounded border text-center">
+                </div>
+            </div>
+
+            <button onclick="calcDimSum()"
+                class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded-xl transition w-full mb-4">Calculate
+                $\dim(U+W)$</button>
+
+            <div id="dim-result"
+                class="hidden p-6 rounded-xl bg-pink-100 dark:bg-pink-900 border border-pink-200 text-center">
+                <!-- Result will be injected here -->
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-cyan-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-cyan-100 text-cyan-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">If $U$ and $W$ are planes through the origin in $\mathbb{R}^3$ ($dim=2$), and $U \neq W$,
+                what is $\dim(U \cap W)$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">0
+                    (The origin only)</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">1
+                    (A line)</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">2
+                    (A plane)</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Hint: Two distinct planes in 3D intersect in a line.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Dimension Calculator Logic
+        function calcDimSum() {
+            const dimU = parseInt(document.getElementById('dimU').value) || 0;
+            const dimW = parseInt(document.getElementById('dimW').value) || 0;
+            const dimInter = parseInt(document.getElementById('dimInter').value) || 0;
+
+            const dimSum = dimU + dimW - dimInter;
+
+            const resultEl = document.getElementById('dim-result');
+            resultEl.classList.remove('hidden');
+
+            resultEl.innerHTML = `
+            <h3 class="font-bold text-lg mb-2 text-pink-800 dark:text-pink-300">Result $\\dim(U+W)$</h3>
+            <div class="text-4xl font-bold text-pink-600 mb-2">
+                ${dimSum}
+            </div>
+            <p class="text-sm text-gray-500">
+                Calculated as: $${dimU} + ${dimW} - ${dimInter} = ${dimSum}$
+            </p>
+        `;
+            MathJax.typesetPromise([resultEl]);
+        }
+
+    </script>
+</body>
+
+</html>
