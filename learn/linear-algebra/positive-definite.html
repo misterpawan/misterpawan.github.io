@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positive Definite Matrices | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    calP: "{\\mathcal{P}}",
+                    M: "{\\mathbf{M}}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f59e0b', // Amber
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fffbeb;
+            /* amber-50 */
+            border-color: #f59e0b;
+            /* amber-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f59e0b;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-amber-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-amber-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600">
+                Positive Definite Matrices
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 8 &bull; Section 8-3</p>
+            <p class="mt-4 text-lg italic">"The 'positive numbers' of the matrix world. ➕"</p>
+        </header>
+
+        <!-- Section 1: Definition -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-amber-600 flex items-center gap-2">
+                <span>✅</span> What is Positive Definite?
+            </h2>
+
+            <div class="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-xl border border-amber-200 mb-6">
+                <p class="mb-4">A symmetric matrix $A$ is <strong>positive definite</strong> if:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ \vec{x}^T A \vec{x} > 0 \quad \text{for all } \vec{x} \neq \vec{0} $$
+                </div>
+                <p class="text-sm text-gray-500 mt-2">This means the quadratic form $q(\vec{x}) = \vec{x}^T A \vec{x}$
+                    is always positive, like a bowl shape opening upwards.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-orange-600">Eigenvalue Test</h3>
+                    <p class="text-sm">All eigenvalues of $A$ are strictly positive ($\lambda_i > 0$).</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-orange-600">Determinant Test</h3>
+                    <p class="text-sm">All leading principal submatrices have positive determinants.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Definiteness Checker -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600">Definiteness Checker</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                Enter a $2 \times 2$ symmetric matrix to check its definiteness.
+                <br>
+                $A = \begin{bmatrix} a & b \\ b & c \end{bmatrix}$
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-2 max-w-[200px] mx-auto">
+                        <input type="number" id="mat-a" value="2"
+                            class="p-3 rounded-lg border text-center text-xl font-bold" onchange="checkDef()">
+                        <input type="number" id="mat-b" value="1"
+                            class="p-3 rounded-lg border text-center text-xl font-bold" onchange="checkDef()">
+                        <div class="p-3 text-center text-gray-400 text-xl font-bold">=</div>
+                        <input type="number" id="mat-c" value="2"
+                            class="p-3 rounded-lg border text-center text-xl font-bold" onchange="checkDef()">
+                    </div>
+                    <p class="text-center text-sm text-gray-500">(Symmetric: $a_{12} = a_{21} = b$)</p>
+                </div>
+
+                <div
+                    class="bg-gray-100 dark:bg-gray-800 p-6 rounded-xl flex flex-col justify-center items-center text-center">
+                    <div id="def-result" class="text-2xl font-bold mb-2 text-green-600">Positive Definite</div>
+                    <p id="def-reason" class="text-sm text-gray-600 dark:text-gray-400">
+                        Eigenvalues: 3.00, 1.00 (Both > 0)<br>
+                        Shape: Bowl (Minimum at 0)
+                    </p>
+                    <div id="def-icon" class="text-6xl mt-4">🥣</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Cholesky Factorization -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600">Cholesky Factorization</h2>
+
+            <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200 mb-6">
+                <p class="mb-4">Every positive definite matrix $A$ can be factored uniquely as:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ A = U^T U $$
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Where $U$ is an upper triangular matrix with positive diagonal
+                    entries. This is like the "square root" of a matrix!</p>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-amber-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-amber-100 text-amber-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">Is the identity matrix $I$ positive definite?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    all eigenvalues are 1.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    it has zeros off-diagonal.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Only
+                    if the dimension is even.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Definiteness Checker Logic
+        function checkDef() {
+            const a = parseFloat(document.getElementById('mat-a').value) || 0;
+            const b = parseFloat(document.getElementById('mat-b').value) || 0;
+            const c = parseFloat(document.getElementById('mat-c').value) || 0;
+
+            // Calculate eigenvalues of [[a, b], [b, c]]
+            // Trace = a + c
+            // Det = ac - b^2
+            // lambda^2 - T*lambda + D = 0
+            const T = a + c;
+            const D = a * c - b * b;
+            const delta = Math.sqrt(T * T - 4 * D);
+            const l1 = (T + delta) / 2;
+            const l2 = (T - delta) / 2;
+
+            const resultEl = document.getElementById('def-result');
+            const reasonEl = document.getElementById('def-reason');
+            const iconEl = document.getElementById('def-icon');
+
+            if (l1 > 0 && l2 > 0) {
+                resultEl.innerText = "Positive Definite";
+                resultEl.className = "text-2xl font-bold mb-2 text-green-600";
+                iconEl.innerText = "🥣"; // Bowl
+                reasonEl.innerHTML = `Eigenvalues: ${l1.toFixed(2)}, ${l2.toFixed(2)} (Both > 0)<br>Shape: Bowl (Minimum at 0)`;
+            } else if (l1 < 0 && l2 < 0) {
+                resultEl.innerText = "Negative Definite";
+                resultEl.className = "text-2xl font-bold mb-2 text-red-600";
+                iconEl.innerText = "⛰️"; // Mountain/Hill
+                reasonEl.innerHTML = `Eigenvalues: ${l1.toFixed(2)}, ${l2.toFixed(2)} (Both < 0)<br>Shape: Hill (Maximum at 0)`;
+            } else if ((l1 > 0 && l2 < 0) || (l1 < 0 && l2 > 0)) {
+                resultEl.innerText = "Indefinite";
+                resultEl.className = "text-2xl font-bold mb-2 text-purple-600";
+                iconEl.innerText = "🐎"; // Saddle (Horse)
+                reasonEl.innerHTML = `Eigenvalues: ${l1.toFixed(2)}, ${l2.toFixed(2)} (Mixed Signs)<br>Shape: Saddle`;
+            } else {
+                resultEl.innerText = "Semi-Definite";
+                resultEl.className = "text-2xl font-bold mb-2 text-yellow-600";
+                iconEl.innerText = "🛶"; // Trough
+                reasonEl.innerHTML = `Eigenvalues: ${l1.toFixed(2)}, ${l2.toFixed(2)} (Contains 0)<br>Shape: Trough`;
+            }
+        }
+
+        // Initial check
+        checkDef();
+
+    </script>
+</body>
+
+</html>

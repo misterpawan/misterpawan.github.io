@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orthogonal Diagonalization | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    calP: "{\\mathcal{P}}",
+                    M: "{\\mathbf{M}}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f43f5e', // Rose
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #ffe4e6;
+            /* rose-50 */
+            border-color: #f43f5e;
+            /* rose-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f43f5e;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        canvas {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        .dark canvas {
+            border-color: #374151;
+            background-color: #1f2937;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-rose-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-rose-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600">
+                Orthogonal Diagonalization
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 8 &bull; Section 8-2</p>
+            <p class="mt-4 text-lg italic">"Symmetric matrices are the nicest matrices in the world. 🌹"</p>
+        </header>
+
+        <!-- Section 1: Orthogonal Matrices -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-rose-600 flex items-center gap-2">
+                <span>🔄</span> Orthogonal Matrices
+            </h2>
+
+            <div class="bg-rose-50 dark:bg-rose-900/20 p-6 rounded-xl border border-rose-200 mb-6">
+                <p class="mb-4">An $n \times n$ matrix $Q$ is <strong>orthogonal</strong> if its columns form an
+                    orthonormal set.</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ Q^T Q = I \quad \implies \quad Q^{-1} = Q^T $$
+                </div>
+                <p class="text-sm text-gray-500 mt-2">This means the inverse is just the transpose! Extremely useful
+                    computationally.</p>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold text-lg mb-2">Principal Axis Theorem</h3>
+                <p class="mb-2">A matrix $A$ is orthogonally diagonalizable ($A = PDP^T$ with $P$ orthogonal) if and
+                    only if $A$ is <strong>symmetric</strong> ($A^T = A$).</p>
+            </div>
+        </section>
+
+        <!-- Interactive Quadratic Form Visualizer -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600">Quadratic Form Visualizer</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                Visualize the quadratic form $q(x,y) = ax^2 + 2bxy + cy^2$.
+                <br>
+                The "cross term" $2bxy$ rotates the shape. Diagonalization removes it, aligning the shape with the axes.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-indigo-600">Coefficients</label>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-8 font-mono">a ($x^2$)</span>
+                                <input type="range" id="coef-a" min="-2" max="2" step="0.1" value="1" class="w-full"
+                                    oninput="updateQuad()">
+                                <span id="val-a" class="w-8 text-right">1</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-8 font-mono">b ($xy$)</span>
+                                <input type="range" id="coef-b" min="-2" max="2" step="0.1" value="0" class="w-full"
+                                    oninput="updateQuad()">
+                                <span id="val-b" class="w-8 text-right">0</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-8 font-mono">c ($y^2$)</span>
+                                <input type="range" id="coef-c" min="-2" max="2" step="0.1" value="1" class="w-full"
+                                    oninput="updateQuad()">
+                                <span id="val-c" class="w-8 text-right">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl">
+                        <h4 class="font-bold text-sm mb-2">Equation:</h4>
+                        <p id="quad-eq" class="font-mono text-sm text-center">$x^2 + y^2 = 1$</p>
+                        <p class="text-xs text-gray-500 mt-2 text-center">(Level curve at $z=1$)</p>
+                    </div>
+                </div>
+                <div class="md:col-span-2 flex justify-center bg-white dark:bg-gray-800 rounded-xl p-4">
+                    <canvas id="quadCanvas" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Properties -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600">Spectral Properties</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200">
+                    <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-300">Real Eigenvalues</h3>
+                    <p class="text-sm">Symmetric matrices always have real eigenvalues (no complex numbers needed!).</p>
+                </div>
+                <div class="bg-pink-50 dark:bg-pink-900/20 p-6 rounded-xl border border-pink-200">
+                    <h3 class="font-bold mb-2 text-pink-800 dark:text-pink-300">Orthogonal Eigenvectors</h3>
+                    <p class="text-sm">Eigenvectors from different eigenspaces are automatically orthogonal.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-rose-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-rose-100 text-rose-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">Which of the following matrices is orthogonally diagonalizable?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$\begin{bmatrix}
+                    1 & 2 \\ 2 & 3 \end{bmatrix}$ (Symmetric)</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$\begin{bmatrix}
+                    1 & 2 \\ 0 & 3 \end{bmatrix}$ (Triangular)</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$\begin{bmatrix}
+                    1 & 1 \\ -1 & 1 \end{bmatrix}$ (Rotation)</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Quadratic Form Visualizer
+        const canvas = document.getElementById('quadCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const scale = 80;
+
+        function updateQuad() {
+            const a = parseFloat(document.getElementById('coef-a').value);
+            const b = parseFloat(document.getElementById('coef-b').value);
+            const c = parseFloat(document.getElementById('coef-c').value);
+
+            document.getElementById('val-a').innerText = a;
+            document.getElementById('val-b').innerText = b;
+            document.getElementById('val-c').innerText = c;
+
+            // Format equation nicely
+            let eq = `${a}x^2`;
+            if (b >= 0) eq += ` + ${2 * b}xy`; else eq += ` - ${Math.abs(2 * b)}xy`;
+            if (c >= 0) eq += ` + ${c}y^2`; else eq += ` - ${Math.abs(c)}y^2`;
+            eq += ` = 1`;
+            document.getElementById('quad-eq').innerText = `$${eq}$`;
+            // Re-render MathJax if needed, but simple text update is faster for slider
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Axes
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(0, centerY); ctx.lineTo(width, centerY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height); ctx.stroke();
+
+            // Draw Level Curve: ax^2 + 2bxy + cy^2 = 1
+            // Convert to polar: r^2 (a cos^2 t + 2b cos t sin t + c sin^2 t) = 1
+            // r = 1 / sqrt(...)
+
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            let first = true;
+            for (let t = 0; t <= 2 * Math.PI; t += 0.05) {
+                const denom = a * Math.cos(t) ** 2 + 2 * b * Math.cos(t) * Math.sin(t) + c * Math.sin(t) ** 2;
+
+                if (denom > 0) {
+                    const r = 1 / Math.sqrt(denom);
+                    const x = r * Math.cos(t);
+                    const y = r * Math.sin(t);
+
+                    // Screen coords
+                    const sx = centerX + x * scale;
+                    const sy = centerY - y * scale; // Flip y for canvas
+
+                    if (first) {
+                        ctx.moveTo(sx, sy);
+                        first = false;
+                    } else {
+                        // Handle jumps (hyperbolas)
+                        if (Math.abs(sx - (centerX + (r * Math.cos(t - 0.05)) * scale)) > 100) {
+                            ctx.moveTo(sx, sy);
+                        } else {
+                            ctx.lineTo(sx, sy);
+                        }
+                    }
+                } else {
+                    first = true; // Gap in hyperbola
+                }
+            }
+            ctx.stroke();
+
+            // Draw Principal Axes (Eigenvectors)
+            // Matrix M = [[a, b], [b, c]]
+            // Eigenvalues/vectors calculation... simplified for visualizer
+            // Angle of rotation theta = 0.5 * atan2(2b, a-c)
+            if (b !== 0 || a !== c) {
+                const theta = 0.5 * Math.atan2(2 * b, a - c);
+
+                ctx.strokeStyle = '#6366f1'; // Indigo
+                ctx.setLineDash([5, 5]);
+                ctx.lineWidth = 1;
+
+                // Axis 1
+                ctx.beginPath();
+                ctx.moveTo(centerX - 200 * Math.cos(theta), centerY + 200 * Math.sin(theta));
+                ctx.lineTo(centerX + 200 * Math.cos(theta), centerY - 200 * Math.sin(theta));
+                ctx.stroke();
+
+                // Axis 2 (Perpendicular)
+                ctx.beginPath();
+                ctx.moveTo(centerX - 200 * Math.cos(theta + Math.PI / 2), centerY + 200 * Math.sin(theta + Math.PI / 2));
+                ctx.lineTo(centerX + 200 * Math.cos(theta + Math.PI / 2), centerY - 200 * Math.sin(theta + Math.PI / 2));
+                ctx.stroke();
+
+                ctx.setLineDash([]);
+            }
+        }
+
+        // Initial draw
+        updateQuad();
+
+    </script>
+</body>
+
+</html>

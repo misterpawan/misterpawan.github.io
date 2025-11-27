@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orthogonality and Projections | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    calP: "{\\mathcal{P}}",
+                    M: "{\\mathbf{M}}",
+                    proj: "\\text{proj}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0ea5e9', // Sky
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #e0f2fe;
+            /* sky-50 */
+            border-color: #0ea5e9;
+            /* sky-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #0ea5e9;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        canvas {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        .dark canvas {
+            border-color: #374151;
+            background-color: #1f2937;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-sky-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-sky-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-500 to-blue-600">
+                Orthogonality and Projections
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 8 &bull; Section 8-1</p>
+            <p class="mt-4 text-lg italic">"Finding the perfect angle. 📐"</p>
+        </header>
+
+        <!-- Section 1: Orthogonality -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-sky-600 flex items-center gap-2">
+                <span>📐</span> Orthogonality Basics
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-sky-50 dark:bg-sky-900/20 p-6 rounded-xl border border-sky-200">
+                    <h3 class="font-bold mb-2 text-sky-800 dark:text-sky-300">Orthogonal Vectors</h3>
+                    <p class="text-sm mb-2">Two vectors $\vec{u}$ and $\vec{v}$ are orthogonal if their dot product is
+                        zero:</p>
+                    <p class="text-center font-bold my-2">$\vec{u} \cdot \vec{v} = 0$</p>
+                </div>
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200">
+                    <h3 class="font-bold mb-2 text-blue-800 dark:text-blue-300">Orthonormal Set</h3>
+                    <p class="text-sm mb-2">A set of vectors is orthonormal if they are all orthogonal to each other AND
+                        have length 1.</p>
+                    <p class="text-center font-bold my-2">$\vec{u}_i \cdot \vec{u}_j = \delta_{ij}$</p>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold text-lg mb-2">Orthogonal Complement $U^\perp$</h3>
+                <p class="mb-2">The set of all vectors orthogonal to every vector in a subspace $U$.</p>
+                <div class="latex-content font-bold text-center">
+                    $$ U^\perp = \{ \vec{x} \in V \mid \vec{x} \cdot \vec{u} = 0 \text{ for all } \vec{u} \in U \} $$
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Gram-Schmidt Visualizer -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-600">Gram-Schmidt Visualizer</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                Convert a basis $\{\vec{x}_1, \vec{x}_2\}$ into an orthogonal basis $\{\vec{f}_1, \vec{f}_2\}$.
+                <br>
+                Formula: $\vec{f}_1 = \vec{x}_1$, $\vec{f}_2 = \vec{x}_2 - \text{proj}_{\vec{f}_1}(\vec{x}_2)$.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-indigo-600">Vector $\vec{x}_1$</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="x1_x" value="4" class="w-full p-2 rounded border text-center"
+                                onchange="updateGS()">
+                            <input type="number" id="x1_y" value="0" class="w-full p-2 rounded border text-center"
+                                onchange="updateGS()">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-indigo-600">Vector $\vec{x}_2$</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="x2_x" value="3" class="w-full p-2 rounded border text-center"
+                                onchange="updateGS()">
+                            <input type="number" id="x2_y" value="3" class="w-full p-2 rounded border text-center"
+                                onchange="updateGS()">
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl">
+                        <h4 class="font-bold text-sm mb-2">Resulting Orthogonal Basis:</h4>
+                        <p id="gs-result" class="font-mono text-sm">f1 = (4, 0)<br>f2 = (0, 3)</p>
+                    </div>
+                </div>
+                <div class="md:col-span-2 flex justify-center bg-white dark:bg-gray-800 rounded-xl p-4">
+                    <canvas id="gsCanvas" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Projections -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600">Orthogonal Projection</h2>
+
+            <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200 mb-6">
+                <p class="mb-4">The projection of $\vec{x}$ onto a subspace $U$ is the "shadow" of $\vec{x}$ on $U$.</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ \proj_U(\vec{x}) = \sum_{i=1}^k \frac{\vec{x} \cdot \vec{f}_i}{\|\vec{f}_i\|^2} \vec{f}_i $$
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Where $\{\vec{f}_1, \dots, \vec{f}_k\}$ is an orthogonal basis for
+                    $U$.</p>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-sky-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-sky-100 text-sky-600 px-2 py-1 rounded-full">Win $15</span></h3>
+            </div>
+            <p class="mb-4">If $\vec{u} = (1, 1)$ and $\vec{v} = (1, -1)$, are they orthogonal?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    $1(1) + 1(-1) = 0$.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    they are perpendicular but not orthogonal.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    their dot product is 2.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Gram-Schmidt Visualizer
+        const canvas = document.getElementById('gsCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const centerX = width / 4; // Shift origin to bottom-left quadrant
+        const centerY = height * 3 / 4;
+        const scale = 40;
+
+        function drawVector(x, y, color, label, fromX = 0, fromY = 0) {
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 3;
+
+            const startX = centerX + fromX * scale;
+            const startY = centerY - fromY * scale;
+            const endX = centerX + (fromX + x) * scale;
+            const endY = centerY - (fromY + y) * scale;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+
+            // Arrowhead
+            const angle = Math.atan2(-(endY - startY), endX - startX);
+            const headLen = 10;
+            ctx.beginPath();
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - headLen * Math.cos(angle - Math.PI / 6), endY + headLen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(endX - headLen * Math.cos(angle + Math.PI / 6), endY + headLen * Math.sin(angle + Math.PI / 6));
+            ctx.fill();
+
+            // Label
+            ctx.font = '14px Inter';
+            ctx.fillText(label, endX + 10, endY - 10);
+        }
+
+        function updateGS() {
+            const x1 = {
+                x: parseFloat(document.getElementById('x1_x').value) || 0,
+                y: parseFloat(document.getElementById('x1_y').value) || 0
+            };
+            const x2 = {
+                x: parseFloat(document.getElementById('x2_x').value) || 0,
+                y: parseFloat(document.getElementById('x2_y').value) || 0
+            };
+
+            // GS Algorithm
+            // f1 = x1
+            const f1 = { ...x1 };
+
+            // proj_f1(x2) = (x2 . f1 / f1 . f1) * f1
+            const dot = x2.x * f1.x + x2.y * f1.y;
+            const magSq = f1.x * f1.x + f1.y * f1.y;
+            const projCoef = magSq === 0 ? 0 : dot / magSq;
+            const proj = { x: projCoef * f1.x, y: projCoef * f1.y };
+
+            // f2 = x2 - proj
+            const f2 = { x: x2.x - proj.x, y: x2.y - proj.y };
+
+            // Update Text
+            document.getElementById('gs-result').innerHTML = `
+            f1 = (${f1.x.toFixed(2)}, ${f1.y.toFixed(2)})<br>
+            f2 = (${f2.x.toFixed(2)}, ${f2.y.toFixed(2)})<br>
+            <span class="text-gray-500 text-xs">Note: f1 is blue, f2 is green. x2 is dashed gray.</span>
+        `;
+
+            // Draw
+            ctx.clearRect(0, 0, width, height);
+
+            // Axes
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(0, centerY); ctx.lineTo(width, centerY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, height); ctx.stroke();
+
+            // Draw x1 (which is f1)
+            drawVector(f1.x, f1.y, '#3b82f6', 'f1 (x1)'); // blue
+
+            // Draw x2 (original)
+            ctx.setLineDash([5, 5]);
+            drawVector(x2.x, x2.y, '#9ca3af', 'x2'); // gray dashed
+            ctx.setLineDash([]);
+
+            // Draw projection (helper)
+            // drawVector(proj.x, proj.y, '#fca5a5', 'proj', 0, 0);
+
+            // Draw f2 (orthogonal part)
+            // We draw f2 starting from origin to show it's a basis vector
+            drawVector(f2.x, f2.y, '#10b981', 'f2'); // green
+
+            // Draw the subtraction visually: x2 = proj + f2
+            // So f2 connects tip of proj to tip of x2
+            // drawVector(f2.x, f2.y, '#10b981', '', proj.x, proj.y);
+        }
+
+        // Initial draw
+        updateGS();
+
+    </script>
+</body>
+
+</html>

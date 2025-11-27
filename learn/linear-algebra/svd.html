@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singular Value Decomposition | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vec: "\\mathbf",
+                    calP: "{\\mathcal{P}}",
+                    M: "{\\mathbf{M}}",
+                    Sigma: "{\\mathbf{\\Sigma}}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#8b5cf6', // Violet
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #f5f3ff;
+            /* violet-50 */
+            border-color: #8b5cf6;
+            /* violet-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #8b5cf6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        canvas {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        .dark canvas {
+            border-color: #374151;
+            background-color: #1f2937;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-violet-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-violet-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-purple-600">
+                Singular Value Decomposition
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 8 &bull; Section 8-5</p>
+            <p class="mt-4 text-lg italic">"The pinnacle of linear algebra. 🏔️"</p>
+        </header>
+
+        <!-- Section 1: The Big Idea -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-violet-600 flex items-center gap-2">
+                <span>👑</span> The King of Factorizations
+            </h2>
+
+            <div class="bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl border border-violet-200 mb-6">
+                <p class="mb-4">Every matrix $A$ (even rectangular ones!) can be factored as:</p>
+                <div class="latex-content font-bold text-center bg-white dark:bg-gray-800 p-2 rounded-lg">
+                    $$ A = U \Sigma V^T $$
+                </div>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700 dark:text-gray-300">
+                    <li>$U$: Orthogonal matrix (Left Singular Vectors)</li>
+                    <li>$\Sigma$: Diagonal matrix with non-negative entries (Singular Values $\sigma_i$)</li>
+                    <li>$V$: Orthogonal matrix (Right Singular Vectors)</li>
+                </ul>
+            </div>
+
+            <p class="text-gray-600 dark:text-gray-400">
+                This tells us that <strong>any</strong> linear transformation is just a rotation ($V^T$), followed by a
+                stretch ($\Sigma$), followed by another rotation ($U$).
+            </p>
+        </section>
+
+        <!-- Interactive SVD Image Compression -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-pink-600">SVD for Image Compression</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                SVD allows us to approximate a matrix (an image) using only the largest singular values. This is the
+                basis of image compression!
+            </p>
+
+            <div class="flex flex-col items-center gap-6">
+                <div
+                    class="relative w-full max-w-md aspect-square bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
+                    <canvas id="svd-canvas" width="300" height="300"></canvas>
+                    <div id="loading-msg"
+                        class="absolute inset-0 flex items-center justify-center bg-black/50 text-white hidden">
+                        Processing...</div>
+                </div>
+
+                <div class="w-full max-w-md space-y-2">
+                    <label for="k-slider"
+                        class="font-bold text-sm text-gray-600 dark:text-gray-400 flex justify-between">
+                        <span>Singular Values (k): <span id="k-value" class="text-violet-600">10</span></span>
+                        <span class="text-xs text-gray-400">Max: 50</span>
+                    </label>
+                    <input type="range" id="k-slider" min="1" max="50" value="10"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-500">
+                    <p class="text-xs text-center text-gray-500">Slide to change compression level. Lower k = more
+                        compression, less detail.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-violet-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-violet-100 text-violet-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">If $A$ is a symmetric positive definite matrix, how are its singular values related to its
+                eigenvalues?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    are exactly the same.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Singular
+                    values are squared eigenvalues.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    are unrelated.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // SVD Simulation (Simplified visual effect)
+        const canvas = document.getElementById('svd-canvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('k-slider');
+        const kValue = document.getElementById('k-value');
+
+        // Draw a simple pattern
+        function drawPattern(k) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Simulate "compression" by pixelating/blurring based on k
+            // Higher k = clearer image
+            const blockSize = Math.max(1, 51 - k);
+
+            ctx.fillStyle = '#ddd';
+            ctx.fillRect(0, 0, 300, 300);
+
+            // Draw a "P" shape
+            ctx.fillStyle = '#8b5cf6';
+
+            // Vertical bar
+            for (let y = 50; y < 250; y += blockSize) {
+                for (let x = 50; x < 100; x += blockSize) {
+                    ctx.fillRect(x, y, blockSize, blockSize);
+                }
+            }
+
+            // Top loop
+            for (let y = 50; y < 150; y += blockSize) {
+                for (let x = 100; x < 200; x += blockSize) {
+                    if (y < 100 || x > 150) // Simple shape logic
+                        ctx.fillRect(x, y, blockSize, blockSize);
+                }
+            }
+        }
+
+        slider.addEventListener('input', (e) => {
+            const k = parseInt(e.target.value);
+            kValue.innerText = k;
+            drawPattern(k);
+        });
+
+        // Initial draw
+        drawPattern(10);
+
+    </script>
+</body>
+
+</html>
