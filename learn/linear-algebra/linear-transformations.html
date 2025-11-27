@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Transformations | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    rank: "\\operatorname{rank}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #f97316;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #ddd;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Linear Transformations
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 2 &bull; Section 2-6</p>
+            <p class="mt-4 text-lg italic">"Functions, but for vectors! 🔄"</p>
+        </header>
+
+        <!-- Section 1: Definition -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>✨</span> The Definition
+            </h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 mb-6">
+                <p class="mb-4">A transformation $T: \RR^n \to \RR^m$ is <strong>linear</strong> if it satisfies two
+                    golden rules for all vectors $\vec{x}, \vec{y}$ and scalars $a$:</p>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm">
+                        <span
+                            class="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-bold px-2 py-1 rounded">1</span>
+                        <span class="latex-content">$T(\vec{x} + \vec{y}) = T(\vec{x}) + T(\vec{y})$</span>
+                        <span class="text-sm text-gray-500 ml-auto hidden sm:inline">(Preserves Addition)</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm">
+                        <span
+                            class="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-bold px-2 py-1 rounded">2</span>
+                        <span class="latex-content">$T(a\vec{x}) = aT(\vec{x})$</span>
+                        <span class="text-sm text-gray-500 ml-auto hidden sm:inline">(Preserves Scalar Mult.)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl border border-yellow-200 text-center">
+                <h3 class="font-bold text-yellow-800 dark:text-yellow-300 mb-2">Key Insight</h3>
+                <p>Every matrix transformation is linear. And amazingly, <strong>every linear transformation is a matrix
+                        transformation!</strong></p>
+                <p class="mt-2 font-mono text-lg">"Linear" = "Matrix"</p>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🕵️‍♀️ Linearity Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">Is $T(\vec{x}) = \vec{x} + \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ a linear transformation?
+            </p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    it just shifts the vector.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">No,
+                    $T(\vec{0}) \neq \vec{0}$, so it fails to preserve the zero vector.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Yes,
+                    because it involves addition.</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Finding the Matrix -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Finding the Matrix of $T$</h2>
+            <p class="mb-4">If $T$ is linear, it is induced by a unique matrix $A$. How do we find it?</p>
+
+            <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 mb-6">
+                <h3 class="font-bold mb-4 text-green-800 dark:text-green-300">The Recipe</h3>
+                <ol class="list-decimal list-inside space-y-2 mb-4">
+                    <li>Take the standard basis vectors $\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n$ (columns of $I$).</li>
+                    <li>See where $T$ sends them: compute $T(\vec{e}_1), T(\vec{e}_2), \dots$.</li>
+                    <li>These become the <strong>columns</strong> of your matrix $A$.</li>
+                </ol>
+                <div class="latex-content text-center font-bold bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                    $$ A = \begin{bmatrix} T(\vec{e}_1) & T(\vec{e}_2) & \cdots & T(\vec{e}_n) \end{bmatrix} $$
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Rotation -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-purple-600 flex items-center gap-2">
+                <span>🔄</span> Rotations in $\RR^2$
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="mb-4">A rotation $R_\theta$ is a linear transformation! Its matrix is determined by
+                        rotating $\vec{e}_1$ and $\vec{e}_2$.</p>
+                    <div class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-200 mb-4">
+                        <div class="latex-content text-center">
+                            $$ A = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} $$
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="font-bold text-sm text-gray-600 dark:text-gray-400">Rotate Angle ($\theta$): <span
+                                id="angle-display">0</span>°</label>
+                        <input type="range" id="angle-slider" min="0" max="360" value="0" class="w-full">
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <div
+                        class="relative w-64 h-64 bg-white dark:bg-gray-800 rounded-full border-4 border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-inner">
+                        <!-- Grid lines -->
+                        <div class="absolute w-full h-px bg-gray-200 dark:bg-gray-700"></div>
+                        <div class="absolute h-full w-px bg-gray-200 dark:bg-gray-700"></div>
+
+                        <!-- Vector e1 -->
+                        <div id="vector-e1"
+                            class="absolute w-1/2 h-1 bg-blue-500 origin-left transition-transform duration-75"
+                            style="left: 50%; top: 50%; margin-top: -2px;">
+                            <div class="absolute right-0 -top-2 text-blue-600 font-bold text-xs">e1</div>
+                        </div>
+
+                        <!-- Vector e2 -->
+                        <div id="vector-e2"
+                            class="absolute w-1/2 h-1 bg-red-500 origin-left transition-transform duration-75"
+                            style="left: 50%; top: 50%; margin-top: -2px; transform: rotate(-90deg);">
+                            <div class="absolute right-0 -top-2 text-red-600 font-bold text-xs">e2</div>
+                        </div>
+
+                        <!-- Center Dot -->
+                        <div class="absolute w-3 h-3 bg-gray-800 dark:bg-gray-200 rounded-full z-10"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Reflections & Composition -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Reflections & Composition</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-bold mb-2 text-indigo-600">Reflections</h3>
+                    <p class="text-sm mb-2">Reflection across a line is also linear.</p>
+                    <ul class="text-sm space-y-1 list-disc list-inside text-gray-600 dark:text-gray-400">
+                        <li>x-axis: $\begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$</li>
+                        <li>y-axis: $\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$</li>
+                        <li>$y=x$: $\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-bold mb-2 text-pink-600">Composition</h3>
+                    <p class="text-sm mb-2">Doing $T$ then $S$ ($S \circ T$) corresponds to matrix multiplication $AB$.
+                    </p>
+                    <p class="text-xs text-gray-500 mt-2">Note: $S \circ T$ means $T$ happens first, so we multiply $B$
+                        (for $T$) by $A$ (for $S$) on the left: $AB$.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Master Challenge <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">What transformation does the matrix $\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$
+                represent?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Rotation
+                    by $90^\circ$ ($\pi/2$).</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Reflection
+                    across $y=x$.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Rotation
+                    by $180^\circ$ ($\pi$).</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Hint: Check where $\vec{e}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$
+                goes.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+        // Rotation Demo Logic
+        const angleSlider = document.getElementById('angle-slider');
+        const angleDisplay = document.getElementById('angle-display');
+        const vecE1 = document.getElementById('vector-e1');
+        const vecE2 = document.getElementById('vector-e2');
+
+        angleSlider.addEventListener('input', (e) => {
+            const angle = e.target.value;
+            angleDisplay.innerText = angle;
+
+            // e1 starts at 0 deg
+            vecE1.style.transform = `rotate(${-angle}deg)`;
+
+            // e2 starts at -90 deg (pointing up in CSS terms relative to right)
+            // Wait, standard math: e1=(1,0) is right, e2=(0,1) is up.
+            // In CSS: right is 0deg. Up is -90deg.
+            // So e2 should be -90 - angle.
+            vecE2.style.transform = `rotate(${-90 - angle}deg)`;
+        });
+    </script>
+</body>
+
+</html>
