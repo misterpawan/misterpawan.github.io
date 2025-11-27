@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Reactions | Linear Algebra</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    rank: "\\operatorname{rank}"
+                }
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            /* orange-50 */
+            border-color: #f97316;
+            /* orange-500 */
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            /* green-100 */
+            border-color: #10b981 !important;
+            /* green-500 */
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            /* red-100 */
+            border-color: #ef4444 !important;
+            /* red-500 */
+        }
+
+        /* Atom Animation */
+        @keyframes orbit {
+            0% {
+                transform: rotate(0deg) translateX(20px) rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg) translateX(20px) rotate(-360deg);
+            }
+        }
+
+        .atom-electron {
+            animation: orbit 3s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-orange-600 transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Container -->
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <!-- Title -->
+        <header class="text-center py-10" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Application to Chemical Reactions
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Chapter 1 &bull; Section 1-6</p>
+            <p class="mt-4 text-lg italic">"I told a chemistry joke, but there was no reaction... 🧪"</p>
+        </header>
+
+        <!-- Section 1: The Problem -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600 flex items-center gap-2">
+                <span>⚗️</span> Balancing Chemical Equations
+            </h2>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <div class="flex-1">
+                    <p class="mb-4">Chemistry is all about balance! We need to ensure the number of atoms of each
+                        element is the same on both sides of the reaction.</p>
+                    <p class="mb-4 font-bold">Problem:</p>
+                    <p class="mb-4">Balance the following reaction involving Tin ($Sn$), Hydrogen ($H$), and Oxygen
+                        ($O$):</p>
+                    <div
+                        class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-200 text-center text-xl font-mono">
+                        $$ x \text{SnO}_2 + y \text{H}_2 \to z \text{Sn} + w \text{H}_2\text{O} $$
+                    </div>
+                </div>
+
+                <!-- Animated Beaker/Atom Visualization -->
+                <div
+                    class="w-32 h-32 relative flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-inner">
+                    <div class="absolute w-4 h-4 bg-red-500 rounded-full"></div> <!-- Nucleus -->
+                    <div class="absolute w-2 h-2 bg-blue-400 rounded-full atom-electron"
+                        style="animation-duration: 2s;"></div>
+                    <div class="absolute w-2 h-2 bg-green-400 rounded-full atom-electron"
+                        style="animation-duration: 3s; animation-direction: reverse;"></div>
+                    <div class="absolute w-2 h-2 bg-yellow-400 rounded-full atom-electron"
+                        style="animation-duration: 1.5s; transform: rotate(45deg);"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧪 Quick Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">In a chemical equation, what do the variables $x, y, z, w$ represent?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
+                    atomic mass of the elements.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
+                    stoichiometric coefficients (how many molecules).</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
+                    temperature of the reaction.</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Setting up the System -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Setting up the System</h2>
+            <p class="mb-4">We create an equation for each element to ensure conservation of mass.</p>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-bold text-gray-500 mb-2">Tin ($Sn$)</h3>
+                    <p>Left: $1 \cdot x$</p>
+                    <p>Right: $1 \cdot z$</p>
+                    <p class="mt-2 font-mono text-blue-600 font-bold">$x = z \implies x - z = 0$</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-bold text-gray-500 mb-2">Oxygen ($O$)</h3>
+                    <p>Left: $2 \cdot x$</p>
+                    <p>Right: $1 \cdot w$</p>
+                    <p class="mt-2 font-mono text-blue-600 font-bold">$2x = w \implies 2x - w = 0$</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-bold text-gray-500 mb-2">Hydrogen ($H$)</h3>
+                    <p>Left: $2 \cdot y$</p>
+                    <p>Right: $2 \cdot w$</p>
+                    <p class="mt-2 font-mono text-blue-600 font-bold">$2y = 2w \implies 2y - 2w = 0$</p>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
+                <h3 class="font-bold mb-4">Augmented Matrix</h3>
+                <p class="mb-2">The system in matrix form ($x, y, z, w$ columns):</p>
+                <div class="latex-content">
+                    $$ \left[\begin{array}{rrrr|r} 1 & 0 & -1 & 0 & 0 \\ 2 & 0 & 0 & -1 & 0 \\ 0 & 2 & 0 & -2 & 0
+                    \end{array}\right] $$
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Solving -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Solving the System</h2>
+
+            <div class="space-y-6">
+                <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold mb-4">Reduced Row-Echelon Form (RREF)</h3>
+                    <div class="latex-content">
+                        $$ \left[\begin{array}{rrrr|r} 1 & 0 & 0 & -1/2 & 0 \\ 0 & 1 & 0 & -1 & 0 \\ 0 & 0 & 1 & -1/2 &
+                        0 \end{array}\right] $$
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200">
+                    <h3 class="font-bold mb-4">General Solution</h3>
+                    <p class="mb-2">We have a free variable $w$. Let $w = t$.</p>
+                    <div class="latex-content">
+                        $$ \begin{cases} x = \frac{1}{2}t \\ y = t \\ z = \frac{1}{2}t \\ w = t \end{cases} $$
+                    </div>
+                </div>
+
+                <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-xl border border-red-200">
+                    <h3 class="font-bold mb-4">Finding Integers</h3>
+                    <p class="mb-2">Chemical equations usually use integers. Let's pick a value for $t$ to clear the
+                        fractions.</p>
+                    <p class="mb-2">If we choose $t = 4$ (or $w=4$):</p>
+                    <div class="latex-content font-bold">
+                        $$ x = 2, \quad y = 4, \quad z = 2, \quad w = 4 $$
+                    </div>
+                    <p class="mt-4 border-t border-red-200 pt-4">
+                        <strong>Balanced Equation:</strong>
+                        $$ 2\text{SnO}_2 + 4\text{H}_2 \to 2\text{Sn} + 4\text{H}_2\text{O} $$
+                    </p>
+                    <p class="text-sm text-gray-500 mt-2">(Note: We could also divide by 2 to get $1, 2, 1, 2$, which
+                        corresponds to $t=2$. Both are valid, but simplest integers are preferred!)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Quiz -->
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🏆 Balancing Act <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">Why did we choose $w=4$ (or $t=4$) instead of $w=1$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Because
+                    4 is a lucky number.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">To
+                    avoid fractional coefficients ($1/2$) and get whole numbers.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Because
+                    the matrix rank was 4.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = parseInt(localStorage.getItem('wallet') || '0');
+        document.getElementById('wallet-balance').innerText = wallet;
+
+        function updateWallet(amount) {
+            wallet += amount;
+            localStorage.setItem('wallet', wallet);
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = parseInt(rewardText.match(/\d+/)[0]);
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '💵';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+    </script>
+</body>
+
+</html>
