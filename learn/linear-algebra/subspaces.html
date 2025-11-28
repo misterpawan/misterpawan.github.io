@@ -238,6 +238,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-subspace" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Interactive Subspace Checker -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-purple-600">Subspace Visualizer</h2>
@@ -447,6 +450,61 @@
         // Init
         updateVisualizer();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-subspace', subspaceProof);
+        });
+
+        // Subspace Test Proof
+        const subspaceProof = {
+            id: "proof-subspace",
+            title: "Theorem: The Subspace Test",
+            intro: "To prove a subset $W$ is a subspace, we must verify three conditions. Let's test $W = \\{(x, y) \\in \\mathbb{R}^2 \\mid y = 2x\\}$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "We need to check: <br> 1. Is $\\vec{0} \\in W$? <br> 2. Is $W$ closed under addition? <br> 3. Is $W$ closed under scalar multiplication?"
+                },
+                {
+                    type: "question",
+                    text: "Step 1: Check the zero vector. Is $(0,0)$ in $W$? (Does $0 = 2(0)$?)",
+                    options: [
+                        { text: "Yes", correct: true, feedback: "Correct! $0=0$, so the origin is on the line." },
+                        { text: "No", correct: false, feedback: "Check the equation $y=2x$ with $x=0, y=0$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Step 2: Check closure under addition. Let $\\vec{u} = (x_1, 2x_1)$ and $\\vec{v} = (x_2, 2x_2)$ be in $W$."
+                },
+                {
+                    type: "question",
+                    text: "What is $\\vec{u} + \\vec{v}$?",
+                    options: [
+                        { text: "$(x_1+x_2, 2x_1+2x_2)$", correct: true, feedback: "Correct! And since $2x_1+2x_2 = 2(x_1+x_2)$, this new vector is also in $W$." },
+                        { text: "$(x_1+x_2, 2x_1+x_2)$", correct: false, feedback: "Add components separately: $(x_1+x_2, y_1+y_2)$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Step 3: Check closure under scalar multiplication. Let $\\vec{u} = (x_1, 2x_1)$ and $c \\in \\mathbb{R}$."
+                },
+                {
+                    type: "question",
+                    text: "What is $c\\vec{u}$?",
+                    options: [
+                        { text: "$(cx_1, 2cx_1)$", correct: true, feedback: "Correct! And since $2cx_1 = 2(cx_1)$, the result is in $W$." },
+                        { text: "$(cx_1, 2x_1)$", correct: false, feedback: "Multiply both components by $c$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since all three conditions hold, $W$ is a subspace of $\\mathbb{R}^2$. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

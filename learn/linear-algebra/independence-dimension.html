@@ -158,6 +158,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-independence" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Interactive Independence Checker -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-blue-600">Independence Checker (Polynomials)</h2>
@@ -353,6 +356,61 @@
             }
         }
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-independence', independenceProof);
+        });
+
+        // Linear Independence Proof
+        const independenceProof = {
+            id: "proof-independence",
+            title: "Theorem: Linear Independence",
+            intro: "How do we prove a set of vectors $\\{\\vec{v}_1, \\vec{v}_2\\}$ is linearly independent? We must show that the only solution to $c_1\\vec{v}_1 + c_2\\vec{v}_2 = \\vec{0}$ is the trivial solution.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $\\vec{v}_1 = \\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix}$ and $\\vec{v}_2 = \\begin{bmatrix} 3 \\\\ 4 \\end{bmatrix}$."
+                },
+                {
+                    type: "question",
+                    text: "Set up the vector equation $c_1\\vec{v}_1 + c_2\\vec{v}_2 = \\vec{0}$. What system of linear equations does this represent?",
+                    options: [
+                        { text: "$c_1 + 3c_2 = 0$ <br> $2c_1 + 4c_2 = 0$", correct: true, feedback: "Correct! Top row: $1c_1 + 3c_2 = 0$. Bottom row: $2c_1 + 4c_2 = 0$." },
+                        { text: "$c_1 + 2c_1 = 0$ <br> $3c_2 + 4c_2 = 0$", correct: false, feedback: "No, match the components of the vectors." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "We can write this as a matrix equation $\\begin{bmatrix} 1 & 3 \\\\ 2 & 4 \\end{bmatrix} \\begin{bmatrix} c_1 \\\\ c_2 \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ 0 \\end{bmatrix}$."
+                },
+                {
+                    type: "question",
+                    text: "Calculate the determinant of the coefficient matrix. $\\det \\begin{bmatrix} 1 & 3 \\\\ 2 & 4 \\end{bmatrix} = (1)(4) - (3)(2)$.",
+                    options: [
+                        { text: "$-2$", correct: true, feedback: "Correct! $4 - 6 = -2$." },
+                        { text: "$0$", correct: false, feedback: "Check your arithmetic." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since the determinant is non-zero ($-2 \\neq 0$), the matrix is invertible."
+                },
+                {
+                    type: "question",
+                    text: "What does an invertible matrix imply about the solution to $A\\vec{x} = \\vec{0}$?",
+                    options: [
+                        { text: "There is a unique solution: $\\vec{x} = \\vec{0}$.", correct: true, feedback: "Correct! If $A$ is invertible, $\\vec{x} = A^{-1}\\vec{0} = \\vec{0}$." },
+                        { text: "There are infinitely many solutions.", correct: false, feedback: "That would happen if the determinant was 0." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since the only solution is $c_1 = 0, c_2 = 0$, the vectors $\\vec{v}_1$ and $\\vec{v}_2$ are linearly independent. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

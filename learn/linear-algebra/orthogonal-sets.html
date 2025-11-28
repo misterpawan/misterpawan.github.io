@@ -189,6 +189,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-pythagoras" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Section 2: Fourier Expansion -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-teal-600">Fourier Expansion</h2>
@@ -374,6 +377,53 @@
             MathJax.typesetPromise([resultEl]);
         }
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-pythagoras', pythagorasProof);
+        });
+
+        // Pythagoras Theorem Proof
+        const pythagorasProof = {
+            id: "proof-pythagoras",
+            title: "Theorem: Pythagoras Theorem",
+            intro: "Let's prove that if $\\vec{u}$ and $\\vec{v}$ are orthogonal, then $\\norm{\\vec{u} + \\vec{v}}^2 = \\norm{\\vec{u}}^2 + \\norm{\\vec{v}}^2$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "We start by expanding the squared norm of the sum: $\\norm{\\vec{u} + \\vec{v}}^2$."
+                },
+                {
+                    type: "question",
+                    text: "Recall that $\\norm{\\vec{x}}^2 = \\vec{x} \\cdot \\vec{x}$. How do we expand $(\\vec{u} + \\vec{v}) \\cdot (\\vec{u} + \\vec{v})$?",
+                    options: [
+                        { text: "$\\vec{u}\\cdot\\vec{u} + 2\\vec{u}\\cdot\\vec{v} + \\vec{v}\\cdot\\vec{v}$", correct: true, feedback: "Correct! This is like expanding $(a+b)^2$." },
+                        { text: "$\\vec{u}\\cdot\\vec{u} + \\vec{v}\\cdot\\vec{v}$", correct: false, feedback: "Don't forget the cross terms!" }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So we have $\\norm{\\vec{u}}^2 + 2(\\vec{u} \\cdot \\vec{v}) + \\norm{\\vec{v}}^2$."
+                },
+                {
+                    type: "question",
+                    text: "Since $\\vec{u}$ and $\\vec{v}$ are orthogonal, what is the value of $\\vec{u} \\cdot \\vec{v}$?",
+                    options: [
+                        { text: "0", correct: true, feedback: "Correct! Orthogonal vectors have a dot product of zero." },
+                        { text: "1", correct: false, feedback: "That would be for parallel unit vectors." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Substituting 0 for the dot product, the middle term vanishes: <br> $\\norm{\\vec{u}}^2 + 2(0) + \\norm{\\vec{v}}^2 = \\norm{\\vec{u}}^2 + \\norm{\\vec{v}}^2$."
+                },
+                {
+                    type: "text",
+                    content: "Thus, $\\norm{\\vec{u} + \\vec{v}}^2 = \\norm{\\vec{u}}^2 + \\norm{\\vec{v}}^2$. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

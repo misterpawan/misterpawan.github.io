@@ -194,6 +194,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-rank-nullity" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Section: Full Rank Cases -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-teal-600 flex items-center gap-2">
@@ -384,6 +387,73 @@
         // Init
         updateRankNullity();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-rank-nullity', rankNullityProof);
+        });
+
+        // Rank-Nullity Theorem Proof
+        const rankNullityProof = {
+            id: "proof-rank-nullity",
+            title: "Theorem: Rank-Nullity Theorem",
+            intro: "Let's verify the Rank-Nullity Theorem for a specific matrix $A$. The theorem states: $\\rank(A) + \\nullity(A) = n$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Consider the matrix $A = \\begin{bmatrix} 1 & 2 & 3 \\\\ 2 & 4 & 6 \\\\ 0 & 0 & 0 \\end{bmatrix}$."
+                },
+                {
+                    type: "question",
+                    text: "Step 1: Find the Rank. Row reduce the matrix to Row Echelon Form (REF). What is the first row operation?",
+                    options: [
+                        { text: "$R_2 \\leftarrow R_2 - 2R_1$", correct: true, feedback: "Correct! This eliminates the 2 in the second row." },
+                        { text: "$R_2 \\leftarrow R_2 + R_1$", correct: false, feedback: "That would make the entry 3, not 0." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "After performing $R_2 \\leftarrow R_2 - 2R_1$, we get: <br> $\\begin{bmatrix} 1 & 2 & 3 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0 \\end{bmatrix}$."
+                },
+                {
+                    type: "question",
+                    text: "How many pivot columns (leading 1s) are there?",
+                    options: [
+                        { text: "1", correct: true, feedback: "Correct! Only the first column has a pivot." },
+                        { text: "2", correct: false, feedback: "Look at the non-zero rows." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So, $\\rank(A) = 1$."
+                },
+                {
+                    type: "question",
+                    text: "Step 2: Find the Nullity. The nullity is the number of free variables. Which columns correspond to free variables?",
+                    options: [
+                        { text: "Columns 2 and 3", correct: true, feedback: "Correct! Columns without pivots correspond to free variables." },
+                        { text: "Column 1", correct: false, feedback: "Column 1 is a pivot column." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So, $\\nullity(A) = 2$."
+                },
+                {
+                    type: "question",
+                    text: "Step 3: Verify the theorem. What is $n$ (the number of columns)?",
+                    options: [
+                        { text: "3", correct: true, feedback: "Correct! The matrix is $3 \\times 3$." },
+                        { text: "2", correct: false, feedback: "Count the total columns." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Check: $\\rank(A) + \\nullity(A) = 1 + 2 = 3 = n$. The theorem holds! Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 
