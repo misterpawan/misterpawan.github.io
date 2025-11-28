@@ -168,6 +168,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-qr-existence" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Section 1.5: The Algorithm -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-emerald-600 flex items-center gap-2">
@@ -383,6 +386,57 @@
             }, 500);
         }
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-qr-existence', qrExistenceProof);
+        });
+
+        // QR Existence Proof
+        const qrExistenceProof = {
+            id: "proof-qr-existence",
+            title: "Theorem: QR Factorization Existence",
+            intro: "We want to show that any matrix $A$ with linearly independent columns can be factored into $A=QR$, where $Q$ has orthonormal columns and $R$ is upper triangular.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $A = [\\vec{a}_1, \\dots, \\vec{a}_n]$. Since columns are independent, we can apply Gram-Schmidt."
+                },
+                {
+                    type: "text",
+                    content: "Gram-Schmidt produces orthogonal vectors $\\vec{u}_1, \\dots, \\vec{u}_n$. <br> We normalize them to get orthonormal vectors $\\vec{q}_1, \\dots, \\vec{q}_n$."
+                },
+                {
+                    type: "question",
+                    text: "In Gram-Schmidt, each vector $\\vec{a}_k$ is a linear combination of which vectors?",
+                    options: [
+                        { text: "The previous orthogonal vectors $\\vec{q}_1, \\dots, \\vec{q}_k$.", correct: true, feedback: "Correct! $\\text{span}(\\vec{a}_1, \\dots, \\vec{a}_k) = \\text{span}(\\vec{q}_1, \\dots, \\vec{q}_k)$." },
+                        { text: "All vectors $\\vec{q}_1, \\dots, \\vec{q}_n$.", correct: false, feedback: "No, it only depends on the current and previous ones." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So we can write: <br> $\\vec{a}_1 = r_{11}\\vec{q}_1$ <br> $\\vec{a}_2 = r_{12}\\vec{q}_1 + r_{22}\\vec{q}_2$ <br> $\\vdots$ <br> $\\vec{a}_n = r_{1n}\\vec{q}_1 + \\dots + r_{nn}\\vec{q}_n$"
+                },
+                {
+                    type: "text",
+                    content: "This can be written in matrix form as $A = Q R$."
+                },
+                {
+                    type: "question",
+                    text: "Look at the coefficients. What is the structure of matrix $R$?",
+                    options: [
+                        { text: "Upper Triangular", correct: true, feedback: "Correct! $r_{ij} = 0$ for $i > j$." },
+                        { text: "Diagonal", correct: false, feedback: "No, we have terms like $r_{12}$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Thus $A = QR$ with $Q$ orthonormal and $R$ upper triangular. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

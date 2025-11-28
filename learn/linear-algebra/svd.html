@@ -177,11 +177,15 @@
             <div class="mt-6 bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl border border-violet-200">
                 <h3 class="font-bold text-lg mb-2">Eigenvalue Theorem</h3>
                 <p class="mb-2">For any $m \times n$ matrix $A$, the matrices $A^T A$ and $A A^T$ have the same
-                    <strong>nonzero</strong> eigenvalues.</p>
+                    <strong>nonzero</strong> eigenvalues.
+                </p>
                 <p class="text-sm text-gray-500">This ensures that the singular values are well-defined regardless of
                     which product we use.</p>
             </div>
         </section>
+
+        <!-- Interactive Proof -->
+        <div id="proof-svd-existence" class="mt-8" data-aos="fade-up"></div>
 
         <!-- Section 1.5: Computing SVD -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
@@ -452,6 +456,57 @@
         // Initial draw
         drawPattern(10);
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-svd-existence', svdExistenceProof);
+        });
+
+        // SVD Existence Proof
+        const svdExistenceProof = {
+            id: "proof-svd-existence",
+            title: "Theorem: SVD Existence",
+            intro: "We want to show that any $m \\times n$ matrix $A$ can be written as $A = U \\Sigma V^T$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Consider the matrix $A^T A$. It is symmetric and positive semi-definite."
+                },
+                {
+                    type: "question",
+                    text: "What does the Spectral Theorem tell us about $A^T A$?",
+                    options: [
+                        { text: "It has orthonormal eigenvectors $\\vec{v}_1, \\dots, \\vec{v}_n$.", correct: true, feedback: "Correct! We can diagonalize it orthogonally." },
+                        { text: "It is invertible.", correct: false, feedback: "Not necessarily (if A has rank < n)." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Let $\\lambda_i$ be the eigenvalues of $A^T A$. Since it's positive semi-definite, $\\lambda_i \\ge 0$. <br> Define singular values $\\sigma_i = \\sqrt{\\lambda_i}$."
+                },
+                {
+                    type: "text",
+                    content: "Sort them so $\\sigma_1 \\ge \\dots \\ge \\sigma_r > 0$ and $\\sigma_{r+1} = \\dots = 0$."
+                },
+                {
+                    type: "text",
+                    content: "For $i \\le r$, define $\\vec{u}_i = \\frac{1}{\\sigma_i} A \\vec{v}_i$."
+                },
+                {
+                    type: "question",
+                    text: "Are these $\\vec{u}_i$ orthonormal? Check $\\vec{u}_i^T \\vec{u}_j$.",
+                    options: [
+                        { text: "Yes, $\\vec{u}_i^T \\vec{u}_j = \\delta_{ij}$.", correct: true, feedback: "Correct! $\\vec{u}_i^T \\vec{u}_j = \\frac{1}{\\sigma_i \\sigma_j} \\vec{v}_i^T A^T A \\vec{v}_j = \\frac{\\lambda_j}{\\sigma_i \\sigma_j} \\vec{v}_i^T \\vec{v}_j = \\delta_{ij}$." },
+                        { text: "No, they are just orthogonal.", correct: false, feedback: "We divided by $\\sigma_i$, so they are normalized too." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "We can extend $\\{\\vec{u}_1, \\dots, \\vec{u}_r\\}$ to an orthonormal basis for $\\mathbb{R}^m$ to form $U$. <br> The $\\vec{v}_i$ form $V$. <br> Then $A = U \\Sigma V^T$. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 
