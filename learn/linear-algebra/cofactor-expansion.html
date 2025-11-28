@@ -306,6 +306,9 @@
                     4(-1) = -4 $$
                 </div>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-row-ops" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Final Quiz -->
@@ -467,6 +470,53 @@
 
         // Initialize
         setDim(2);
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-row-ops', rowOpsProof);
+        });
+
+        // Row Operations Proof
+        const rowOpsProof = {
+            id: "proof-row-ops",
+            title: "Theorem: Row Operations and Determinants",
+            intro: "How do row operations change the determinant? Let's predict the effect!",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$. We know $\\det A = 4-6 = -2$."
+                },
+                {
+                    type: "question",
+                    text: "Operation 1: Swap Row 1 and Row 2. New matrix $B = \\begin{bmatrix} 3 & 4 \\\\ 1 & 2 \\end{bmatrix}$. What is $\\det B$?",
+                    options: [
+                        { text: "$-2$ (No change)", correct: false, feedback: "Calculate it: $3(2) - 4(1) = 6-4 = 2$." },
+                        { text: "$2$ (Sign flip)", correct: true, feedback: "Correct! Swapping rows multiplies the determinant by $-1$." }
+                    ]
+                },
+                {
+                    type: "question",
+                    text: "Operation 2: Multiply Row 1 of $A$ by $5$. New matrix $C = \\begin{bmatrix} 5 & 10 \\\\ 3 & 4 \\end{bmatrix}$. What is $\\det C$?",
+                    options: [
+                        { text: "$-2$ (No change)", correct: false, feedback: "Calculate it: $20 - 30 = -10$." },
+                        { text: "$-10$ (Scaled by 5)", correct: true, feedback: "Correct! Scaling a row scales the determinant by the same factor." }
+                    ]
+                },
+                {
+                    type: "question",
+                    text: "Operation 3: Add $2 \\times$ Row 1 to Row 2. New matrix $D = \\begin{bmatrix} 1 & 2 \\\\ 3+2(1) & 4+2(2) \\end{bmatrix} = \\begin{bmatrix} 1 & 2 \\\\ 5 & 8 \\end{bmatrix}$. What is $\\det D$?",
+                    options: [
+                        { text: "$-2$ (No change)", correct: true, feedback: "Correct! $1(8) - 2(5) = 8-10 = -2$. Adding a multiple of a row doesn't change the determinant." },
+                        { text: "$-4$ (Changed)", correct: false, feedback: "Check the calculation again." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Summary: <br> 1. Swap $\\to$ Sign Flip ($-1$) <br> 2. Scale $\\to$ Scale ($k$) <br> 3. Add $\\to$ No Change ($1$)"
+                }
+            ]
+        };
     </script>
 </body>
 

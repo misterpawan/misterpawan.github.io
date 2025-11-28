@@ -233,16 +233,26 @@
                     <li>$D$ is a <strong>diagonal</strong> matrix of eigenvalues.</li>
                     <li>$P$ is a matrix with eigenvectors as <strong>columns</strong>.</li>
                 </ul>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-sm">
+                    <li>$D$ is a <strong>diagonal</strong> matrix of eigenvalues.</li>
+                    <li>$P$ is a matrix with eigenvectors as <strong>columns</strong>.</li>
+                </ul>
             </div>
 
+            <!-- Interactive Proof -->
+            <div id="proof-diag" class="mt-8" data-aos="fade-up"></div>
+
             <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
-                <h3 class="font-bold mb-2">Why do we care?</h3>
-                <p class="mb-2">It makes computing powers super fast!</p>
-                <div class="latex-content font-bold">
-                    $$ A^k = P D^k P^{-1} $$
+
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
+                    <h3 class="font-bold mb-2">Why do we care?</h3>
+                    <p class="mb-2">It makes computing powers super fast!</p>
+                    <div class="latex-content font-bold">
+                        $$ A^k = P D^k P^{-1} $$
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Computing $D^k$ is trivial (just power the diagonal entries).
+                    </p>
                 </div>
-                <p class="text-xs text-gray-500 mt-2">Computing $D^k$ is trivial (just power the diagonal entries).</p>
-            </div>
             </div>
 
             <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
@@ -449,6 +459,60 @@
         // Initial draw
         update(centerX + 50, centerY - 50);
 
+        // Initial draw
+        update(centerX + 50, centerY - 50);
+
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-diag', diagProof);
+        });
+
+        // Diagonalization Proof
+        const diagProof = {
+            id: "proof-diag",
+            title: "Theorem: The Diagonalization Theorem",
+            intro: "Let's construct the diagonalization $A = PDP^{-1}$ step-by-step for $A = \\begin{bmatrix} 4 & -2 \\\\ -1 & 3 \\end{bmatrix}$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Step 1: Find Eigenvalues. Solve $\\det(A - \\lambda I) = 0$."
+                },
+                {
+                    type: "question",
+                    text: "The characteristic polynomial is $\\lambda^2 - 7\\lambda + 10$. What are the roots?",
+                    options: [
+                        { text: "$\\lambda = 2, 5$", correct: true, feedback: "Correct! $(2-4)(2-3)-2 = (-2)(-1)-2 = 0$." },
+                        { text: "$\\lambda = 3, 4$", correct: false, feedback: "Check the factoring: $(\\lambda-2)(\\lambda-5)$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Step 2: Find Eigenvectors. <br> For $\\lambda_1 = 2$: $A - 2I = \\begin{bmatrix} 2 & -2 \\\\ -1 & 1 \\end{bmatrix}$. $\\vec{v}_1 = \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix}$. <br> For $\\lambda_2 = 5$: $A - 5I = \\begin{bmatrix} -1 & -2 \\\\ -1 & -2 \\end{bmatrix}$. $\\vec{v}_2 = \\begin{bmatrix} -2 \\\\ 1 \\end{bmatrix}$."
+                },
+                {
+                    type: "question",
+                    text: "Step 3: Construct $P$. How do we form $P$?",
+                    options: [
+                        { text: "Put eigenvectors as columns: $P = \\begin{bmatrix} 1 & -2 \\\\ 1 & 1 \\end{bmatrix}$", correct: true, feedback: "Correct! The order matters (must match $D$)." },
+                        { text: "Put eigenvalues as columns: $P = \\begin{bmatrix} 2 & 0 \\\\ 0 & 5 \\end{bmatrix}$", correct: false, feedback: "No, that's $D$." }
+                    ]
+                },
+                {
+                    type: "question",
+                    text: "Step 4: Construct $D$. How do we form $D$?",
+                    options: [
+                        { text: "Diagonal matrix of eigenvalues: $D = \\begin{bmatrix} 2 & 0 \\\\ 0 & 5 \\end{bmatrix}$", correct: true, feedback: "Correct! $\\lambda_1$ matches col 1 of $P$, $\\lambda_2$ matches col 2." },
+                        { text: "Identity matrix: $D = I$", correct: false, feedback: "No." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Conclusion: We have found $P$ and $D$ such that $A = PDP^{-1}$. <br> $P = \\begin{bmatrix} 1 & -2 \\\\ 1 & 1 \\end{bmatrix}, D = \\begin{bmatrix} 2 & 0 \\\\ 0 & 5 \\end{bmatrix}$."
+                }
+            ]
+        };
     </script>
 </body>
 

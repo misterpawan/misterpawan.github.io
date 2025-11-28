@@ -175,16 +175,20 @@
             </div>
             </div>
 
-            <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                <h3 class="font-bold mb-4">Example: When is it Invertible?</h3>
-                <p class="mb-2 text-sm">Find $c$ so $A = \begin{bmatrix} c & 1 & 0 \\ 0 & 2 & c \\ -1 & c & 5
-                    \end{bmatrix}$ is invertible.</p>
-                <p class="text-sm mb-2">Calculate $\det A$ and set $\neq 0$:</p>
-                <div class="latex-content text-center text-sm">
-                    $$ \det A = c(10-c^2) - (-1)(c) = 10c - c^3 + c = c(11-c^2) $$
-                </div>
-                <p class="text-sm mt-2">So $A$ is invertible if $c \neq 0$ and $c \neq \pm\sqrt{11}$.</p>
+            <!-- Interactive Proof -->
+            <div id="proof-product" class="mt-8" data-aos="fade-up"></div>
+        </section>
+
+        <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+            <h3 class="font-bold mb-4">Example: When is it Invertible?</h3>
+            <p class="mb-2 text-sm">Find $c$ so $A = \begin{bmatrix} c & 1 & 0 \\ 0 & 2 & c \\ -1 & c & 5
+                \end{bmatrix}$ is invertible.</p>
+            <p class="text-sm mb-2">Calculate $\det A$ and set $\neq 0$:</p>
+            <div class="latex-content text-center text-sm">
+                $$ \det A = c(10-c^2) - (-1)(c) = 10c - c^3 + c = c(11-c^2) $$
             </div>
+            <p class="text-sm mt-2">So $A$ is invertible if $c \neq 0$ and $c \neq \pm\sqrt{11}$.</p>
+        </div>
         </section>
 
         <!-- Quiz 1 -->
@@ -423,6 +427,52 @@
                 document.getElementById('res-x2').innerText = (detA2 / detA).toFixed(2);
             }
         }
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-product', productTheoremProof);
+        });
+
+        // Product Theorem Proof
+        const productTheoremProof = {
+            id: "proof-product",
+            title: "Theorem: The Product Theorem",
+            intro: "We know $\\det(AB) = \\det A \\det B$. But what about $\\det(A+B)$? Let's spot the error in a false claim.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Claim (False): $\\det(A+B) = \\det A + \\det B$."
+                },
+                {
+                    type: "spot-error",
+                    text: "Find the error in the following 'proof':",
+                    content: "1. Let $A = I = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$ and $B = I$. <br> 2. Then $\\det A = 1$ and $\\det B = 1$. <br> 3. $A+B = \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$. <br> 4. $\\det(A+B) = 2$. <br> 5. $\\det A + \\det B = 1 + 1 = 2$. <br> 6. Since $2=2$, the claim is true for all matrices.",
+                    correctStep: 6,
+                    feedback: "Correct! Just because it works for ONE example doesn't mean it's true for ALL matrices. This is a classic logic error."
+                },
+                {
+                    type: "question",
+                    text: "Let's find a counterexample. Let $A = \\begin{bmatrix} 1 & 0 \\\\ 0 & 0 \\end{bmatrix}$ and $B = \\begin{bmatrix} 0 & 0 \\\\ 0 & 1 \\end{bmatrix}$. What is $\\det A + \\det B$?",
+                    options: [
+                        { text: "$0 + 0 = 0$", correct: true, feedback: "Correct! Both are singular matrices." },
+                        { text: "$1 + 1 = 2$", correct: false, feedback: "Check the determinants again. $1(0)-0(0)=0$." }
+                    ]
+                },
+                {
+                    type: "question",
+                    text: "Now, what is $A+B$?",
+                    options: [
+                        { text: "$\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} = I$", correct: true, feedback: "Correct! The sum is the identity matrix." },
+                        { text: "$\\begin{bmatrix} 0 & 0 \\\\ 0 & 0 \\end{bmatrix}$", correct: false, feedback: "Add corresponding entries: $1+0=1$, $0+1=1$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So $\\det(A+B) = \\det(I) = 1$. <br> But $\\det A + \\det B = 0$. <br> Since $1 \\neq 0$, the claim $\\det(A+B) = \\det A + \\det B$ is FALSE."
+                }
+            ]
+        };
     </script>
 </body>
 
