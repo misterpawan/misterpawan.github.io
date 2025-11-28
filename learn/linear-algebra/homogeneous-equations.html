@@ -258,6 +258,9 @@
                     <li><strong>Every</strong> solution is a linear combination of these basic solutions.</li>
                 </ol>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-structure" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Quiz 2 -->
@@ -439,7 +442,50 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             new InteractiveProof('proof-homogeneous', homogeneousProof);
+            new InteractiveProof('proof-structure', structureProof);
         });
+
+        // Structure of Solutions Proof
+        const structureProof = {
+            id: "proof-structure",
+            title: "Theorem: Structure of Solutions",
+            intro: "How do we know that *every* solution is just a mix of the basic ones? Let's build it up.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $x$ be ANY solution to $Ax=0$. Let $k = n-r$ be the number of free variables."
+                },
+                {
+                    type: "step",
+                    text: "Let $X_1, \\dots, X_k$ be the basic solutions. (Recall: $X_j$ comes from setting the $j$-th free variable to 1 and others to 0).",
+                    math: "X_{total} = c_1 X_1 + \\dots + c_k X_k"
+                },
+                {
+                    type: "question",
+                    text: "We want to show that our specific solution $x$ is equal to some combination $y = c_1 X_1 + \\dots + c_k X_k$. How should we choose the constants $c_i$?",
+                    options: [
+                        { text: "Choose $c_i$ randomly.", correct: false, feedback: "That might give us *a* solution, but not necessarily $x$." },
+                        { text: "Choose $c_i$ to match the values of the free variables in $x$.", correct: true, feedback: "Correct! If $x$ has $x_{free_1} = 5$, we should pick $c_1 = 5$." }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "Let $y = c_1 X_1 + \\dots + c_k X_k$, where $c_i$ are the values of the free variables in $x$.",
+                    math: "y_{free} = x_{free}"
+                },
+                {
+                    type: "spot-error",
+                    text: "Here is the final argument. Spot the flaw!",
+                    proposal: "Since $y$ and $x$ have the same values for the free variables, they are the same vector. Thus $x = y$.",
+                    error_index: 0,
+                    correction: "Not quite complete! We know they match on *free* variables. We must also mention that the **pivot variables** are uniquely determined by the free variables. Since free vars match $\\implies$ pivot vars match $\\implies$ vectors are identical!"
+                },
+                {
+                    type: "text",
+                    content: "Precisely! Once the free variables are fixed, the pivot variables are forced to be specific values to satisfy the equations. Since $x$ and $y$ match on free variables, they must match everywhere."
+                }
+            ]
+        };
 
         // Scroll Progress Bar
         window.onscroll = function () {

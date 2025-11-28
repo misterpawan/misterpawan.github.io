@@ -254,6 +254,17 @@
             </div>
             </div>
 
+            </div>
+
+            <div class="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border-l-4 border-green-500">
+                <h3 class="font-bold text-green-700 dark:text-green-300">Theorem: Existence of RREF</h3>
+                <p>Every matrix can be reduced to at least one Reduced Row-Echelon Form matrix using elementary row
+                    operations.</p>
+            </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-existence" class="mt-8 mb-8" data-aos="fade-up"></div>
+
             <div class="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border-l-4 border-purple-500">
                 <h3 class="font-bold text-purple-700 dark:text-purple-300">Theorem: Uniqueness of RREF</h3>
                 <p>Every matrix is row equivalent to a <strong>unique</strong> reduced row-echelon matrix.</p>
@@ -526,7 +537,45 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             new InteractiveProof('proof-rref', rrefProof);
+            new InteractiveProof('proof-existence', existenceProof);
         });
+
+        // Existence of RREF Proof
+        const existenceProof = {
+            id: "proof-existence",
+            title: "Theorem: Existence of RREF",
+            intro: "How do we know the algorithm doesn't loop forever? Let's prove it always finishes.",
+            steps: [
+                {
+                    type: "text",
+                    content: "The Gaussian Elimination algorithm works column by column, from left to right."
+                },
+                {
+                    type: "question",
+                    text: "What happens in each step (for a non-zero column)?",
+                    options: [
+                        { text: "We create a pivot (leading 1) and eliminate entries below it.", correct: true, feedback: "Correct! We lock in a pivot and move to the submatrix." },
+                        { text: "We randomly swap rows until it looks good.", correct: false, feedback: "No, the process is systematic!" }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "After creating a pivot, we move to the submatrix to the right and bottom. The size of the active matrix decreases.",
+                    math: "m \\times n \\to (m-1) \\times (n-1)"
+                },
+                {
+                    type: "spot-error",
+                    text: "Here is a claim about termination. Spot the error!",
+                    proposal: "Since the matrix size decreases at every step, and the matrix is finite, the algorithm must eventually stop. When it stops, we are in RREF.",
+                    error_index: 1,
+                    correction: "Careful! 'When it stops' is not enough. We must ensure that when it stops, the *conditions* for RREF are actually met (zeros below pivots, etc.). The algorithm is designed specifically to satisfy these conditions one by one."
+                },
+                {
+                    type: "text",
+                    content: "Exactly. The algorithm constructs the RREF form constructively. Since the dimensions are finite ($m, n < \\infty$), and we never revisit a finished column, it MUST terminate in a valid RREF."
+                }
+            ]
+        };
 
         // Scroll Progress Bar
         window.onscroll = function () {
