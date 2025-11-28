@@ -222,6 +222,9 @@
                 </ol>
             </div>
 
+            <!-- Interactive Proof -->
+            <div id="proof-unique-representation" class="mt-8" data-aos="fade-up"></div>
+
             <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200">
                 <h3 class="font-bold text-lg mb-2">Definition: Dimension</h3>
                 <p class="mb-2">The <strong>dimension</strong> of a subspace $U$, denoted $\dim(U)$, is the number of
@@ -380,6 +383,57 @@
             }
         }
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-unique-representation', uniqueRepProof);
+        });
+
+        // Unique Representation Theorem Proof
+        const uniqueRepProof = {
+            id: "proof-unique-representation",
+            title: "Theorem: Unique Representation",
+            intro: "Let $\\mathcal{B} = \\{\\vec{b}_1, \\dots, \\vec{b}_n\\}$ be a basis for $V$. We want to prove that every vector $\\vec{x} \\in V$ has a <strong>unique</strong> representation in terms of $\\mathcal{B}$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Suppose, for the sake of contradiction, that $\\vec{x}$ has two different representations: <br> $\\vec{x} = c_1\\vec{b}_1 + \\dots + c_n\\vec{b}_n$ <br> $\\vec{x} = d_1\\vec{b}_1 + \\dots + d_n\\vec{b}_n$"
+                },
+                {
+                    type: "question",
+                    text: "Subtract the second equation from the first. What is $\\vec{x} - \\vec{x}$?",
+                    options: [
+                        { text: "$\\vec{0}$", correct: true, feedback: "Correct! The left side becomes the zero vector." },
+                        { text: "$\\vec{x}$", correct: false, feedback: "Anything minus itself is zero." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So we have: <br> $\\vec{0} = (c_1-d_1)\\vec{b}_1 + \\dots + (c_n-d_n)\\vec{b}_n$."
+                },
+                {
+                    type: "question",
+                    text: "Since $\\mathcal{B}$ is a basis, what do we know about the vectors $\\{\\vec{b}_1, \\dots, \\vec{b}_n\\}$?",
+                    options: [
+                        { text: "They are Linearly Independent", correct: true, feedback: "Correct! That's part of the definition of a basis." },
+                        { text: "They are Linearly Dependent", correct: false, feedback: "A basis must be independent." }
+                    ]
+                },
+                {
+                    type: "question",
+                    text: "If a linear combination of independent vectors equals zero, what must be true about the coefficients $(c_i - d_i)$?",
+                    options: [
+                        { text: "They must all be zero.", correct: true, feedback: "Correct! $c_i - d_i = 0$ for all $i$." },
+                        { text: "They can be anything.", correct: false, feedback: "That would mean they are dependent." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "If $c_i - d_i = 0$, then $c_i = d_i$ for all $i$. <br> This means the two representations are actually the same! <br> Thus, the representation is unique. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

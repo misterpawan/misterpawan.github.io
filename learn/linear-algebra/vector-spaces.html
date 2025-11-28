@@ -250,7 +250,8 @@
             </h2>
             <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200 mb-6">
                 <p class="mb-4">From the axioms, we can prove several useful properties that hold in
-                    <strong>every</strong> vector space:</p>
+                    <strong>every</strong> vector space:
+                </p>
                 <ul class="list-disc list-inside space-y-2 ml-4">
                     <li><strong>Cancellation:</strong> If $\vec{u} + \vec{v} = \vec{u} + \vec{w}$, then $\vec{v} =
                         \vec{w}$.</li>
@@ -259,6 +260,9 @@
                     <li><strong>Negation:</strong> $(-1)\vec{v} = -\vec{v}$.</li>
                 </ul>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-cancellation" class="mt-8" data-aos="fade-up"></div>
 
 
             <!-- Interactive Polynomial Adder -->
@@ -420,6 +424,73 @@
             MathJax.typesetPromise([resultEl]);
         }
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-cancellation', cancellationProof);
+        });
+
+        // Cancellation Law Proof
+        const cancellationProof = {
+            id: "proof-cancellation",
+            title: "Theorem: Cancellation Law",
+            intro: "Let's prove that if $\\vec{u} + \\vec{v} = \\vec{u} + \\vec{w}$, then $\\vec{v} = \\vec{w}$. We will use the vector space axioms step-by-step.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Start with the hypothesis: $\\vec{u} + \\vec{v} = \\vec{u} + \\vec{w}$."
+                },
+                {
+                    type: "question",
+                    text: "We want to isolate $\\vec{v}$. What can we add to both sides?",
+                    options: [
+                        { text: "$-\\vec{u}$ (Additive Inverse)", correct: true, feedback: "Correct! Axiom A5 guarantees the existence of $-\\vec{u}$." },
+                        { text: "$\\vec{0}$ (Zero Vector)", correct: false, feedback: "Adding zero won't help us get rid of $\\vec{u}$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Add $-\\vec{u}$ to the left of both sides: <br> $-\\vec{u} + (\\vec{u} + \\vec{v}) = -\\vec{u} + (\\vec{u} + \\vec{w})$."
+                },
+                {
+                    type: "question",
+                    text: "We want to group $-\\vec{u}$ and $\\vec{u}$ together. Which axiom allows us to change grouping?",
+                    options: [
+                        { text: "Associativity (A3)", correct: true, feedback: "Correct! $(\\vec{a}+\\vec{b})+\\vec{c} = \\vec{a}+(\\vec{b}+\\vec{c})$." },
+                        { text: "Commutativity (A2)", correct: false, feedback: "We are not changing the order, just the parentheses." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Apply Associativity: <br> $(-\\vec{u} + \\vec{u}) + \\vec{v} = (-\\vec{u} + \\vec{u}) + \\vec{w}$."
+                },
+                {
+                    type: "question",
+                    text: "What is $-\\vec{u} + \\vec{u}$ equal to?",
+                    options: [
+                        { text: "$\\vec{0}$ (Zero Vector)", correct: true, feedback: "Correct! By definition of additive inverse." },
+                        { text: "$\\vec{u}$", correct: false, feedback: "A vector plus its negative is zero." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Simplify: <br> $\\vec{0} + \\vec{v} = \\vec{0} + \\vec{w}$."
+                },
+                {
+                    type: "question",
+                    text: "Finally, what is $\\vec{0} + \\vec{v}$?",
+                    options: [
+                        { text: "$\\vec{v}$ (Identity Axiom A4)", correct: true, feedback: "Correct! Adding zero does nothing." },
+                        { text: "$\\vec{0}$", correct: false, feedback: "Zero is the additive identity, not a zero-maker." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Result: $\\vec{v} = \\vec{w}$. The cancellation law holds! Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

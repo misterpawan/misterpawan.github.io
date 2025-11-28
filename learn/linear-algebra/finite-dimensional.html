@@ -192,6 +192,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-basis-invariance" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Section 2: Sums and Intersections -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-indigo-600">Sums and Intersections</h2>
@@ -363,6 +366,61 @@
             MathJax.typesetPromise([resultEl]);
         }
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-basis-invariance', basisInvarianceProof);
+        });
+
+        // Basis Invariance Theorem Proof
+        const basisInvarianceProof = {
+            id: "proof-basis-invariance",
+            title: "Theorem: Basis Invariance",
+            intro: "We want to prove that any two bases for a finite-dimensional vector space $V$ have the same number of vectors. Let $B_1$ have $n$ vectors and $B_2$ have $m$ vectors.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $B_1 = \\{\\vec{u}_1, \\dots, \\vec{u}_n\\}$ and $B_2 = \\{\\vec{v}_1, \\dots, \\vec{v}_m\\}$ be two bases."
+                },
+                {
+                    type: "question",
+                    text: "Since $B_1$ spans $V$ and $B_2$ is independent, what does the Fundamental Theorem tell us about $m$ and $n$?",
+                    options: [
+                        { text: "$m \\le n$", correct: true, feedback: "Correct! An independent set cannot be larger than a spanning set." },
+                        { text: "$m > n$", correct: false, feedback: "That would violate the Fundamental Theorem." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So we know $m \\le n$."
+                },
+                {
+                    type: "question",
+                    text: "Now swap roles: $B_2$ spans $V$ and $B_1$ is independent. What does the theorem say now?",
+                    options: [
+                        { text: "$n \\le m$", correct: true, feedback: "Correct! The logic works both ways." },
+                        { text: "$n > m$", correct: false, feedback: "The same theorem applies." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "We have $m \\le n$ and $n \\le m$."
+                },
+                {
+                    type: "question",
+                    text: "What is the only logical conclusion?",
+                    options: [
+                        { text: "$m = n$", correct: true, feedback: "Correct! The dimensions must be equal." },
+                        { text: "$m \\neq n$", correct: false, feedback: "Impossible if both inequalities hold." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Thus, all bases for $V$ have the same size. This size is called the **dimension** of $V$. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 
