@@ -168,6 +168,9 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Why? Because there must be at least one free
                     variable!</p>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-homogeneous" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Quiz 1 -->
@@ -392,8 +395,51 @@
         <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
     </footer>
 
+    <script src="assets/js/interactive-proof.js"></script>
     <script>
         AOS.init();
+
+        // Interactive Proof Initialization
+        const homogeneousProof = {
+            id: "proof-homogeneous",
+            title: "Theorem: Homogeneous Systems with n > m",
+            intro: "If you have more variables than equations, something interesting happens. Let's explore why!",
+            steps: [
+                {
+                    type: "text",
+                    content: "Consider a homogeneous system $Ax=0$ with $m$ equations and $n$ variables, where $n > m$."
+                },
+                {
+                    type: "question",
+                    text: "What does $n > m$ imply about the Rank $r$?",
+                    options: [
+                        { text: "$r = n$ (Full Rank)", correct: false, feedback: "Impossible! The rank $r$ is the number of leading 1s. You can't have more leading 1s than you have rows ($m$). So $r \\le m < n$." },
+                        { text: "$r \\le m < n$", correct: true, feedback: "Correct! The rank cannot exceed the number of rows ($m$), and since $m < n$, we must have $r < n$." },
+                        { text: "$r > n$", correct: false, feedback: "The rank can never be greater than the number of variables!" }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "Since $r$ is the number of leading 1s, and we can't have more leading 1s than rows, we know $r \\le m$.",
+                    math: "r \\le m < n \\implies r < n"
+                },
+                {
+                    type: "spot-error",
+                    text: "Here is a proposed conclusion. Can you spot the error?",
+                    proposal: "Since $r < n$, there are no free variables. Therefore, only the trivial solution exists.",
+                    error_index: 0,
+                    correction: "Hold on! The number of free variables (parameters) is $n - r$. Since $r < n$, we have $n - r > 0$. So there ARE free variables!"
+                },
+                {
+                    type: "text",
+                    content: "Exactly! We have at least one free variable. We can assign it any non-zero value (e.g., $t=1$) to get a <strong>nontrivial solution</strong>."
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-homogeneous', homogeneousProof);
+        });
 
         // Scroll Progress Bar
         window.onscroll = function () {

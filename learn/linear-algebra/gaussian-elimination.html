@@ -153,7 +153,8 @@
                         <ul class="list-disc list-inside space-y-1 text-sm">
                             <li>All zero rows are at the bottom. 📉</li>
                             <li>The first nonzero entry in each nonzero row is a <strong>1</strong> (called the
-                                <strong>leading 1</strong>). 🥇</li>
+                                <strong>leading 1</strong>). 🥇
+                            </li>
                             <li>Each leading 1 is to the right of all leading 1's in the rows above it. ➡️</li>
                         </ul>
                     </div>
@@ -259,6 +260,9 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">This means no matter which row operations you
                     use, you will always end up with the same RREF!</p>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-rref" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Section 3: Examples -->
@@ -475,8 +479,54 @@
         <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
     </footer>
 
+    <script src="assets/js/interactive-proof.js"></script>
     <script>
         AOS.init();
+
+        // Interactive Proof Initialization
+        const rrefProof = {
+            id: "proof-rref",
+            title: "Theorem: Uniqueness of RREF",
+            intro: "Every matrix has a UNIQUE reduced row-echelon form. But why? Let's trace the pivots.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Suppose a matrix $A$ could be row-reduced to two different RREF matrices, $R$ and $R'$."
+                },
+                {
+                    type: "question",
+                    text: "What defines the structure of an RREF matrix?",
+                    options: [
+                        { text: "The specific numbers in the non-pivot columns.", correct: false, feedback: "Those numbers matter, but the *structure* is defined by something more fundamental first." },
+                        { text: "The positions of the leading 1s (pivots) and the zero rows.", correct: true, feedback: "Correct! The pivot positions determine which variables are leading and which are free." }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "Let's focus on the pivot positions. Can $R$ and $R'$ have pivots in different columns?",
+                    math: "R: \\text{Pivot in col } j \\quad vs \\quad R': \\text{No pivot in col } j"
+                },
+                {
+                    type: "spot-error",
+                    text: "Here is a proposed argument. Can you spot the error?",
+                    proposal: "The pivot positions depend on the order of row operations we choose. So $R$ and $R'$ might have pivots in different places, but they represent the same system.",
+                    error_index: 0,
+                    correction: "False! The pivot positions are determined by the linear dependencies of the columns, which are intrinsic to the matrix $A$. They do NOT depend on the row operations. A variable is either dependent or free; it cannot be both!"
+                },
+                {
+                    type: "text",
+                    content: "Exactly! The pivot positions are uniquely determined by the solution space of $Ax=0$. Thus, $R$ and $R'$ must have the same pivot columns."
+                },
+                {
+                    type: "text",
+                    content: "Since the pivot positions are fixed, and the RREF conditions force pivot columns to be unit vectors (e.g., $[0, 1, 0]^T$), the entire matrix structure is fixed. Thus $R = R'$."
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-rref', rrefProof);
+        });
 
         // Scroll Progress Bar
         window.onscroll = function () {

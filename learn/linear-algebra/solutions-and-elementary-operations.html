@@ -360,6 +360,9 @@
                 <p class="font-bold">Theorem</p>
                 <p>Performing elementary operations results in an equivalent system. The solutions do not change!</p>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-elementary-ops" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Section 6: Augmented Matrix -->
@@ -449,8 +452,54 @@
         <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
     </footer>
 
+    <script src="assets/js/interactive-proof.js"></script>
     <script>
         AOS.init();
+
+        // Interactive Proof Initialization
+        const elementaryOpsProof = {
+            id: "proof-elementary-ops",
+            title: "Theorem: Elementary Operations Preserve Solutions",
+            intro: "Did you know? We manipulate equations all the time, but how do we KNOW the solutions don't change? Let's prove it!",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $S$ be a system of linear equations and $S'$ be the system after applying an elementary operation."
+                },
+                {
+                    type: "question",
+                    text: "To prove they are equivalent, what do we need to show?",
+                    options: [
+                        { text: "Only that solutions to S are also solutions to S' ($S \\implies S'$)", correct: false, feedback: "Not quite! That would only mean we haven't *lost* solutions, but we might have gained extra invalid ones." },
+                        { text: "That they have exactly the same solution set ($S \\iff S'$)", correct: true, feedback: "Correct! We need to show that $S \\implies S'$ AND $S' \\implies S$." }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "Let's look at Type II operations: Multiplying an equation $E_i$ by a constant $k$ to get $E_i'$.",
+                    math: "E_i': \\quad k \\cdot (a_{i1}x_1 + \\dots + a_{in}x_n) = k \\cdot b_i"
+                },
+                {
+                    type: "spot-error",
+                    text: "Here is a proposed proof step. Can you spot the error?",
+                    proposal: "If a solution $x$ satisfies $E_i$, then it clearly satisfies $k E_i$. Thus, any solution to $S$ is a solution to $S'$. Since $k$ can be any real number, we are done.",
+                    error_index: 2,
+                    correction: "Wait! $k$ cannot be just *any* number. We need $k \\neq 0$ so that the operation is <strong>reversible</strong> (we can multiply by $1/k$ to go back). If $k=0$, we destroy information!"
+                },
+                {
+                    type: "text",
+                    content: "Exactly! Because $k \\neq 0$, we can reverse the operation. This means $S'$ implies $S$ as well."
+                },
+                {
+                    type: "text",
+                    content: "The same logic applies to Type I (swapping) and Type III (adding multiples). Because every elementary operation is <strong>reversible</strong>, the solution sets are identical."
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-elementary-ops', elementaryOpsProof);
+        });
 
         // Scroll Progress Bar
         window.onscroll = function () {
