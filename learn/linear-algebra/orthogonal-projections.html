@@ -201,6 +201,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-orthogonal-independence" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Section 1.6: Gram-Schmidt Algorithm -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-indigo-600 flex items-center gap-2">
@@ -305,7 +308,8 @@
                 <div class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg border-l-4 border-purple-500">
                     <p class="font-bold text-purple-700 dark:text-purple-400">Best Approximation Property</p>
                     <p class="text-sm mt-1">The projection $\vec{p}$ is the vector in $U$ that is
-                        <strong>closest</strong> to $\vec{x}$.</p>
+                        <strong>closest</strong> to $\vec{x}$.
+                    </p>
                     <p class="text-center font-bold my-2">$\|\vec{x} - \vec{p}\| < \|\vec{x} - \vec{u}\|$ for all other
                             $\vec{u} \in U$</p>
                 </div>
@@ -504,6 +508,61 @@
         // Initial draw
         updateGS();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-orthogonal-independence', orthogonalIndependenceProof);
+        });
+
+        // Orthogonal Independence Proof
+        const orthogonalIndependenceProof = {
+            id: "proof-orthogonal-independence",
+            title: "Theorem: Orthogonal Sets are Independent",
+            intro: "Let $S = \\{\\vec{v}_1, \\dots, \\vec{v}_k\\}$ be an orthogonal set of non-zero vectors. We want to prove that $S$ is linearly independent.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Start with the definition of linear independence. Assume a linear combination equals the zero vector: <br> $c_1\\vec{v}_1 + \\dots + c_i\\vec{v}_i + \\dots + c_k\\vec{v}_k = \\vec{0}$"
+                },
+                {
+                    type: "question",
+                    text: "To isolate $c_i$, what operation should we perform on both sides?",
+                    options: [
+                        { text: "Take the dot product with $\\vec{v}_i$", correct: true, feedback: "Correct! The dot product is linear and respects orthogonality." },
+                        { text: "Divide by $\\vec{v}_i$", correct: false, feedback: "Vector division is not defined." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "We get: $(\\vec{v}_i \\cdot c_1\\vec{v}_1) + \\dots + (\\vec{v}_i \\cdot c_i\\vec{v}_i) + \\dots + (\\vec{v}_i \\cdot c_k\\vec{v}_k) = \\vec{v}_i \\cdot \\vec{0}$"
+                },
+                {
+                    type: "question",
+                    text: "Because the set is orthogonal, what happens to terms like $\\vec{v}_i \\cdot \\vec{v}_j$ where $i \\neq j$?",
+                    options: [
+                        { text: "They become 0.", correct: true, feedback: "Correct! Orthogonal vectors have a zero dot product." },
+                        { text: "They become 1.", correct: false, feedback: "That would be for orthonormal vectors, but even then only if i=j." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "The equation simplifies to just one term: <br> $c_i(\\vec{v}_i \\cdot \\vec{v}_i) = 0$, or $c_i \\|\\vec{v}_i\\|^2 = 0$."
+                },
+                {
+                    type: "question",
+                    text: "Since we assumed $\\vec{v}_i$ are non-zero vectors, what must be true about $c_i$?",
+                    options: [
+                        { text: "$c_i = 0$", correct: true, feedback: "Correct! If the vector isn't zero, its length isn't zero, so the scalar must be." },
+                        { text: "$c_i$ can be anything.", correct: false, feedback: "The product is zero, and the length is non-zero." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since this holds for any $i$, all coefficients $c_1, \\dots, c_k$ must be zero. <br> Therefore, the set is linearly independent. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

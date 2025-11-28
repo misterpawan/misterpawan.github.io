@@ -166,6 +166,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-pd-eigenvalues" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Interactive Definiteness Checker -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-indigo-600">Definiteness Checker</h2>
@@ -369,6 +372,61 @@
         // Initial check
         checkDef();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-pd-eigenvalues', pdEigenvaluesProof);
+        });
+
+        // PD Eigenvalues Proof
+        const pdEigenvaluesProof = {
+            id: "proof-pd-eigenvalues",
+            title: "Theorem: Positive Definite $\\iff$ Positive Eigenvalues",
+            intro: "We want to prove that a symmetric matrix $A$ is positive definite if and only if all its eigenvalues are positive.",
+            steps: [
+                {
+                    type: "text",
+                    content: "<strong>Part 1: $(\\Rightarrow)$</strong> Assume $A$ is positive definite. Let $\\lambda$ be an eigenvalue with eigenvector $\\vec{v} \\neq \\vec{0}$."
+                },
+                {
+                    type: "question",
+                    text: "By definition of PD, what do we know about $\\vec{v}^T A \\vec{v}$?",
+                    options: [
+                        { text: "It is $> 0$.", correct: true, feedback: "Correct! $\\vec{x}^T A \\vec{x} > 0$ for all non-zero vectors." },
+                        { text: "It is $= 0$.", correct: false, feedback: "That would be positive semi-definite." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Substitute $A\\vec{v} = \\lambda\\vec{v}$: <br> $\\vec{v}^T (\\lambda\\vec{v}) = \\lambda (\\vec{v}^T \\vec{v}) = \\lambda \\|\\vec{v}\\|^2$."
+                },
+                {
+                    type: "text",
+                    content: "Since $\\lambda \\|\\vec{v}\\|^2 > 0$ and $\\|\\vec{v}\\|^2 > 0$, we must have $\\lambda > 0$."
+                },
+                {
+                    type: "text",
+                    content: "<strong>Part 2: $(\\Leftarrow)$</strong> Assume all $\\lambda_i > 0$. Since $A$ is symmetric, we can orthogonally diagonalize it: $A = Q D Q^T$."
+                },
+                {
+                    type: "text",
+                    content: "Let $\\vec{x} \\neq \\vec{0}$. Then $\\vec{x}^T A \\vec{x} = \\vec{x}^T Q D Q^T \\vec{x}$. Let $\\vec{y} = Q^T \\vec{x}$."
+                },
+                {
+                    type: "question",
+                    text: "This simplifies to $\\vec{y}^T D \\vec{y}$. What is this sum?",
+                    options: [
+                        { text: "$\\sum \\lambda_i y_i^2$", correct: true, feedback: "Correct! It's a weighted sum of squares." },
+                        { text: "$\\sum y_i^2$", correct: false, feedback: "The diagonal entries of D are the eigenvalues." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since all $\\lambda_i > 0$ and at least one $y_i \\neq 0$ (why?), the sum is positive. <br> Thus $A$ is positive definite. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

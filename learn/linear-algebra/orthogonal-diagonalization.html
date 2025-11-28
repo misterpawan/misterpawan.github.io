@@ -175,6 +175,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-symmetric-eigenvectors" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Interactive Quadratic Form Visualizer -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-indigo-600">Quadratic Form Visualizer</h2>
@@ -441,6 +444,65 @@
         // Initial draw
         updateQuad();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-symmetric-eigenvectors', symmetricEigenvectorsProof);
+        });
+
+        // Symmetric Eigenvectors Proof
+        const symmetricEigenvectorsProof = {
+            id: "proof-symmetric-eigenvectors",
+            title: "Theorem: Eigenvectors of Symmetric Matrices are Orthogonal",
+            intro: "Let $A$ be a symmetric matrix ($A^T = A$). Let $\\vec{v}_1$ and $\\vec{v}_2$ be eigenvectors with distinct eigenvalues $\\lambda_1 \\neq \\lambda_2$. We want to prove $\\vec{v}_1 \\cdot \\vec{v}_2 = 0$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Consider the quantity $\\lambda_1 (\\vec{v}_1 \\cdot \\vec{v}_2)$. We can write this as $(A\\vec{v}_1) \\cdot \\vec{v}_2$."
+                },
+                {
+                    type: "question",
+                    text: "Recall that $\\vec{x} \\cdot \\vec{y} = \\vec{x}^T \\vec{y}$. How can we rewrite $(A\\vec{v}_1)^T \\vec{v}_2$?",
+                    options: [
+                        { text: "$\\vec{v}_1^T A^T \\vec{v}_2$", correct: true, feedback: "Correct! The transpose of a product reverses the order." },
+                        { text: "$\\vec{v}_1^T A \\vec{v}_2$", correct: false, feedback: "Don't forget to transpose A." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since $A$ is symmetric, $A^T = A$. So we have $\\vec{v}_1^T A \\vec{v}_2$."
+                },
+                {
+                    type: "question",
+                    text: "Now, use the fact that $\\vec{v}_2$ is an eigenvector ($A\\vec{v}_2 = \\lambda_2\\vec{v}_2$). What does $\\vec{v}_1^T A \\vec{v}_2$ become?",
+                    options: [
+                        { text: "$\\vec{v}_1^T (\\lambda_2 \\vec{v}_2) = \\lambda_2 (\\vec{v}_1 \\cdot \\vec{v}_2)$", correct: true, feedback: "Correct!" },
+                        { text: "$\\lambda_1 (\\vec{v}_1 \\cdot \\vec{v}_2)$", correct: false, feedback: "We are using the eigenvalue for v2." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So we started with $\\lambda_1 (\\vec{v}_1 \\cdot \\vec{v}_2)$ and ended with $\\lambda_2 (\\vec{v}_1 \\cdot \\vec{v}_2)$."
+                },
+                {
+                    type: "text",
+                    content: "Subtracting them gives: $(\\lambda_1 - \\lambda_2)(\\vec{v}_1 \\cdot \\vec{v}_2) = 0$."
+                },
+                {
+                    type: "question",
+                    text: "Since we assumed $\\lambda_1 \\neq \\lambda_2$, what must be true?",
+                    options: [
+                        { text: "$\\vec{v}_1 \\cdot \\vec{v}_2 = 0$", correct: true, feedback: "Correct! If the scalar part isn't zero, the dot product must be." },
+                        { text: "$\\lambda_1 = 0$", correct: false, feedback: "Not necessarily." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Thus, eigenvectors corresponding to distinct eigenvalues are orthogonal. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 
