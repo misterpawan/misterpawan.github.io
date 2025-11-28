@@ -178,6 +178,9 @@
                     closed under addition/scaling.</p>
             </div>
 
+            <!-- Interactive Proof -->
+            <div id="proof-kernel-subspace" class="mt-8" data-aos="fade-up"></div>
+
             <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
                 <h3 class="font-bold text-lg mb-2">Example: Polynomial Evaluation</h3>
                 <p class="mb-2">Let $T: \calP_1 \to \mathbb{R}$ be defined by $T(p(x)) = p(1)$.</p>
@@ -396,6 +399,69 @@
         // Initial update
         updateRankNullity();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-kernel-subspace', kernelSubspaceProof);
+        });
+
+        // Kernel Subspace Proof
+        const kernelSubspaceProof = {
+            id: "proof-kernel-subspace",
+            title: "Theorem: The Kernel is a Subspace",
+            intro: "We want to prove that $\\ker(T) = \\{ \\vec{v} \\in V \\mid T(\\vec{v}) = \\vec{0} \\}$ is a subspace of $V$. We need to check the three subspace conditions.",
+            steps: [
+                {
+                    type: "text",
+                    content: "First, does $\\ker(T)$ contain the zero vector? We check $T(\\vec{0})$."
+                },
+                {
+                    type: "question",
+                    text: "What is $T(\\vec{0})$ for any linear transformation?",
+                    options: [
+                        { text: "$\\vec{0}$", correct: true, feedback: "Correct! Linear transformations map zero to zero." },
+                        { text: "It depends on $T$.", correct: false, feedback: "It's always the zero vector." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since $T(\\vec{0}) = \\vec{0}$, the zero vector is in $\\ker(T)$."
+                },
+                {
+                    type: "text",
+                    content: "Second, is it closed under addition? Let $\\vec{u}, \\vec{v} \\in \\ker(T)$. This means $T(\\vec{u}) = \\vec{0}$ and $T(\\vec{v}) = \\vec{0}$."
+                },
+                {
+                    type: "question",
+                    text: "What is $T(\\vec{u} + \\vec{v})$?",
+                    options: [
+                        { text: "$T(\\vec{u}) + T(\\vec{v}) = \\vec{0} + \\vec{0} = \\vec{0}$", correct: true, feedback: "Correct! Using linearity and the kernel definition." },
+                        { text: "$T(\\vec{u})T(\\vec{v}) = \\vec{0}$", correct: false, feedback: "Linearity involves addition, not multiplication." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So $\\vec{u} + \\vec{v} \\in \\ker(T)$. Addition is closed."
+                },
+                {
+                    type: "text",
+                    content: "Third, is it closed under scalar multiplication? Let $\\vec{u} \\in \\ker(T)$ and $c$ be a scalar."
+                },
+                {
+                    type: "question",
+                    text: "What is $T(c\\vec{u})$?",
+                    options: [
+                        { text: "$cT(\\vec{u}) = c\\vec{0} = \\vec{0}$", correct: true, feedback: "Correct! Using linearity." },
+                        { text: "$T(c) + T(\\vec{u})$", correct: false, feedback: "That's not the scaling property." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So $c\\vec{u} \\in \\ker(T)$. Scalar multiplication is closed. <br> Thus, $\\ker(T)$ is a subspace of $V$. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

@@ -175,6 +175,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-matrix-linearity" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Section: Finding the Matrix -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-orange-600">Finding the Standard Matrix</h2>
@@ -541,6 +544,57 @@
         // Initial draw
         updateVis();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-matrix-linearity', matrixLinearityProof);
+        });
+
+        // Matrix Linearity Proof
+        const matrixLinearityProof = {
+            id: "proof-matrix-linearity",
+            title: "Theorem: Matrix Multiplication is Linear",
+            intro: "Let $T(\\vec{x}) = A\\vec{x}$. We want to prove that $T$ is a linear transformation by checking the two properties.",
+            steps: [
+                {
+                    type: "text",
+                    content: "First, we check if it preserves addition: Is $A(\\vec{u} + \\vec{v}) = A\\vec{u} + A\\vec{v}$?"
+                },
+                {
+                    type: "question",
+                    text: "Recall the Distributive Property of matrix multiplication. Does $A(B+C) = AB + AC$ hold for matrices/vectors?",
+                    options: [
+                        { text: "Yes, always.", correct: true, feedback: "Correct! Matrix multiplication distributes over addition." },
+                        { text: "No, only for scalars.", correct: false, feedback: "It works for matrices and vectors too." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So, $T(\\vec{u} + \\vec{v}) = A(\\vec{u} + \\vec{v}) = A\\vec{u} + A\\vec{v} = T(\\vec{u}) + T(\\vec{v})$. Addition is preserved."
+                },
+                {
+                    type: "text",
+                    content: "Next, we check if it preserves scalar multiplication: Is $A(c\\vec{u}) = c(A\\vec{u})$?"
+                },
+                {
+                    type: "question",
+                    text: "Can we move a scalar $c$ past a matrix $A$?",
+                    options: [
+                        { text: "Yes, scalars commute with matrices.", correct: true, feedback: "Correct! $c(A\\vec{x}) = A(c\\vec{x})$." },
+                        { text: "No, order matters.", correct: false, feedback: "Order matters for matrices, but not for scalars." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So, $T(c\\vec{u}) = A(c\\vec{u}) = c(A\\vec{u}) = cT(\\vec{u})$. Scalar multiplication is preserved."
+                },
+                {
+                    type: "text",
+                    content: "Since both properties hold, $T(\\vec{x}) = A\\vec{x}$ is a linear transformation. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

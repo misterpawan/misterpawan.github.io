@@ -241,6 +241,9 @@
             </div>
         </section>
 
+        <!-- Interactive Proof -->
+        <div id="proof-composition-linearity" class="mt-8" data-aos="fade-up"></div>
+
         <!-- Section 2: Inverses -->
         <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-pink-600">Inverse Transformations</h2>
@@ -372,6 +375,57 @@
         // Initial update
         updateComp();
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-composition-linearity', compositionLinearityProof);
+        });
+
+        // Composition Linearity Proof
+        const compositionLinearityProof = {
+            id: "proof-composition-linearity",
+            title: "Theorem: Composition of Linear Transformations is Linear",
+            intro: "Let $S: U \\to V$ and $T: V \\to W$ be linear transformations. We want to prove that their composition $T \\circ S$ is also linear.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let's check the addition property for $(T \\circ S)(\\vec{u} + \\vec{v})$."
+                },
+                {
+                    type: "question",
+                    text: "By definition, what is $(T \\circ S)(\\vec{x})$?",
+                    options: [
+                        { text: "$T(S(\\vec{x}))$", correct: true, feedback: "Correct! Apply S first, then T." },
+                        { text: "$S(T(\\vec{x}))$", correct: false, feedback: "That would be $S \\circ T$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So, $(T \\circ S)(\\vec{u} + \\vec{v}) = T(S(\\vec{u} + \\vec{v}))$. <br> Since $S$ is linear, $S(\\vec{u} + \\vec{v}) = S(\\vec{u}) + S(\\vec{v})$."
+                },
+                {
+                    type: "text",
+                    content: "Now we have $T(S(\\vec{u}) + S(\\vec{v}))$. Since $T$ is linear, this splits into $T(S(\\vec{u})) + T(S(\\vec{v}))$."
+                },
+                {
+                    type: "question",
+                    text: "What is $T(S(\\vec{u})) + T(S(\\vec{v}))$ in terms of composition?",
+                    options: [
+                        { text: "$(T \\circ S)(\\vec{u}) + (T \\circ S)(\\vec{v})$", correct: true, feedback: "Correct! Addition is preserved." },
+                        { text: "$T(\\vec{u}) + S(\\vec{v})$", correct: false, feedback: "Keep the composition notation." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Similarly for scalars: $(T \\circ S)(c\\vec{u}) = T(S(c\\vec{u})) = T(cS(\\vec{u})) = cT(S(\\vec{u})) = c(T \\circ S)(\\vec{u})$."
+                },
+                {
+                    type: "text",
+                    content: "Thus, the composition of two linear transformations is linear. Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 
