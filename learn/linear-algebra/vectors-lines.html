@@ -255,6 +255,9 @@
                     -2, 0) $$
                 </div>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-parallelogram" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Interactive Calculator -->
@@ -543,6 +546,55 @@
         // Init
         updateLine();
 
+
+
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-parallelogram', parallelogramProof);
+        });
+
+        // Parallelogram Proof
+        const parallelogramProof = {
+            id: "proof-parallelogram",
+            title: "Theorem: Diagonals of a Parallelogram Bisect Each Other",
+            intro: "Let's prove this geometric property using vectors. Consider a parallelogram with vertices $A, B, C, D$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $M$ be the midpoint of diagonal $AC$. <br> In vector terms, $\\vec{m} = \\frac{1}{2}(\\vec{a} + \\vec{c})$."
+                },
+                {
+                    type: "question",
+                    text: "Since $ABCD$ is a parallelogram, how are $\\vec{b}$ and $\\vec{d}$ related to $\\vec{a}$ and $\\vec{c}$?",
+                    options: [
+                        { text: "$\\vec{b} - \\vec{a} = \\vec{c} - \\vec{d}$ (Opposite sides are equal vectors)", correct: true, feedback: "Correct! $\\overrightarrow{AB} = \\overrightarrow{DC}$." },
+                        { text: "$\\vec{b} + \\vec{a} = \\vec{c} + \\vec{d}$", correct: false, feedback: "Think about the displacement vectors." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "From $\\vec{b} - \\vec{a} = \\vec{c} - \\vec{d}$, we can rearrange to get $\\vec{b} + \\vec{d} = \\vec{a} + \\vec{c}$."
+                },
+                {
+                    type: "question",
+                    text: "Now, what is the midpoint of the other diagonal $BD$?",
+                    options: [
+                        { text: "$\\frac{1}{2}(\\vec{b} + \\vec{d})$", correct: true, feedback: "Correct! The midpoint is the average of the endpoints." },
+                        { text: "$\\vec{b} - \\vec{d}$", correct: false, feedback: "That would be a vector between them, not the midpoint." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since $\\vec{b} + \\vec{d} = \\vec{a} + \\vec{c}$, it follows that: <br> $\\frac{1}{2}(\\vec{b} + \\vec{d}) = \\frac{1}{2}(\\vec{a} + \\vec{c}) = \\vec{m}$."
+                },
+                {
+                    type: "text",
+                    content: "Conclusion: The midpoint of $BD$ is the SAME point as the midpoint of $AC$. <br> Therefore, the diagonals bisect each other! Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

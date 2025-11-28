@@ -249,6 +249,11 @@
                     <div class="absolute w-2 h-2 bg-black dark:bg-white rounded-full"></div>
                 </div>
             </div>
+            </div>
+            </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-rotation" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Final Quiz -->
@@ -352,8 +357,56 @@
         let currentRotation = 0;
         function rotateDemo(deg) {
             currentRotation += deg;
+
             document.getElementById('vector-arrow').style.transform = `rotate(${currentRotation}deg)`;
         }
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-rotation', rotationProof);
+        });
+
+        // Rotation Proof
+        const rotationProof = {
+            id: "proof-rotation",
+            title: "Theorem: Deriving the Rotation Matrix",
+            intro: "How do we find the matrix for a rotation $R_\\theta$? We use the fact that columns of the matrix are simply $T(\\vec{e}_1)$ and $T(\\vec{e}_2)$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $E_1 = \\begin{bmatrix} 1 \\\\ 0 \\end{bmatrix}$ and $E_2 = \\begin{bmatrix} 0 \\\\ 1 \\end{bmatrix}$ be the standard basis vectors."
+                },
+                {
+                    type: "question",
+                    text: "When we rotate $E_1$ (which lies on the x-axis) by an angle $\\theta$, what are its new coordinates?",
+                    options: [
+                        { text: "$\\begin{bmatrix} \\cos\\theta \\\\ \\sin\\theta \\end{bmatrix}$", correct: true, feedback: "Correct! This is the definition of sine and cosine on the unit circle." },
+                        { text: "$\\begin{bmatrix} \\sin\\theta \\\\ \\cos\\theta \\end{bmatrix}$", correct: false, feedback: "Check your trigonometry. x is cos, y is sin." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So the first column of our matrix is $\\begin{bmatrix} \\cos\\theta \\\\ \\sin\\theta \\end{bmatrix}$."
+                },
+                {
+                    type: "question",
+                    text: "Now rotate $E_2$ (which lies on the y-axis) by $\\theta$. Note that $E_2$ is $90^\\circ$ ahead of $E_1$.",
+                    options: [
+                        { text: "$\\begin{bmatrix} -\\sin\\theta \\\\ \\cos\\theta \\end{bmatrix}$", correct: true, feedback: "Correct! x becomes negative sine, y becomes cosine." },
+                        { text: "$\\begin{bmatrix} \\cos\\theta \\\\ -\\sin\\theta \\end{bmatrix}$", correct: false, feedback: "Visualize the rotation. The y-axis moves into the second quadrant (negative x)." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So the second column is $\\begin{bmatrix} -\\sin\\theta \\\\ \\cos\\theta \\end{bmatrix}$."
+                },
+                {
+                    type: "text",
+                    content: "Putting it all together, the rotation matrix is: <br> $R_\\theta = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix}$. <br> Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

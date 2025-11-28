@@ -228,6 +228,9 @@
                     <canvas id="proj-canvas" width="300" height="200"></canvas>
                 </div>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-projection" class="mt-8" data-aos="fade-up"></div>
             </div>
 
             <div class="mt-8 bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl border border-orange-200">
@@ -453,6 +456,61 @@
         ctx.fillStyle = "#ef4444"; ctx.fillText("u", 210, 40);
         ctx.fillStyle = "#10b981"; ctx.fillText("proj u", 120, 170);
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-projection', projectionProof);
+        });
+
+        // Projection Proof
+        const projectionProof = {
+            id: "proof-projection",
+            title: "Theorem: The Projection Formula",
+            intro: "Let's derive the formula for $\\text{proj}_{\\vec{d}} \\vec{u}$. We want to find a vector $\\vec{p} = c\\vec{d}$ such that $\\vec{u} - \\vec{p}$ is orthogonal to $\\vec{d}$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Step 1: Write $\\vec{u}$ as a sum of two vectors: <br> $\\vec{u} = \\vec{p} + \\vec{w}$, where $\\vec{p}$ is parallel to $\\vec{d}$ and $\\vec{w}$ is orthogonal to $\\vec{d}$."
+                },
+                {
+                    type: "question",
+                    text: "Since $\\vec{p}$ is parallel to $\\vec{d}$, how can we write $\\vec{p}$?",
+                    options: [
+                        { text: "$\\vec{p} = c\\vec{d}$ for some scalar $c$", correct: true, feedback: "Correct! Parallel vectors are scalar multiples." },
+                        { text: "$\\vec{p} = \\vec{d} + c$", correct: false, feedback: "No, that's vector addition." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So $\\vec{u} = c\\vec{d} + \\vec{w}$. <br> We also know $\\vec{w}$ is orthogonal to $\\vec{d}$, which means $\\vec{w} \\cdot \\vec{d} = 0$."
+                },
+                {
+                    type: "question",
+                    text: "Let's take the dot product of both sides with $\\vec{d}$. What is $\\vec{u} \\cdot \\vec{d}$?",
+                    options: [
+                        { text: "$(c\\vec{d} + \\vec{w}) \\cdot \\vec{d} = c(\\vec{d} \\cdot \\vec{d}) + (\\vec{w} \\cdot \\vec{d})$", correct: true, feedback: "Correct! Distributing the dot product." },
+                        { text: "$c(\\vec{d} \\cdot \\vec{d})$", correct: false, feedback: "Don't forget the $\\vec{w}$ term (even if it vanishes later)." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Since $\\vec{w} \\cdot \\vec{d} = 0$, we have: <br> $\\vec{u} \\cdot \\vec{d} = c(\\vec{d} \\cdot \\vec{d}) = c\\norm{\\vec{d}}^2$."
+                },
+                {
+                    type: "question",
+                    text: "Now, solve for $c$.",
+                    options: [
+                        { text: "$c = \\frac{\\vec{u} \\cdot \\vec{d}}{\\norm{\\vec{d}}^2}$", correct: true, feedback: "Correct!" },
+                        { text: "$c = \\vec{u} \\cdot \\vec{d}$", correct: false, feedback: "You must divide by $\\norm{\\vec{d}}^2$." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "Finally, substitute $c$ back into $\\vec{p} = c\\vec{d}$: <br> $\\text{proj}_{\\vec{d}} \\vec{u} = \\frac{\\vec{u} \\cdot \\vec{d}}{\\norm{\\vec{d}}^2} \\vec{d}$. <br> Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 

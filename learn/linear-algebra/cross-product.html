@@ -188,6 +188,11 @@
                     </div>
                 </div>
             </div>
+            </div>
+            </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-area" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Interactive Cross Product Visualizer -->
@@ -348,6 +353,53 @@
             document.getElementById('cross-res').classList.remove('hidden');
         }
 
+    </script>
+    <script src="assets/js/interactive-proof.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-area', areaProof);
+        });
+
+        // Area Proof
+        const areaProof = {
+            id: "proof-area",
+            title: "Theorem: Area of Parallelogram using Cross Product",
+            intro: "We know $\\norm{\\vec{u} \\times \\vec{v}} = \\norm{\\vec{u}} \\norm{\\vec{v}} \\sin \\theta$. Let's prove this using the Lagrange Identity.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Recall the Lagrange Identity: <br> $\\norm{\\vec{u} \\times \\vec{v}}^2 = \\norm{\\vec{u}}^2 \\norm{\\vec{v}}^2 - (\\vec{u} \\cdot \\vec{v})^2$."
+                },
+                {
+                    type: "question",
+                    text: "Substitute the formula for the dot product $\\vec{u} \\cdot \\vec{v}$. What do you get?",
+                    options: [
+                        { text: "$\\norm{\\vec{u}}^2 \\norm{\\vec{v}}^2 - (\\norm{\\vec{u}} \\norm{\\vec{v}} \\cos \\theta)^2$", correct: true, feedback: "Correct!" },
+                        { text: "$\\norm{\\vec{u}}^2 \\norm{\\vec{v}}^2 - (\\norm{\\vec{u}} \\norm{\\vec{v}} \\sin \\theta)^2$", correct: false, feedback: "Dot product uses cosine." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "This simplifies to: <br> $\\norm{\\vec{u}}^2 \\norm{\\vec{v}}^2 - \\norm{\\vec{u}}^2 \\norm{\\vec{v}}^2 \\cos^2 \\theta$ <br> $= \\norm{\\vec{u}}^2 \\norm{\\vec{v}}^2 (1 - \\cos^2 \\theta)$."
+                },
+                {
+                    type: "question",
+                    text: "What is $1 - \\cos^2 \\theta$ equal to?",
+                    options: [
+                        { text: "$\\sin^2 \\theta$", correct: true, feedback: "Correct! Pythagorean identity." },
+                        { text: "$\\tan^2 \\theta$", correct: false, feedback: "No." }
+                    ]
+                },
+                {
+                    type: "text",
+                    content: "So we have $\\norm{\\vec{u} \\times \\vec{v}}^2 = \\norm{\\vec{u}}^2 \\norm{\\vec{v}}^2 \\sin^2 \\theta$."
+                },
+                {
+                    type: "text",
+                    content: "Taking the square root of both sides (since $\\sin \\theta \\geq 0$ for $0 \\leq \\theta \\leq \\pi$): <br> $\\norm{\\vec{u} \\times \\vec{v}} = \\norm{\\vec{u}} \\norm{\\vec{v}} \\sin \\theta$. <br> This is exactly the area of the parallelogram! Q.E.D. ∎"
+                }
+            ]
+        };
     </script>
 </body>
 
