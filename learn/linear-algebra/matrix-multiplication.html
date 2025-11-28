@@ -221,6 +221,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Interactive Proof -->
+            <div id="proof-commutativity" class="mt-8" data-aos="fade-up"></div>
         </section>
 
         <!-- Section 3: Properties -->
@@ -283,8 +286,47 @@
         <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
     </footer>
 
+    <script src="assets/js/interactive-proof.js"></script>
     <script>
         AOS.init();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-commutativity', commutativityProof);
+        });
+
+        // Non-commutativity Proof
+        const commutativityProof = {
+            id: "proof-commutativity",
+            title: "Theorem: Non-commutativity",
+            intro: "Let's try to prove that $AB = BA$. If we fail, we'll know why order matters!",
+            steps: [
+                {
+                    type: "text",
+                    content: "Let $A$ and $B$ be $2 \\times 2$ matrices."
+                },
+                {
+                    type: "step",
+                    text: "Consider the product $AB$. The entry $(AB)_{11}$ comes from Row 1 of $A$ and Column 1 of $B$.",
+                    math: "(AB)_{11} = a_{11}b_{11} + a_{12}b_{21}"
+                },
+                {
+                    type: "step",
+                    text: "Now consider $BA$. The entry $(BA)_{11}$ comes from Row 1 of $B$ and Column 1 of $A$.",
+                    math: "(BA)_{11} = b_{11}a_{11} + b_{12}a_{21}"
+                },
+                {
+                    type: "spot-error",
+                    text: "Here is a proposed argument for why they are equal. Spot the flaw!",
+                    proposal: "Since multiplication of numbers is commutative ($ab=ba$), we can rearrange the terms. $a_{11}b_{11} = b_{11}a_{11}$. Therefore, the first parts match. If we assume the matrices are symmetric, the second parts match too. Thus $AB=BA$.",
+                    error_index: 0,
+                    correction: "The error is assuming we can just rearrange terms to make them equal! Look closely: $(AB)_{11}$ has $a_{12}b_{21}$ while $(BA)_{11}$ has $b_{12}a_{21}$. These involve DIFFERENT entries entirely ($a_{12}$ vs $a_{21}$). Unless $A$ and $B$ have very specific structures (like diagonal matrices), these sums will NOT be equal."
+                },
+                {
+                    type: "text",
+                    content: "Exactly! The dot product mixes rows and columns in a specific way. Swapping the matrix order changes which rows pair with which columns, leading to completely different results."
+                }
+            ]
+        };
 
         // Scroll Progress Bar
         window.onscroll = function () {

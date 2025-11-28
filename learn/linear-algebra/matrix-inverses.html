@@ -152,6 +152,9 @@
                         $B = IB = (CA)B = C(AB) = CI = C$. Thus $B = C$. $\blacksquare$
                     </p>
                 </div>
+
+                <!-- Interactive Proof -->
+                <div id="proof-uniqueness" class="mt-4" data-aos="fade-up"></div>
             </div>
 
             <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-200">
@@ -272,8 +275,10 @@
                     <div class="latex-content text-center font-bold mb-2">
                         $$ (AB)^{-1} = B^{-1} A^{-1} $$
                     </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">"Shoes and Socks" rule: You put on socks ($A$)
-                        then shoes ($B$). To undo, you take off shoes ($B^{-1}$) then socks ($A^{-1}$).</p>
+                    then shoes ($B$). To undo, you take off shoes ($B^{-1}$) then socks ($A^{-1}$).</p>
+
+                    <!-- Interactive Proof -->
+                    <div id="proof-product" class="mt-4" data-aos="fade-up"></div>
                 </div>
                 <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl border border-teal-200">
                     <h3 class="font-bold mb-2">Inverse of Transpose</h3>
@@ -318,8 +323,117 @@
         <p>&copy; 2025 Pawan Kumar. All rights reserved.</p>
     </footer>
 
+    <script src="assets/js/interactive-proof.js"></script>
     <script>
         AOS.init();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveProof('proof-uniqueness', uniquenessProof);
+            new InteractiveProof('proof-product', productProof);
+        });
+
+        // Uniqueness of Inverse Proof
+        const uniquenessProof = {
+            id: "proof-uniqueness",
+            title: "Theorem: Uniqueness of Inverse",
+            intro: "If a matrix has an inverse, can it have two different ones? Let's find out.",
+            steps: [
+                {
+                    type: "text",
+                    content: "Suppose $A$ is an invertible matrix. Assume it has two inverses, $B$ and $C$."
+                },
+                {
+                    type: "step",
+                    text: "Since $B$ is an inverse of $A$, we know:",
+                    math: "AB = I \\quad \\text{and} \\quad BA = I"
+                },
+                {
+                    type: "step",
+                    text: "Since $C$ is also an inverse of $A$, we know:",
+                    math: "AC = I \\quad \\text{and} \\quad CA = I"
+                },
+                {
+                    type: "question",
+                    text: "We want to show $B=C$. Let's start with $B$. How can we rewrite $B$ using the Identity matrix?",
+                    options: [
+                        { text: "$B = B + I$", correct: false, feedback: "No, adding identity changes the value." },
+                        { text: "$B = BI$", correct: true, feedback: "Correct! Multiplying by Identity does nothing." }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "Now, substitute $I$ with something involving $C$. (Recall $AC=I$).",
+                    math: "B = B(AC)"
+                },
+                {
+                    type: "step",
+                    text: "Use the Associative Property to regroup.",
+                    math: "B = (BA)C"
+                },
+                {
+                    type: "question",
+                    text: "What is $BA$ equal to?",
+                    options: [
+                        { text: "$A$", correct: false, feedback: "No." },
+                        { text: "$I$", correct: true, feedback: "Yes! Because $B$ is the inverse of $A$." }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "Substitute $BA = I$.",
+                    math: "B = IC = C"
+                },
+                {
+                    type: "text",
+                    content: "Thus, we have proved that $B=C$. The inverse is unique."
+                }
+            ]
+        };
+
+        // Inverse of Product Proof
+        const productProof = {
+            id: "proof-product",
+            title: "Theorem: Inverse of a Product",
+            intro: "Why do we swap the order? Let's prove $(AB)^{-1} = B^{-1}A^{-1}$.",
+            steps: [
+                {
+                    type: "text",
+                    content: "We want to verify that $B^{-1}A^{-1}$ is indeed the inverse of $AB$."
+                },
+                {
+                    type: "question",
+                    text: "What condition must be met for $X$ to be the inverse of $Y$?",
+                    options: [
+                        { text: "$XY = YX$", correct: false, feedback: "Commutativity is not enough." },
+                        { text: "$XY = I$ and $YX = I$", correct: true, feedback: "Correct! The product must be the Identity." }
+                    ]
+                },
+                {
+                    type: "step",
+                    text: "Let's check $(AB)(B^{-1}A^{-1})$.",
+                    math: "(AB)(B^{-1}A^{-1})"
+                },
+                {
+                    type: "step",
+                    text: "Use associativity to regroup the middle terms.",
+                    math: "A(BB^{-1})A^{-1}"
+                },
+                {
+                    type: "step",
+                    text: "Simplify $BB^{-1}$.",
+                    math: "A(I)A^{-1} = AA^{-1}"
+                },
+                {
+                    type: "step",
+                    text: "Simplify $AA^{-1}$.",
+                    math: "I"
+                },
+                {
+                    type: "text",
+                    content: "Since the product is $I$, $B^{-1}A^{-1}$ is the inverse of $AB$. (You can check the reverse order similarly)."
+                }
+            ]
+        };
 
         // Scroll Progress Bar
         window.onscroll = function () {
