@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Theory | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+
+        .payoff-cell {
+            transition: all 0.3s ease;
+        }
+
+        .payoff-cell.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+            border-color: #8b5cf6;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 2: Probability</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Game Theory
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Strategic decision making and the Prisoner's Dilemma
+            </p>
+        </div>
+
+        <!-- Prisoner's Dilemma -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">👮</span> The Prisoner's Dilemma
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <p class="text-lg mb-6">
+                    Two suspects, Wanda and Fred, are arrested. The police don't have enough evidence for a conviction,
+                    so they separate them and offer each a deal.
+                </p>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-bold mb-4 text-center">Interactive Payoff Matrix</h3>
+                    <p class="text-center mb-6 text-gray-500">Click on a strategy for Wanda and Fred to see the outcome!
+                    </p>
+
+                    <div class="grid grid-cols-[auto_1fr_1fr] gap-4">
+                        <!-- Header Row -->
+                        <div class="row-span-3 flex items-center justify-center font-bold -rotate-90 text-violet-600">
+                            WANDA</div>
+                        <div></div> <!-- Empty corner -->
+                        <div class="col-span-2 text-center font-bold text-blue-600 mb-2">FRED</div>
+
+                        <!-- Column Headers -->
+                        <div></div>
+                        <div class="text-center font-semibold bg-gray-100 dark:bg-gray-700 p-2 rounded">Silent</div>
+                        <div class="text-center font-semibold bg-gray-100 dark:bg-gray-700 p-2 rounded">Confess</div>
+
+                        <!-- Wanda Silent Row -->
+                        <div class="flex items-center justify-end font-semibold pr-2">Silent</div>
+                        <div id="cell-ss"
+                            class="payoff-cell bg-green-50 dark:bg-green-900/20 border-2 border-transparent p-4 rounded-lg cursor-pointer hover:bg-green-100 dark:hover:bg-green-900/40"
+                            onclick="selectOutcome('ss')">
+                            <div class="text-center">
+                                <p class="font-bold">2 Years Each</p>
+                                <p class="text-xs text-gray-500">Cooperation</p>
+                            </div>
+                        </div>
+                        <div id="cell-sc"
+                            class="payoff-cell bg-red-50 dark:bg-red-900/20 border-2 border-transparent p-4 rounded-lg cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/40"
+                            onclick="selectOutcome('sc')">
+                            <div class="text-center">
+                                <p class="font-bold">W: 10 Years</p>
+                                <p class="font-bold">F: Free</p>
+                            </div>
+                        </div>
+
+                        <!-- Wanda Confess Row -->
+                        <div class="flex items-center justify-end font-semibold pr-2">Confess</div>
+                        <div id="cell-cs"
+                            class="payoff-cell bg-red-50 dark:bg-red-900/20 border-2 border-transparent p-4 rounded-lg cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/40"
+                            onclick="selectOutcome('cs')">
+                            <div class="text-center">
+                                <p class="font-bold">W: Free</p>
+                                <p class="font-bold">F: 10 Years</p>
+                            </div>
+                        </div>
+                        <div id="cell-cc"
+                            class="payoff-cell bg-yellow-50 dark:bg-yellow-900/20 border-2 border-transparent p-4 rounded-lg cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900/40"
+                            onclick="selectOutcome('cc')">
+                            <div class="text-center">
+                                <p class="font-bold">5 Years Each</p>
+                                <p class="text-xs text-gray-500">Nash Equilibrium</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="outcome-explanation"
+                        class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl text-center hidden">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nash Equilibrium -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">⚖️</span> Nash Equilibrium
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-4">What is it?</h3>
+                        <p class="text-lg mb-4">
+                            A <strong>Nash Equilibrium</strong> is a situation where no player can benefit by changing
+                            their strategy while the other players keep theirs unchanged.
+                        </p>
+                        <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-bold text-yellow-700 dark:text-yellow-300">In Prisoner's Dilemma:</p>
+                            <p>
+                                (Confess, Confess) is the Nash Equilibrium. Even though (Silent, Silent) is better for
+                                both, neither can trust the other not to confess!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/3">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
+                            <div class="text-6xl mb-4">🧠</div>
+                            <h4 class="text-lg font-bold">John Nash</h4>
+                            <p class="text-sm text-gray-500">Nobel Prize 1994</p>
+                            <p class="text-xs mt-2 text-gray-400">Subject of "A Beautiful Mind"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📝</span> Test Your Understanding
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl mb-4">Why is (Silent, Silent) NOT a Nash Equilibrium?</p>
+                    <div id="quiz1" class="space-y-3">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> Because 2 years is too long.
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> Because if one stays silent, the other can improve
+                            their outcome by confessing (going free).
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> It IS a Nash Equilibrium.
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="motivation-probability.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Motivation
+            </a>
+            <a href="random-walks.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Random Walks <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Payoff Matrix Logic
+        function selectOutcome(id) {
+            // Reset styles
+            document.querySelectorAll('.payoff-cell').forEach(el => {
+                el.classList.remove('active', 'ring-4', 'ring-violet-400');
+            });
+
+            // Highlight selected
+            const cell = document.getElementById(`cell-${id}`);
+            cell.classList.add('active', 'ring-4', 'ring-violet-400');
+
+            // Show explanation
+            const explanation = document.getElementById('outcome-explanation');
+            explanation.classList.remove('hidden');
+
+            let text = "";
+            if (id === 'ss') {
+                text = "<span class='font-bold text-green-600'>Cooperation!</span> Both serve 2 years. This is the global optimum, but it's unstable because both have an incentive to defect.";
+            } else if (id === 'sc') {
+                text = "<span class='font-bold text-red-600'>Betrayal!</span> Fred goes free, Wanda serves 10 years. Fred exploited Wanda's trust.";
+            } else if (id === 'cs') {
+                text = "<span class='font-bold text-red-600'>Betrayal!</span> Wanda goes free, Fred serves 10 years. Wanda exploited Fred's trust.";
+            } else if (id === 'cc') {
+                text = "<span class='font-bold text-yellow-600'>Nash Equilibrium!</span> Both serve 5 years. Neither regrets their choice given what the other did (if you switch to Silent, you get 10 years!).";
+            }
+            explanation.innerHTML = text;
+        }
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'b' };
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! In a Nash Equilibrium, no player has an incentive to deviate. Here, deviation (confessing) pays off.";
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+            } else {
+                feedback.innerHTML = "Incorrect. Think about individual incentives!";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+    </script>
+</body>
+
+</html>

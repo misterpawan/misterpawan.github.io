@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivation for Probability | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+
+        .proof-step {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .proof-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 2: Probability</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Motivation for Probability
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                From games of chance to a rigorous mathematical theory
+            </p>
+        </div>
+
+        <!-- Historical Context -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📜</span> Origins
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <p class="text-lg mb-6">
+                    Probability theory didn't start in a classroom. It started in casinos and gambling houses!
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Cardano -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                        <div class="text-4xl mb-4">🎲</div>
+                        <h3 class="text-xl font-bold mb-2">Gerolamo Cardano</h3>
+                        <p class="text-sm text-gray-500 mb-2">Italian (1501–1576)</p>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">
+                            A gambling scholar who wrote <em>Liber de Ludo Aleae</em> (Book on Games of Chance), the
+                            first systematic treatment of probability.
+                        </p>
+                    </div>
+
+                    <!-- Pascal -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                        <div class="text-4xl mb-4">🔺</div>
+                        <h3 class="text-xl font-bold mb-2">Blaise Pascal</h3>
+                        <p class="text-sm text-gray-500 mb-2">French (1623–1662)</p>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">
+                            Laid the foundation of modern probability theory through correspondence with Fermat about
+                            gambling problems.
+                        </p>
+                    </div>
+
+                    <!-- Laplace -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                        <div class="text-4xl mb-4">🌌</div>
+                        <h3 class="text-xl font-bold mb-2">Pierre-Simon Laplace</h3>
+                        <p class="text-sm text-gray-500 mb-2">French (1749–1827)</p>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">
+                            Formalized classical probability: <br>
+                            \( P(E) = \frac{\text{Favorable Cases}}{\text{Total Cases}} \)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Definitions -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📖</span> Key Definitions
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="space-y-6">
+                    <div class="border-l-4 border-violet-500 pl-4">
+                        <h3 class="text-xl font-bold text-violet-700 dark:text-violet-300">Random Experiment</h3>
+                        <p>A process with an uncertain outcome (e.g., tossing a coin, rolling a die).</p>
+                    </div>
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h3 class="text-xl font-bold text-blue-700 dark:text-blue-300">Sample Space (\(S\))</h3>
+                        <p>The set of <strong>all possible outcomes</strong>.</p>
+                        <p class="text-sm text-gray-500 mt-1">Example: For a die roll, \(S = \{1, 2, 3, 4, 5, 6\}\)</p>
+                    </div>
+                    <div class="border-l-4 border-emerald-500 pl-4">
+                        <h3 class="text-xl font-bold text-emerald-700 dark:text-emerald-300">Event (\(E\))</h3>
+                        <p>A subset of the sample space.</p>
+                        <p class="text-sm text-gray-500 mt-1">Example: Rolling an even number, \(E = \{2, 4, 6\}\)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Axioms of Probability -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">⚖️</span> Axioms of Probability
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="bg-gray-900 text-white p-6 rounded-xl shadow-inner">
+                    <h3 class="text-lg font-mono mb-4 text-yellow-400">// Kolmogorov's Axioms</h3>
+                    <ul class="space-y-4 font-mono">
+                        <li class="flex gap-4">
+                            <span class="text-gray-500">1.</span>
+                            <span>For any event \(A\), \(P(A) \geq 0\)</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="text-gray-500">2.</span>
+                            <span>\(P(S) = 1\) (Something must happen)</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="text-gray-500">3.</span>
+                            <span>If \(A_1, A_2, \dots\) are disjoint, then <br>
+                                \(P(\cup A_i) = \sum P(A_i)\)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Proof -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Interactive Proof: Probability of Complement</h3>
+                <p class="mb-4">Prove that \(P(A^c) = 1 - P(A)\).</p>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                    <div class="space-y-2" id="proof-container">
+                        <!-- Steps injected here -->
+                    </div>
+                    <button onclick="nextProofStep()" id="proof-btn"
+                        class="mt-4 bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg font-semibold transition">
+                        Show Next Step
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Galton Board -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📉</span> The Galton Board
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="mb-4">
+                            The Galton Board demonstrates how the <strong>Binomial Distribution</strong> (and eventually
+                            the Normal Distribution) arises from simple random events.
+                        </p>
+                        <p class="mb-4">
+                            At each peg, a ball has a 50/50 chance of going left or right. This is like a coin flip!
+                        </p>
+                        <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                            <p class="font-bold text-blue-700 dark:text-blue-300">Connection to Pascal's Triangle:</p>
+                            <p class="text-sm mt-1">
+                                The number of paths to reach a bin corresponds exactly to the numbers in Pascal's
+                                Triangle!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl flex justify-center">
+                        <canvas id="galtonCanvas" width="300" height="400"
+                            class="bg-white dark:bg-gray-900 rounded-lg shadow-inner"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button onclick="startGalton()"
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition">
+                        Drop Balls!
+                    </button>
+                    <button onclick="resetGalton()"
+                        class="ml-2 text-gray-500 hover:text-gray-700 px-4 py-2 rounded-lg transition">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📝</span> Test Your Understanding
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl mb-4">If \(P(A) = 0.3\) and \(P(B) = 0.4\), and \(A\) and \(B\) are disjoint
+                        (mutually exclusive), what is \(P(A \cup B)\)?</p>
+                    <div id="quiz1" class="space-y-3">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> 0.7
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> 0.12
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> Cannot be determined
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">Question 2:</h3>
+                    <p class="text-xl mb-4">What is the probability of getting at least one Head in 3 coin tosses?</p>
+                    <div id="quiz2" class="space-y-3">
+                        <button onclick="checkQuiz(2, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> 1/8
+                        </button>
+                        <button onclick="checkQuiz(2, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> 7/8
+                        </button>
+                        <button onclick="checkQuiz(2, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> 3/8
+                        </button>
+                    </div>
+                    <div id="quiz2-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="problems-unit1.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Unit 1: Practice Problems
+            </a>
+            <a href="game-theory.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Game Theory <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Interactive Proof Logic
+        const proofSteps = [
+            "1. We know that \\(S = A \\cup A^c\\) (Sample space is union of event and its complement)",
+            "2. Also, \\(A\\) and \\(A^c\\) are disjoint (They have no common elements)",
+            "3. By Axiom 3: \\(P(S) = P(A \\cup A^c) = P(A) + P(A^c)\\)",
+            "4. By Axiom 2: \\(P(S) = 1\\)",
+            "5. Therefore: \\(1 = P(A) + P(A^c)\\)",
+            "6. Rearranging: \\(P(A^c) = 1 - P(A)\\) ■"
+        ];
+        let currentStep = 0;
+
+        function nextProofStep() {
+            if (currentStep < proofSteps.length) {
+                const container = document.getElementById('proof-container');
+                const div = document.createElement('div');
+                div.className = 'proof-step p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border-l-4 border-violet-500';
+                div.innerText = proofSteps[currentStep];
+                container.appendChild(div);
+
+                // Trigger reflow
+                void div.offsetWidth;
+                div.classList.add('visible');
+
+                // Re-render MathJax
+                MathJax.typesetPromise([div]);
+
+                currentStep++;
+                if (currentStep === proofSteps.length) {
+                    document.getElementById('proof-btn').style.display = 'none';
+                }
+            }
+        }
+
+        // Galton Board Logic (Simple Canvas Simulation)
+        const canvas = document.getElementById('galtonCanvas');
+        const ctx = canvas.getContext('2d');
+        let balls = [];
+        let bins = new Array(9).fill(0);
+        let animationId;
+        const pegs = [];
+        const rows = 8;
+
+        // Setup pegs
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c <= r; c++) {
+                pegs.push({
+                    x: canvas.width / 2 + (c - r / 2) * 30,
+                    y: 50 + r * 30
+                });
+            }
+        }
+
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw pegs
+            ctx.fillStyle = '#cbd5e1';
+            pegs.forEach(peg => {
+                ctx.beginPath();
+                ctx.arc(peg.x, peg.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw bins
+            const binWidth = 30;
+            const startX = canvas.width / 2 - (rows * binWidth) / 2;
+            for (let i = 0; i <= rows; i++) {
+                const h = bins[i] * 5;
+                ctx.fillStyle = '#8b5cf6';
+                ctx.fillRect(startX + i * binWidth + 2, canvas.height - h, binWidth - 4, h);
+            }
+
+            // Draw balls
+            ctx.fillStyle = '#ef4444';
+            balls.forEach(ball => {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function updateGalton() {
+            balls.forEach((ball, index) => {
+                if (ball.y < canvas.height - 10) {
+                    ball.y += 2;
+
+                    // Collision with peg logic (simplified)
+                    // Check if close to a peg row
+                    const rowHeight = 30;
+                    const relativeY = ball.y - 50;
+
+                    if (relativeY > 0 && relativeY % rowHeight < 2 && !ball.decisionMade[Math.floor(relativeY / rowHeight)]) {
+                        // Make a decision
+                        ball.decisionMade[Math.floor(relativeY / rowHeight)] = true;
+                        ball.targetX += (Math.random() > 0.5 ? 15 : -15);
+                    }
+
+                    // Move towards target X
+                    if (ball.x < ball.targetX) ball.x += 1;
+                    if (ball.x > ball.targetX) ball.x -= 1;
+
+                } else {
+                    // Landed in bin
+                    const binIndex = Math.floor((ball.x - (canvas.width / 2 - (rows * 30) / 2)) / 30);
+                    if (binIndex >= 0 && binIndex <= rows) {
+                        bins[binIndex]++;
+                    }
+                    balls.splice(index, 1);
+                }
+            });
+
+            drawBoard();
+            if (balls.length > 0) {
+                animationId = requestAnimationFrame(updateGalton);
+            }
+        }
+
+        function startGalton() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    balls.push({
+                        x: canvas.width / 2,
+                        y: 20,
+                        targetX: canvas.width / 2,
+                        decisionMade: {}
+                    });
+                    if (balls.length === 1) updateGalton();
+                }, i * 100);
+            }
+        }
+
+        function resetGalton() {
+            balls = [];
+            bins = new Array(9).fill(0);
+            cancelAnimationFrame(animationId);
+            drawBoard();
+        }
+
+        // Initial draw
+        drawBoard();
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'a', 2: 'b' };
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! " + (qNum === 1 ? "Since they are disjoint, P(A U B) = P(A) + P(B) = 0.7" : "P(at least one H) = 1 - P(no H) = 1 - P(TTT) = 1 - 1/8 = 7/8");
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+            } else {
+                feedback.innerHTML = "Incorrect. Try again!";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+    </script>
+</body>
+
+</html>

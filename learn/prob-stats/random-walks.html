@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Walks | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 2: Probability</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Random Walks
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                From drunkard's walk to stock market fluctuations
+            </p>
+        </div>
+
+        <!-- 1D Random Walk -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🚶</span> 1D Random Walk
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">The Setup</h3>
+                        <p class="mb-4">
+                            Imagine a person starting at position \(x=0\). At each step, they flip a coin:
+                        </p>
+                        <ul class="list-disc ml-6 mb-4 space-y-2">
+                            <li><strong>Heads (prob \(p\)):</strong> Move Right (+1)</li>
+                            <li><strong>Tails (prob \(1-p\)):</strong> Move Left (-1)</li>
+                        </ul>
+                        <p class="mb-4">
+                            This simple process models Brownian motion, gambling fortunes, and more!
+                        </p>
+
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner mb-4">
+                            <label class="block font-bold mb-2">Bias (Probability of Right): <span
+                                    id="prob-display">0.5</span></label>
+                            <input type="range" id="prob-slider" min="0" max="1" step="0.1" value="0.5"
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Left Biased</span>
+                                <span>Unbiased</span>
+                                <span>Right Biased</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button onclick="stepWalk()"
+                                class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                Take Step
+                            </button>
+                            <button onclick="autoWalk()"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+                                Auto Walk
+                            </button>
+                            <button onclick="resetWalk()"
+                                class="text-gray-500 hover:text-gray-700 px-4 py-2 rounded-lg transition">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl flex flex-col items-center justify-center h-64 relative overflow-hidden">
+                        <!-- Walker Visualization -->
+                        <div id="walker-track"
+                            class="w-full h-1 bg-gray-300 dark:bg-gray-600 absolute top-1/2 transform -translate-y-1/2">
+                        </div>
+                        <div id="walker-ticks" class="w-full h-full absolute top-0 left-0 pointer-events-none">
+                            <!-- Ticks generated by JS -->
+                        </div>
+                        <div id="walker"
+                            class="w-8 h-8 bg-violet-600 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-lg transition-all duration-300 z-10 flex items-center justify-center text-white font-bold text-xs">
+                            0
+                        </div>
+                        <div class="absolute bottom-4 text-sm text-gray-500">Position: <span id="pos-display"
+                                class="font-bold text-gray-900 dark:text-gray-100">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2D Random Walk Problem -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🧩</span> The Meeting Problem (2D)
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <p class="text-lg mb-6">
+                    <strong>Alice</strong> starts at top-left (A). <strong>Bob</strong> starts at bottom-right (B).
+                    Alice moves Right/Down. Bob moves Left/Up. What is the probability they meet?
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner flex justify-center items-center">
+                        <canvas id="gridCanvas" width="300" height="300"
+                            class="bg-white dark:bg-gray-900 rounded-lg shadow-sm"></canvas>
+                    </div>
+
+                    <div>
+                        <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border-l-4 border-blue-500 mb-6">
+                            <h3 class="text-xl font-bold text-blue-700 dark:text-blue-300 mb-2">Analysis</h3>
+                            <ul class="list-disc ml-5 space-y-2">
+                                <li>They can only meet on the diagonal!</li>
+                                <li>They meet after exactly <strong>5 steps</strong> each (on a 6x6 grid).</li>
+                                <li>Total paths for each = \(2^5 = 32\).</li>
+                                <li>Total combined paths = \(32 \times 32 = 1024\).</li>
+                            </ul>
+                        </div>
+
+                        <div class="text-center">
+                            <button onclick="simulate2DWalk()"
+                                class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition w-full md:w-auto">
+                                Run Simulation
+                            </button>
+                            <p id="sim-result" class="mt-4 font-bold text-lg h-8"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📝</span> Test Your Understanding
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl mb-4">In a simple symmetric 1D random walk (p=0.5), what is the expected position
+                        after \(n\) steps?</p>
+                    <div id="quiz1" class="space-y-3">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> \(n\)
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> 0
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> \(\sqrt{n}\)
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="game-theory.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Game Theory
+            </a>
+            <a href="information-theory.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Information Theory <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // 1D Walk Logic
+        let position = 0;
+        let walkInterval;
+        const walker = document.getElementById('walker');
+        const posDisplay = document.getElementById('pos-display');
+        const probSlider = document.getElementById('prob-slider');
+        const probDisplay = document.getElementById('prob-display');
+
+        probSlider.addEventListener('input', (e) => {
+            probDisplay.innerText = e.target.value;
+        });
+
+        function updateWalker() {
+            // Map position -10 to 10 to 0% to 100%
+            // Center is 50%
+            // Each step is 5%
+            const percent = 50 + (position * 5);
+            walker.style.left = `${Math.max(0, Math.min(100, percent))}%`;
+            walker.innerText = position;
+            posDisplay.innerText = position;
+        }
+
+        function stepWalk() {
+            const p = parseFloat(probSlider.value);
+            if (Math.random() < p) {
+                position++;
+            } else {
+                position--;
+            }
+            updateWalker();
+        }
+
+        function autoWalk() {
+            if (walkInterval) clearInterval(walkInterval);
+            walkInterval = setInterval(stepWalk, 500);
+        }
+
+        function resetWalk() {
+            if (walkInterval) clearInterval(walkInterval);
+            position = 0;
+            updateWalker();
+        }
+
+        // Generate ticks
+        const ticksContainer = document.getElementById('walker-ticks');
+        for (let i = -10; i <= 10; i++) {
+            const tick = document.createElement('div');
+            tick.className = 'absolute top-1/2 w-0.5 h-2 bg-gray-400 transform -translate-y-1/2';
+            tick.style.left = `${50 + (i * 5)}%`;
+            ticksContainer.appendChild(tick);
+        }
+
+
+        // 2D Walk Logic
+        const canvas = document.getElementById('gridCanvas');
+        const ctx = canvas.getContext('2d');
+        const gridSize = 6;
+        const cellSize = canvas.width / gridSize;
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#e5e7eb'; // gray-200
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i <= gridSize; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * cellSize, 0);
+                ctx.lineTo(i * cellSize, canvas.height);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, i * cellSize);
+                ctx.lineTo(canvas.width, i * cellSize);
+                ctx.stroke();
+            }
+
+            // Draw Start Points
+            ctx.fillStyle = '#8b5cf6'; // violet
+            ctx.beginPath();
+            ctx.arc(0, 0, 8, 0, Math.PI * 2); // Alice
+            ctx.fill();
+
+            ctx.fillStyle = '#3b82f6'; // blue
+            ctx.beginPath();
+            ctx.arc(canvas.width, canvas.height, 8, 0, Math.PI * 2); // Bob
+            ctx.fill();
+        }
+
+        function simulate2DWalk() {
+            drawGrid();
+            let alice = { x: 0, y: 0 };
+            let bob = { x: gridSize, y: gridSize };
+            let steps = 0;
+            const maxSteps = 5; // They meet after 5 steps if at all
+
+            const interval = setInterval(() => {
+                if (steps >= maxSteps) {
+                    clearInterval(interval);
+                    const met = (alice.x === bob.x && alice.y === bob.y);
+                    const res = document.getElementById('sim-result');
+                    if (met) {
+                        res.innerText = "They Met! 🎉";
+                        res.className = "mt-4 font-bold text-lg h-8 text-green-600";
+                    } else {
+                        res.innerText = "Missed each other.";
+                        res.className = "mt-4 font-bold text-lg h-8 text-gray-500";
+                    }
+                    return;
+                }
+
+                // Alice moves Right or Down
+                if (Math.random() < 0.5) alice.x++; else alice.y++;
+
+                // Bob moves Left or Up
+                if (Math.random() < 0.5) bob.x--; else bob.y--;
+
+                // Draw paths
+                ctx.fillStyle = 'rgba(139, 92, 246, 0.5)';
+                ctx.beginPath();
+                ctx.arc(alice.x * cellSize, alice.y * cellSize, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.5)';
+                ctx.beginPath();
+                ctx.arc(bob.x * cellSize, bob.y * cellSize, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                steps++;
+            }, 500);
+        }
+
+        drawGrid();
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'b' };
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! Since steps are +1 and -1 with equal probability, they cancel out on average.";
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+                MathJax.typesetPromise([feedback]);
+            } else {
+                feedback.innerHTML = "Incorrect. Think about symmetry!";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+    </script>
+</body>
+
+</html>
