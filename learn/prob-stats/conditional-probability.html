@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditional Probability | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+
+        .door {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .door:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 2: Probability</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Conditional Probability
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Updating beliefs with new evidence
+            </p>
+        </div>
+
+        <!-- Definition -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🎯</span> Definition
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <p class="text-lg mb-6">
+                    The probability of event \(E\) occurring, <strong>given</strong> that event \(F\) has already
+                    occurred.
+                </p>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner text-center">
+                    <p class="text-2xl font-bold text-violet-600 dark:text-violet-400 mb-4">
+                        \( P(E|F) = \frac{P(E \cap F)}{P(F)} \)
+                    </p>
+                    <p class="text-gray-500">
+                        "The part of E that is inside F, divided by the total size of F"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bayes Theorem -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🔄</span> Bayes' Theorem
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <p class="mb-6">
+                    Bayes' Theorem allows us to flip conditional probabilities. It's crucial for medical diagnosis, spam
+                    filtering, and AI.
+                </p>
+
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border-l-4 border-blue-500 mb-8">
+                    <p class="text-xl font-bold text-center text-blue-800 dark:text-blue-200">
+                        \( P(A|B) = \frac{P(B|A)P(A)}{P(B)} \)
+                    </p>
+                </div>
+
+                <!-- Interactive Medical Test -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-bold mb-4">Interactive: Medical Test Paradox</h3>
+                    <p class="mb-4 text-sm text-gray-500">
+                        A test is 99% accurate. You test positive. What is the chance you actually have the disease?
+                        (Hint: It depends on how rare the disease is!)
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block font-bold text-sm">Disease Prevalence (%)</label>
+                                <input type="range" id="prevalence" min="0.1" max="50" step="0.1" value="1"
+                                    class="w-full" oninput="updateBayes()">
+                                <span id="prev-val" class="text-sm text-blue-600">1%</span>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-sm">Test Sensitivity (True Positive Rate) (%)</label>
+                                <input type="range" id="sensitivity" min="50" max="100" step="0.1" value="99"
+                                    class="w-full" oninput="updateBayes()">
+                                <span id="sens-val" class="text-sm text-green-600">99%</span>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-sm">False Positive Rate (%)</label>
+                                <input type="range" id="falsepos" min="0" max="20" step="0.1" value="5" class="w-full"
+                                    oninput="updateBayes()">
+                                <span id="fp-val" class="text-sm text-red-600">5%</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <p class="text-sm font-semibold mb-2">Probability you have disease given Positive Test:</p>
+                            <div class="text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2" id="bayes-result">
+                                16.6%
+                            </div>
+                            <p class="text-xs text-center text-gray-500">
+                                Even with high accuracy, if the disease is rare, false positives can outnumber true
+                                positives!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Monty Hall -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🚪</span> The Monty Hall Problem
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <p class="mb-6">
+                    Behind one door is a Car 🚗. Behind the others, Goats 🐐.
+                    You pick a door. Monty opens another door with a Goat. Should you switch?
+                </p>
+
+                <div class="flex justify-center gap-4 mb-8">
+                    <div id="door1"
+                        class="door w-24 h-32 bg-amber-700 rounded-lg cursor-pointer flex items-center justify-center text-4xl shadow-lg border-4 border-amber-800"
+                        onclick="pickDoor(1)">
+                        <span class="content">1</span>
+                    </div>
+                    <div id="door2"
+                        class="door w-24 h-32 bg-amber-700 rounded-lg cursor-pointer flex items-center justify-center text-4xl shadow-lg border-4 border-amber-800"
+                        onclick="pickDoor(2)">
+                        <span class="content">2</span>
+                    </div>
+                    <div id="door3"
+                        class="door w-24 h-32 bg-amber-700 rounded-lg cursor-pointer flex items-center justify-center text-4xl shadow-lg border-4 border-amber-800"
+                        onclick="pickDoor(3)">
+                        <span class="content">3</span>
+                    </div>
+                </div>
+
+                <div class="text-center mb-6">
+                    <p id="monty-msg" class="text-lg font-bold min-h-[2rem]">Pick a door!</p>
+                    <div id="monty-actions" class="hidden mt-4 space-x-4">
+                        <button onclick="finalizeChoice(false)"
+                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded font-bold">Stay</button>
+                        <button onclick="finalizeChoice(true)"
+                            class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded font-bold">Switch</button>
+                    </div>
+                    <button id="reset-monty" onclick="resetMonty()"
+                        class="hidden mt-4 bg-blue-500 text-white px-4 py-2 rounded">Play Again</button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-center text-sm">
+                    <div class="bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                        <p class="font-bold">Stay Wins</p>
+                        <p id="stay-wins">0</p>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                        <p class="font-bold">Switch Wins</p>
+                        <p id="switch-wins">0</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📝</span> Test Your Understanding
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl mb-4">If \(A\) and \(B\) are independent, what is \(P(A|B)\)?</p>
+                    <div id="quiz1" class="space-y-3">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> \(P(A)\)
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> \(P(B)\)
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> \(P(A) \times P(B)\)
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="information-theory.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Information Theory
+            </a>
+            <a href="index.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Back to Syllabus <span>↑</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Bayes Logic
+        function updateBayes() {
+            const prev = parseFloat(document.getElementById('prevalence').value) / 100;
+            const sens = parseFloat(document.getElementById('sensitivity').value) / 100;
+            const fp = parseFloat(document.getElementById('falsepos').value) / 100;
+
+            document.getElementById('prev-val').innerText = (prev * 100).toFixed(1) + '%';
+            document.getElementById('sens-val').innerText = (sens * 100).toFixed(1) + '%';
+            document.getElementById('fp-val').innerText = (fp * 100).toFixed(1) + '%';
+
+            // P(Disease | Positive) = P(Pos | Dis) * P(Dis) / P(Pos)
+            // P(Pos) = P(Pos|Dis)P(Dis) + P(Pos|NoDis)P(NoDis)
+
+            const pPosGivenDis = sens;
+            const pPosGivenNoDis = fp;
+            const pDis = prev;
+            const pNoDis = 1 - prev;
+
+            const pPos = (pPosGivenDis * pDis) + (pPosGivenNoDis * pNoDis);
+            const result = (pPosGivenDis * pDis) / pPos;
+
+            document.getElementById('bayes-result').innerText = (result * 100).toFixed(1) + '%';
+        }
+        updateBayes(); // Init
+
+        // Monty Hall Logic
+        let carDoor, pickedDoor, openedDoor;
+        let gameState = 'pick'; // pick, reveal, result
+        let stats = { stay: 0, switch: 0 };
+
+        function resetMonty() {
+            carDoor = Math.floor(Math.random() * 3) + 1;
+            gameState = 'pick';
+            document.getElementById('monty-msg').innerText = "Pick a door!";
+            document.getElementById('monty-actions').classList.add('hidden');
+            document.getElementById('reset-monty').classList.add('hidden');
+
+            for (let i = 1; i <= 3; i++) {
+                const door = document.getElementById(`door${i}`);
+                door.style.backgroundColor = '#b45309'; // amber-700
+                door.querySelector('.content').innerText = i;
+                door.classList.remove('opacity-50');
+            }
+        }
+
+        function pickDoor(doorNum) {
+            if (gameState !== 'pick') return;
+            pickedDoor = doorNum;
+
+            // Monty opens a goat door
+            do {
+                openedDoor = Math.floor(Math.random() * 3) + 1;
+            } while (openedDoor === carDoor || openedDoor === pickedDoor);
+
+            // Visual update
+            document.getElementById(`door${pickedDoor}`).style.backgroundColor = '#3b82f6'; // blue (picked)
+            document.getElementById(`door${openedDoor}`).style.backgroundColor = '#ef4444'; // red (opened)
+            document.getElementById(`door${openedDoor}`).querySelector('.content').innerText = '🐐';
+
+            gameState = 'reveal';
+            document.getElementById('monty-msg').innerText = `Monty opened Door ${openedDoor} (Goat). Switch or Stay?`;
+            document.getElementById('monty-actions').classList.remove('hidden');
+        }
+
+        function finalizeChoice(shouldSwitch) {
+            if (gameState !== 'reveal') return;
+
+            let finalDoor = pickedDoor;
+            if (shouldSwitch) {
+                // Switch to the remaining closed door
+                for (let i = 1; i <= 3; i++) {
+                    if (i !== pickedDoor && i !== openedDoor) {
+                        finalDoor = i;
+                        break;
+                    }
+                }
+            }
+
+            // Reveal Result
+            const won = (finalDoor === carDoor);
+            document.getElementById(`door${finalDoor}`).style.backgroundColor = won ? '#22c55e' : '#ef4444';
+            document.getElementById(`door${finalDoor}`).querySelector('.content').innerText = won ? '🚗' : '🐐';
+
+            // Reveal Car if lost
+            if (!won) {
+                document.getElementById(`door${carDoor}`).style.backgroundColor = '#22c55e';
+                document.getElementById(`door${carDoor}`).querySelector('.content').innerText = '🚗';
+            }
+
+            if (won) {
+                if (shouldSwitch) stats.switch++; else stats.stay++;
+                document.getElementById('monty-msg').innerText = "You Won! 🎉";
+            } else {
+                document.getElementById('monty-msg').innerText = "You Lost. 😢";
+            }
+
+            document.getElementById('stay-wins').innerText = stats.stay;
+            document.getElementById('switch-wins').innerText = stats.switch;
+
+            document.getElementById('monty-actions').classList.add('hidden');
+            document.getElementById('reset-monty').classList.remove('hidden');
+            gameState = 'result';
+        }
+
+        resetMonty();
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'a' };
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! If independent, B occurring gives no info about A.";
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+                MathJax.typesetPromise([feedback]);
+            } else {
+                feedback.innerHTML = "Incorrect. Independence means P(A|B) = P(A).";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Theory | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+
+        .ball {
+            transition: all 0.3s ease;
+        }
+
+        .ball:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 2: Probability</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Information Theory
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Measuring uncertainty, knowledge, and the limits of compression
+            </p>
+        </div>
+
+        <!-- Shannon Intro -->
+        <section class="mb-12">
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6 flex flex-col md:flex-row gap-8 items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-4">Claude Shannon</h2>
+                    <p class="text-lg mb-4">
+                        In 1948, Claude Shannon published "A Mathematical Theory of Communication", introducing the
+                        concept of <strong>Information Entropy</strong>.
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        He asked: How can we quantify "information"? How much "surprise" is in a message?
+                    </p>
+                </div>
+                <div class="w-full md:w-1/3 bg-gray-100 dark:bg-gray-800 p-6 rounded-xl text-center">
+                    <div class="text-6xl mb-4">📡</div>
+                    <p class="font-mono text-sm">Bit (Binary Digit)</p>
+                    <p class="text-xs text-gray-500">Coined by Shannon</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Entropy & Buckets -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🗳️</span> Entropy as Uncertainty
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <p class="mb-6 text-lg">
+                    Entropy measures the <strong>uncertainty</strong> of an outcome.
+                    <br>
+                    <span class="text-sm text-gray-500">High Entropy = High Uncertainty = High "Surprise"</span>
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Bucket 1: Low Entropy -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center cursor-pointer hover:shadow-lg transition border-2 border-transparent hover:border-violet-400"
+                        onclick="selectBucket(1)">
+                        <h3 class="font-bold mb-2">Bucket 1</h3>
+                        <div class="flex justify-center gap-2 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                        </div>
+                        <p class="text-sm text-gray-500">4 Red, 0 Blue</p>
+                        <p class="font-bold text-violet-600 mt-2">Entropy: 0 bits</p>
+                    </div>
+
+                    <!-- Bucket 2: Medium Entropy -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center cursor-pointer hover:shadow-lg transition border-2 border-transparent hover:border-violet-400"
+                        onclick="selectBucket(2)">
+                        <h3 class="font-bold mb-2">Bucket 2</h3>
+                        <div class="flex justify-center gap-2 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-blue-500 shadow-sm ball"></div>
+                        </div>
+                        <p class="text-sm text-gray-500">3 Red, 1 Blue</p>
+                        <p class="font-bold text-violet-600 mt-2">Entropy: ~0.81 bits</p>
+                    </div>
+
+                    <!-- Bucket 3: High Entropy -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center cursor-pointer hover:shadow-lg transition border-2 border-transparent hover:border-violet-400"
+                        onclick="selectBucket(3)">
+                        <h3 class="font-bold mb-2">Bucket 3</h3>
+                        <div class="flex justify-center gap-2 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-red-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-blue-500 shadow-sm ball"></div>
+                            <div class="w-8 h-8 rounded-full bg-blue-500 shadow-sm ball"></div>
+                        </div>
+                        <p class="text-sm text-gray-500">2 Red, 2 Blue</p>
+                        <p class="font-bold text-violet-600 mt-2">Entropy: 1 bit</p>
+                    </div>
+                </div>
+
+                <div id="bucket-explanation" class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl text-center hidden">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- The Formula -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📐</span> The Formula
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="text-center mb-8">
+                    <p
+                        class="text-2xl md:text-4xl font-bold font-mono bg-gray-100 dark:bg-gray-800 p-6 rounded-xl inline-block shadow-inner text-violet-600 dark:text-violet-400">
+                        \( H = - \sum_{i} p_i \log_2(p_i) \)
+                    </p>
+                </div>
+
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border-l-4 border-blue-500">
+                    <h3 class="text-xl font-bold text-blue-700 dark:text-blue-300 mb-2">Interactive Calculator</h3>
+                    <p class="mb-4">Enter probabilities (comma separated, must sum to 1):</p>
+
+                    <div class="flex gap-4 items-center">
+                        <input type="text" id="prob-input" placeholder="e.g. 0.5, 0.5"
+                            class="flex-1 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 font-mono">
+                        <button onclick="calculateEntropy()"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                            Calculate
+                        </button>
+                    </div>
+                    <p id="calc-error" class="text-red-500 mt-2 text-sm hidden"></p>
+                    <div id="calc-result" class="mt-4 hidden">
+                        <p class="text-lg">Entropy \(H\) = <span
+                                class="font-bold text-2xl text-blue-600 dark:text-blue-400" id="entropy-value"></span>
+                            bits</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 20 Questions -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">❓</span> Connection to "20 Questions"
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <p class="mb-6 text-lg">
+                    Entropy is the <strong>minimum average number of yes/no questions</strong> needed to determine an
+                    outcome.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-xl">
+                        <h3 class="font-bold mb-2">Example: Guessing a Letter (A, B, C, D)</h3>
+                        <p class="text-sm text-gray-500 mb-4">If all are equally likely (p=0.25):</p>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center gap-2">
+                                <span
+                                    class="bg-violet-200 text-violet-800 px-2 py-1 rounded text-xs font-bold">Q1</span>
+                                <span>Is it A or B? (Yes/No)</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span
+                                    class="bg-violet-200 text-violet-800 px-2 py-1 rounded text-xs font-bold">Q2</span>
+                                <span>Is it A? (or C?)</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4 font-bold text-violet-600">Total Questions = 2 = \(\log_2(4)\)</p>
+                    </div>
+
+                    <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-xl">
+                        <h3 class="font-bold mb-2">What if A is very common?</h3>
+                        <p class="text-sm text-gray-500 mb-4">P(A)=0.5, P(B)=0.25, P(C)=0.125, P(D)=0.125</p>
+                        <p class="text-sm">
+                            We should ask "Is it A?" first!
+                        </p>
+                        <p class="mt-4 font-bold text-violet-600">Entropy = 1.75 bits</p>
+                        <p class="text-xs text-gray-500">(Less than 2 questions on average!)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📝</span> Test Your Understanding
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl mb-4">Which coin toss has the HIGHEST entropy?</p>
+                    <div id="quiz1" class="space-y-3">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> A fair coin (50% Heads, 50% Tails)
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> A biased coin (90% Heads, 10% Tails)
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> A double-headed coin (100% Heads)
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="random-walks.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Random Walks
+            </a>
+            <a href="conditional-probability.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Conditional Probability <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Bucket Logic
+        function selectBucket(id) {
+            const explanation = document.getElementById('bucket-explanation');
+            explanation.classList.remove('hidden');
+
+            let text = "";
+            if (id === 1) {
+                text = "<span class='font-bold text-red-600'>Certainty!</span> We know the ball is Red. No surprise. Entropy = 0.";
+            } else if (id === 2) {
+                text = "<span class='font-bold text-yellow-600'>Some Uncertainty.</span> Mostly Red, but could be Blue. Entropy is low but positive.";
+            } else if (id === 3) {
+                text = "<span class='font-bold text-green-600'>Maximum Uncertainty!</span> Equal chance of Red or Blue. We are most surprised by the outcome. Entropy is highest (1 bit).";
+            }
+            explanation.innerHTML = text;
+        }
+
+        // Calculator Logic
+        function calculateEntropy() {
+            const input = document.getElementById('prob-input').value;
+            const errorEl = document.getElementById('calc-error');
+            const resultEl = document.getElementById('calc-result');
+            const valueEl = document.getElementById('entropy-value');
+
+            errorEl.classList.add('hidden');
+            resultEl.classList.add('hidden');
+
+            try {
+                const probs = input.split(',').map(p => parseFloat(p.trim()));
+
+                // Validation
+                if (probs.some(isNaN)) throw new Error("Invalid numbers");
+                const sum = probs.reduce((a, b) => a + b, 0);
+                if (Math.abs(sum - 1) > 0.01) throw new Error("Probabilities must sum to 1 (got " + sum.toFixed(2) + ")");
+                if (probs.some(p => p < 0 || p > 1)) throw new Error("Probabilities must be between 0 and 1");
+
+                // Calculation
+                let entropy = 0;
+                probs.forEach(p => {
+                    if (p > 0) {
+                        entropy -= p * Math.log2(p);
+                    }
+                });
+
+                valueEl.innerText = entropy.toFixed(4);
+                resultEl.classList.remove('hidden');
+
+            } catch (e) {
+                errorEl.innerText = e.message;
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'a' };
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! Uncertainty is maximized when outcomes are equally likely.";
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+            } else {
+                feedback.innerHTML = "Incorrect. Entropy is low when we are 'sure' of the outcome (like 90% or 100%).";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+    </script>
+</body>
+
+</html>
