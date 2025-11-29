@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixed Random Variables - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-slate-500">/</span>
+                    <span class="text-slate-300 font-medium">Unit 3: Mixed RVs</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="continuous-random-variables.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Prev:
+                        Continuous RVs</a>
+                    <span class="text-sm font-medium text-slate-600 cursor-not-allowed">Next: Unit 4</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/0 to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                Mixed Random Variables
+            </h1>
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Not purely discrete, not purely continuous. A mix of smooth curves and sudden jumps.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- Definition Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-indigo-300">1. What is a Mixed Random Variable?</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    A <strong>Mixed Random Variable</strong> is a combination of discrete and continuous parts. Its
+                    Cumulative Distribution Function (CDF) has both:
+                </p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Continuous segments:</strong> Where probability accumulates smoothly.</li>
+                    <li><strong>Jumps (Discontinuities):</strong> Where there is a non-zero probability at a specific
+                        point (like a discrete variable).</li>
+                </ul>
+                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
+                    $$ F_Y(y) = C(y) + D(y) $$
+                    <p class="text-sm text-slate-400 mt-2">Sum of Continuous part C(y) and Discrete part D(y)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Visualization -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-cyan-300">2. Visualizing the CDF</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    Consider a variable \( Y \) that behaves like \( X^2 \) for \( 0 \le X < 0.5 \), but then jumps to a
+                        fixed value. The graph below shows a CDF with a smooth curve and a sudden vertical jump. </p>
+            </div>
+
+            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                <h3 class="text-lg font-semibold text-white mb-4">Interactive Mixed CDF</h3>
+                <p class="text-sm text-slate-400 mb-6">
+                    Adjust the "Jump Size" to see how the discrete part affects the total CDF. The remaining probability
+                    is distributed continuously.
+                </p>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Jump Probability at X=0.5: <span
+                            id="jump-val" class="text-white">0.5</span></label>
+                    <input type="range" min="0" max="0.9" step="0.1" value="0.5" class="w-full accent-cyan-500"
+                        id="jump-slider">
+                </div>
+
+                <div class="h-80 w-full relative" id="cdf-container">
+                    <canvas id="mixedChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decomposition Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-emerald-300">3. Decomposition</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                    <h3 class="text-lg font-semibold text-white mb-4">Continuous Part</h3>
+                    <p class="text-slate-400 text-sm mb-4">
+                        Represents the probability density over intervals.
+                    </p>
+                    <div class="text-center p-4 bg-slate-900/50 rounded-lg font-mono text-sm text-emerald-400">
+                        $$ \int_{-\infty}^{\infty} c(y) \, dy < 1 $$ </div>
+                    </div>
+
+                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                        <h3 class="text-lg font-semibold text-white mb-4">Discrete Part</h3>
+                        <p class="text-slate-400 text-sm mb-4">
+                            Represents the probability mass at specific points (jumps).
+                        </p>
+                        <div class="text-center p-4 bg-slate-900/50 rounded-lg font-mono text-sm text-emerald-400">
+                            $$ \sum P(Y=y_k) > 0 $$
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 text-center text-slate-400 text-sm">
+                    The sum of the integral of the continuous part and the sum of the discrete probabilities must equal
+                    1.
+                </div>
+        </section>
+
+    </main>
+
+    <script>
+        const ctx = document.getElementById('mixedChart').getContext('2d');
+        let mixedChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'CDF F(y)',
+                    data: [],
+                    borderColor: 'rgba(34, 211, 238, 1)',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0.1,
+                    segment: {
+                        borderDash: ctx => ctx.p0.parsed.y !== ctx.p1.parsed.y && ctx.p0.parsed.x === ctx.p1.parsed.x ? [5, 5] : undefined,
+                        borderColor: ctx => ctx.p0.parsed.y !== ctx.p1.parsed.y && ctx.p0.parsed.x === ctx.p1.parsed.x ? 'rgba(251, 191, 36, 0.8)' : 'rgba(34, 211, 238, 1)'
+                    }
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1.1,
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#94a3b8' },
+                        title: { display: true, text: 'Probability', color: '#94a3b8' }
+                    },
+                    x: {
+                        type: 'linear',
+                        min: 0,
+                        max: 1,
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#94a3b8' },
+                        title: { display: true, text: 'Y', color: '#94a3b8' }
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateChart() {
+            const jumpProb = parseFloat(document.getElementById('jump-slider').value);
+            document.getElementById('jump-val').textContent = jumpProb.toFixed(1);
+
+            const continuousProb = 1 - jumpProb;
+            const jumpPoint = 0.5;
+
+            const data = [];
+
+            // Part 1: Continuous curve from 0 to 0.5
+            // Let's model it as F(y) = k * y^2 for y < 0.5
+            // At y=0.5, F(y) should be (continuousProb) just before the jump? 
+            // Actually, let's say the jump happens AT 0.5.
+            // So F(0.5-) = continuousProb.
+            // F(y) = continuousProb * (y / 0.5)^2 for y < 0.5
+
+            for (let y = 0; y < jumpPoint; y += 0.01) {
+                data.push({ x: y, y: continuousProb * Math.pow(y / jumpPoint, 2) });
+            }
+
+            // The point right before the jump
+            data.push({ x: jumpPoint, y: continuousProb });
+
+            // The point right after the jump (The jump itself)
+            // F(0.5) = F(0.5-) + P(Y=0.5) = continuousProb + jumpProb = 1
+            data.push({ x: jumpPoint, y: 1 });
+
+            // Part 2: Flat line after 0.5 (since sum is already 1)
+            for (let y = jumpPoint + 0.01; y <= 1.0; y += 0.01) {
+                data.push({ x: y, y: 1 });
+            }
+
+            mixedChart.data.datasets[0].data = data;
+            mixedChart.update();
+        }
+
+        document.getElementById('jump-slider').addEventListener('input', updateChart);
+        updateChart();
+
+    </script>
+</body>
+
+</html>
