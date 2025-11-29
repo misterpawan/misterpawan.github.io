@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayesian Inference | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-cyan-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 6: Statistical Inference</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                Bayesian Inference
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Updating beliefs with data: Priors, Posteriors, and MAP Estimation.
+            </p>
+        </div>
+
+        <!-- 1. Introduction -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-600 p-2 rounded-lg">1</span> Introduction
+            </h2>
+            <div class="glass p-8 rounded-2xl shadow-sm mb-6">
+                <p class="mb-4">
+                    In <strong>Frequentist Inference</strong>, we assume the unknown parameter \( \theta \) is a
+                    <strong>fixed constant</strong>. We estimate it using data (e.g., sample mean).
+                </p>
+                <p class="mb-4">
+                    In <strong>Bayesian Inference</strong>, we treat the unknown parameter \( \Theta \) as a
+                    <strong>random variable</strong>.
+                </p>
+                <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 ml-4">
+                    <li>We start with a <strong>Prior Distribution</strong> \( f_\Theta(\theta) \) representing our
+                        initial belief.</li>
+                    <li>We observe data \( D \).</li>
+                    <li>We update our belief to get the <strong>Posterior Distribution</strong> \(
+                        f_{\Theta|D}(\theta|D) \) using Bayes' Rule.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. Bayes Theorem -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-600 p-2 rounded-lg">2</span> Bayes' Theorem for Inference
+            </h2>
+            <div class="glass p-8 rounded-2xl shadow-sm mb-6">
+                <p class="mb-6 text-lg text-center font-serif">
+                    \[ f_{\Theta|D}(\theta|D) = \frac{P(D|\theta) f_\Theta(\theta)}{P(D)} \]
+                </p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 dark:bg-gray-800 p-4 rounded-xl border-l-4 border-blue-500">
+                        <h3 class="font-bold text-blue-700 dark:text-blue-400 mb-2">Prior \( f_\Theta(\theta) \)</h3>
+                        <p class="text-sm">What we think about \( \theta \) <em>before</em> seeing data.</p>
+                    </div>
+                    <div class="bg-green-50 dark:bg-gray-800 p-4 rounded-xl border-l-4 border-green-500">
+                        <h3 class="font-bold text-green-700 dark:text-green-400 mb-2">Likelihood \( P(D|\theta) \)</h3>
+                        <p class="text-sm">How probable the data is for a given \( \theta \).</p>
+                    </div>
+                    <div class="bg-purple-50 dark:bg-gray-800 p-4 rounded-xl border-l-4 border-purple-500">
+                        <h3 class="font-bold text-purple-700 dark:text-purple-400 mb-2">Posterior \(
+                            f_{\Theta|D}(\theta|D) \)</h3>
+                        <p class="text-sm">Our updated belief about \( \theta \) <em>after</em> seeing data.</p>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl border-l-4 border-gray-500">
+                        <h3 class="font-bold text-gray-700 dark:text-gray-400 mb-2">Evidence \( P(D) \)</h3>
+                        <p class="text-sm">Normalization constant (total probability of data).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Interactive Bayesian Updater -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-600 p-2 rounded-lg">3</span> Interactive: Bayesian Updater
+            </h2>
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <p class="mb-6">
+                    Let's estimate the bias of a coin \( \theta \) (probability of Heads).
+                    Start with a <strong>Prior</strong> belief, then flip the coin and watch the
+                    <strong>Posterior</strong> update!
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Controls -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block font-bold mb-2">1. Choose Prior Belief:</label>
+                            <select id="prior-select"
+                                class="w-full p-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600"
+                                onchange="resetSimulation()">
+                                <option value="uniform">Uniform (I know nothing)</option>
+                                <option value="fair">Fair Coin (Peaked at 0.5)</option>
+                                <option value="biased">Biased towards Heads (Peaked at 0.8)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-bold mb-2">2. Observe Data:</label>
+                            <div class="flex gap-2">
+                                <button onclick="flip('H')"
+                                    class="flex-1 bg-green-100 hover:bg-green-200 text-green-800 py-2 rounded-lg font-bold transition">Head
+                                    (H)</button>
+                                <button onclick="flip('T')"
+                                    class="flex-1 bg-red-100 hover:bg-red-200 text-red-800 py-2 rounded-lg font-bold transition">Tail
+                                    (T)</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-gray-500">Data Observed:</p>
+                            <p id="data-stats" class="font-mono text-lg font-bold">Heads: 0, Tails: 0</p>
+                        </div>
+
+                        <button onclick="resetSimulation()"
+                            class="w-full text-sm text-gray-400 underline">Reset</button>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="md:col-span-2 h-64 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-inner relative">
+                        <canvas id="bayesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. MAP and MMSE -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-600 p-2 rounded-lg">4</span> Point Estimation
+            </h2>
+            <div class="glass p-8 rounded-2xl shadow-sm mb-6">
+                <p class="mb-4">
+                    Once we have the posterior distribution, how do we choose a single value estimate \( \hat{\theta}
+                    \)?
+                </p>
+
+                <div class="space-y-6">
+                    <div class="border-l-4 border-purple-500 pl-4">
+                        <h3 class="text-xl font-bold text-purple-600 mb-2">Maximum A Posteriori (MAP)</h3>
+                        <p class="mb-2">The value of \( \theta \) that maximizes the posterior PDF/PMF (the mode).</p>
+                        <p class="font-serif text-lg">\[ \hat{\theta}_{MAP} = \arg \max_\theta f_{\Theta|D}(\theta|D) \]
+                        </p>
+                    </div>
+
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h3 class="text-xl font-bold text-blue-600 mb-2">Minimum Mean Squared Error (MMSE)</h3>
+                        <p class="mb-2">The mean of the posterior distribution.</p>
+                        <p class="font-serif text-lg">\[ \hat{\theta}_{MMSE} = E[\Theta | D] \]</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Quiz -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-600 p-2 rounded-lg">5</span> Check Your Understanding
+            </h2>
+            <div class="glass p-8 rounded-2xl shadow-sm">
+                <div class="mb-8">
+                    <p class="font-semibold mb-4">1. If you use a Uniform Prior (flat everywhere), the MAP estimate is
+                        equivalent to:</p>
+                    <div class="space-y-2">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            a) The Prior Mean
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            b) Maximum Likelihood Estimate (MLE)
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            c) Zero
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-2 text-sm"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="statistical-inference.html"
+                class="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-semibold transition">
+                <span>←</span> Previous: Statistical Inference
+            </a>
+            <a href="index.html"
+                class="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-semibold transition">
+                Back to Syllabus <span>↑</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Bayesian Updater Logic
+        let heads = 0;
+        let tails = 0;
+        let chart;
+
+        // Beta distribution PDF (unnormalized is fine for shape)
+        // f(x) ~ x^(alpha-1) * (1-x)^(beta-1)
+        function getBetaPDF(x, alpha, beta) {
+            if (x === 0 || x === 1) return 0; // Avoid singularities at edges for visualization
+            return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1);
+        }
+
+        function getPriorParams() {
+            const type = document.getElementById('prior-select').value;
+            if (type === 'uniform') return { a: 1, b: 1 };
+            if (type === 'fair') return { a: 10, b: 10 }; // Peaked at 0.5
+            if (type === 'biased') return { a: 8, b: 2 }; // Peaked at 0.8
+            return { a: 1, b: 1 };
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('bayesChart').getContext('2d');
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Posterior Density',
+                        data: [],
+                        borderColor: 'rgba(6, 182, 212, 1)', // cyan-500
+                        backgroundColor: 'rgba(6, 182, 212, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            display: false,
+                            grid: { display: false }
+                        },
+                        x: {
+                            min: 0, max: 1,
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, maxTicksLimit: 5 },
+                            title: { display: true, text: 'Parameter θ (Probability of Heads)', color: textColor }
+                        }
+                    },
+                    plugins: { legend: { display: false } },
+                    animation: { duration: 400 }
+                }
+            });
+            updateChart();
+        }
+
+        function updateChart() {
+            const prior = getPriorParams();
+            // Posterior parameters for Beta-Bernoulli conjugate
+            // alpha_post = alpha_prior + heads
+            // beta_post = beta_prior + tails
+            const alpha = prior.a + heads;
+            const beta = prior.b + tails;
+
+            const data = [];
+            const labels = [];
+
+            // Generate points
+            for (let i = 0; i <= 100; i++) {
+                const x = i / 100;
+                labels.push(x.toFixed(2));
+                data.push(getBetaPDF(x, alpha, beta));
+            }
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.update();
+
+            document.getElementById('data-stats').innerText = `Heads: ${heads}, Tails: ${tails}`;
+        }
+
+        function flip(result) {
+            if (result === 'H') heads++;
+            else tails++;
+            updateChart();
+        }
+
+        function resetSimulation() {
+            heads = 0;
+            tails = 0;
+            updateChart();
+        }
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'b' };
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! If the Prior is constant, maximizing Posterior is same as maximizing Likelihood.";
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+            } else {
+                feedback.innerHTML = "Incorrect. Hint: Look at Bayes formula. If P(θ) is constant, what happens?";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+
+        // Initialize
+        window.onload = function () {
+            initChart();
+        };
+    </script>
+</body>
+
+</html>
