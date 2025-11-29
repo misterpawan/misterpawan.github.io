@@ -30,6 +30,9 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         .glass {
             background: rgba(255, 255, 255, 0.7);
@@ -225,6 +228,36 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <!-- Binary Entropy Graph -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <h3 class="text-xl font-bold mb-4">Binary Entropy Function</h3>
+                <p class="mb-6">
+                    How does entropy change for a coin flip with probability \( p \) of Heads?
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Probability
+                                of Heads (\( p \)): <span id="p-val"
+                                    class="font-bold text-violet-600">0.5</span></label>
+                            <input type="range" min="0" max="100" value="50" class="w-full accent-violet-600"
+                                id="p-slider" oninput="updateEntropyGraph()">
+                        </div>
+                        <p class="text-lg">Entropy \( H(p) = \) <span id="entropy-result-graph"
+                                class="font-bold text-2xl text-violet-600">1.00</span> bits</p>
+                        <p class="text-sm text-gray-500 mt-2">
+                            Notice: Entropy is maximized at \( p=0.5 \) (most uncertain) and 0 at \( p=0 \) or \( p=1 \)
+                            (certainty).
+                        </p>
+                    </div>
+                    <div class="h-64 w-full relative bg-white dark:bg-gray-800 rounded-xl p-4 shadow-inner">
+                        <canvas id="entropyChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- 20 Questions -->
@@ -268,6 +301,33 @@
                         <p class="text-xs text-gray-500">(Less than 2 questions on average!)</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Interactive Guessing Game -->
+            <div class="mt-8 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner text-center">
+                <h3 class="font-bold mb-4">Interactive: Guess the Letter!</h3>
+                <p class="text-sm text-gray-500 mb-4">I have picked a letter based on the probabilities above (A is 50%,
+                    B is 25%, etc). Try to guess it!</p>
+
+                <div id="game-area" class="space-y-4">
+                    <div class="flex justify-center gap-4">
+                        <button onclick="askQuestion('A')"
+                            class="bg-violet-100 hover:bg-violet-200 text-violet-800 px-4 py-2 rounded-lg font-semibold transition">Is
+                            it A?</button>
+                        <button onclick="askQuestion('B')"
+                            class="bg-violet-100 hover:bg-violet-200 text-violet-800 px-4 py-2 rounded-lg font-semibold transition">Is
+                            it B?</button>
+                        <button onclick="askQuestion('C')"
+                            class="bg-violet-100 hover:bg-violet-200 text-violet-800 px-4 py-2 rounded-lg font-semibold transition">Is
+                            it C?</button>
+                        <button onclick="askQuestion('D')"
+                            class="bg-violet-100 hover:bg-violet-200 text-violet-800 px-4 py-2 rounded-lg font-semibold transition">Is
+                            it D?</button>
+                    </div>
+                    <div id="game-feedback" class="font-bold min-h-[1.5em]"></div>
+                    <button onclick="resetGame()" class="text-sm text-gray-400 underline">Reset Game</button>
+                </div>
+            </div>
             </div>
         </section>
 
@@ -380,6 +440,121 @@
                 feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
             }
         }
+
+        // Entropy Graph Logic
+        let entropyChart;
+        function initGraph() {
+            const ctx = document.getElementById('entropyChart').getContext('2d');
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+
+            entropyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Entropy H(p)',
+                        data: [],
+                        borderColor: 'rgba(139, 92, 246, 1)', // violet-500
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 6
+                    }, {
+                        label: 'Current Point',
+                        data: [],
+                        borderColor: 'rgba(239, 68, 68, 1)', // red-500
+                        backgroundColor: 'rgba(239, 68, 68, 1)',
+                        pointRadius: 6,
+                        showLine: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            min: 0, max: 1.1,
+                            grid: { color: gridColor },
+                            ticks: { color: textColor },
+                            title: { display: true, text: 'Bits', color: textColor }
+                        },
+                        x: {
+                            min: 0, max: 1,
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, maxTicksLimit: 5 },
+                            title: { display: true, text: 'Probability p', color: textColor }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Precompute curve
+            const curveData = [];
+            const labels = [];
+            for (let i = 0; i <= 100; i++) {
+                const p = i / 100;
+                labels.push(p.toFixed(2));
+                curveData.push(calcBinaryEntropy(p));
+            }
+            entropyChart.data.labels = labels;
+            entropyChart.data.datasets[0].data = curveData;
+            entropyChart.update();
+
+            updateEntropyGraph(); // Initial point
+        }
+
+        function calcBinaryEntropy(p) {
+            if (p === 0 || p === 1) return 0;
+            return - (p * Math.log2(p) + (1 - p) * Math.log2(1 - p));
+        }
+
+        function updateEntropyGraph() {
+            const val = parseInt(document.getElementById('p-slider').value);
+            const p = val / 100;
+            const h = calcBinaryEntropy(p);
+
+            document.getElementById('p-val').textContent = p.toFixed(2);
+            document.getElementById('entropy-result-graph').textContent = h.toFixed(2);
+
+            const pointData = new Array(101).fill(null);
+            pointData[val] = h;
+            entropyChart.data.datasets[1].data = pointData;
+            entropyChart.update();
+        }
+
+        // Game Logic
+        let secretLetter = 'A';
+        function resetGame() {
+            const rand = Math.random();
+            if (rand < 0.5) secretLetter = 'A';
+            else if (rand < 0.75) secretLetter = 'B';
+            else if (rand < 0.875) secretLetter = 'C';
+            else secretLetter = 'D';
+
+            document.getElementById('game-feedback').innerText = "";
+            document.getElementById('game-feedback').className = "font-bold min-h-[1.5em]";
+        }
+
+        function askQuestion(guess) {
+            const feedback = document.getElementById('game-feedback');
+            if (guess === secretLetter) {
+                feedback.innerText = `Yes! It is ${guess}.`;
+                feedback.className = "font-bold text-green-600 min-h-[1.5em]";
+            } else {
+                feedback.innerText = `No, it is not ${guess}.`;
+                feedback.className = "font-bold text-red-600 min-h-[1.5em]";
+            }
+        }
+
+        // Initialize
+        window.onload = function () {
+            initGraph();
+            resetGame();
+        };
     </script>
 </body>
 
