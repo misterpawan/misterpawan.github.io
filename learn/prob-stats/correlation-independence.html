@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correlation & Independence - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-slate-500">/</span>
+                    <span class="text-slate-300 font-medium">Unit 4: Correlation</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="joint-distributions.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Prev: Joint
+                        Dist</a>
+                    <a href="conditional-distributions.html"
+                        class="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Next:
+                        Conditional Dist</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/0 to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                Correlation & Independence
+            </h1>
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Does knowing one thing tell you about another? Measuring the strength of relationships.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- Independence Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-indigo-300">1. Independence</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    Two random variables \( X \) and \( Y \) are <strong>independent</strong> if knowing the value of
+                    one tells you absolutely nothing about the other.
+                </p>
+                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
+                    $$ P(X=x, Y=y) = P(X=x) \cdot P(Y=y) $$
+                    <p class="text-sm text-slate-400 mt-2">The joint probability is just the product of marginals.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Correlation Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-cyan-300">2. Covariance & Correlation</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    <strong>Covariance</strong> measures how two variables move together. <strong>Correlation</strong>
+                    (\( \rho \)) is a normalized version between -1 and 1.
+                </p>
+                <div class="grid md:grid-cols-2 gap-8 my-6">
+                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                        <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Covariance</h4>
+                        $$ \text{Cov}(X,Y) = E[(X-\mu_X)(Y-\mu_Y)] $$
+                    </div>
+                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                        <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Correlation
+                            Coefficient</h4>
+                        $$ \rho_{XY} = \frac{\text{Cov}(X,Y)}{\sigma_X \sigma_Y} $$
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Correlation Explorer -->
+            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                <h3 class="text-lg font-semibold text-white mb-4">Interactive Correlation Explorer</h3>
+                <p class="text-sm text-slate-400 mb-6">
+                    Drag the slider to change the correlation coefficient (\( \rho \)) and see how the scatter plot
+                    changes.
+                </p>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Correlation (ρ): <span id="rho-val"
+                            class="text-white">0.0</span></label>
+                    <input type="range" min="-1" max="1" step="0.1" value="0" class="w-full accent-cyan-500"
+                        id="rho-slider">
+                </div>
+
+                <div class="h-80 w-full">
+                    <canvas id="correlationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-emerald-300">3. Game: Guess the Correlation</h2>
+            <p class="text-slate-300 mb-6">
+                Can you estimate the correlation coefficient just by looking at the data?
+            </p>
+
+            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50 text-center">
+                <div class="h-64 w-full mb-6 mx-auto max-w-md">
+                    <canvas id="guessChart"></canvas>
+                </div>
+
+                <div id="game-controls">
+                    <p class="text-sm text-slate-400 mb-4">What is the correlation of this plot?</p>
+                    <div class="flex justify-center gap-4 mb-4">
+                        <button onclick="checkGuess(0)"
+                            class="guess-btn px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">0.0</button>
+                        <button onclick="checkGuess(0.5)"
+                            class="guess-btn px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">0.5</button>
+                        <button onclick="checkGuess(0.9)"
+                            class="guess-btn px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">0.9</button>
+                        <button onclick="checkGuess(-0.5)"
+                            class="guess-btn px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">-0.5</button>
+                        <button onclick="checkGuess(-0.9)"
+                            class="guess-btn px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">-0.9</button>
+                    </div>
+                    <div id="game-feedback" class="text-sm font-bold min-h-[20px]"></div>
+                    <button onclick="newGame()"
+                        class="mt-4 px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-colors">
+                        Next Plot
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Find the Flaw -->
+        <section class="glass-panel p-8 md:p-10 border-l-4 border-red-500">
+            <h2 class="text-2xl font-bold text-white mb-6">Find the Flaw</h2>
+            <p class="text-slate-300 mb-6">
+                "If the correlation between X and Y is 0, then X and Y must be independent."
+                <br><br>
+                Is this statement true?
+            </p>
+
+            <div class="bg-slate-900/50 rounded-xl p-6">
+                <button onclick="toggleFlaw()"
+                    class="text-indigo-400 hover:text-indigo-300 text-sm font-medium flex items-center">
+                    <span id="flaw-btn-text">Show Answer</span>
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="flaw-answer" class="hidden mt-4 text-slate-300 text-sm border-t border-slate-700 pt-4">
+                    <p class="font-bold text-red-400 mb-2">False!</p>
+                    <p>
+                        Correlation only measures <strong>linear</strong> relationships. Variables can be dependent in a
+                        non-linear way (e.g., \( Y = X^2 \) with \( X \) symmetric around 0) and still have zero
+                        correlation.
+                        <br>
+                        <strong>Independence implies Zero Correlation, but Zero Correlation does not imply
+                            Independence.</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- Correlation Explorer ---
+        const corrCtx = document.getElementById('correlationChart').getContext('2d');
+        let corrChart = new Chart(corrCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Data Points',
+                    data: [],
+                    backgroundColor: 'rgba(34, 211, 238, 0.6)',
+                    borderColor: 'rgba(34, 211, 238, 1)',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { min: -3, max: 3, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                    y: { min: -3, max: 3, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function generateCorrelatedData(rho, n = 200) {
+            const data = [];
+            for (let i = 0; i < n; i++) {
+                const x = randn_bm();
+                const z = randn_bm();
+                const y = rho * x + Math.sqrt(1 - rho * rho) * z;
+                data.push({ x: x, y: y });
+            }
+            return data;
+        }
+
+        // Standard Normal random number generator (Box-Muller transform)
+        function randn_bm() {
+            let u = 0, v = 0;
+            while (u === 0) u = Math.random();
+            while (v === 0) v = Math.random();
+            return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        }
+
+        function updateCorrelation() {
+            const rho = parseFloat(document.getElementById('rho-slider').value);
+            document.getElementById('rho-val').textContent = rho.toFixed(1);
+
+            const data = generateCorrelatedData(rho);
+            corrChart.data.datasets[0].data = data;
+            corrChart.update();
+        }
+
+        document.getElementById('rho-slider').addEventListener('input', updateCorrelation);
+        updateCorrelation();
+
+
+        // --- Guess the Correlation Game ---
+        const guessCtx = document.getElementById('guessChart').getContext('2d');
+        let guessChart = new Chart(guessCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    data: [],
+                    backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                    pointRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { display: false, min: -3, max: 3 },
+                    y: { display: false, min: -3, max: 3 }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        let currentTargetRho = 0;
+        const possibleRhos = [0, 0.5, 0.9, -0.5, -0.9];
+
+        function newGame() {
+            // Pick random rho
+            currentTargetRho = possibleRhos[Math.floor(Math.random() * possibleRhos.length)];
+
+            // Generate data
+            const data = generateCorrelatedData(currentTargetRho, 100);
+            guessChart.data.datasets[0].data = data;
+            guessChart.update();
+
+            // Reset UI
+            document.getElementById('game-feedback').textContent = "";
+            document.getElementById('game-feedback').className = "text-sm font-bold min-h-[20px]";
+            document.querySelectorAll('.guess-btn').forEach(btn => {
+                btn.classList.remove('bg-green-600', 'bg-red-600', 'opacity-50');
+                btn.disabled = false;
+            });
+        }
+
+        function checkGuess(guess) {
+            const feedback = document.getElementById('game-feedback');
+
+            if (guess === currentTargetRho) {
+                feedback.textContent = "Correct! Great eye.";
+                feedback.className = "text-sm font-bold min-h-[20px] text-green-400";
+                // Highlight correct button
+                event.target.classList.add('bg-green-600');
+            } else {
+                feedback.textContent = `Not quite. The actual correlation was ${currentTargetRho}.`;
+                feedback.className = "text-sm font-bold min-h-[20px] text-red-400";
+                event.target.classList.add('bg-red-600');
+            }
+
+            // Disable buttons
+            document.querySelectorAll('.guess-btn').forEach(btn => {
+                btn.disabled = true;
+                if (parseFloat(btn.textContent) !== currentTargetRho && parseFloat(btn.textContent) !== guess) {
+                    btn.classList.add('opacity-50');
+                }
+            });
+        }
+
+        newGame();
+
+        function toggleFlaw() {
+            const answer = document.getElementById('flaw-answer');
+            const btnText = document.getElementById('flaw-btn-text');
+
+            if (answer.classList.contains('hidden')) {
+                answer.classList.remove('hidden');
+                btnText.textContent = "Hide Answer";
+            } else {
+                answer.classList.add('hidden');
+                btnText.textContent = "Show Answer";
+            }
+        }
+    </script>
+</body>
+
+</html>

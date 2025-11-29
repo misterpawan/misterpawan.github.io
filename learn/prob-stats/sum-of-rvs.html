@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum of Random Variables - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-slate-500">/</span>
+                    <span class="text-slate-300 font-medium">Unit 4: Sum of RVs</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="conditional-distributions.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Prev:
+                        Conditional Dist</a>
+                    <a href="random-vectors.html"
+                        class="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Next: Random
+                        Vectors</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/0 to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                Sum of Random Variables
+            </h1>
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                What happens when you add two random numbers? The result is a Convolution.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- Definition Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-indigo-300">1. Convolution</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    If \( X \) and \( Y \) are independent random variables, the PDF of their sum \( Z = X + Y \) is the
+                    <strong>convolution</strong> of their individual PDFs.
+                </p>
+                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
+                    $$ f_Z(z) = \int_{-\infty}^{\infty} f_X(x) f_Y(z-x) \, dx $$
+                </div>
+                <p>
+                    Intuitively, to get a sum of \( z \), if \( X \) is \( x \), then \( Y \) MUST be \( z-x \). We sum
+                    up (integrate) all such possibilities weighted by their probabilities.
+                </p>
+            </div>
+        </section>
+
+        <!-- Interactive Convolution -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-cyan-300">2. Visualizing Convolution</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    Let's visualize the sum of two <strong>Uniform(0,1)</strong> distributions.
+                    <br>
+                    The sliding animation shows \( f_Y(z-x) \) moving across \( f_X(x) \). The area of their overlap
+                    (product) at each point builds the new distribution \( f_Z(z) \).
+                </p>
+            </div>
+
+            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                <h3 class="text-lg font-semibold text-white mb-4">Convolution Animation</h3>
+
+                <div class="h-64 w-full mb-6">
+                    <canvas id="convolutionChart"></canvas>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button id="play-btn" onclick="toggleAnimation()"
+                        class="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z">
+                            </path>
+                        </svg>
+                        Play Animation
+                    </button>
+                    <input type="range" min="0" max="2" step="0.01" value="0" class="flex-1 accent-indigo-500"
+                        id="conv-slider" oninput="updateFrame(this.value)">
+                </div>
+                <p class="text-xs text-slate-500 mt-2 text-center">Drag slider to manually convolve.</p>
+            </div>
+        </section>
+
+        <!-- Properties Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-emerald-300">3. Key Properties</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                    <h3 class="text-lg font-semibold text-white mb-4">Expectation is Linear</h3>
+                    <p class="text-slate-400 text-sm mb-4">
+                        Always true, even if dependent!
+                    </p>
+                    <div class="text-center p-4 bg-slate-900/50 rounded-lg font-mono text-sm text-emerald-400">
+                        E[X + Y] = E[X] + E[Y]
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                    <h3 class="text-lg font-semibold text-white mb-4">Variance Adds (if Independent)</h3>
+                    <p class="text-slate-400 text-sm mb-4">
+                        Only true if X and Y are independent (or uncorrelated).
+                    </p>
+                    <div class="text-center p-4 bg-slate-900/50 rounded-lg font-mono text-sm text-emerald-400">
+                        Var(X + Y) = Var(X) + Var(Y)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const ctx = document.getElementById('convolutionChart').getContext('2d');
+
+        // We are convolving two Rect(0,1) functions (Uniform PDF is 1 between 0 and 1)
+        // The result is a Triangle(0,2)
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'f_X(x) [Static]',
+                        data: [],
+                        borderColor: 'rgba(99, 102, 241, 0.5)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0,
+                        order: 2
+                    },
+                    {
+                        label: 'f_Y(z-x) [Sliding]',
+                        data: [],
+                        borderColor: 'rgba(245, 158, 11, 0.8)',
+                        borderDash: [5, 5],
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false,
+                        order: 1
+                    },
+                    {
+                        label: 'Sum PDF f_Z(z)',
+                        data: [],
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderWidth: 3,
+                        fill: true,
+                        pointRadius: 0,
+                        order: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { min: -1, max: 3, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                    y: { min: 0, max: 1.2, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                },
+                plugins: { legend: { display: true, labels: { color: '#94a3b8' } } },
+                animation: { duration: 0 }
+            }
+        });
+
+        // Initialize Static Data f_X (Rect from 0 to 1)
+        const labels = [];
+        const staticData = [];
+        for (let x = -1; x <= 3; x += 0.05) {
+            labels.push(x.toFixed(2));
+            staticData.push((x >= 0 && x <= 1) ? 1 : 0);
+        }
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = staticData;
+
+        function updateFrame(z) {
+            z = parseFloat(z);
+
+            // Sliding Function f_Y(z-x)
+            // f_Y(u) is 1 if 0 <= u <= 1.
+            // So f_Y(z-x) is 1 if 0 <= z-x <= 1  =>  x <= z AND x >= z-1
+            // It is a rectangle from z-1 to z
+
+            const slidingData = [];
+            const resultData = []; // The triangle built so far
+
+            for (let x = -1; x <= 3; x += 0.05) {
+                // Sliding rect
+                if (x >= z - 1 && x <= z) {
+                    slidingData.push(1);
+                } else {
+                    slidingData.push(0);
+                }
+
+                // Result Triangle (The convolution integral value at current z)
+                // We only plot the point at 'z' for the current frame? 
+                // No, usually we show the accumulated result up to z?
+                // Or we show the full result curve but highlight where we are?
+                // Let's show the full result curve f_Z(t) but only up to t=z to show it "drawing"
+
+                if (x <= z) {
+                    // Triangle function value at x
+                    let val = 0;
+                    if (x >= 0 && x <= 1) val = x;
+                    else if (x > 1 && x <= 2) val = 2 - x;
+                    resultData.push(val);
+                } else {
+                    resultData.push(null);
+                }
+            }
+
+            chart.data.datasets[1].data = slidingData;
+            chart.data.datasets[2].data = resultData;
+            chart.update();
+        }
+
+        let isPlaying = false;
+        let animationId;
+
+        function toggleAnimation() {
+            const btn = document.getElementById('play-btn');
+            if (isPlaying) {
+                cancelAnimationFrame(animationId);
+                isPlaying = false;
+                btn.innerHTML = `<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg> Play Animation`;
+            } else {
+                isPlaying = true;
+                btn.innerHTML = `<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg> Pause`;
+                animate();
+            }
+        }
+
+        function animate() {
+            let slider = document.getElementById('conv-slider');
+            let val = parseFloat(slider.value);
+
+            if (val >= 2) {
+                val = 0; // Loop
+            } else {
+                val += 0.01;
+            }
+
+            slider.value = val;
+            updateFrame(val);
+
+            if (isPlaying) {
+                animationId = requestAnimationFrame(animate);
+            }
+        }
+
+        updateFrame(0);
+
+    </script>
+</body>
+
+</html>
