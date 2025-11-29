@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Random Variables - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="../index.html" class="flex-shrink-0 flex items-center font-bold text-xl text-blue-600">
+                        ProbStats
+                    </a>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html"
+                            class="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Unit 3 Home
+                        </a>
+                        <a href="#"
+                            class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Continuous RVs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-gray-900">Continuous Random Variables</h1>
+            <p class="mt-2 text-lg text-gray-600">Variables that can take any value within a range.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+
+        <!-- Definition -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Definition</h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    A random variable \(X\) is <strong>continuous</strong> if its CDF \(F_X(x)\) is a continuous
+                    function.
+                    Unlike discrete variables, the probability of taking any single exact value is 0: \(P(X=x) = 0\).
+                </p>
+            </div>
+        </section>
+
+        <!-- PDF -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Probability Density Function (PDF)</h2>
+            <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                <p class="text-gray-700">
+                    The PDF \(f_X(x)\) is the derivative of the CDF:
+                    $$ f_X(x) = \frac{d}{dx} F_X(x) $$
+                </p>
+            </div>
+            <div class="mt-6">
+                <h3 class="font-semibold text-gray-900 mb-2">Properties</h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>\( f_X(x) \geq 0 \) for all \(x\).</li>
+                    <li>\( \int_{-\infty}^{\infty} f_X(x) \, dx = 1 \).</li>
+                    <li>\( P(a < X \leq b)=\int_a^b f_X(x) \, dx \).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Expectation & Variance -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Expectation and Variance</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-semibold text-gray-900 mb-2">Expected Value</h3>
+                    <p class="text-gray-700">
+                        $$ E[X] = \int_{-\infty}^{\infty} x f_X(x) \, dx $$
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-semibold text-gray-900 mb-2">Variance</h3>
+                    <p class="text-gray-700">
+                        $$ \text{Var}(X) = \int_{-\infty}^{\infty} (x - E[X])^2 f_X(x) \, dx $$
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Method of Transformation -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Method of Transformation</h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    If \(Y = g(X)\) where \(g\) is a strictly monotonic and differentiable function, then the PDF of
+                    \(Y\) is:
+                </p>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
+                    $$ f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right| $$
+                    where \(x = g^{-1}(y)\).
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500">
+            <p>&copy; 2025 Probability & Statistics Course</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

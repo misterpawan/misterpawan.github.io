@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Distributions - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="../index.html" class="flex-shrink-0 flex items-center font-bold text-xl text-blue-600">
+                        ProbStats
+                    </a>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html"
+                            class="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Unit 3 Home
+                        </a>
+                        <a href="#"
+                            class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Distributions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-gray-900">Special Discrete Distributions</h1>
+            <p class="mt-2 text-lg text-gray-600">Common probability distributions that model real-world phenomena.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+
+        <!-- Uniform Distribution -->
+        <section id="uniform" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">1</span> Uniform Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    The simplest discrete distribution is the <strong>Uniform Distribution</strong>, where every outcome
+                    has the same probability.
+                    Consider rolling a fair die. The possible outcomes are \(\{1, 2, 3, 4, 5, 6\}\).
+                </p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>
+                        A random variable \(X\) has a discrete uniform distribution on \(\{1, 2, \dots, n\}\) if its PMF
+                        is:
+                        $$ p(x) = \begin{cases} \frac{1}{n} & x \in \{1, 2, \dots, n\} \\ 0 & \text{otherwise}
+                        \end{cases} $$
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bernoulli Distribution -->
+        <section id="bernoulli" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">2</span> Bernoulli Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    A <strong>Bernoulli random variable</strong> models a single experiment with two possible outcomes:
+                    "Success" (1) and "Failure" (0).
+                </p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>
+                        \(X \sim \text{Bernoulli}(p)\) if its PMF is:
+                        $$ P_X(x) = \begin{cases} p & x=1 \\ 1-p & x=0 \\ 0 & \text{otherwise} \end{cases} $$
+                        where \(0 < p < 1\). </p>
+                </div>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li><strong>Example:</strong> A coin toss (Heads/Tails).</li>
+                    <li><strong>Example:</strong> Pass/Fail exam.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Geometric Distribution -->
+        <section id="geometric" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">3</span> Geometric Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    The <strong>Geometric Distribution</strong> models the number of trials needed to get the <em>first
+                        success</em> in a sequence of independent Bernoulli trials.
+                </p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>
+                        \(X \sim \text{Geometric}(p)\) if its PMF is:
+                        $$ P_X(k) = p(1-p)^{k-1}, \quad k=1, 2, 3, \dots $$
+                    </p>
+                </div>
+                <p class="text-sm text-gray-500">
+                    <em>Note:</em> Some definitions count the number of <em>failures</em> before the first success. In
+                    that case, the domain starts at 0.
+                </p>
+            </div>
+        </section>
+
+        <!-- Binomial Distribution -->
+        <section id="binomial" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">4</span> Binomial Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    The <strong>Binomial Distribution</strong> models the number of successes in \(n\) independent
+                    Bernoulli trials.
+                </p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>
+                        \(X \sim \text{Binomial}(n, p)\) if its PMF is:
+                        $$ P_X(k) = \binom{n}{k} p^k (1-p)^{n-k}, \quad k=0, 1, \dots, n $$
+                    </p>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                    <p class="text-blue-700">
+                        <strong>Key Property:</strong> A Binomial(\(n, p\)) variable is the sum of \(n\) independent
+                        Bernoulli(\(p\)) variables.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Poisson Distribution -->
+        <section id="poisson" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">5</span> Poisson Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    The <strong>Poisson Distribution</strong> models the number of events occurring in a fixed interval
+                    of time or space, given a constant average rate \(\lambda\).
+                </p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>
+                        \(X \sim \text{Poisson}(\lambda)\) if its PMF is:
+                        $$ P_X(k) = \frac{e^{-\lambda} \lambda^k}{k!}, \quad k=0, 1, 2, \dots $$
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h4 class="font-semibold text-gray-900 mb-2">Example: Call Center</h4>
+                        <p class="text-sm text-gray-600">
+                            If a call center receives 5 calls per minute on average, the probability of receiving
+                            exactly \(k\) calls in a minute follows a Poisson(5) distribution.
+                        </p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h4 class="font-semibold text-gray-900 mb-2">Limit of Binomial</h4>
+                        <p class="text-sm text-gray-600">
+                            The Poisson distribution is the limit of the Binomial distribution as \(n \to \infty\) and
+                            \(p \to 0\) such that \(np = \lambda\) remains constant.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500">
+            <p>&copy; 2025 Probability & Statistics Course</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

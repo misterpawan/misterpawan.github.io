@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumulative Distribution Function (CDF) - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="../index.html" class="flex-shrink-0 flex items-center font-bold text-xl text-blue-600">
+                        ProbStats
+                    </a>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html"
+                            class="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Unit 3 Home
+                        </a>
+                        <a href="#"
+                            class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            CDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-gray-900">Cumulative Distribution Function (CDF)</h1>
+            <p class="mt-2 text-lg text-gray-600">Accumulating probabilities across the range of a random variable.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+
+        <!-- Definition -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Definition</h2>
+            <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">CDF</h3>
+                <p class="text-gray-700">
+                    The Cumulative Distribution Function \(F_X(x)\) of a random variable \(X\) is defined as the
+                    probability that \(X\) will take a value less than or equal to \(x\):
+                    $$ F_X(x) = P(X \leq x) $$
+                </p>
+            </div>
+        </section>
+
+        <!-- Properties -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Properties</h2>
+            <ul class="list-disc list-inside space-y-4 text-gray-700">
+                <li><strong>Non-decreasing:</strong> If \(a < b\), then \(F_X(a) \leq F_X(b)\).</li>
+                <li><strong>Limits:</strong>
+                    $$ \lim_{x \to -\infty} F_X(x) = 0 \quad \text{and} \quad \lim_{x \to \infty} F_X(x) = 1 $$
+                </li>
+                <li><strong>Right-Continuous:</strong> \( \lim_{\epsilon \to 0^+} F_X(x + \epsilon) = F_X(x) \).</li>
+                <li><strong>Interval Probability:</strong>
+                    $$ P(a < X \leq b)=F_X(b) - F_X(a) $$ </li>
+            </ul>
+        </section>
+
+        <!-- Discrete vs Continuous -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Discrete vs. Continuous</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-semibold text-gray-900 mb-2">Discrete Random Variables</h3>
+                    <p class="text-gray-700">
+                        The CDF is a <strong>step function</strong>. It jumps at each value \(x\) where \(P(X=x) > 0\).
+                        The size of the jump is equal to the probability \(P(X=x)\).
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-semibold text-gray-900 mb-2">Continuous Random Variables</h3>
+                    <p class="text-gray-700">
+                        The CDF is a <strong>continuous function</strong>. It is the integral of the Probability Density
+                        Function (PDF):
+                        $$ F_X(x) = \int_{-\infty}^x f_X(t) \, dt $$
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500">
+            <p>&copy; 2025 Probability & Statistics Course</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

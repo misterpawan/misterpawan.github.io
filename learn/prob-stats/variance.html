@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variance & Standard Deviation - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="../index.html" class="flex-shrink-0 flex items-center font-bold text-xl text-blue-600">
+                        ProbStats
+                    </a>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html"
+                            class="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Unit 3 Home
+                        </a>
+                        <a href="#"
+                            class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Variance
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-gray-900">Variance and Standard Deviation</h1>
+            <p class="mt-2 text-lg text-gray-600">Understanding variability and spread in data.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+
+        <!-- Motivation -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Motivation</h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    The expected value \(E[X]\) (or mean) gives us the "center" of a distribution, but it doesn't tell
+                    us how spread out the data is.
+                    Consider three scenarios where you win money:
+                </p>
+                <ul class="list-disc list-inside space-y-2 mt-4">
+                    <li><strong>Case A:</strong> You get $1000 guaranteed.</li>
+                    <li><strong>Case B:</strong> Coin toss: Heads you get $2000, Tails you get $0.</li>
+                    <li><strong>Case C:</strong> Lottery: 1/1000 chance to win $1,000,000, otherwise $0.</li>
+                </ul>
+                <p class="mt-4">
+                    In all three cases, the expected winning is <strong>$1000</strong>. However, the <em>risk</em> or
+                    <em>variability</em> is vastly different. Variance measures this spread.
+                </p>
+            </div>
+        </section>
+
+        <!-- Definition -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Definition</h2>
+            <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Variance</h3>
+                <p class="text-gray-700">
+                    Let \(\mu = E[X]\). The <strong>variance</strong> of \(X\), denoted as \(\text{Var}(X)\) or
+                    \(\sigma^2\), is:
+                    $$ \text{Var}(X) = E[(X - \mu)^2] = \sum_x (x - \mu)^2 p(x) $$
+                </p>
+            </div>
+            <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Standard Deviation</h3>
+                <p class="text-gray-700">
+                    The <strong>standard deviation</strong> is the square root of the variance:
+                    $$ \sigma_X = \sqrt{\text{Var}(X)} $$
+                </p>
+            </div>
+        </section>
+
+        <!-- Alternative Formula -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Computational Formula</h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    There is often a more convenient way to calculate variance:
+                </p>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
+                    $$ \text{Var}(X) = E[X^2] - (E[X])^2 $$
+                </div>
+                <p>
+                    <strong>Proof:</strong><br>
+                    \begin{align*}
+                    \text{Var}(X) &= E[(X - \mu)^2] \\
+                    &= E[X^2 - 2\mu X + \mu^2] \\
+                    &= E[X^2] - 2\mu E[X] + \mu^2 \\
+                    &= E[X^2] - 2\mu^2 + \mu^2 \\
+                    &= E[X^2] - \mu^2
+                    \end{align*}
+                </p>
+            </div>
+        </section>
+
+        <!-- Properties -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Properties</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-semibold text-gray-900 mb-2">Scaling</h3>
+                    <p class="text-gray-700">
+                        $$ \text{Var}(aX) = a^2 \text{Var}(X) $$
+                        <span class="text-sm text-gray-500">Variance scales by the square of the constant.</span>
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-semibold text-gray-900 mb-2">Shifting</h3>
+                    <p class="text-gray-700">
+                        $$ \text{Var}(X + b) = \text{Var}(X) $$
+                        <span class="text-sm text-gray-500">Adding a constant shifts the distribution but does not
+                            change its spread.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Example: Binomial -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Example: Variance of Binomial</h2>
+            <div class="prose max-w-none text-gray-700">
+                <p>
+                    For a Binomial random variable \(X \sim \text{Binomial}(n, p)\):
+                </p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Mean: \( E[X] = np \)</li>
+                    <li>Variance: \( \text{Var}(X) = np(1-p) \)</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500">
+            <p>&copy; 2025 Probability & Statistics Course</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
