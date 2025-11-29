@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Random Variables - Probability & Statistics</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 1rem;
+        }
+
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .interactive-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-gray-200 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-gray-400 dark:text-slate-500">/</span>
+                    <span class="text-gray-600 dark:text-slate-300 font-medium">Unit 4: Multiple RVs</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="joint-continuous-rv.html"
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Prev:
+                        Joint Continuous</a>
+                    <a href="bounds.html"
+                        class="text-sm font-medium text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Next:
+                        Bounds</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-gray-50/0 to-gray-50/0 dark:via-slate-900/0 dark:to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
+                Multiple Random Variables
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Scaling up to \( n \) dimensions. Random Vectors, Moment Generating Functions, and the Multivariate
+                Normal.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- 1. Joint PDF/CDF for n Variables -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3 text-sm">1</span>
+                Joint Distributions in \( n \) Dimensions
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    For \( n \) continuous random variables \( X_1, X_2, \dots, X_n \), the joint PDF satisfies:
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm overflow-x-auto">
+                    $$ P((X_1, \dots, X_n) \in A) = \int \dots \int_A f_{X_1 \dots X_n}(x_1, \dots, x_n) \, dx_1 \dots
+                    dx_n $$
+                </div>
+                <p>
+                    <strong>Independence:</strong> The variables are independent if the joint PDF factors into the
+                    product of marginal PDFs:
+                </p>
+                <div class="text-center my-4">
+                    $$ f_{X_1 \dots X_n}(x_1, \dots, x_n) = f_{X_1}(x_1) \cdot f_{X_2}(x_2) \cdots f_{X_n}(x_n) $$
+                </div>
+                <p>
+                    <strong>I.I.D. (Independent and Identically Distributed):</strong> If they are independent and share
+                    the same marginal distribution \( F_X(x) \).
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. Sums of Random Variables (Interactive) -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mr-3 text-sm">2</span>
+                Sums of Random Variables
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    Let \( Y = \sum_{i=1}^n X_i \). Linearity of expectation always holds:
+                </p>
+                <div class="text-center my-4">
+                    $$ E[Y] = \sum_{i=1}^n E[X_i] $$
+                </div>
+                <p>
+                    Variance adds up only if they are uncorrelated (or independent):
+                </p>
+                <div class="text-center my-4">
+                    $$ \text{Var}(Y) = \sum_{i=1}^n \text{Var}(X_i) + 2 \sum_{i<j} \text{Cov}(X_i, X_j) $$ </div>
+                </div>
+
+                <!-- Interactive Sum Simulator -->
+                <div
+                    class="bg-gray-50 dark:bg-slate-900/50 rounded-xl p-6 border border-gray-200 dark:border-slate-700/50">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Interactive Sum Simulator</h3>
+                    <p class="text-sm text-gray-600 dark:text-slate-400 mb-6">
+                        See what happens when you sum \( n \) independent Uniform(0,1) random variables. As \( n \)
+                        increases, the distribution approaches a Normal distribution (Central Limit Theorem).
+                    </p>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Number of
+                            Variables Summed (\( n \)): <span id="n-val"
+                                class="text-gray-900 dark:text-white">1</span></label>
+                        <input type="range" min="1" max="20" step="1" value="1" class="w-full accent-cyan-500"
+                            id="n-slider">
+                    </div>
+
+                    <div
+                        class="h-64 w-full relative border border-gray-200 dark:border-transparent rounded-lg bg-white dark:bg-slate-800/30 p-4">
+                        <canvas id="sumChart"></canvas>
+                    </div>
+                </div>
+        </section>
+
+        <!-- 3. Moment Generating Functions -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mr-3 text-sm">3</span>
+                Moment Generating Functions (MGF)
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    The MGF of a random variable \( X \) is defined as \( M_X(s) = E[e^{sX}] \). It uniquely determines
+                    the distribution.
+                </p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Moments:</strong> \( E[X^k] = \frac{d^k}{ds^k} M_X(s) \big|_{s=0} \)</li>
+                    <li><strong>Sum of Independent RVs:</strong> \( M_{X+Y}(s) = M_X(s) \cdot M_Y(s) \)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. Random Vectors & Covariance Matrix -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-3 text-sm">4</span>
+                Random Vectors & Covariance Matrix
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    A random vector \( \mathbf{X} = [X_1, \dots, X_n]^T \) has a mean vector \( E[\mathbf{X}] \) and a
+                    covariance matrix \( C_X \):
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm overflow-x-auto">
+                    $$ C_X = E[(\mathbf{X} - E[\mathbf{X}])(\mathbf{X} - E[\mathbf{X}])^T] $$
+                </div>
+                <p>
+                    The covariance matrix is always symmetric and positive semi-definite.
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Multivariate Normal Distribution -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 mr-3 text-sm">5</span>
+                Multivariate Normal Distribution
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    A random vector \( \mathbf{X} \) is Multivariate Normal if any linear combination of its components
+                    is Normal. Its PDF is:
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm overflow-x-auto">
+                    $$ f_\mathbf{X}(\mathbf{x}) = \frac{1}{(2\pi)^{n/2} |\Sigma|^{1/2}} \exp\left( -\frac{1}{2}
+                    (\mathbf{x} - \mathbf{\mu})^T \Sigma^{-1} (\mathbf{x} - \mathbf{\mu}) \right) $$
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Check Your Understanding</h2>
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div
+                    class="quiz-item bg-white dark:bg-slate-800/30 p-6 rounded-xl border border-gray-200 dark:border-slate-700/30 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">1. Variance of Sum</h3>
+                    <p class="text-gray-600 dark:text-slate-400 mb-4">
+                        If \( X \) and \( Y \) are independent, what is \( \text{Var}(X - Y) \)?
+                    </p>
+                    <div class="space-y-3">
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="false">
+                            \( \text{Var}(X) - \text{Var}(Y) \)
+                        </button>
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="true">
+                            \( \text{Var}(X) + \text{Var}(Y) \)
+                        </button>
+                    </div>
+                    <div class="quiz-feedback hidden mt-4 p-4 rounded-lg text-sm"></div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div
+                    class="quiz-item bg-white dark:bg-slate-800/30 p-6 rounded-xl border border-gray-200 dark:border-slate-700/30 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">2. MGF of Sum</h3>
+                    <p class="text-gray-600 dark:text-slate-400 mb-4">
+                        If \( X \) and \( Y \) are independent, what is \( M_{X+Y}(s) \)?
+                    </p>
+                    <div class="space-y-3">
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="true">
+                            \( M_X(s) \cdot M_Y(s) \)
+                        </button>
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="false">
+                            \( M_X(s) + M_Y(s) \)
+                        </button>
+                    </div>
+                    <div class="quiz-feedback hidden mt-4 p-4 rounded-lg text-sm"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Quiz Logic
+        document.querySelectorAll('.quiz-option').forEach(button => {
+            button.addEventListener('click', function () {
+                const parent = this.closest('.quiz-item');
+                const feedback = parent.querySelector('.quiz-feedback');
+                const isCorrect = this.dataset.correct === 'true';
+
+                // Reset styles
+                parent.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('bg-green-500/20', 'border-green-500', 'bg-red-500/20', 'border-red-500');
+                    opt.classList.add('bg-gray-50', 'dark:bg-slate-700/30');
+                });
+
+                if (isCorrect) {
+                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
+                    this.classList.add('bg-green-500/20', 'border-green-500');
+                    feedback.textContent = "Correct!";
+                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-green-500/10 text-green-400 block";
+                } else {
+                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
+                    this.classList.add('bg-red-500/20', 'border-red-500');
+                    feedback.textContent = "Incorrect. Try again!";
+                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-red-500/10 text-red-400 block";
+                }
+            });
+        });
+
+        // Sum Simulator Chart
+        const ctx = document.getElementById('sumChart').getContext('2d');
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+
+        let sumChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Frequency',
+                    data: [],
+                    backgroundColor: 'rgba(34, 211, 238, 0.6)',
+                    borderColor: 'rgba(34, 211, 238, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } },
+                    x: { grid: { display: false }, ticks: { color: textColor } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateSumChart() {
+            const n = parseInt(document.getElementById('n-slider').value);
+            document.getElementById('n-val').textContent = n;
+
+            const samples = 10000;
+            const bins = 30;
+            const counts = new Array(bins).fill(0);
+
+            // Min sum is 0, Max sum is n
+            const minVal = 0;
+            const maxVal = n;
+            const binWidth = (maxVal - minVal) / bins;
+
+            for (let i = 0; i < samples; i++) {
+                let sum = 0;
+                for (let j = 0; j < n; j++) {
+                    sum += Math.random();
+                }
+                const binIndex = Math.min(Math.floor((sum - minVal) / binWidth), bins - 1);
+                counts[binIndex]++;
+            }
+
+            const labels = counts.map((_, i) => (minVal + i * binWidth + binWidth / 2).toFixed(1));
+
+            sumChart.data.labels = labels;
+            sumChart.data.datasets[0].data = counts;
+            sumChart.update();
+        }
+
+        document.getElementById('n-slider').addEventListener('input', updateSumChart);
+        updateSumChart();
+
+    </script>
+</body>
+
+</html>
