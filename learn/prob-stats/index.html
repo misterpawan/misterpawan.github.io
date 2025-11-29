@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability and Statistics | Pawan Kumar</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#8b5cf6', // Violet-500
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        /* Glassmorphism utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased selection:bg-violet-200 selection:text-violet-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 font-bold text-xl hover:text-violet-600 transition">
+                <span>←</span> Back to Subjects
+            </a>
+        </div>
+    </nav>
+
+    <!-- Course Header -->
+    <header class="max-w-5xl mx-auto px-4 mb-12" data-aos="fade-down">
+        <div
+            class="glass p-8 rounded-3xl shadow-xl bg-gradient-to-br from-violet-50 to-white dark:from-gray-800 dark:to-gray-900 border-l-8 border-violet-500">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">Probability and Statistics
+            </h1>
+            <div class="flex items-center gap-4 text-lg text-gray-600 dark:text-gray-300">
+                <div class="flex items-center gap-2">
+                    <span class="bg-violet-100 text-violet-800 p-2 rounded-full">👨‍🏫</span>
+                    <span class="font-semibold">Instructor:</span> Pawan Kumar
+                </div>
+            </div>
+            <p class="mt-6 text-xl leading-relaxed text-gray-700 dark:text-gray-300">
+                A comprehensive course on Probability and Statistics, covering counting principles, probability theory,
+                random variables, distributions, statistical inference, and more. Essential for Data Science, Machine
+                Learning,
+                and Statistical Analysis.
+            </p>
+        </div>
+    </header>
+
+    <!-- Syllabus -->
+    <main class="max-w-5xl mx-auto px-4 pb-20">
+        <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
+            <span class="bg-violet-100 text-violet-600 p-2 rounded-lg">📚</span> Syllabus
+        </h2>
+
+        <div class="space-y-6">
+            <!-- Unit 1: Basic Background -->
+            <div class="glass rounded-2xl shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Unit 1: Basic Background</h3>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="counting.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-violet-600 transition">
+                                            Basic Counting</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Introduction to counting principles, sum
+                                            rule,
+                                            and historical context.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sets.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-violet-600 transition">Set
+                                            Theory
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">Sets, operations, Venn diagrams, De
+                                            Morgan's
+                                            laws, and partitions.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="sum-product-rule.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-violet-600 transition">Sum and
+                                            Product Rule</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Fundamental counting principles with
+                                            examples.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tuples.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-violet-600 transition">Tuples
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">Ordered pairs, tuples, and Cartesian
+                                            products.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="combinations.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-violet-600 transition">
+                                            Combinations and Permutations</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Permutations, combinations, and binomial
+                                            coefficients.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="problems-unit1.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-violet-600 transition">
+                                            Practice
+                                            Problems</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Exercises and problems for Unit 1.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Unit 2: Probability -->
+            <div class="glass rounded-2xl shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Unit 2: Probability</h3>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="motivation-probability.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-emerald-600 transition">
+                                            Motivation
+                                            for Probability</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Introduction to probability, sample
+                                            spaces,
+                                            events, and axioms.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="game-theory.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-emerald-600 transition">Game
+                                            Theory
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">Applications of probability in game
+                                            theory.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="random-walks.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-emerald-600 transition">Random
+                                            Walks</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Introduction to random walks and their
+                                            applications.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="information.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-emerald-600 transition">
+                                            Information
+                                            Theory</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Entropy, information, and coding theory
+                                            basics.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="conditional-probability.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-emerald-600 transition">
+                                            Conditional
+                                            Probability</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Conditional probability, Bayes' theorem,
+                                            and
+                                            independence.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Unit 3: Random Variables -->
+            <div class="glass rounded-2xl shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Unit 3: Random Variables</h3>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="random-variables.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">Random
+                                            Variables</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Introduction to random variables, discrete
+                                            and
+                                            continuous.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="distributions.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">
+                                            Distributions
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">Common probability distributions:
+                                            Bernoulli,
+                                            Binomial, Poisson.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="variance.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">Variance
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">Expectation, variance, and standard
+                                            deviation.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="moments.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">Moments
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">Moment generating functions and higher
+                                            moments.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="problems-unit3a.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">Practice
+                                            Problems</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Exercises on discrete random variables.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="cdf.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">
+                                            Cumulative
+                                            Distribution Function</h4>
+                                        <p class="text-sm text-gray-500 mt-1">CDF properties and applications.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="continuous-rv.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">
+                                            Continuous
+                                            Random Variables</h4>
+                                        <p class="text-sm text-gray-500 mt-1">PDF, expectation, and variance for
+                                            continuous
+                                            RVs.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="solved-examples.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">Solved
+                                            Examples
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">Step-by-step solutions to key problems.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="continuous-distributions.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-blue-600 transition">
+                                            Continuous
+                                            Distributions</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Uniform, Exponential, Normal
+                                            distributions.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Unit 4: Multiple Random Variables -->
+            <div class="glass rounded-2xl shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Unit 4: Multiple Random Variables
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="mixed-rv.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-amber-600 transition">Mixed
+                                            Random
+                                            Variables</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Functions of random variables and
+                                            transformations.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="joint-distributions.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-amber-600 transition">Joint
+                                            Distributions</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Joint PMF, marginal distributions, and
+                                            independence.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="joint-continuous-rv.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-amber-600 transition">Joint
+                                            Continuous Random Variables</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Joint PDF, covariance, and correlation.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="multiple-rv.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-amber-600 transition">Multiple
+                                            Random Variables</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Multivariate distributions and properties.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Unit 5: Probability Bounds -->
+            <div class="glass rounded-2xl shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Unit 5: Probability Bounds</h3>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="bounds.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-pink-500 hover:bg-pink-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-pink-600 transition">
+                                            Probability
+                                            Bounds and Inequalities</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Markov, Chebyshev, and Chernoff bounds.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Unit 6: Statistical Inference -->
+            <div class="glass rounded-2xl shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Unit 6: Statistical Inference</h3>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="statistical-inference.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-cyan-500 hover:bg-cyan-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-cyan-600 transition">
+                                            Statistical
+                                            Inference</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Estimation, hypothesis testing, and
+                                            confidence
+                                            intervals.</p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="bayesian-inference.html"
+                                class="block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-cyan-500 hover:bg-cyan-50 dark:hover:bg-gray-800 transition group">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-lg font-semibold group-hover:text-cyan-600 transition">Bayesian
+                                            Inference</h4>
+                                        <p class="text-sm text-gray-500 mt-1">Bayesian methods, priors, and posteriors.
+                                        </p>
+                                    </div>
+                                    <span class="text-2xl group-hover:translate-x-2 transition">➡️</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Unit 7: Random Processes -->
+            <div class="glass rounded-2xl shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Unit 7: Random Processes</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 dark:text-gray-400 italic">Content coming soon...</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        AOS.init();
+    </script>
+</body>
+
+</html>

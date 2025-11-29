@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Counting | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 1: Basic Background</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Basic Counting
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Understanding the fundamentals of counting without actually counting
+            </p>
+        </div>
+
+        <!-- Why Counting? -->
+        <section class="mb-12">
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <span class="text-3xl">🤔</span> Why Counting?
+                </h2>
+                <div class="space-y-4 text-lg">
+                    <p>Counting is a basic task in mathematics, but our objective is more sophisticated:</p>
+                    <div class="bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl border-l-4 border-violet-500">
+                        <p class="font-semibold text-violet-700 dark:text-violet-300">
+                            To determine how many objects there are <em>without actually counting them one by one</em>
+                        </p>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mt-6 mb-3">Applications of Counting:</h3>
+                    <ul class="space-y-3 ml-6">
+                        <li class="flex items-start gap-3">
+                            <span class="text-violet-500 mt-1">▸</span>
+                            <span><strong>Algorithm Analysis:</strong> Determining the number of steps an algorithm
+                                takes</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-violet-500 mt-1">▸</span>
+                            <span><strong>Probability:</strong> Estimating the likelihood of events (our focus in this
+                                course)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-violet-500 mt-1">▸</span>
+                            <span><strong>Proofs:</strong> Techniques like the Pigeonhole Principle</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historical Context -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📜</span> Brief History of Counting
+            </h2>
+
+            <!-- Ishango Bone -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-xl">
+                            <h3 class="text-xl font-bold mb-4 text-amber-700 dark:text-amber-300">The Ishango Bone</h3>
+                            <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-amber-500">•</span>
+                                    <span>Possibly the <strong>oldest mathematical artifact</strong> still in
+                                        existence</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-amber-500">•</span>
+                                    <span>Dates back to the Upper Paleolithic period, approximately <strong>20,000 years
+                                            old</strong></span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-amber-500">•</span>
+                                    <span>10 cm long bone with a series of notches believed to be used for
+                                        counting</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                        <div
+                            class="bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40 p-8 rounded-2xl">
+                            <p class="text-6xl text-center">🦴</p>
+                            <p class="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">Ishango Bone<br>~20,000
+                                BCE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sumerian Tablet -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="flex justify-center order-2 md:order-1">
+                        <div
+                            class="bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/40 dark:to-cyan-900/40 p-8 rounded-2xl">
+                            <p class="text-6xl text-center">📱</p>
+                            <p class="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">Sumerian
+                                Tablet<br>~2600 BCE</p>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                            <h3 class="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">Sumerian Multiplication
+                                Table</h3>
+                            <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500">•</span>
+                                    <span>Created around <strong>2600 BCE</strong> in the Sumerian city of
+                                        Shuruppak</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500">•</span>
+                                    <span>Contains three columns with dots representing distances from 6 meters to 3
+                                        kilometers</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500">•</span>
+                                    <span>The third column shows the product of the first two columns</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500">•</span>
+                                    <span>Sumer was a region of ancient Mesopotamia in the Middle East</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How Do We Count? -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🔢</span> How Do We Count?
+            </h2>
+
+            <!-- Interactive Quiz 1 -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl">How many numbers are there between 21 and 31?</p>
+                </div>
+
+                <div id="quiz1" class="space-y-3">
+                    <button onclick="checkAnswer(1, 'a')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">A)</span> 10
+                    </button>
+                    <button onclick="checkAnswer(1, 'b')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">B)</span> 11
+                    </button>
+                    <button onclick="checkAnswer(1, 'c')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">C)</span> 9
+                    </button>
+                </div>
+
+                <div id="quiz1-explanation"
+                    class="hidden mt-6 p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border-l-4 border-green-500">
+                    <p class="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correct!</p>
+                    <p>The numbers between 21 and 31 are: 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31.</p>
+                    <p class="mt-2">That's <strong>11 numbers</strong> in total.</p>
+                </div>
+            </div>
+
+            <!-- General Formula -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Question 2 (General Case):</h3>
+                    <p class="text-xl">How many numbers are there between \(m\) and \(n\), where \(m < n\)?</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-r from-violet-100 to-purple-100 dark:from-violet-900/40 dark:to-purple-900/40 p-8 rounded-xl text-center">
+                    <p class="text-2xl font-bold text-violet-700 dark:text-violet-300">
+                        Answer: \(n - m + 1\)
+                    </p>
+                </div>
+
+                <div class="mt-6 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                    <p class="font-semibold mb-3">💡 Explanation:</p>
+                    <p>When counting from \(m\) to \(n\) inclusive, we need to add 1 because we're including both
+                        endpoints.</p>
+                    <p class="mt-2">For example: From 21 to 31 → \(31 - 21 + 1 = 11\) ✓</p>
+                </div>
+            </div>
+
+            <!-- Practice Problem -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Practice Problem:</h3>
+                    <p class="text-xl">How many numbers between 33 and 67 are divisible by 4?</p>
+                </div>
+
+                <button onclick="toggleSolution('practice1')"
+                    class="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                    Show Solution
+                </button>
+
+                <div id="practice1"
+                    class="hidden mt-6 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-l-4 border-blue-500">
+                    <p class="font-semibold mb-3">Step-by-step Solution:</p>
+                    <ol class="space-y-3 ml-6 list-decimal">
+                        <li>First, find the smallest number ≥ 33 that's divisible by 4: <strong>36</strong></li>
+                        <li>Next, find the largest number ≤ 67 that's divisible by 4: <strong>64</strong></li>
+                        <li>The numbers divisible by 4 form an arithmetic sequence: 36, 40, 44, ..., 64</li>
+                        <li>Number of terms = \(\frac{64 - 36}{4} + 1 = \frac{28}{4} + 1 = 7 + 1 = 8\)</li>
+                    </ol>
+                    <p class="mt-4 font-semibold text-blue-700 dark:text-blue-300">Answer: <strong>8 numbers</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sum Rule -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">➕</span> The Sum Rule
+            </h2>
+
+            <!-- Definition -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 p-8 rounded-xl border-l-4 border-emerald-500">
+                    <h3 class="text-xl font-bold mb-4 text-emerald-700 dark:text-emerald-300">Sum Rule</h3>
+                    <p class="text-lg">
+                        If there are <strong>\(m\)</strong> objects of the first type and <strong>\(n\)</strong> objects
+                        of the second type,
+                        then there are <strong>\(m + n\)</strong> objects of one of the two types.
+                    </p>
+                </div>
+
+                <div class="mt-8">
+                    <h4 class="text-lg font-semibold mb-4">Example: Pizza or Burger Places</h4>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-xl text-center">
+                            <p class="text-4xl mb-2">🍕</p>
+                            <p class="text-2xl font-bold">7</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Pizza places</p>
+                        </div>
+                        <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl text-center">
+                            <p class="text-4xl mb-2">🍔</p>
+                            <p class="text-2xl font-bold">5</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Burger places</p>
+                        </div>
+                    </div>
+                    <div class="bg-violet-50 dark:bg-violet-900/20 p-6 rounded-xl text-center">
+                        <p class="text-lg">Total = <strong>7 + 5 = 12</strong> places</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chess Example -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <h4 class="text-lg font-semibold mb-4">Example: Chess Piece Movement</h4>
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl mb-4">
+                    <p class="mb-3">
+                        A piece starts in the bottom left corner of a chessboard. In one move it can move
+                        <strong>one step to the right</strong> or <strong>one step up</strong>.
+                    </p>
+                    <p class="font-semibold">How many moves are needed to reach column 4, row 6?</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-blue-100 dark:bg-blue-900/40 px-4 py-2 rounded-lg font-semibold">Step 1:</div>
+                        <p>To reach column 4, we need <strong>3 moves to the right</strong></p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-blue-100 dark:bg-blue-900/40 px-4 py-2 rounded-lg font-semibold">Step 2:</div>
+                        <p>To reach row 6, we need <strong>5 moves up</strong></p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-violet-100 dark:bg-violet-900/40 px-4 py-2 rounded-lg font-semibold">Answer:
+                        </div>
+                        <p>Total moves = <strong>3 + 5 = 8 moves</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caution! -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-xl border-l-4 border-red-500">
+                    <h4 class="text-xl font-bold mb-4 text-red-700 dark:text-red-300">⚠️ Caution with Sum Rule!</h4>
+
+                    <div class="mb-6">
+                        <p class="font-semibold mb-2">Question:</p>
+                        <p>Count all integers from 1 to 10 that are divisible by 2 or by 3.</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg mb-4">
+                        <p class="font-semibold mb-2">❌ Incorrect Approach:</p>
+                        <ul class="space-y-2 ml-6">
+                            <li>• Numbers divisible by 2: 2, 4, 6, 8, 10 → <strong>5 numbers</strong></li>
+                            <li>• Numbers divisible by 3: 3, 6, 9 → <strong>3 numbers</strong></li>
+                            <li>• By sum rule: 5 + 3 = <strong>8</strong> ❌</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg mb-4">
+                        <p class="font-semibold mb-2">✓ Correct Approach:</p>
+                        <p>Let's count directly: 2, 3, 4, 6, 8, 9, 10</p>
+                        <p class="mt-2">That's <strong>7 numbers</strong>, not 8!</p>
+                    </div>
+
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg">
+                        <p class="font-semibold text-yellow-700 dark:text-yellow-300">💡 Key Insight:</p>
+                        <p class="mt-2">The number <strong>6</strong> was counted twice (it's divisible by both 2 and
+                            3)!</p>
+                        <p class="mt-3 text-lg font-semibold">
+                            In the sum rule, <span class="text-red-600 dark:text-red-400">no object should belong to
+                                both types!</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="index.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <a href="sets.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Set Theory <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        function checkAnswer(quizNum, answer) {
+            const quiz = document.getElementById(`quiz${quizNum}`);
+            const explanation = document.getElementById(`quiz${quizNum}-explanation`);
+            const buttons = quiz.querySelectorAll('button');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-violet-500');
+            });
+
+            if (quizNum === 1 && answer === 'b') {
+                buttons[1].classList.add('correct');
+                explanation.classList.remove('hidden');
+            } else {
+                const clickedButton = Array.from(buttons).find(btn =>
+                    btn.getAttribute('onclick').includes(`'${answer}'`)
+                );
+                if (clickedButton) {
+                    clickedButton.classList.add('incorrect');
+                }
+                buttons[1].classList.add('correct');
+
+                setTimeout(() => {
+                    explanation.classList.remove('hidden');
+                }, 1000);
+            }
+        }
+
+        function toggleSolution(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('hidden');
+        }
+    </script>
+
+</body>
+
+</html>

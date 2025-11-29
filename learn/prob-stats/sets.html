@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Theory | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Venn Diagram Styles */
+        .venn-circle {
+            transition: all 0.3s ease;
+        }
+
+        .venn-circle:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 1: Basic Background</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Set Theory
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Understanding sets, operations, and their properties
+            </p>
+        </div>
+
+        <!-- Definition of a Set -->
+        <section class="mb-12">
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div
+                    class="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/40 dark:to-purple-900/40 p-8 rounded-xl border-l-4 border-violet-500 mb-6">
+                    <h2 class="text-2xl font-bold mb-4 text-violet-700 dark:text-violet-300">Definition of a Set</h2>
+                    <p class="text-lg">
+                        A <strong>set</strong> is a collection of things (called <strong>elements</strong>).
+                    </p>
+                </div>
+
+                <h3 class="text-xl font-semibold mb-4">Key Properties and Examples:</h3>
+                <div class="space-y-4">
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                        <p class="mb-2">• The <strong>ordering of elements does not matter</strong></p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 ml-6">Example: \(\{1, 2, 3\} = \{3, 1, 2\}\)
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl">
+                            <p class="font-semibold mb-2">Natural Numbers</p>
+                            <p>\(\mathbb{N} = \{1, 2, 3, \ldots\}\)</p>
+                        </div>
+                        <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                            <p class="font-semibold mb-2">Integers</p>
+                            <p>\(\mathbb{Z} = \{\ldots, -2, -1, 0, 1, 2, \ldots\}\)</p>
+                        </div>
+                        <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl">
+                            <p class="font-semibold mb-2">Rational Numbers</p>
+                            <p>\(\mathbb{Q}\) (all fractions)</p>
+                        </div>
+                        <div class="bg-pink-50 dark:bg-pink-900/20 p-6 rounded-xl">
+                            <p class="font-semibold mb-2">Real Numbers</p>
+                            <p>\(\mathbb{R}\) (all numbers on number line)</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-xl">
+                        <p class="font-semibold mb-3">Interval Notation:</p>
+                        <ul class="space-y-2 ml-6">
+                            <li>• <strong>Closed interval:</strong> \([2,3] = \{x : 2 \leq x \leq 3\}\)</li>
+                            <li>• <strong>Open interval:</strong> \((-1,2) = \{x : -1 < x < 2\}\)</li>
+                            <li>• <strong>Half-open interval:</strong> \((1,3] = \{x : 1 < x \leq 3\}\)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Set Terminology -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📖</span> Set Terminology
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg space-y-6">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold mb-2">Subset</h3>
+                    <p>A set \(A\) is a <strong>subset</strong> of set \(B\) (denoted \(A \subseteq B\)) if every
+                        element of \(A\) is also in \(B\).</p>
+                </div>
+
+                <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold mb-2">Set Equality</h3>
+                    <p>Two sets \(A\) and \(B\) are <strong>equal</strong> if \(A \subseteq B\) and \(B \subseteq A\).
+                    </p>
+                </div>
+
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold mb-2">Empty Set</h3>
+                    <p>A set with no elements is called the <strong>empty set</strong> or <strong>null set</strong>,
+                        denoted by \(\emptyset\) or \(\phi\).</p>
+                </div>
+
+                <div class="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold mb-2">Universal Set</h3>
+                    <p>The <strong>universal set</strong> is the set of all things we could possibly consider in our
+                        context. Every set \(A\) is a subset of the universal set.</p>
+                </div>
+
+                <div class="bg-pink-50 dark:bg-pink-900/20 p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold mb-2">Countable Set</h3>
+                    <p>A set \(S\) is <strong>countable</strong> if there exists a bijective function \(f: S \rightarrow
+                        \mathbb{N}\).</p>
+                    <p class="mt-2 text-sm">Examples: \(\mathbb{N}\) and \(\mathbb{Q}\) are countable.</p>
+                </div>
+
+                <div class="bg-cyan-50 dark:bg-cyan-900/20 p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold mb-2">Finite vs. Countably Infinite</h3>
+                    <ul class="space-y-2 ml-6">
+                        <li>• <strong>Finite set:</strong> A set with a finite number of elements</li>
+                        <li>• <strong>Countably infinite:</strong> A set that is countable but not finite</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Venn Diagrams -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🎨</span> Venn Diagrams
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <p class="mb-6 text-lg">Venn diagrams are useful visual tools for analyzing relationships between sets.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Two Sets Venn Diagram -->
+                    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                        <h3 class="text-center font-semibold mb-4">Two Sets</h3>
+                        <svg viewBox="0 0 200 120" class="w-full">
+                            <!-- Universal Set -->
+                            <rect x="10" y="10" width="180" height="100" fill="none" stroke="currentColor"
+                                stroke-width="2" rx="5" />
+                            <text x="15" y="25" class="text-xs fill-current">U</text>
+
+                            <!-- Set A -->
+                            <circle cx="70" cy="60" r="35" fill="#8b5cf6" opacity="0.3" stroke="#8b5cf6"
+                                stroke-width="2" class="venn-circle" />
+                            <text x="50" y="65" class="text-sm font-bold fill-current">A</text>
+
+                            <!-- Set B -->
+                            <circle cx="130" cy="60" r="35" fill="#ec4899" opacity="0.3" stroke="#ec4899"
+                                stroke-width="2" class="venn-circle" />
+                            <text x="140" y="65" class="text-sm font-bold fill-current">B</text>
+                        </svg>
+                    </div>
+
+                    <!-- Subset Venn Diagram -->
+                    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                        <h3 class="text-center font-semibold mb-4">Subset Relationship</h3>
+                        <svg viewBox="0 0 200 120" class="w-full">
+                            <!-- Universal Set -->
+                            <rect x="10" y="10" width="180" height="100" fill="none" stroke="currentColor"
+                                stroke-width="2" rx="5" />
+                            <text x="15" y="25" class="text-xs fill-current">U</text>
+
+                            <!-- Set B (larger) -->
+                            <circle cx="100" cy="60" r="40" fill="#ec4899" opacity="0.2" stroke="#ec4899"
+                                stroke-width="2" class="venn-circle" />
+                            <text x="130" y="45" class="text-sm font-bold fill-current">B</text>
+
+                            <!-- Set A (smaller, inside B) -->
+                            <circle cx="100" cy="60" r="25" fill="#8b5cf6" opacity="0.4" stroke="#8b5cf6"
+                                stroke-width="2" class="venn-circle" />
+                            <text x="95" y="65" class="text-sm font-bold fill-current">A</text>
+                        </svg>
+                        <p class="text-center text-sm mt-2 text-gray-600 dark:text-gray-400">\(A \subseteq B\)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Set Operations -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">⚙️</span> Set Operations
+            </h2>
+
+            <!-- Union -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/40 dark:to-cyan-900/40 p-6 rounded-xl border-l-4 border-blue-500 mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-blue-700 dark:text-blue-300">Union (\(\cup\))</h3>
+                    <p class="text-lg">The <strong>union</strong> of two sets \(A\) and \(B\), denoted \(A \cup B\),
+                        contains all elements that are in \(A\) <strong>or</strong> in \(B\).</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-semibold mb-2">Example:</p>
+                        <p>\(\{1, 2\} \cup \{2, 3\} = \{1, 2, 3\}\)</p>
+
+                        <p class="font-semibold mt-4 mb-2">General Form:</p>
+                        <p>\(A_1 \cup A_2 \cup \cdots \cup A_k = \bigcup_{i=1}^k A_i\)</p>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                        <svg viewBox="0 0 200 120" class="w-full">
+                            <rect x="10" y="10" width="180" height="100" fill="none" stroke="currentColor"
+                                stroke-width="2" rx="5" />
+                            <circle cx="70" cy="60" r="35" fill="#3b82f6" opacity="0.5" stroke="#3b82f6"
+                                stroke-width="2" />
+                            <circle cx="130" cy="60" r="35" fill="#3b82f6" opacity="0.5" stroke="#3b82f6"
+                                stroke-width="2" />
+                            <text x="50" y="65" class="text-sm font-bold fill-white">A</text>
+                            <text x="140" y="65" class="text-sm font-bold fill-white">B</text>
+                        </svg>
+                        <p class="text-center text-sm mt-2">\(A \cup B\) (shaded region)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intersection -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 p-6 rounded-xl border-l-4 border-emerald-500 mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-emerald-700 dark:text-emerald-300">Intersection (\(\cap\))
+                    </h3>
+                    <p class="text-lg">The <strong>intersection</strong> of two sets \(A\) and \(B\), denoted \(A \cap
+                        B\), contains all elements that are in \(A\) <strong>and</strong> in \(B\).</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-semibold mb-2">Example:</p>
+                        <p>\(\{1, 2\} \cap \{2, 3\} = \{2\}\)</p>
+
+                        <p class="font-semibold mt-4 mb-2">General Form:</p>
+                        <p>\(A_1 \cap A_2 \cap \cdots \cap A_k = \bigcap_{i=1}^k A_i\)</p>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                        <svg viewBox="0 0 200 120" class="w-full">
+                            <rect x="10" y="10" width="180" height="100" fill="none" stroke="currentColor"
+                                stroke-width="2" rx="5" />
+                            <defs>
+                                <clipPath id="clip-intersection">
+                                    <circle cx="70" cy="60" r="35" />
+                                </clipPath>
+                            </defs>
+                            <circle cx="70" cy="60" r="35" fill="none" stroke="#10b981" stroke-width="2" />
+                            <circle cx="130" cy="60" r="35" fill="none" stroke="#10b981" stroke-width="2" />
+                            <circle cx="130" cy="60" r="35" fill="#10b981" opacity="0.5"
+                                clip-path="url(#clip-intersection)" />
+                            <text x="50" y="65" class="text-sm font-bold fill-current">A</text>
+                            <text x="140" y="65" class="text-sm font-bold fill-current">B</text>
+                        </svg>
+                        <p class="text-center text-sm mt-2">\(A \cap B\) (shaded region)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complement -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 p-6 rounded-xl border-l-4 border-purple-500 mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-purple-700 dark:text-purple-300">Complement (\(A^c\))</h3>
+                    <p class="text-lg">The <strong>complement</strong> of set \(A\), denoted \(A^c\), contains all
+                        elements in the universal set \(U\) that are <strong>not</strong> in \(A\).</p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl max-w-md mx-auto">
+                    <svg viewBox="0 0 200 120" class="w-full">
+                        <rect x="10" y="10" width="180" height="100" fill="#a855f7" opacity="0.3" stroke="currentColor"
+                            stroke-width="2" rx="5" />
+                        <circle cx="100" cy="60" r="35" fill="white" stroke="#a855f7" stroke-width="2" />
+                        <text x="15" y="25" class="text-xs fill-current">U</text>
+                        <text x="95" y="65" class="text-sm font-bold fill-current">A</text>
+                    </svg>
+                    <p class="text-center text-sm mt-2">\(A^c\) (shaded region)</p>
+                </div>
+            </div>
+
+            <!-- Set Difference -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div
+                    class="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/40 dark:to-orange-900/40 p-6 rounded-xl border-l-4 border-amber-500 mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-amber-700 dark:text-amber-300">Set Difference (\(A - B\))
+                    </h3>
+                    <p class="text-lg">The <strong>set difference</strong> \(A - B\) contains elements that are in \(A\)
+                        but <strong>not</strong> in \(B\).</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-semibold mb-2">Example:</p>
+                        <p>If \(A = \{1, 2, 3\}\) and \(B = \{3, 5\}\),</p>
+                        <p>then \(A - B = \{1, 2\}\)</p>
+
+                        <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                            <p class="font-semibold mb-2">Disjoint Sets:</p>
+                            <p class="text-sm">Two sets \(A\) and \(B\) are <strong>mutually exclusive</strong> or
+                                <strong>disjoint</strong> if they have no shared elements: \(A \cap B = \emptyset\)</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                        <svg viewBox="0 0 200 120" class="w-full">
+                            <rect x="10" y="10" width="180" height="100" fill="none" stroke="currentColor"
+                                stroke-width="2" rx="5" />
+                            <defs>
+                                <clipPath id="clip-difference">
+                                    <circle cx="130" cy="60" r="35" />
+                                </clipPath>
+                                <mask id="mask-difference">
+                                    <rect x="0" y="0" width="200" height="120" fill="white" />
+                                    <circle cx="130" cy="60" r="35" fill="black" />
+                                </mask>
+                            </defs>
+                            <circle cx="70" cy="60" r="35" fill="#f59e0b" opacity="0.5" stroke="#f59e0b"
+                                stroke-width="2" mask="url(#mask-difference)" />
+                            <circle cx="130" cy="60" r="35" fill="none" stroke="#f59e0b" stroke-width="2" />
+                            <text x="40" y="65" class="text-sm font-bold fill-current">A</text>
+                            <text x="140" y="65" class="text-sm font-bold fill-current">B</text>
+                        </svg>
+                        <p class="text-center text-sm mt-2">\(A - B\) (shaded region)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cartesian Product and Partition -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🔗</span> Advanced Concepts
+            </h2>
+
+            <!-- Cartesian Product -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/40 dark:to-blue-900/40 p-6 rounded-xl border-l-4 border-cyan-500 mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyan-700 dark:text-cyan-300">Cartesian Product</h3>
+                    <p class="text-lg mb-3">
+                        The <strong>Cartesian product</strong> of sets \(A = \{a_1, a_2, \ldots, a_m\}\) and \(B =
+                        \{b_1, b_2, \ldots, b_n\}\), denoted \(A \times B\), is:
+                    </p>
+                    <p class="text-center text-xl">\(A \times B = \bigcup_{i,j} \{(a_i, b_j)\}\)</p>
+                </div>
+
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                    <p class="font-semibold mb-3">Example:</p>
+                    <p>If \(A = \{1, 2\}\) and \(B = \{x, y\}\), then:</p>
+                    <p class="mt-2">\(A \times B = \{(1,x), (1,y), (2,x), (2,y)\}\)</p>
+                </div>
+            </div>
+
+            <!-- Partition -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div
+                    class="bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/40 dark:to-rose-900/40 p-6 rounded-xl border-l-4 border-pink-500 mb-6">
+                    <h3 class="text-xl font-bold mb-3 text-pink-700 dark:text-pink-300">Partition of a Set</h3>
+                    <p class="text-lg">
+                        A collection of nonempty sets \(A_1, A_2, \ldots\) is a <strong>partition</strong> of set \(A\)
+                        if:
+                    </p>
+                    <ul class="mt-3 space-y-2 ml-6">
+                        <li>• They are <strong>disjoint</strong> (no overlapping elements)</li>
+                        <li>• Their <strong>union is \(A\)</strong></li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl max-w-md mx-auto">
+                    <svg viewBox="0 0 200 120" class="w-full">
+                        <rect x="10" y="10" width="180" height="100" fill="none" stroke="currentColor" stroke-width="2"
+                            rx="5" />
+                        <text x="15" y="25" class="text-xs fill-current">A</text>
+
+                        <rect x="20" y="35" width="50" height="60" fill="#ec4899" opacity="0.4" stroke="#ec4899"
+                            stroke-width="2" rx="3" />
+                        <text x="40" y="70" class="text-sm font-bold fill-current">A₁</text>
+
+                        <rect x="75" y="35" width="50" height="60" fill="#8b5cf6" opacity="0.4" stroke="#8b5cf6"
+                            stroke-width="2" rx="3" />
+                        <text x="95" y="70" class="text-sm font-bold fill-current">A₂</text>
+
+                        <rect x="130" y="35" width="50" height="60" fill="#06b6d4" opacity="0.4" stroke="#06b6d4"
+                            stroke-width="2" rx="3" />
+                        <text x="150" y="70" class="text-sm font-bold fill-current">A₃</text>
+                    </svg>
+                    <p class="text-center text-sm mt-2">Partition: \(A_1 \cup A_2 \cup A_3 = A\) and all disjoint</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Important Laws -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">⚖️</span> Important Laws
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <!-- De Morgan's Laws -->
+                <div
+                    class="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/40 dark:to-purple-900/40 p-8 rounded-xl border-l-4 border-violet-500 mb-6">
+                    <h3 class="text-2xl font-bold mb-4 text-violet-700 dark:text-violet-300">De Morgan's Laws</h3>
+                    <p class="mb-4">For any sets \(A_1, A_2, \ldots, A_n\):</p>
+                    <div class="space-y-4 bg-white dark:bg-gray-800 p-6 rounded-lg">
+                        <div class="text-center text-lg">
+                            <p>\((A_1 \cup A_2 \cup \cdots \cup A_n)^c = A_1^c \cap A_2^c \cap \cdots \cap A_n^c\)</p>
+                        </div>
+                        <div class="text-center text-lg">
+                            <p>\((A_1 \cap A_2 \cap \cdots \cap A_n)^c = A_1^c \cup A_2^c \cup \cdots \cup A_n^c\)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Distributive Laws -->
+                <div
+                    class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 p-8 rounded-xl border-l-4 border-emerald-500">
+                    <h3 class="text-2xl font-bold mb-4 text-emerald-700 dark:text-emerald-300">Distributive Laws</h3>
+                    <div class="space-y-4 bg-white dark:bg-gray-800 p-6 rounded-lg">
+                        <div class="text-center text-lg">
+                            <p>\(A \cap (B \cup C) = (A \cap B) \cup (A \cap C)\)</p>
+                        </div>
+                        <div class="text-center text-lg">
+                            <p>\(A \cup (B \cap C) = (A \cup B) \cap (A \cup C)\)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Quizzes -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🧠</span> Test Your Understanding
+            </h2>
+
+            <!-- Quiz 1 -->
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Quiz 1:</h3>
+                    <p class="text-xl">If \(A\) and \(B\) are countable sets, is \(A \cup B\) also countable?</p>
+                </div>
+
+                <div id="quiz1" class="space-y-3">
+                    <button onclick="checkAnswer(1, 'a')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">A)</span> Yes, always
+                    </button>
+                    <button onclick="checkAnswer(1, 'b')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">B)</span> No, never
+                    </button>
+                    <button onclick="checkAnswer(1, 'c')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">C)</span> It depends on the sets
+                    </button>
+                </div>
+
+                <div id="quiz1-explanation"
+                    class="hidden mt-6 p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border-l-4 border-green-500">
+                    <p class="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correct!</p>
+                    <p>Yes, the union of two countable sets is always countable. We can enumerate the elements of \(A
+                        \cup B\) by alternating between elements of \(A\) and \(B\).</p>
+                </div>
+            </div>
+
+            <!-- Quiz 2 -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Quiz 2:</h3>
+                    <p class="text-xl">What is \(\{1, 2, 3\} \cap \{3, 4, 5\}\)?</p>
+                </div>
+
+                <div id="quiz2" class="space-y-3">
+                    <button onclick="checkAnswer(2, 'a')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">A)</span> \(\{1, 2, 3, 4, 5\}\)
+                    </button>
+                    <button onclick="checkAnswer(2, 'b')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">B)</span> \(\{3\}\)
+                    </button>
+                    <button onclick="checkAnswer(2, 'c')"
+                        class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                        <span class="font-semibold">C)</span> \(\emptyset\)
+                    </button>
+                </div>
+
+                <div id="quiz2-explanation"
+                    class="hidden mt-6 p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border-l-4 border-green-500">
+                    <p class="font-semibold text-green-700 dark:text-green-300 mb-2">✓ Correct!</p>
+                    <p>The intersection contains only elements that appear in both sets. The only common element is 3,
+                        so \(\{1, 2, 3\} \cap \{3, 4, 5\} = \{3\}\).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="counting.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Counting
+            </a>
+            <a href="sum-product-rule.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Sum and Product Rule <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        function checkAnswer(quizNum, answer) {
+            const quiz = document.getElementById(`quiz${quizNum}`);
+            const explanation = document.getElementById(`quiz${quizNum}-explanation`);
+            const buttons = quiz.querySelectorAll('button');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-violet-500');
+            });
+
+            const correctAnswers = {
+                1: 'a',
+                2: 'b'
+            };
+
+            if (answer === correctAnswers[quizNum]) {
+                const clickedButton = Array.from(buttons).find(btn =>
+                    btn.getAttribute('onclick').includes(`'${answer}'`)
+                );
+                clickedButton.classList.add('correct');
+                explanation.classList.remove('hidden');
+            } else {
+                const clickedButton = Array.from(buttons).find(btn =>
+                    btn.getAttribute('onclick').includes(`'${answer}'`)
+                );
+                clickedButton.classList.add('incorrect');
+
+                const correctButton = Array.from(buttons).find(btn =>
+                    btn.getAttribute('onclick').includes(`'${correctAnswers[quizNum]}'`)
+                );
+                correctButton.classList.add('correct');
+
+                setTimeout(() => {
+                    explanation.classList.remove('hidden');
+                }, 1000);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
