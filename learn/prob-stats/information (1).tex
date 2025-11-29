@@ -1,0 +1,352 @@
+\section{Probability and Information}
+
+
+\begin{frame}{Information Theory}
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.6]{shanon.PNG}
+        \caption{Claude Shannon}
+        %\label{fig:my_label}
+    \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    In his 1948 paper “A Mathematical Theory of Communication”, Claude Shannon introduced the revolutionary notion of Information Entropy.
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Entropy in Physics}
+\pause 
+\begin{block}{}
+Entropy: Log of the number of microstates and microscopic configurations. \pause 
+    \begin{enumerate}
+        \item if particles in a system have many possible positions to move, then the system has high entropy \pause 
+        \item if they have to stay rigid, then the system has low entropy
+    \end{enumerate} \pause 
+    For example,
+    \begin{enumerate}
+        \item The molecules in ice have to stay in a lattice, as it is a rigid system, so ice has low entropy \pause 
+        \item Molecules in water have more positions to move around, so water in liquid has medium entropy \pause 
+        \item Molecules inside water vapor can pretty much go anywhere they want, so it has high entropy
+    \end{enumerate}
+\end{block}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.2]{entropy1}
+    \caption{Water in three phases}
+    %\label{fig:my_label}
+\end{figure}
+    
+\end{frame}
+
+
+
+\begin{frame}{Entropy and Knowledge}
+\pause 
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{entropy2.PNG}
+        \caption{The buckets}
+        %\label{fig:my_label}
+    \end{figure}
+    \pause 
+    \begin{enumerate}
+        \item In the first bucket, we’ll know for sure that the ball coming out is red \pause 
+        \item In the second bucket, we know with 75\% certainty that the ball is red, and with 25\% certainty that it’s blue \pause 
+        \item In the third bucket, we know with 50\% certainty that the ball is red, and with the same certainty that it’s blue
+    \end{enumerate}
+    
+\end{frame}
+
+
+\begin{frame}{Entropy in buckets}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{entropy3.PNG}
+        \caption{Entropy in buckets}
+        %\label{fig:my_label}
+    \end{figure}
+    \pause 
+    \begin{enumerate}
+        \item Bucket 1 gives us the most amount of “knowledge” about what ball we’ll draw (because we know for sure it’s red) \pause 
+        \item Bucket 2 gives us some knowledge \pause 
+        \item Bucket 3 will give us the least amount of knowledge
+    \end{enumerate}
+     \blue{``Entropy is in some way, the opposite of knowledge"}
+\end{frame}
+
+
+
+\begin{frame}{How to Quantify Entropy? Using Probability!}
+\pause 
+ \begin{figure}
+        \centering
+        \includegraphics[scale=0.1]{entropy2.PNG}
+        \caption{The buckets}
+        %\label{fig:my_label}
+    \end{figure}
+    \begin{block}{Right Question to Ask}
+    How do we cook up a formula which gives us a low number for a bucket with 4 red balls, a high number for a bucket with 2 red and 2 blue balls, and a medium number for a bucket with 3 red and 1 blue balls?
+    \end{block}
+    \pause 
+    \begin{block}{Recall Physical Entropy}
+    If molecules have many possible rearrangements, then the system has high entropy, and if they have very few rearrangements, then the system has low entropy.
+    \end{block}
+    \pause 
+    \begin{block}{Possible Solution Using Counting}
+    So a first attempt would be to count the number of rearrangements of these balls.
+    \end{block}
+\end{frame}
+
+
+\begin{frame}{Entropy and Rearrangements}
+    \pause 
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.25]{entropy4.PNG}
+        \caption{Entropy and Rearrangements}
+        %\label{fig:my_label}
+    \end{figure}
+    \pause 
+    In this case, we have 1 possible rearrangement for Bucket 1, 4 for Bucket 2, and 6 for Bucket 3, this number given by the binomial coefficient.
+    \pause 
+    \begin{block}{Hint of a formula for entropy!}
+     If there are many arrangements, then entropy is large, and if there are very few arrangements, then entropy is low. In the next section, we’ll cook up a formula for entropy. 
+    \end{block}
+\end{frame}
+
+
+\begin{frame}{Entropy and an Interesting Game Show}
+\pause 
+    \begin{block}{}
+     Spoiler: The probability of winning this game, will help us get the formula for entropy.
+    \end{block}
+    \pause 
+    \begin{enumerate}
+        \item We choose one of the three buckets.
+We are shown the balls in the bucket, in some order. Then, the balls go back in the bucket
+\pause 
+ \item We then pick one ball out of the bucket, at a time, record the color, and return the ball back to the bucket
+ \pause 
+ \item If the colors recorded make the same sequence than the sequence of balls that we were shown at the beginning, then we win 1,000,000 dollars. If not, then we lose
+    \end{enumerate}
+    
+\end{frame}
+
+
+\begin{frame}{Game with an Example}
+\pause 
+    \begin{block}{Example}
+     We’re shown the balls in the bucket in some order, so let’s say, they’re shown to us in that precise order, red, red, red, blue. Now, let’s try to draw the balls to get that sequence, red, red, red, blue. What’s the probability of this happening?
+    \end{block} \pause 
+    \begin{enumerate}
+        \item In order for the first ball to be red, the probability is 3/4, or 0.75 \pause 
+\item For the second ball to be red, the probability is again 3/4. (Remember that we put the first ball back in the bucket after looking at its color.) \pause 
+\item For the third ball to be red, the probability is again 3/4 \pause 
+\item For the fourth ball to be blue, the probability is now 1/4, or 0.25
+    \end{enumerate}
+    
+    As these are independent events, then the probability of the 4 of them to happen, is (3/4)*(3/4)*(3/4)*(1/4) = 27/256, or 0.105. This is not very likely. 
+    
+\end{frame}
+
+
+\begin{frame}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{entropy5.PNG}
+    %\caption{Caption}
+    %\label{fig:my_label}
+\end{figure}
+    
+\end{frame}
+
+
+\begin{frame}{Probability of Winning}
+    \begin{figure}
+    \centering
+    \includegraphics[scale=0.2]{entropy6.PNG}
+    %\caption{Caption}
+    %\label{fig:my_label}
+\end{figure}
+
+\begin{block}{Towards Entropy Formula}
+ In order to build the entropy formula, we want the opposite, some measure that gives us a low number for Bucket 1, a medium number for Bucket 2, and a high number for Bucket 3. No problem, this is where logarithms will come to save our life.
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Calculate Entropy for Example}
+    \pause 
+    
+    \begin{enumerate}
+        \item For bucket 2, (3 red balls, and 1 blue balls) \pause 
+        \begin{align*}
+            0.75 * 0.75 * 0.75 * 0.25 = 0.10546875
+        \end{align*} \pause 
+        \item Taking the logarithm and multiplying by -1, we get \pause 
+        \begin{align*}
+            -\log_2(0.75)  -\log_2(0.75)  -\log_2(0.75)  -\log_2(0.25) = 3.245
+        \end{align*} \pause 
+        \item Finally, we take the average in order to normalize \pause 
+        \begin{align*}
+            \dfrac{1}{4} (-\log_2(0.75)  -\log_2(0.75)  -\log_2(0.75)  -\log_2(0.25)) = 0.81125
+        \end{align*} \pause 
+        \item Similarly, entropy for bucket 1: 0 \pause 
+        \item Similarly, entropy for bucket 2: 1
+    \end{enumerate}
+    
+\end{frame}
+
+
+\begin{frame}{Entropy for $m$ red balls and $n$ blue balls}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{entropy7.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    \pause 
+     \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{entropy8.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+\end{frame}
+
+
+\begin{frame}{Multiclass Entropy}
+    \pause 
+     \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{entropy9.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    \begin{block}{Formula for Entropy}
+     The general formula for entropy is
+     \begin{align*}
+         \text{Entropy} = - \sum_{i=1}^n p_i \log_2 p_i,
+     \end{align*}
+     where $n$ is the number of classes, $p_i$ is the probability of an object from the ith class appearing. 
+    \end{block}
+\end{frame}
+
+
+\begin{frame}{Entropy for the Buckets Using Formula}
+     \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{entropy10.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+     \begin{figure}
+        \centering
+        \includegraphics[scale=0.4]{entropy11.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+     \begin{figure}
+        \centering
+        \includegraphics[scale=0.4]{entropy12.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+     \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{entropy13.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+\end{frame}
+
+
+\begin{frame}{Information Theory}
+         \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{entropy14.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure} \pause 
+    On average, how many questions do we need to ask to find out what letter it is? \pause 
+    \begin{enumerate}
+        \item For bucket 1: Avrage number of questions = 0 \pause 
+        \item For buckets 2 and 3, we may think we need the following questions \pause 
+        \begin{enumerate}
+            \item Is the letter an A?
+\item Is the letter a B?
+\item Is the letter a C?
+\item Is the letter a D?
+        \end{enumerate} \pause 
+        Do we need all the four questions? Is the last question needed? Can we do better?
+    \end{enumerate}
+    \pause 
+    Consider the following questions: \pause 
+    \begin{enumerate}
+        \item Is the letter A or B?
+         \begin{enumerate}
+             \item a) If the answer to question 1 is “yes”: Is the letter A? If the answer to question 1 is “no”: Is the letter C?
+         \end{enumerate}
+         
+    \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Average Number of Questions for Bucket 3}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.3]{entropy15.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.4]{entropy16.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+\end{frame}
+
+
+\begin{frame}{Average Number of Questions for Bucket 2}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.25]{entropy17.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.45]{entropy18.PNG}
+%        \caption{Caption}
+%        \label{fig:my_label}
+    \end{figure}
+    
+\end{frame}
+
+
+\begin{frame}{Conclusion}
+    \begin{block}{}
+     Here’s the connection between Entropy and Information Theory. If we want to find out a letter drawn out of a bucket, the average number of questions we must ask to find out (if we ask our questions in the smartest possible way), is at least the entropy of the set.
+    \end{block} \pause 
+    \begin{block}{}
+      The entropy of the set is a lower bound on the number of questions we must ask in average to find out. In the cases we saw above, the number of questions is exactly the entropy.
+    \end{block}
+    \pause 
+    \begin{block}{}
+      We may need to ask more questions than the entropy. But we will never be able to do it with less questions than the entropy of the set.
+    \end{block}
+\end{frame}

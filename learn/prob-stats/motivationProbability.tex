@@ -1,0 +1,980 @@
+% \section{Motivation for Probability}
+
+% %\begin{comment}
+
+% \begin{frame}{Why do we need Probability?}
+% \begin{alertblock}{What is probability?}
+% Probability is a \yellow{measure} that we use to measure how likely an event or outcome is.
+% For example, today there is 10\% chance of rain.
+% \end{alertblock} \pause 
+
+% \vspace{0.5 cm}
+% How likely is that one player or team will win the game? \\
+
+% \begin{figure}
+% \includegraphics[scale=1.8]{ludo11}
+% \end{figure}
+% \end{frame}
+
+% \begin{frame}{Motivation for Probability...}
+
+% \begin{columns}
+
+% \begin{column}{0.5\textwidth}
+% How likely is that one will win the lottery?
+% \end{column}
+
+% \begin{column}{0.5\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.03  ]{lottery}
+% \end{figure}
+% \end{column}
+% \end{columns}
+
+% \pause 
+
+% \begin{columns}
+% \begin{column}{0.5\textwidth}
+% How likely it is to rain or snow?
+% \end{column}
+
+% \begin{column}{0.5\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.15]{weather}
+% \end{figure}
+% \end{column}
+% \end{columns}
+
+% \end{frame}
+
+% \begin{frame}{Study of Probability started with Games of Chance...}
+% \begin{figure}
+% \includegraphics[scale=0.45]{game11}
+% \end{figure}
+% \end{frame}
+
+% \begin{frame}{Game of Chance, Probability, and War}
+
+% \begin{columns}
+% \begin{column}{0.65\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.3]{maha}
+% \caption{illustration of great war}
+% \end{figure}
+% \end{column}
+
+% \begin{column}{0.3\textwidth}
+% \begin{itemize}
+% \item Mahabharat, happened around 900 BCE (Proof dates to 400BCE) \pause 
+% \item Struggle between two major group of cousins: Adventure, Drama, Suspense, Thriller, etc \pause 
+% \item ... and a game of chance!
+% \end{itemize}
+% \end{column}
+
+% \end{columns}
+
+% \end{frame}
+
+
+% \begin{frame}{What Does Game of Chance has to do with Mahabharat in India?}
+
+% \begin{columns}
+% \begin{column}{0.6\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.2]{pasha}
+% \end{figure}
+% \end{column}
+
+% \begin{column}{0.4\textwidth}
+% \begin{itemize}
+% \item It is a game of Pasha, similar to modern ludo \pause
+% \item In ludo, there is one dice with 6 sides 
+% \item There are two cuboidal dices with number of dots on them \pause 
+% \item The move is determined by a randomly throwing the two dices
+% \end{itemize}
+% \end{column}
+
+% \end{columns}
+
+% \end{frame}
+
+% \begin{frame}{Game of Chance and Early History of Probability}
+
+% \begin{columns}
+% \begin{column}{0.35\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.4]{cardano}
+% \caption{Cardino, Italy}
+% \end{figure}
+% \end{column}
+% \pause 
+% \begin{column}{0.7\textwidth}
+% \begin{itemize}
+% \item Early theory of probability arose from games of chance played in Europe\pause
+% \item On the left is Cardano, an Italian mathematician, who studied game of chance \pause  
+% \item He gambled for about 25 years! \pause 
+% \item His work on probability were published in famous 15 page ``Liber de Ludo Aleae"
+% \end{itemize}
+% \end{column}
+
+% \end{columns}
+
+% \end{frame}
+
+
+% \begin{frame}{Game of Chance and Early History of Probability...}
+
+% \begin{columns}
+% \begin{column}{0.3\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.4]{cardano}
+% \end{figure}
+% \end{column}
+% \pause 
+% \begin{column}{0.75\textwidth}
+% \begin{itemize}
+% \item Cardano’s contributions have led some to consider
+% Cardano as the real father of probability. \pause
+% \item Oystein Ore’s biography of Cardano,
+% titled Cardano: The Gambling Scholar:
+% \begin{figure}
+% \includegraphics[scale=0.55]{cardano2}
+% \end{figure}
+% \end{itemize}
+% \end{column}
+
+% \end{columns}
+
+% \end{frame}
+
+
+
+
+
+
+%\begin{frame}{Definition of Classical Probability...}
+%
+%\begin{columns}
+%\begin{column}{0.3\textwidth}
+%\begin{figure}
+%\includegraphics[scale=0.45]{laplace}
+%\end{figure}
+%\end{column}
+%\pause 
+%\begin{column}{0.75\textwidth}
+%\begin{itemize}
+%\item French mathematician, 1749-1827 \pause
+%\item Known for his work in 
+%\begin{itemize}
+%\item Engineering: Tidal Dynamics \pause 
+%\item Mathematics: Laplace equation, Laplace Transform \pause 
+%\item Statistics: Bayesian Intrepretation \pause 
+%\item Physics: Existance of black holes, Gravitational collapse, stability of solar, Speed of sound, Surface tension, etc
+%\end{itemize}
+%\end{itemize}
+%\end{column}
+%
+%\end{columns}
+%
+%\end{frame}
+
+
+% \begin{frame}%{Define Keywords}
+% \begin{alertblock}{Random Experiment}
+% A \yellow{random experiment} is a process by which we observe something \yellow{uncertain}. After the experiment, the result of the random experiment is known.
+% \end{alertblock}
+
+% \pause 
+
+% \begin{alertblock}{Outcome}
+% An \yellow{outcome} is a result of a \yellow{random} experiment. 
+% \end{alertblock}
+
+% \pause 
+
+% \begin{alertblock}{Sample Space}
+% The set of \yellow{all} possible outcomes is called the \yellow{sample space}.
+% \end{alertblock}
+
+% \pause 
+
+% \begin{alertblock}{Event}
+% An \yellow{event} is a \yellow{subset} of the sample space.
+% \end{alertblock}
+
+% \pause 
+
+% \begin{alertblock}{Trial}
+% When we repeat a random experiment several times, we call each one of them a \yellow{trial.}
+% \end{alertblock}
+
+
+% \end{frame}
+
+
+% \begin{frame}{Examples of Experiments and Samples Spaces}
+% \begin{itemize}
+% \item \yellow{Random experiment:} toss a coin; \\ \pause 
+% \yellow{Sample space:} S=\{heads,tails\} or as we usually write it, $\{H,T\}.$ \pause 
+% \item \yellow{Random experiment:} roll a die;\\ \pause \yellow{Sample space:} S=\{1,2,3,4,5,6\}. \pause 
+% \item \yellow{Random experiment:} observe the number of iPhones sold by an Apple store in Boston in 2015; \\ \pause \yellow{Sample space:} S=\{0,1,2,3, $\cdots$\}. \pause 
+% \item \yellow{Random experiment:} observe the number of goals in a basketball match; \\ \pause \yellow{Sample space:} S=\{0,1,2,3,$\cdots$ \}. 
+% \end{itemize}
+% \end{frame}
+
+
+% \begin{frame}{Definition of Classical Probability...}
+
+% \begin{columns}
+% \begin{column}{0.3\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.45]{cardano3}
+% \end{figure}
+% \end{column}
+% \pause 
+% \begin{column}{0.7\textwidth}
+% \begin{itemize}
+% \item In Chapter 14 of the De Ludo Aleae, Cardano gives what
+% some would consider the first definition of classical (or
+% mathematical) probability: \pause
+% \begin{figure}
+% \includegraphics[scale=0.58]{cardano4}
+% \end{figure}
+% \end{itemize}
+% \end{column}
+
+% \end{columns}
+
+% \end{frame}
+
+
+% \section{Classical Probability}
+
+
+
+% \begin{frame}{Definition of Classical Probability...}
+% \pause 
+% \begin{columns}
+% \begin{column}{0.3\textwidth}
+% \begin{figure}
+% \includegraphics[scale=0.45]{laplace}
+% \caption{Pascal, France}
+% \end{figure}
+% \end{column}
+% \pause 
+% \begin{column}{0.75\textwidth}
+% \begin{itemize}
+% \item Pascal, French mathematician, 1749-1827 \pause
+% \item Modern definition of probability is due to him \pause 
+% \item Known for his work in 
+% \begin{itemize}
+% \item Engineering: Tidal Dynamics \pause 
+% \item Mathematics: Laplace equation, Laplace Transform \pause 
+% \item Statistics: Bayesian Intrepretation \pause 
+% \item Physics: Existence of black holes, Gravitational collapse, stability of solar, Speed of sound, Surface tension, etc
+% \end{itemize}
+% \end{itemize}
+% \end{column}
+
+% \end{columns}
+
+% \end{frame}
+
+
+% \begin{frame}{Definition of Classical Probability...the way it evolved}
+% \pause 
+% \begin{figure}
+% \includegraphics[scale=0.6]{laplace2}
+% \caption{Book: Théorie analytique des probabilités, Laplace, 1812}
+% \end{figure}
+% \pause
+
+% \alert{Translation of last line:} The probability of an event is a \yellow{fraction} whose \yellow{numerator is  
+% the number of favourable cases} and whose \yellow{denominator is total number of cases.} In the first line, he also mentions that all the events are \yellow{equally possible} (or equally likely).
+
+% \end{frame}
+
+
+% \begin{frame}{Finite Probability Space}
+% \begin{alertblock}{Definition}
+% \begin{itemize}
+% \item The number of outcomes is finite. \pause 
+% \item Each outcome $i$ has probability $p_i \geq 0$ \pause 
+% \item Probabilities sum to 1: $\sum_i p_i = 1$ \pause 
+% \item \yellow{Event:} a set of outcomes \pause 
+% \item \yellow{Probability of the event:} sum of outcome probabilities \pause 
+% \item Is $p_i=0$ possible?
+% \end{itemize}
+% \end{alertblock}
+% \end{frame}
+
+
+% \begin{frame}{Finite Probability Space with Equally Likely Outcomes}
+% \begin{alertblock}{Definition}
+% A finite sample space where each outcome is equally likely
+% \end{alertblock}
+% \pause 
+% \begin{itemize}
+% \item Let $S = \{ s_1, s_2, \cdots, s_N \}, \quad P(s_i) = P(s_j), \quad \forall i,j$ \pause 
+% \item Since all outcomes are equally likely, 
+% \[ P(s_i) = \dfrac{1}{N}, \quad \forall i \in \{ 1,2, \cdots, N\} \] \pause 
+% \item If $A$ is any event with cardinality $|A|=M,$ then \[ P(A) = \dfrac{|A|}{|S|} = \dfrac{M}{N}\]
+% \end{itemize}
+% \end{frame}
+
+
+
+% \begin{frame}{Probability and Axioms of Probability}
+% \pause 
+% \begin{alertblock}{Probability}
+% We assign a \yellow{probability measure} P(A) or Pr(A) to an event A. \pause This is a value between 0 and 1 that shows how likely the event is. \pause If P(A) is close to 0, it is very unlikely that the event A occurs. \pause On the other hand, if $P(A)$ is close to 1, $A$ is very likely to occur. \pause The main subject of probability theory is to develop tools and techniques to calculate probabilities of different events.
+% \end{alertblock}
+% \pause 
+% \begin{alertblock}{Probability Axioms...}
+% \begin{itemize}
+% \item \yellow{Axiom 1:} For any event $A, \quad P(A) \geq 0$ \pause 
+% \item \yellow{Axiom 2:} Probability of the sample space $S$ is $P(S)=1$ \pause 
+% \item \yellow{Axiom 3:} If $A1,A2,A3,\cdots$ are disjoint events, then $P(A_1 \cup A_2 \cup A_3 \cdots ) = P(A_1)+P(A_2)+P(A_3)+ \cdots $
+% \end{itemize}
+% \end{alertblock}
+% \end{frame}
+
+% \begin{frame}{Quiz}
+% \begin{alertblock}{Quiz}
+% Prove the following:
+% \begin{itemize}
+% \item For any event $A,$ $P(A^c) = 1 - P(A)$ \pause 
+% \item The probability of the empty set is zero, i.e., $P(\phi) = 0$ \pause 
+% \item For any event $A, P(A ) \leq 1$ \pause 
+% \item If $A \subseteq B,$ then $P(A) \leq P(B)$ \pause 
+% \item $P(A - B) = P(A) - P(A \cap B)$ 
+% \end{itemize}
+% \end{alertblock}
+% \end{frame}
+
+
+% \begin{frame}{Calculate Probabilities...}
+% \begin{alertblock}{Coin Toss example}
+% A coin is considered fair if the likelihood of getting heads or tails is same. Calculate the probability of obtaining head, when the coin is tossed once.
+% \end{alertblock}
+% \pause 
+% \begin{block}{Answer}
+% There are two favourable cases, the set of all possible cases is $\{H, T \}.$ The number of head possible in one toss of the coin is 1. Hence, the probability of obtaining head is the fraction: $\dfrac{1}{2}$
+% \end{block}
+
+% \end{frame}
+
+% \begin{frame}{Quiz}
+% \begin{alertblock}{Quiz}
+% We roll a fair dice. What is the probability of the event $E = \{ 1, 6\}?$
+% \end{alertblock}
+% \vspace{4cm}
+% \end{frame}
+
+
+% \begin{frame}{Calculate Probabilities...}
+% \begin{alertblock}{Coin Toss example}
+% A coin is considered \yellow{fair} if the likelihood of getting heads or tails is \yellow{same.} \pause  Calculate the probability of obtaining at least one head, when two fair coins are tossed simultaneously.
+% \end{alertblock}
+% \pause 
+% \begin{block}{Answer}
+% \begin{itemize}
+% \item Total number possibilities are 
+
+% $ \{ H, H \}, \{ H, T \}, \{ T, T\}, \{ T, H \} $ \pause 
+
+% \item Favourable cases are
+% %\begin{align*}
+% $ \{ H, H \}, \{ H, T \}, \{ T, H \} $ \pause 
+% %\end{align*}
+% \item Hence the probability of atleast one head is = $\dfrac{3}{4}$
+% \end{itemize}
+% \end{block}
+
+% \end{frame}
+
+
+% \begin{frame}{Calculate Probabilities...}
+% \begin{alertblock}{Coin Toss example}
+% Ten \yellow{fair coins} are tossed \yellow{simultaneously}. What is the probability of getting \yellow{atleast one head?}
+% \end{alertblock}
+% \pause 
+% \begin{block}{Answer}
+% \begin{itemize}
+% \item Total number possibilities are $2^{10}$ \pause 
+% \item Only case with \yellow{no head:} $\{ T,T,T,T,T,T,T,T,T,T\}.$ \yellow{Favourable cases} are: $2^{10}-1$ \pause 
+% \item Hence the probability of \yellow{atleast one head} is = $\dfrac{2^{10}-1}{2^{10}}$
+% \end{itemize}
+% \end{block}
+
+% \end{frame}
+
+
+
+
+
+
+% \begin{frame}{Computing probabilities...}
+
+% \begin{columns}
+% \begin{column}{0.45\textwidth}
+% Consider an \yellow{experiment} of throwing two dice: blue and red one.
+% \begin{figure}
+% \includegraphics[scale=2.5]{redblue2}
+% \end{figure}
+% \end{column}
+% \pause 
+
+% \begin{column}{0.6\textwidth}
+% What did we assume? \pause 
+% \begin{itemize}
+% \item The \yellow{outcome} is $(x,y), \quad x,y, \in \{1,2,\dots,6\}$ \pause 
+% \item The \yellow{number of outcomes} = 36 \pause 
+% \item We assume that all 36 are \yellow{equiprobable} \pause 
+% \item \yellow{Probability space:} all outcomes \pause 
+% \item \yellow{Event:} some favourable outcomes that we need to define precisely
+% \end{itemize}
+% \end{column}
+
+% \end{columns}
+
+% \end{frame}
+
+%%%%%%%%%%%%%%%% QUIZ %%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{Attendance Quiz-2}
+% \Huge
+% \url{https://tinyurl.com/y3ct7ucj}
+% \normalsize
+% \vspace{3cm}
+% \end{frame}
+
+
+
+\begin{frame}{Computing probabilities...}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\yellow{Experiment:} Throw two dice. \\ \pause 
+\yellow{Event:} Bigger number on red than blue. \\ \pause 
+\yellow{Quiz:} What is the probability of this event? \pause 
+\begin{figure}
+\includegraphics[scale=0.5]{twodice2}
+\end{figure}
+\end{column}
+\pause 
+
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \yellow{Probability space:} all outcomes \pause 
+\item \yellow{Event:} some favourable outcomes \pause 
+\item \yellow{Probability:} (\#favorable)/36
+\begin{figure}
+\includegraphics[scale=0.5]{redblue3}
+\end{figure}
+\end{itemize}
+\end{column}
+\end{columns}
+\pause 
+\mydef{0.4}{Hence, probability, $p = \dfrac{15}{36}$}
+
+\end{frame}
+
+
+\begin{frame}
+\begin{alertblock}{Quiz}
+\begin{itemize}
+\item \yellow{Experiment:} Toss a coin $n$ times \pause 
+\item \yellow{Outcome:} sequence of $n$ bits \pause 
+\item \yellow{Total number of outcomes:} $2^n$ outcomes \pause 
+\item \yellow{Assumption:} equiprobable \pause 
+\item \yellow{Probability of all heads:} $1/2^n$ \pause 
+\item Consider an event of ``first bit" = ``last bit" \pause 
+\item What is the \yellow{probability} of the above event?
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+
+\begin{frame}{Answer to Quiz...}
+\pause 
+\begin{block}{Answer to Quiz:}
+\pause 
+\begin{itemize}
+\item Number of possible cases:
+\begin{align*}
+&H \, * \, \cdots \, * \, H \\
+&T \, * \, \cdots \, * \, H \\
+&H \, * \, \cdots \, * \, T \\
+&T \, * \, \cdots \, * \, T \\
+\end{align*} \pause 
+\item \yellow{Observation:} In \yellow{half} of the cases, first bit does not equal last bit \pause 
+\item Hence, probability of the event is $1/2$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Remark on Counting. Does probability boils down to counting always?}
+\pause 
+\begin{itemize}
+\item It is true that in many cases probability boils down to counting \pause 
+\item However, there are \yellow{non-uniform} distributions  \pause 
+\item We also study \yellow{continuous} distributions \pause 
+\item In the continuous case, we need to consider some other measure \pause 
+\item What is the probability that a number 1.5 is picked in $[1,2]?$ \pause Does this make sense? 	
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Probability, Galton Board, and Pascal Triangle}
+
+\begin{center}
+Movie of Galton board here!
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Probability, Galton Board, and Pascal Triangle}
+
+\begin{columns}
+\begin{column}{0.3\textwidth}
+\begin{figure}
+\includegraphics[scale=0.5]{galton}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.75\textwidth}
+\begin{itemize}
+\item This is called galton board, \yellow{Sir Francis Galton (1822-1911)} \pause
+\item The set of red marbles are allowed to fall \pause 
+\item We observe the distribution of the marbles after the fall \pause 
+\item \yellow{Quiz:} Why do we have more marbles in the middle? \pause 
+\item Does probability have any role in this distribution? \pause 
+\item Can we \yellow{prove that the distribution will look like this mathematically?} \pause 
+\item Does \yellow{Pascal triangle} has anything to do with this? \pause 
+\item Let us analyze this in detail ...
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+\end{frame}
+
+
+
+
+%\begin{frame}{Probability, Galton Board, and Pascal Triangle}
+%
+%\begin{columns}
+%\begin{column}{0.35\textwidth}
+%\begin{figure}
+%\includegraphics[scale=0.5]{galton2}
+%\end{figure}
+%\end{column}
+%\pause 
+%\begin{column}{0.7\textwidth}
+%\begin{itemize}
+%\item Assume that at each level the beans are splitted evenly. \pause
+%\item The set of red marbles are allowed to fall
+%\item We observe the distribution of the marbles 
+%\item Why do we have more marbles in the middle?
+%\item Can we prove this mathematically?
+%\item Also, what does Pascal triangle has to do with this?
+%\end{itemize}
+%\end{column}
+%
+%\end{columns}
+%
+%\end{frame}
+
+
+
+
+
+\begin{frame}{Probability, Galton Board, and Pascal Triangle}
+
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{figure}
+\includegraphics[scale=0.5]{galton2}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item Assume that at each level the \yellow{beams are splitted evenly} \pause
+\item Probability that ball hits current beam is sum of probability of this ball hitting left and right beam above \pause 
+\item If $x$ is the top left probability, and $y$ is the top right probability, then probability of hitting the current bin is $(x+y)/2$ \pause 
+\begin{figure}
+\includegraphics[scale=0.35]{galton3}
+\end{figure}
+\pause 
+\item The probability of current bin = $\binom{n}{k} / 2^n$
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+\end{frame}
+
+
+%\begin{frame}{Probability, Galton Board, and Pascal Triangle}
+%
+%\begin{columns}
+%\begin{column}{0.3\textwidth}
+%\begin{figure}
+%\includegraphics[scale=0.5]{galton}
+%\end{figure}
+%\end{column}
+%\pause 
+%
+%\begin{column}{0.75\textwidth}
+%What did we assume?
+%\begin{itemize}
+%\item At each level half of the beans go left and half of the beans go right \pause
+%\item Nothing but the truth, but not the entire truth \pause 
+%\item Imagine that beans remember left/right direction, and it influences the next move
+%\item May happen in real life; But we assumed \yellow{independence} \pause 
+%\item We define independence later
+%\end{itemize}
+%\end{column}
+%
+%\end{columns}
+%
+%\end{frame}
+
+
+
+
+\begin{frame}{Non equiprobable outcomes!}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+What is wrong with these dice?
+\begin{figure}
+\includegraphics[scale=0.55]{skewdice}
+\end{figure}
+\end{column}
+\pause 
+
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item So far we assumed \yellow{equiprobable} outcomes \pause 
+\item On the left, we have \yellow{skewed dice, i.e., unfair dice} \pause 
+\item Will our previous definition of calculating probability work? \pause 
+\item Unfortunately not, how to deal with skewed cases?
+
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Non equiprobable outcomes!}
+
+\begin{columns}
+\begin{column}{0.35\textwidth}
+
+\begin{figure}
+\includegraphics[scale=0.55]{skewdice}
+\end{figure}
+\end{column}
+\pause 
+
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item Since the dice is skewed, frequency of outcomes are \yellow{different} \pause
+\begin{itemize}
+\item That is, for example, number 4 may appear more frequently  \pause 
+\end{itemize}
+\item Let $p_i$ denote the probability of $i$th number \pause 
+\item If we throw the dice long enough, the frequencies \yellow{stabilise} \pause 
+\item For example, the probability of getting an even number = $p_2 + p_4 + p_6$ \pause 
+\item Also, we know that the sum of \yellow{all the probabilities sum to 1, even though the dice is skewed!}
+\begin{itemize}
+\item That is: $p_1 + p_2 \cdots + p_6 = 1$
+\end{itemize}
+
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Example: Dice Throw and Venn Diagram}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\yellow{Experiment:} Throw a fair dice once \\ \pause 
+\yellow{Sample Space:} $S = \{ 1,2,3,4,5,6 \}$ \pause  
+\begin{figure}
+\includegraphics[scale=0.3]{probdice}
+\end{figure}
+\begin{itemize}
+\item Consider \yellow{event} $A = \{1,2,3\}$ \pause 
+\item Consider \yellow{event} $B = \{5,6\}$
+\end{itemize}
+\end{column}
+\pause 
+
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Since the dice is fair, we have $p_1+p_2+\cdots + p_6 = 1$ \pause 
+\item $Pr(A) = p_1 + p_2 + p_3$ \pause 
+\item $Pr(B) = p_5 + p_6$ \pause 
+\item Consider the \yellow{event} $A$ or $B = \{ 1,2,3,5,6\}$ \pause 
+\item $Pr(A ~\text{or}~ B) = $
+\[ Pr(A) + Pr(B) = p_1+p_2+p_3+p_5+p_6 \]
+\end{itemize}
+\yellow{Why $Pr(A~\text{or}~B) = Pr(A)+Pr(B)?$} \pause \\
+\yellow{When are we allowed to add probabilities?}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Mutually Exclusive Events Events}
+\begin{alertblock}{Mutually Exclusive Events}
+Two events are said to be \yellow{mutually exclusive} if they have disjoint set of outcomes. \pause Let $A$ and $B$ be two \yellow{mutually exclusive events}, then we have \[ Pr(A \cup B) = Pr(A) + Pr(B) \]
+\end{alertblock}
+\pause
+\begin{alertblock}{Probability of a complement}
+Let $A$ be any event, and $A^c$ be its \yellow{complement}. \pause Then clearly $A \cup A^c$ is the \yellow{complete set of outcomes,} i.e., it is a \yellow{sample space}. \pause  Hence, we have \[ Pr(A) + Pr(A^c) = 1 \quad \implies Pr(A^c) = 1 - Pr(A) \]
+\end{alertblock}
+
+
+\end{frame}
+
+\begin{frame}{Mutually Exclusive Events..}
+\pause 
+\begin{alertblock}{Mutually disjoint events}
+A set of $n$ events denoted by $A_1, A_2, \cdots, A_n$ are called \yellow{mutually disjoint events} if the following holds:
+\pause 
+\begin{align*}
+P(A_1 \cup \cdots \cup A_n) = P(A_1) + \cdots + P(A_n).
+\end{align*}
+\pause 
+From \yellow{Axiom-3,} it holds for \yellow{countably infinite unions}. 
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Quiz: Use concept of disjoint events}
+\begin{alertblock}{Quiz}
+In a cricket tournament with four teams denoted by $\{ A, B, C, D \},$ team $A$ has $20\%$ chance of winning, while team $B$ has a $40\%$ chance of winning. What is the probability that $A$ or $B$ win the tournament? 
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Quiz-Use probability axioms}
+\begin{alertblock}{Quiz}
+\yellow{Suppose we know the following:}
+\begin{itemize}
+\item there is a $50\%$ chance that it will be hot Today
+\item there is a $30\%$ chance that it will be hot Tomorrow
+\item there is $10\%$ chance that it wont be hot Today or Tomorrow 
+\end{itemize} \pause 
+\yellow{Answer the following:} \pause 
+\begin{itemize}
+\item probability that it will be hot today or tomorrow
+\item probability that it will be hot today and tomorrow
+\item probability that it will be hot today but not tomorrow
+\item probability that it either will be hot today or tomorrow, but not both
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Non-Mutually Exclusive Events}
+\begin{itemize}
+\item What if the two events $A$ and $B$ are \yellow{not mutually exclusive}? \pause 
+\item What relation we have
+\begin{align}
+\label{eq1}
+Pr(A \cup B) \quad ? \quad Pr(A) + Pr(B)
+\end{align} \pause 
+\item Let us consider an example below with two events $A$ and $B$ shaded
+\begin{figure}
+\includegraphics[scale=0.3]{excl}
+\end{figure} \pause 
+\item For the events $A$ and $B,$ which relation \eqref{eq1} holds?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}%{Non-Mutually Exclusive Events}
+\begin{itemize}
+\item Consider the example as before
+\begin{figure}
+\includegraphics[scale=0.3]{excl}
+\end{figure}
+\pause 
+\item Let us calculate the probabilities of the two events $A$ and $B$
+\[ Pr(A) = p_1 + p_2 + p_3, \quad Pr(B) = p_3 + p_4 \] \pause 
+\item Now we calculate probability of $A \cup B$ \pause 
+\[ Pr(A \cup B) = Pr(\{ 1,2,3,4 \}) = p_1 + p_2 + p_3 + p_4 \] \pause 
+\item Using above: \yellow{$Pr(A \cup B) = Pr(A) + Pr(B) - Pr(A \cap B)$} \pause 
+\item Recall discrete mathematics: \yellow{inclusion-exclusion principle}. (\yellow{Proof?})
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Generalized Inclusion-Exclusion Principle}
+\pause 
+\begin{alertblock}{Inclusion-Exclusion Principle}
+\begin{itemize}
+\item $P(A \cup B) = P(A) + P(B) - P(A \cap B)$ \pause 
+\item $P(A \cup B \cup C) = P(A) + P(B) + P(C) - P(A \cap B) - P(B \cap C) - P(B \cap C) + P(A \cap B \cap C)$ \pause 
+\item In general for $n$ events, we have \pause 
+\begin{align*}
+P(\cup_{i=1}^n A_i ) = \sum_{i=1}^n P(A_i) - \sum_{i < j} P(A_i \cap A_j) &+ \sum_{i<j<k} P(A_i \cap A_j \cap A_k) \\ &- \cdots (-1)^{n-1} P(\cap_{i=1}^n A_i)
+\end{align*}
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Discrete Probability Models}
+\pause 
+\begin{itemize}
+\item Sample space can be of two types: \yellow{discrete or continuous} \pause 
+\item in discrete probability models we can compute the probability of events by \yellow{adding} all the corresponding outcomes \pause 
+\item in continuous probability models we need to use \yellow{integration instead of summation}	
+\end{itemize} \pause 
+\begin{alertblock}{Definition of discrete probability model}
+If the sample space $S$ is a countable set, then it refers to discrete probability model. Since $S$ is countable: $S = \{ s_1, s_2, \cdots, \}$ \pause 
+\begin{itemize}
+\item For an event $A \subset S,$ by \yellow{3rd axiom}
+\begin{align*}
+P(A) = \sum_{s_j \in A} P(s_j)
+\end{align*} 
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Choices and Choice Tree}
+\pause 
+\begin{itemize}
+\item Consider 6 balls labelled 1,2,3,4,5,6 \pause 
+\item The balls are kept in two boxes. In the first box, we have ${1,2}$ balls, and in the second box, we have ${3,4,5,6}$ balls \pause 
+\begin{figure}
+\includegraphics[scale=0.4]{box}
+\end{figure} \pause 
+\item Assume the following: \pause 
+\begin{itemize}
+\item The two boxes are \yellow{equiprobable} \pause 
+\item All the balls in each box is \yellow{equiprobable} \pause 
+\end{itemize}
+\item \yellow{Question:} What are the probabilities $p_1, p_2, \cdots, p_6?$
+\end{itemize}	
+\end{frame}
+
+
+\begin{frame}
+\begin{columns}
+
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.37]{choice}
+\caption{Consider a choice tree for the problem}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item We have the following
+$$ p_1 + p_2 = 1/2, \quad p_3 + p_4 + p_5 + p_6 = 1/2 $$ \pause 
+\item Balls in box-1 are \yellow{equiprobable:} $p_1 = p_2$ \pause 
+\item Balls in box-2 are \yellow{equiprobable:} $p_3 = p_4 = p_5 = p_6$ \pause 
+\item From above, we have 
+\[ p_1 = p_2 = 1/4, \quad p_3 = p_4 = p_5 = p_6 = 1/8 \]
+\end{itemize}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+
+%\end{comment}
+
+\begin{frame}{Shrewd Prisoner and Maximizing Chance!}
+\begin{alertblock}{Shrewd Prisoner Problem}
+Long ago a prisoner was to be executed. \pause In
+response to his supplications, he was promised that he would be
+released if he drew a white ball from one of two similar urns. \pause  The
+provisions were that he had to distribute 50 white and 50 black balls
+between the two urns, \pause in any way he liked, \pause  after which he had to draw
+a ball at random from one of these urns.
+\\
+\pause 
+\yellow{Question:} How should the prisoner put the balls such that the probability of his release is maximized?
+\end{alertblock}
+\end{frame}
+
+
+
+\begin{frame}{Solution to Shrewd Prisoner Problem}
+\begin{itemize}
+\item How did the prisoner arrange to make his chance of success as great
+as possible? \pause 
+\item What happens if he puts equal number of white and black balls in two boxes? \pause 
+\begin{itemize}
+\item The probability of choosing a white ball (from either boxes) is $1/2$ \pause 
+\item Can he do better? \pause 
+\end{itemize}
+\item What if he puts all white in one, and all black in other urn? \pause 
+\begin{itemize}
+\item probability of choosing white from urn-1 is 1/2, but probability of choosing white from urn-2 is 0. Can he do better? \pause 
+\end{itemize}
+\item Can he do better than this? If yes, then how? \pause 
+\item Put 1 white and 0 black in urn-1, and put 49 white and 100 black in urn-2 \pause 
+\item The \yellow{probability of success} is $\dfrac{1}{2} \times 1 + \dfrac{1}{2} \times \dfrac{49}{99} \approx 3/4$
+%\item If he chooses urn-1, he is sure, if not, then he still has a ``good" chance}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Extension of the problem}
+\begin{alertblock}{Quiz-1}
+What is the chance of success of the prisoner if he had been allowed to distribute 100 balls among 4 urns?
+\end{alertblock}
+\pause 
+\begin{alertblock}{Quiz-2}
+What if the number of balls is increased?
+\end{alertblock}
+
+\end{frame}
+
+
+%\begin{frame}{Random Walks, Independence, and Probability}
+%\pause
+%	
+%\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

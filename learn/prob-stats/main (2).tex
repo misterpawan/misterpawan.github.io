@@ -1,0 +1,158 @@
+\documentclass[10pt,t, aspectratio=169, handout]{beamer}
+\usetheme{Heverlee}
+\usepackage{multicol}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{multicol}
+
+
+\newcommand\mydef[2]{%
+  \fbox{\begin{minipage}{#1\textwidth}#2\end{minipage}}\vspace{0.5cm}} 
+
+\setbeamertemplate{itemize items}[ball]
+
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+%\input{iteach.tex}
+
+%%% QUICK OPTIONS:
+% (A) Math font without serifs, enable line below to make math serif:
+    %\usefonttheme[onlymath]{serif}
+
+% (B) Re-define primary colour by adjusting the RGB values
+    %\definecolor{pblue}	{RGB}{206,125,66}
+
+% (C) Title page graphic (optional) --- this is not for the background image, see \usebackgroundtemplate to change that ---
+    %\titlegraphic{\includegraphics[height=2.7cm]{example_figure.pdf}}
+
+% (D) Add logo to bottom right-corner (optional)
+ %   \logo{\includegraphics[height=0.7cm]{logo.png}\hspace{12pt}\vspace{-6pt}}      
+
+% (E) Choose one (or none) of these lines to add footline bar on all frames
+    %\setbeamertemplate{footline}[infoline]  % author, title, insitute
+    %\setbeamertemplate{footline}[navigation] % dots swhowing progress
+    %\setbeamertemplate{footline}[navsym] % navigation symbols
+
+% (F) Widescreen 16:9 ratio
+    %\usepackage[orientation=landscape,size=custom,width=16,height=9,scale=0.45,debug]{beamerposter} 
+
+
+
+%%% TITLE PAGE INFO:
+\title{Discrete Structures}
+\subtitle{Permutations and Combinations}
+\author{Pawan Kumar}
+\institute{IIIT, Hyderabad}
+%\date{ 2020}
+
+% Text inside {} is used on the title page. Text inside [] is optional, and is used in footline bar (if [] is omitted then text from {} will be used in both ; if [] is specified but left empty then the footline will not show any text)
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\brown}[1]{\textcolor{brown}{#1}}
+\newcommand{\yellow}[1]{\textcolor{brown}{#1}}
+\newcommand{\orange}[1]{\textcolor{orange}{#1}}
+
+
+\setbeamertemplate{frametitle}
+{
+    \vspace{10pt}
+    {\large\textbf{ \insertframetitle}} 
+    % section number -- frame title 
+}
+
+ %%
+ %%  0. TITLE PAGE and TABLE OF CONTENT
+ %%
+\begin{document}
+% Title page
+
+{
+% Change image, or delete this line to remove background image
+\usebackgroundtemplate{ \parbox[b][\paperheight][b]{\paperwidth}{\centering\includegraphics[width=\paperwidth]{Background/bg_winter.jpg}}} 
+
+% \usebackgroundtemplate{ \parbox[b][\paperheight][b]{\paperwidth}{\centering\includegraphics[width=\paperwidth]{Background/dolomites-2179602_1920}}} 
+
+ %   abudhabi      cherry      forest      river
+ %   alishan       chobe       leuven      sanfancisco
+ %   blueprint     columns     library     uyuni
+ %   bokeh         flowers     newyork     winter
+
+%\setbeamercolor{background canvas}{bg=lgray}  % make background light gray
+
+
+
+
+
+\begin{frame}[plain,noframenumbering]
+    \titlepage
+\end{frame}
+}		
+
+
+
+% Table of contents slide
+% \begin{frame}{Outline}
+% 	\vskip 2mm
+% 	\hfill	{\large \parbox{.95\textwidth}{\tableofcontents[hideothersubsections]}}
+% \end{frame}
+
+\begin{frame}
+\begin{multicols}{2}
+  \tableofcontents
+\end{multicols}
+\end{frame}
+
+% Unit-1: Basic background
+\input{quiz}
+\input{checklist}
+%\input{toc}
+\input{counting.tex}
+\input{sets} 
+\input{sumAndProductRule}
+\input{tuples}
+%\input{temp}
+\input{combinations}
+\input{problems}
+
+% Unit-2: Probability
+\input{motivationProbability}
+\input{gameTheory}
+\input{RandomWalks}
+\input{information}
+\input{quantum}
+\input{condProb}
+
+% Unit-3: Random Variables
+\input{RandomVariables}
+\input{distributions}
+\input{variance}
+\input{moments}
+\input{problems2}
+\input{cdf}
+\input{continuousRV}
+\input{solved}
+\input{continuousDistributions}
+
+% Unit-4: Multiple Random Variables
+\input{mixedrv}
+\input{JointDist}
+\input{jointContRVs}
+\input{multRV}
+
+% Unit-5: Probability Bounds
+\input{bounds}
+
+%% Unit-6: Statistical Inference
+\input{statInference1}
+\input{bayesianInference}
+
+%% Unit-7: Random Process
+
+
+\end{document}

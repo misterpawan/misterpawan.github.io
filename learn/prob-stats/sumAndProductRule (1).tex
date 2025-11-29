@@ -1,0 +1,116 @@
+
+\begin{frame}{Rule of Sum using Set Language}
+\pause
+\begin{alertblock}{Rule of Sum}
+If there is a set $A$ with $k$ elements, a set $B$ with $n$
+elements and these sets do not have common
+elements, then the set $A \cup B$ has $n+k$ elements
+\end{alertblock} \pause 
+\begin{figure}
+\includegraphics[scale=0.35]{sum}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Remark on Rule of Sum}
+\pause 
+\begin{alertblock}{Rule of sum}
+Can we apply rule of sum when $A$ and $B$ intersect as follows? \pause 
+\begin{figure}
+\includegraphics[scale=0.28]{sum2}
+\end{figure} \pause 
+\end{alertblock}
+\begin{itemize}
+\item If we consider $|A|+|B|$ as in sum rule, then we will be wrong \pause 
+\item We will count elements that belong to both $A$ and $B$ twice
+\item $|A \cup B| = |A| + |B| - |A \cap B|$ (Inclusion-Exclusion Principle)
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Applications of sum rule}
+\pause 
+\begin{alertblock}{Sum rule}
+Count all integers from 1 to 10 that are divisible by 2 or by 3
+\end{alertblock} \pause 
+\begin{itemize}
+\item Let us count all the numbers from 1 to 10:
+\begin{align*}
+1,2,3,4,5,\alert{6},7,8,9,10
+\end{align*} \pause 
+\item Here 6 is divisible both by 2 and by 3. Hence, rule of sum can't be applied!
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Sum Rule: Example}
+\pause 
+\begin{alertblock}{Number of Paths}
+Suppose there are several points connected by
+arrows. There is a starting point $s$ (called source)
+and a final point $t$ (called sink). How many
+different ways are there to get from $s$ to $t?$
+\end{alertblock} \pause 
+\begin{figure}
+\includegraphics[scale=0.35]{count}
+\end{figure} \pause 
+\begin{itemize}
+\item counting can be done recursively \pause 
+\item for each node count the number of paths from $s$ to this node
+\begin{itemize}
+\item sum rule will be used
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Product Rule}
+
+\begin{frame}{Product Rule}
+\pause 
+\begin{alertblock}{Product Rule}
+If there are $k$ object of the first type and there are
+$n$ object of the second type, then there are $k \times n$
+pairs of objects, the first of the first type and the
+second of the second type
+\end{alertblock} \pause 
+\begin{figure}
+\includegraphics[scale=0.35]{mult}
+\end{figure} \pause 
+\begin{itemize}
+\item Hence, there are $4 \times 3 = 12$ options
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{All possible pairs}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.38]{mult2}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Rule of Product Using Sets}
+\pause 
+\begin{alertblock}{Product Rule}
+If there is a finite set $A$ and a finite set $B,$ then
+there are $|A| \times |B|$ pairs of objects, the first from
+$A,$ and the second from $B$
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Tuples: Application of Product Rule}
+\pause 
+\begin{alertblock}{Tuples}
+How many different 5-symbol passwords can we
+create using lower case Latin letters only? (the
+size of the alphabet is 26)
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item How many different 1-letter passwords are possible? \pause 
+\item What about 2-letters? \pause 
+\item How many different 3-letter words are possible? \pause 
+\item Can you now answer the question above?
+\end{itemize}
+\end{frame}

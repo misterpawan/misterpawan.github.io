@@ -1,0 +1,1399 @@
+\section{Joint Continuous Random Variables}
+
+\begin{frame}{Joint Probability Density Function...}
+\pause 
+
+\begin{alertblock}{Joint Continuous Density Functions}
+Two RVs $X,Y$ are \yellow{jointly continuous} if there exists a nonnegative function $f_{XY}: \mathbb{R}^2 \rightarrow \mathbb{R},$ such that, for any set $A \in \mathbb{R}^2,$ we have 
+\begin{align*}
+P((X,Y) \in A) = \int \int_A f_{XY}(x,y) \, dx dy
+\end{align*} \pause 
+The function $f_{XY}(x,y)$ is called the \yellow{joint probability density function,} PDF, of $X$ and $Y.$ \pause 
+\begin{enumerate}
+\item Here domain of $f_{XY}(x,y)$ is $\mathbb{R}^2,$ but we may redefine \pause 
+\begin{align*}
+R_{XY} = \{ (x,y) \mid f_{X,Y}(x,y) > 0 \}
+\end{align*} \pause 
+\vspace{-0.7cm}
+\item If we indeed choose $A = \mathbb{R}^2,$ then we must have \pause 
+\begin{align*}
+\int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f_{XY}(x,y) \, dx dy = 1
+\end{align*}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+\begin{alertblock}{Solved Example}
+Let $X,Y$ be two jointly continuous RVs with joint $PDF$ \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+x+cy^2 \quad &0 \leq x \leq 1, \: 0 \leq y \leq 1 \\
+0 \quad &\text{otherwise}	
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item Find the constant $c$ \pause 
+\item Find $P(0 \leq X \leq \dfrac{1}{2}, \: 0 \leq Y \leq \dfrac{1}{2})$
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+\subsection{Marginal Continuous PDFs}
+
+\begin{frame}{Marginal Continuous PDF...}
+\pause 
+
+\begin{alertblock}{Marginal Continuous PDF}
+Let $X,Y$ be two random variable. \pause Then the \yellow{marginal PDFs} of $X$ and $Y$ can be computed from the \yellow{joint PDF} $f_{XY}$ as follows \pause 
+\[
+\begin{aligned}
+f_X(x) &= \int_{-\infty}^{\infty} f_{XY}(x,y) \, dy, \quad \text{for all}~x, \\ \pause 
+f_Y(y) &= \int_{-\infty}^{\infty} f_{XY}(x,y) \, dx, \quad \text{for all}~y.
+\end{aligned}
+\]
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+\begin{alertblock}{Solved Example}
+Let $X,Y$ be two jointly continuous RVs with joint $PDF$ \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+x+cy^2 \quad &0 \leq x \leq 1, 0 \leq y \leq 1 \\
+0 \quad &\text{otherwise}	
+\end{cases}
+\end{align*}
+\pause 
+\begin{enumerate}
+\item Find the PDFs $f_X(x)$ and $f_Y(y)$
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{alertblock}{Solved Example}
+Let $X,Y$ be two jointly continuous RVs with joint PDFs \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+cx^2y \quad &0 \leq y \leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item Find $R_{XY}$ and plot it \pause 
+\item Find the constant $c$ \pause 
+\item Find the marginal PDFs $f_X(x)$ and $f_Y(y)$ \pause 
+\item Find $P\left(Y \leq \dfrac{X}{2}\right)$ \pause 
+\item Find $P\left(Y \leq \dfrac{X}{2} \mid Y \leq \dfrac{X}{2}\right)$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Solution to previous problem...}
+\pause 
+
+Looking at the joint PDF, we have \pause 
+\[ R_{XY} = \{ (x,y) \in \mathbb{R}^2 \mid 0 \leq y \leq x \leq 1 \} \]
+\pause 
+The plot is the following \pause 
+\begin{figure}
+\includegraphics[scale=0.25]{example1}
+\caption{Figure showing $R_{XY}$ and integration region $P(Y \leq \dfrac{X}{2})$}
+\end{figure}
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\subsection{Joint Cumulative Distribution}
+
+
+\begin{frame}{Joint Cumulative Distribution...}
+\pause 
+
+\begin{alertblock}{Joint cumulative distribution}
+Let $X,Y$ be two continuous RVs with joint CDF $F_{XY}(x,y)$ as follows \pause 
+\begin{align*}
+F_{XY}(x,y) = P(X \leq x, Y \leq y).
+\end{align*} \pause 
+The joint CDF satisfies the following properties: \pause 
+\begin{enumerate}
+\item $F_X(x) = F_{XY}(x, \infty)$ for any $x$ \quad (marginal CDF of $X$) \pause 
+\item $F_Y(y) = F_{XY}(\infty, y)$ for any $y$ \quad (marginal CDF of $Y$) \pause 
+\item $F_{XY}(\infty, \infty) = 1$ \pause 
+\item $F_{XY}(-\infty, y) = F_{XY}(x, -\infty) = 0$ \pause 
+\item $P(x_1 < X \leq x_2, y_1 < Y \leq y_2) = F_{XY}(x_2,y_2) - F_{XY}(x_2,y_2) - F_{XY}(x_2,y_1) + F_{XY}(x_1,y_1)$ \pause 
+\item If $X,Y$ are independent, then $F_{XY}=F_X(x)F_Y(y)$ 
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solved Example}
+\begin{alertblock}{Solved Example}
+Let $X,Y$ be two random variables with Uniform(0,1) distribution. Find $F_{XY}(x,y).$
+\end{alertblock}
+\vspace{6cm}
+\end{frame}
+
+
+
+\input{scratch}
+
+
+
+
+
+
+
+
+\begin{frame}{Figure for Solved Example...}
+\pause 
+
+\begin{figure}
+\includegraphics[scale=0.25]{FxyJointCDF}
+\caption{Plot of joint CDF}
+\end{figure}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Relationship Between CDF and PDF...}
+\pause 
+\begin{alertblock}{Relationship between CDF and PDF}
+Recall that for single RV we have \pause 
+\begin{align*}
+F_X(x) &= \int_{-\infty}^x f_X(u) \, du \\
+f_X(x) &= \dfrac{dF_X(x)}{dx}
+\end{align*} \pause 
+Similarly, for two RVs we have \pause 
+\begin{align*}
+F_{XY}(x,y) &= \int_{-\infty}^y \int_{-\infty}^x f_{XY}(u,v) \, du \, dv \\
+f_{XY} &= \dfrac{\partial^2}{\partial x \partial y} F_{XY}(x,y)
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example of Joint CDF...}
+\pause 
+
+\begin{alertblock}{Solved Example}
+Let $X,Y$ be two jointly continuous RVs with joint $PDF$ \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+x+cy^2 \quad &0 \leq x \leq 1, 0 \leq y \leq 1 \\
+0 \quad &\text{otherwise}	
+\end{cases}
+\end{align*}
+\pause 
+\begin{enumerate}
+\item Find the joint CDF of $X$ and $Y$
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+\subsection{Conditional PDF, Conditional CDF, and Conditional Expectation}
+
+\begin{frame}{Definition of Conditional PDF and Conditional CDF}
+Let $X$ be a continuous RV and $A$ be an event that $a<X<b$ (where possibly $b=\infty$ or $a=-\infty$), then 
+\begin{align*}
+f_{X\mid A}(x) = \begin{cases}
+1 \quad &x>b \\
+\dfrac{F_X(x) - F_X(a)}{F_X(b) - F_X(a)} \quad &a \leq x < b \\
+0 \quad &x<a
+\end{cases}
+\end{align*}
+
+\begin{align*}
+f_{X \mid A}(x) = \begin{cases}
+\dfrac{f_X(x)}{P(A)} \quad &a \leq x < b \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+\end{frame}
+
+\input{scratch}
+\input{scratch}
+
+
+\subsection{Conditional Expectation and Variance}
+
+\begin{frame}{Conditional Expectation and Variance...}
+\pause 
+
+\begin{alertblock}{Definition of Conditional Expectation and Variance}
+For a random variable $X$ and event $A,$ we have \pause 
+\begin{align*}
+E[X \mid A] &= \int_{-\infty}^{\infty} x f_{X \mid A} (x) \, dx \\
+E[g(X) \mid A] &= \int_{-\infty}^{\infty} g(x) f_{X \mid A}(x) \, dx \\
+\text{Var}(X \mid A) &= E[X^2 \mid A] - (E[X \mid A])^2
+\end{align*}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Example: Conditional PDF and CDF...}
+\pause 
+
+\begin{alertblock}{Solved Example}
+Let $X \sim \text{Exponential}(1).$ \pause Answer the following. \pause 
+\begin{enumerate}
+\item Find the \yellow{conditional PDF and CDF} of $X$ given $X>1$ \pause 
+\item Find $E[X \mid X>1]$ \pause 
+\item Find Var($X \mid X>1$)
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+\subsection{Conditional PDF, Conditional Probability, and Conditional CDF}
+
+
+\begin{frame}{Conditional PDF, Conditional Probability, and Conditional CDF...}
+\pause 
+
+\begin{alertblock}{Definition}
+Let $X,Y$ be two continuous RVs. We define the following: \pause 
+\begin{enumerate}
+\item The \yellow{conditional PDF} of $X$ given $Y=y$ is \pause 
+\vspace{-0.3cm}
+\begin{align*}
+f_{X \mid Y} (X \mid y) = \dfrac{f_{XY}(x,y)}{f_Y(y)}
+\end{align*}  \pause 
+\item The \yellow{conditional probability} that $X \in A$ given $Y=y$ is  \pause 
+\vspace{-0.3cm}
+\begin{align*}
+P(X \in A \mid Y = y) = \int_A f_{X \mid Y} (x \mid y) \, dx 
+\end{align*} \pause 
+\item The \yellow{conditional CDF} of $X$ given $Y=y$ is  \pause 
+\vspace{-0.5cm}
+\begin{align*}
+F_{X \mid Y} (x \mid y) = P(X \leq x \mid Y = y) = \int_{-\infty}^x f_{X \mid Y} (x \mid y) \, dx
+\end{align*}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}[Solved Example]
+Let $X,Y$ be two jointly continuous RVs with joint PDF \pause 
+\begin{align*}
+f_{XY} = \begin{cases}
+\dfrac{x^2}{4} + \dfrac{y^2}{5} + \dfrac{xy}{6} \quad &0 \leq x \leq 1, 0 \leq y \leq 2 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+For $0 \leq y \leq 2,$ find the following \pause 
+\begin{enumerate}
+\item The conditional PDF of $X$ given $Y=y$ \pause 
+\item $P\left(X < \dfrac{1}{2} \mid Y = y \right)$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\subsection{Conditional Expectation and Variance}
+
+\begin{frame}{Definition of Conditional Expectation and Variance...}
+\pause 
+
+\begin{alertblock}{Definition}
+Let $X,Y$ be two jointly continuous RVs. We have \pause 
+\begin{enumerate}
+\item \yellow{Expected value} of $X$ given $Y=y$ is \pause 
+\begin{align*}
+E[X \mid Y=y] = \int_{-\infty}^{\infty} x \, f_{X \mid Y} (x \mid y) \, dx 
+\end{align*} \pause 
+\item \yellow{Conditional expectation} of function of RV \pause 
+\begin{align*}
+E[g(X) \mid Y = y] = \int_{-\infty}^{\infty} g(x) \, f_{X \mid Y} (x | y) \, dx
+\end{align*} \pause 
+\item \yellow{Conditional Variance} of $X$ given $Y=y$ is  \pause 
+\begin{align*}
+\text{Var}(X \mid Y = y) = E[X^2 \mid Y = y] - (E[X \mid Y=y])^2
+\end{align*}
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Solved Example on Conditional Expectation and Conditional Variance}
+\pause 
+
+\begin{example}[Solved Example on Conditional Expectation and Conditional Variance]
+Let $X,Y$ be two jointly continuous RVs with joint PDF \pause 
+\begin{align*}
+f_{XY} = \begin{cases}
+\dfrac{x^2}{4} + \dfrac{y^2}{5} + \dfrac{xy}{6} \quad &0 \leq x \leq 1, \: 0 \leq y \leq 2 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+For $0 \leq y \leq 2,$ find the following \pause 
+\begin{enumerate}
+\item Find $E[X \mid Y = 1]$ and Var$(X \mid Y = 1)$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Independent Random Variables...}
+\pause 
+
+\begin{alertblock}{Definition of Independent Random Variable}
+Two continuous random variables $X$ and $Y$ are \yellow{independent} if \pause 
+\begin{align*}
+f_{XY}(x,y) = f_X(x) \, f_Y(y), \quad \text{for all}~x,y.
+\end{align*} \pause 
+\vspace{-0.2cm}
+Equivalently, $X$ and $Y$ are \yellow{independent} if \pause 
+\begin{align*}
+F_{XY}(x,y) = F_X(x) \, F_Y(y), \quad \text{for all}~x,y 
+\end{align*} \pause 
+\vspace{-0.3cm}
+If $X$ and $Y$ are \yellow{independent}, we have \pause 
+\begin{align*}
+E[XY] &= E[X] \, E[Y] \\
+E[g(X)h(Y)] &= E[g(X)] \, E[h(Y)] 
+\end{align*} \pause 
+\vspace{-0.6cm}
+\begin{itemize}
+\item If we are given joint PDF of $X$ and $Y,$ $f_{XY}(x,y).$ If we can write \pause 
+\begin{align*}
+f_{XY}(x,y) = f_1(x) \, f_2(y),
+\end{align*}  \pause 
+then $X$ and $Y$ are \yellow{independent.}
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}[Solved Example]
+Are the following RVs denoted by $X$ and $Y$ with the following PDF independent? 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+2e^{-x - 2y} \quad &x,y > 0 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+
+
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+8xy \quad &0<x<y<1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+
+
+\end{example}
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}[Solved Example]
+Consider a point $(X,Y)$ chosen uniformly at random from the following disc \pause 
+\begin{align*}
+D = \{ (x,y) \mid x^2 + y^2 \leq 1 \}
+\end{align*} \pause 
+The joint PDF of $X$ and $Y$ is given by \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+c \quad &(x,y) \in D \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item Find the constant $c$ \pause 
+\item Find the marginal PDFs $f_X(x)$ and $f_Y(y)$ \pause 
+\item Find the conditional PDF of $X$ given $Y = y,$ where $-1 \leq y \leq 1$ \pause 
+\item Are $X$ and $Y$ independent? 
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+\begin{frame}{Law of Total Probability...}
+\pause 
+
+\begin{alertblock}{Law of total probability}
+\begin{enumerate}
+
+\item \yellow{Law of Total Probability} \pause 
+\begin{align*}
+P(A) = \int_{-\infty}^{\infty} P(A \mid X = x) f_X(x) \, dx 
+\end{align*}
+\pause 
+
+\item \yellow{Law of Total Expectation} \pause 
+\begin{align*}
+E[Y] = \int_{-\infty}^{\infty} E[Y \mid X = x] f_X(x) \, dx = E[E[Y \mid X]]
+\end{align*}
+\pause 
+
+\item \yellow{Law of Total Variance} \pause 
+\begin{align*}
+\text{Var}(Y) = E[\text{Var}(Y \mid X)] + \text{Var}(E[Y \mid X])
+\end{align*}
+\end{enumerate}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}[Example]
+Let $X,Y$ be two independent Uniform$(0,1)$ RVs. Find $P(X^3 + Y > 1).$
+\end{example}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}[Solved example]
+Let $X \sim \text{Uniform}(1,2).$ \pause For a given $X=x,$ $Y$ is an exponential RV with parameter 
+$\lambda = x,$ that is \pause 
+\[ Y \mid X = x \sim \text{Exponential}(x). \] \pause 
+That is  \pause 
+\[ Y \mid X \sim \text{Exponential}(X). \] \pause 
+\begin{enumerate}
+\item Find $E[Y]$ \pause 
+\item Find $\text{Var}(Y)$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+\subsection{Functions of Two Continuous Random Variables}
+
+
+\begin{frame}{Expectation of Function of Two RVs...}
+\pause 
+
+\begin{alertblock}{Definition of Exectation of Function of RVs}
+
+Let $X,Y$ be two continuous RVs and let $g(X,Y)$ be a function of two RVs $X$ and $Y.$ \pause Then the expectation $E[g(X,Y)]$ is \pause 
+\begin{align*}
+E[g(X,Y)] = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} g(x,y) f_{XY}(x,y) \, dx \, dy
+\end{align*} 
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of Expectation of Function of Two RVs...}
+\pause 
+
+\begin{example}[Example]
+Let $X,Y$ be two jointly continuous RVs with \yellow{joint PDF} \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+x + y \quad &0 \leq x,y \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+Find $E[XY^2].$
+\end{example}
+\vspace{5cm}
+\end{frame}
+
+
+
+\subsection{Computing CDF of Function of Two RVs}
+
+
+\begin{frame}{Computing CDF of Function of Two RVs...}
+\pause 
+
+\begin{alertblock}{Computing PDF of Function of Two RVs}
+If $Z = g(X,Y),$ then the CDF of $Z$ denoted by $F_Z(z)$ is given as follows \pause 
+\begin{align*}
+F_Z(z) &= P(Z \leq z) \\
+&= P(g(X,Y) \leq z) \\
+&= \int \int_D f_{XY}(x,y) \, dx \, dy,
+\end{align*} \pause 
+where $D = \{ (x,y) \mid g(x,y) < z \}.$ To compute the PDF, we need to differentiate $F_Z(z).$
+\end{alertblock}
+\pause 
+\begin{example}[Example]
+Let $X,Y$ be two independent $\text{Uniform}(0,1)$ RVs, and $Z = XY.$ Find the CDF and PDF of $Z.$
+\end{example}
+
+\end{frame}
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\subsection{Method of Tranformation for Function of Two Variables}
+
+
+\begin{frame}{Method of Transformation...}
+\pause 
+
+\begin{alertblock}{Method of Transformation}
+Let $X$ and $Y$ be two jointly continuous RVs. \pause Let $(Z,W) = g(X,Y) = (g_1(X,Y), g_2(X,Y)),$ where $g: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ is continuous one-to-one function with continuous partial derivatives. \pause Let $h=g^{-1},$ that is, $(X,Y) = h(Z,W) = (h_1(Z,W), h_2(Z,W).$ \pause Then $Z$ and $W$ are jointly continuous and their joint PDF, $f_{ZW}(z,w),$ for $(z,w) \in R_{ZW}$ is given by \pause 
+\begin{align*}
+f_{ZW}(z,w) = f_{XY}(h_1(z,w), h_2(z,w)) \, |J|,  
+\end{align*}  \pause 
+where $J$ is the \yellow{Jacobian} of $h$ defined by \pause 
+\begin{align*}
+J = \text{det} \begin{bmatrix}
+\dfrac{\partial h_1}{\partial z} & \dfrac{\partial h_1}{\partial w} \\
+\dfrac{\partial h_2}{\partial z} & \dfrac{\partial h_2}{\partial w}
+\end{bmatrix} = \dfrac{\partial h_1}{\partial z} \cdot \dfrac{\partial h_2}{\partial w} - \dfrac{\partial h_2}{\partial z} \cdot \dfrac{\partial h_1}{\partial w}
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example of Method of Tranformation...}
+\pause 
+
+\begin{example}[Example]
+Let $X$ and $Y$ be two independent standard normal RVs. \pause Let 
+\begin{align*}
+Z &= 2X - Y \\
+W &= -X + Y
+\end{align*} \pause 
+Find $f_{ZW}(z,w).$
+\end{example}
+
+\end{frame}
+
+
+
+
+\input{scratch}
+
+
+
+
+
+\begin{frame}{Example of Method of Transform...}
+\pause 
+
+\begin{example}[Example of Method of Transform]
+Let $X,Y$ be two RVs with joint PDF $f_{XY}(x,y).$ Let $Z = X+Y.$ Find $f_Z(z).$ 
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Convolution and PDF...}
+\pause 
+
+\begin{alertblock}{Convolution and PDF}
+Let $X,Y$ be two jointly continuous RVs and $Z = X+Y,$ then \pause 
+\begin{align*}
+f_Z(z) = \int_{-\infty}^{\infty} f_{XY}(w, z - w) \, dw = \int_{-\infty}^{\infty} f_{XY}(z-w,w) \, dw.
+\end{align*} \pause 
+If $X,Y$ are also \yellow{independent}, then we have \pause 
+\begin{align*}
+f_Z(z) &= f_X(x) \text{*} f_Y(y) \\
+&= \int_{-\infty}^{\infty} f_X(w) f_Y(z - w) \, dw = \int_{-\infty}^{\infty} f_Y(w)f_X(z-w) \, dw
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}[Solved example]
+Let $X$ and $Y$ be two independent standard normal RVs, and let $Z = X + Y.$ \pause Find the PDF of $Z.$ 
+\end{example}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+\subsection{Solved Examples}
+
+
+
+\begin{frame}{Solved Problem 1} 
+\pause 
+\begin{example}[Solved Problem]
+Let $X,Y$ be jointly continuous RVs with joint PDF \pause 
+\begin{align*}
+f_{X,Y}(x,y) = \begin{cases}
+cx + 1 \quad &x,y \geq 0, \, x+y < 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item Find the range of $(X,Y)$ and plot it \pause 
+\item Find the constant $c$  \pause 
+\item Find the marginal PDFs $f_X(x)$ and $f_Y(y)$ \pause 
+\item Find $P(Y < 2X^2)$
+\end{enumerate}
+\end{example}
+\end{frame}
+
+
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Solved Example 2}
+\pause 
+
+\begin{example}[Solved Example]
+Let $X,Y$ be jointly continuous RVs with joint PDF \pause 
+\begin{align*}
+f_{X,Y} = \begin{cases}
+6e^{-(2x + 3y)} \quad &x,y \geq 0 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+%\begin{itemize}
+$\bullet$ Are $X$ and $Y$ independent? \pause \quad $\bullet$ Find $E[Y \mid X>2]$ \pause \quad $\bullet$ Find $P(X>Y)$
+%\end{itemize}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Solved Example 3}
+\pause 
+
+\begin{example}[Solved example]
+Let $X$ be a continuous RV with PDF \pause
+\begin{align*}
+f_X(x) = \begin{cases}
+2x \quad &0 \leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause
+We are also know that given $X=x,$ the RV $Y$ is uniformly distributed on $[-x,x].$ \\ \pause
+$\bullet$ Find the joint PDF $f_{XY}(x,y)$ \quad $\bullet$ Find $P_Y(y)$ \quad $\bullet$ Find $P(|Y| < X^3)$
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Solved Example 4}
+\pause 
+
+\begin{example}[Solved example]
+Let $X,Y$ be two jointly continuous RVs with joint PDF \pause  
+\begin{align*}
+f_{X,Y}(x,y) = \begin{cases}
+6xy \quad &0 \leq x \leq 1, \: 0 \leq y \leq \sqrt{x} \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item Plot $R_{XY}$ \pause 
+\item Find $f_X(x)$ and $f_Y(y)$ \pause  
+\item Are $X$ and $Y$ independent?  \pause 
+\item Find the conditional PDF of $X$ given $Y=y,$  $f_{X \mid Y}(x \mid y)$ \pause 
+\item Find $E[X \mid Y = y], 0 \leq y \leq 1$ \pause 
+\item Find $\text{Var}(X \mid Y = y)$ for $0 \leq y \leq 1$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\subsection{Covariance and Correlation}
+
+
+
+
+\begin{frame}{Definition of Covariance...}
+\pause 
+
+\begin{alertblock}{Definition of Covariance}
+
+Let $X$ and $Y$ be two random variables. \pause The \yellow{covariance} between $X$ and $Y$ is defined as \pause 
+\begin{align*}
+\text{Cov}(X,Y) = E[(X - E[X])(Y - E[Y])] = E[XY] - (E[X])(E[Y]) 
+\end{align*}
+
+\end{alertblock}
+
+\colorbox{red}{\begin{minipage}{2cm}
+Derivation
+\end{minipage}}
+
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Example}
+\pause 
+
+\begin{example}[Solved Example]
+Suppose $X \sim \text{Uniform}(1,2)$ and given $X=x,$ $Y$ is \yellow{exponential} with parameter $\lambda = x.$ Find $\text{Cov}(X,Y).$
+\end{example}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Properties of Covariance...}
+\pause 
+
+\begin{alertblock}{Properties of Covariance}
+\begin{enumerate}
+\item $\text{Cov}(X,X) = \text{Var}(X)$ \pause 
+\item If $X$ and $Y$ are \yellow{independent}, then $\text{Cov}(X,Y)=0.$ [Note: converse is not true!] \pause 
+\item $\text{Cov}(X,Y) = \text{Cov}(Y,X)$ \pause 
+\item $\text{Cov}(a \, X, Y) = a \, \text{Cov}(X,Y)$ \pause 
+\item $\text{Cov}(X + c, Y) = \text{Cov}(X,Y)$ \pause 
+\item $\text{Cov}(X+Y, Z) = \text{Cov}(X,Z)+\text{Cov}(Y,Z)$ \pause 
+\item More generally, we have  \pause 
+\begin{align*}
+\text{Cov} \left( \sum_{i=1}^m a_i X_i, \: \sum_{j=1}^n b_j Y_j  \right) = \sum_{i=1}^m \sum_{j=1}^n a_i b_j \, \text{Cov}(X_i, Y_j)
+\end{align*}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}[Solved example]
+Let $X$ and $Y$ be two independent random variables following standard normal distribution, and 
+\begin{align*}
+Z &= 1 + X + XY^2 \\
+W &= 1 + X
+\end{align*}
+Find $\text{Cov}(Z,W).$
+\end{example}
+\vspace{6cm}
+\colorbox{red}{\begin{minipage}{2cm}
+Solution
+\end{minipage}}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Variance of a Sum...}
+\pause 
+
+\begin{example}[Variance of a Sum]
+Let $Z = X + Y,$ then \pause 
+\[ \text{Var}(Z) = \text{Var}(X) + \text{Var}(Y) + 2 \text{Cov}(X,Y) \] \pause 
+More generally, for $a,b \in \mathbb{R},$ and $Z = aX + b Y,$ we have \pause 
+\[  \text{Var}(Z) = a^2 \, \text{Var}(X) + b^2 \, \text{Var}(Y) + 2ab \, \text{Cov}(X,Y) \]
+\end{example}
+
+\colorbox{red}{\begin{minipage}{2cm}
+Solution
+\end{minipage}}
+
+\vspace{5cm}
+
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Correlation Coefficient...}
+\pause 
+
+\begin{alertblock}{Correlation coefficient}
+The \yellow{correlation coefficient} $\rho_{XY}$ or $\rho(X,Y)$ is defined as follows \pause 
+\begin{align*}
+\rho_{XY} = \rho(X,Y) = \dfrac{\text{Cov}(X,Y)}{\sqrt{\text{Var}(X) \: \text{Var}(Y)}} = \dfrac{\text{Cov}(X,Y)}{\rho_X \: \rho_Y}
+\end{align*} \pause 
+\vspace{-0.5cm}
+\begin{itemize}
+\item Given two RVs $X$ and $Y,$ define \yellow{standardized versions} of these as follows \pause
+\begin{align*}
+U = \dfrac{X - E[X]}{\rho_X}, \quad V = \dfrac{Y - E[Y]}{\rho_Y}
+\end{align*} \pause 
+\vspace{-0.6cm}
+\item With this by computing the covariance $\text{Cov}(U,V),$ we have \pause 
+\begin{align*}
+\rho_{XY} &= \text{Cov}(U,V) = \text{Cov}\left( \dfrac{X - E[X]}{\rho_X}, \dfrac{Y - E[Y]}{\rho_Y} \right) \\
+&= \text{Cov} \left(\dfrac{X}{\rho_X}, \dfrac{Y}{\rho_Y} \right) = \dfrac{\text{Cov}(X,Y)}{\rho_X \rho_Y}
+\end{align*}
+\end{itemize}
+\end{alertblock}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}{Properties of Correlation Coefficient...}
+\pause 
+
+\begin{alertblock}{Properties of correlation coefficient}
+Let $X,Y$ be two RVs. \pause These are some properties of \yellow{correlation coefficient} \pause 
+\begin{enumerate}
+\item $-1 \leq \rho(X,Y) \leq 1$ \pause 
+\item If $\rho(X,Y)=1,$ \pause then $Y = aX + b,$ where $a > 0$ \pause 
+\item If $\rho(X,Y)=1,$ \pause then $Y = aX + b,$ where $a<0$ \pause 
+\item $\rho(aX + b, cY + d) = \rho(X,Y)$ for $a,c>0$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Positive Correlation, Negative Correlation, Uncorrelation...}
+\pause 
+
+\begin{alertblock}{Definition of positive, negative correlation}
+Let $X$ and $Y$ be two RVs.  \pause 
+\begin{enumerate}
+\item If $\rho(X,Y)=0,$ we say that $X$ and $Y$ are \yellow{uncorrelated} \pause 
+\item If $\rho(X,Y) > 0,$ we say that $X$ and $Y$ are \yellow{positively correlated} \pause  
+\item If $\rho(X,Y) < 0,$ we say that $X$ and $Y$ are \yellow{negatively correlated} \pause 
+\end{enumerate}
+\end{alertblock}
+
+
+\begin{alertblock}{Pairwise uncorrelation and Variance}
+If $X$ and $Y$ are uncorrelated, then 
+\begin{align*}
+\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y)
+\end{align*}
+More generally, if $X_1, X_2, \dots, X_n,$ are pairwise uncorrelated, i.e., $\rho(X_i, X_j)=0$ when $i \neq j,$ then \pause 
+\begin{align*}
+\text{Var}(X_1 + X_2 + \dots + X_n) = \text{Var}(X_1) + \text{Var}(X_2) + \dots + \text{Var}(X_n)
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Solved Example}
+\begin{example}[Solved Example]
+Consider a point $(X,Y)$ chosen uniformly at random from the following disc \pause 
+\begin{align*}
+D = \{ (x,y) \mid x^2 + y^2 \leq 1 \}
+\end{align*} \pause 
+The joint PDF of $X$ and $Y$ is given by \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+c \quad &(x,y) \in D \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+Are $X$ and $Y$ \yellow{uncorrelated?}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+
+\begin{frame}{Bivariate Normal Distribution...}
+\pause 
+
+\begin{example}[Sum of Two Normal Distribution May Not be Normal] 
+Let RVs $X \sim N(0,1)$ and $W \sim \text{Bernoulli} \left(\dfrac{1}{2} \right)$ be two \yellow{independent} 
+RVs. \pause Let random variable $Y $ be a function of $X$ and $W$ as follows \pause 
+\begin{align*}
+Y = h(X,W) = \begin{cases}
+X \quad &\text{if}~W=0 \\
+-X \quad &\text{if}~W=1
+\end{cases}
+\end{align*} \pause 
+Find the \yellow{PDF} of $Y$
+\end{example}
+\end{frame}
+
+
+
+
+\input{scratch}
+
+
+\begin{frame}{Bivariate Normal Distribution and Properties...}
+\pause 
+
+\begin{alertblock}{Definition (Bivariate Normal Distribution)}
+Two RVs $X$ and $Y$ are called \yellow{bivariate normal,} \pause or \yellow{jointly normal}, \pause if $aX + b Y$ has a \yellow{normal distribution} for all $a,b \in \mathbb{R}.$ \pause 
+
+\begin{enumerate}
+\item If $a=b=0,$ \pause then $aX + bY=0$ is a normal distribution with mean and variance 0 \pause 
+\item If $X$ and $Y$ are \yellow{bivariate normal}, \pause then by letting $a=1,b=0,$ \pause $X$ must be \yellow{normal} \pause 
+\item If $X$ and $Y$ are \yellow{bivariate normal}, \pause then by letting $a=0,b=1,$ \pause $Y$ must be \yellow{normal} \pause 
+\item If $X \sim N(\mu_X, \sigma_X^2)$ and $Y \sim N(\mu_Y, \sigma^2)$ are \yellow{independent}, \pause then they are \yellow{jointly normal} \pause 
+\item If $X \sim N(\mu_X, \sigma_X^2)$ and $Y \sim N(\mu_Y, \sigma_Y^2)$ are \yellow{jointly normal}, \pause  then $$X+Y \sim N(\mu_X + \mu_Y, \quad \sigma_X^2 + \sigma_Y^2 + 2 \rho(X,Y) \sigma_X \sigma_Y )$$ \pause 
+\vspace{-0.6cm}
+\item Can we provide a simple way to generate jointly normal random variables? \pause 
+\item We first introduce  \yellow{standard bivariate normal distribution }
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Example of Bivariate Normal...}
+\pause 
+
+\begin{example}[Bivariate Normal Variable]
+Let $Z_1$ and $Z_2$ be two \yellow{independent} $N(0,1)$ RVs. \pause We define \pause 
+\begin{align*}
+X &= Z_1 \\
+Y &= \rho Z_1 + \sqrt{1 - \rho^2} Z_2,
+\end{align*} \pause 
+where $\rho$ is a real number in $(-1,1).$ \pause 
+\begin{enumerate}
+\item Is $X$ and $Y$ \yellow{bivariate normal}? \pause 
+\item What is the \yellow{joint PDF} of $X$ and $Y?$ \pause 
+\item Find $\rho(X,Y)$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Standard Bivariate Normal Distribution...}
+\pause 
+
+\begin{alertblock}{Definition of Standard Bivariate Normal Distribution}
+Two RVs $X$ and $Y$ are said to have the \yellow{standard bivariate normal distribution} with correlation coefficient $\rho$ if their joint PDF is given by \pause 
+\begin{align*}
+f_{XY}(x,y) = \dfrac{1}{2 \pi \sqrt{1 - \rho^2}} \exp \left\{ - \dfrac{1}{2(1 - \rho^2)}  [x^2 - 2 \rho x y + y^2, ] \right\}
+\end{align*} \pause 
+where $\rho \in (-1,1).$ If $\rho = 0,$ then we call $X$ and $Y$ to have \yellow{standard normal 
+bivariate normal distribution.}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Definition of Bivariate Normal Distribution...}
+\pause 
+
+\begin{alertblock}{Definition of Bivariate Normal Distribution}
+Two random variables $X$ and $Y$ are said to have a \yellow{bivariate normal distribution} with
+parameters $\mu_x, \sigma_X^2, \mu_Y, \sigma_Y^2,$ and $\rho,$ \pause if their joint PDF is given by
+\begin{align*}
+f_{XY} &= \dfrac{1}{2 \pi \sigma_X \sigma_Y \sqrt{1 - \rho^2}} \cdot \\
+&\exp \left\{ - \dfrac{1}{2(1-\rho^2)} \left[ \left( \dfrac{x - \mu_X}{\sigma_X} \right)^2 + \left( \dfrac{y - \mu_Y}{\sigma_Y} \right)^2 - 2 \rho \dfrac{(x - \mu_X)(y - \mu_Y)}{\sigma_X \sigma_Y} \right] \right\},
+\end{align*}	\pause 
+where $\mu_X, \mu_Y \in \mathbb{R}, \sigma_X, \sigma_Y > 0$ and $\rho \in (-1,1)$ are all constant.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{Creating a Jointly Normal Distribution...}
+\pause 
+
+\begin{alertblock}{Creation of Jointly Normal Random Variables}
+If we want two \yellow{jointly normal} random variables $X$ and $Y$ such that \pause 
+\[ X \sim N(\mu_X, \sigma_X^2), \quad Y \sim N(\mu_Y, \sigma_Y^2), \quad \text{and}~\rho(X,Y)=\rho \] \pause 
+we start with two \yellow{independent standard normal} RVs $Z_1$ and $Z_2$ and define \pause 
+\begin{align*}
+X &= \sigma_X Z_1 + \mu_X \\
+Y &= \sigma_Y (\rho Z_1 + \sqrt{1-\rho^2} Z_2) + \mu_Y
+\end{align*}
+and follow the above procedure: solve for $Z_1,Z_2,$ and apply method of transformation
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example}
+\begin{example}[Conditional Distribution of Normal Distribution is Normal]
+Let $X$ and $Y$ be jointly normal random variables with parameters $\mu_X, \sigma_X^2, \mu_Y, \sigma_Y^2,$ and $\rho.$ \pause Find the \yellow{conditional distribution} of $Y$ given $X=x.$ \pause 
+Show the following \pause 
+\begin{align*}
+E[Y \mid X = x] &= \mu_Y + \rho \sigma_Y \dfrac{x - \mu_X}{\sigma_X} \\
+\text{Var}(Y \mid X=x) &= (1 -\rho^2) \sigma_Y^2
+\end{align*}
+\end{example}
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+\begin{frame}{Example on Bivariate Normal Distribution...}
+\pause 
+
+\begin{example}[Computing Probabilities, Covariance of Jointly Normal Distributions]
+Let $X$ and $Y$ be jointly normal RVs with parameters $\mu_X = 1, \sigma_X^2 = 1, \mu_Y = 0, \sigma_Y^2 =4, $ and $\rho = \dfrac{1}{2}.$ \pause Answer the following \pause 
+\begin{enumerate}
+\item Find $P(2X+Y \leq 3)$ \pause 
+\item Find $\text{Cov}(X+Y, 2X-Y)$ \pause 
+%\item Find $P(Y>1 \mid X=2)$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Bivariate Normal and Uncorrelation implies Independence...}
+\pause 
+
+\begin{theorem}
+\normalfont If $X$ and $Y$ are bivariate normal and uncorrelated, then they are independent.
+\end{theorem}
+\vspace{6cm}
+
+\end{frame}
+
+
+\subsection{Solved Problems}
+
+
+\begin{frame}{Solved Problem 1}
+\begin{example}[Solved Problem 1]
+Let $X$ and $Y$ be two jointly continuous random variables with joint PDF \pause 
+\begin{align*}
+f_{XY}(x,y) = \begin{cases}
+2 \quad &y+x \leq 1, \: x>0, \: y>0 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+Find $\text{Cov}(X,Y)$ and $\rho(X,Y).$
+\end{example}
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+\begin{frame}{Solved Problem 2...}
+\pause 
+
+\begin{example}[Solved Problem 2]
+I roll a fair die $n$ times. \pause Let $X$ be the number of 1's that I observe and let $Y$ be the number of 2's that I observe. \pause Find $\text{Cov}(X,Y)$ and $\rho(X,Y).$
+\end{example}
+\end{frame}
+
+
+\input{scratch}
+
+
+
+
+\begin{frame}{Solved Problem 3...}
+\pause 
+
+\begin{example}[Solved Problem 3]
+Let $X$ and $Y$ be two independent $\text{Uniform}(0,1)$ random variables. \pause Let also $Z=\text{max}(X,Y)$ and $W=\text{min}(X,Y).$ \pause Find $\text{Cov}(Z,W).$
+\end{example}
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Solved Problem 4...}
+\pause 
+
+\begin{example}[Solved Problem 4]
+Let $X$ and $Y$ be jointly (bivariate) normal, with $\text{Var}(X)= \text{Var}(Y).$ \pause Show that the two random variables $X+Y$ and $X−Y$ are \yellow{independent}.
+\end{example}
+\end{frame}
+
+
+
+\begin{frame}{Solved Problem 5...}
+\pause 
+
+\begin{example}[Solved Problem 5]
+Let X and Y be jointly normal random variables with parameters  $\mu_X=0, \: \sigma_X^2 = 1, \: \mu_Y=-1, \: \sigma_Y^2 = 4,$ and $\rho = - \dfrac{1}{2}.$ \\ \pause 
+Answer the following: \pause 
+\begin{enumerate}
+\item Find $P(X+Y > 0)$ \pause 
+\item Find the constant $a$ \pause if we know $aX+Y$ and $X+2Y$ are \yellow{independent} \pause 
+\item Find $P(X+Y > 0 \mid 2X - Y = 0)$
+\end{enumerate}
+\end{example}
+\end{frame}
+
+
+
+% \input{scratch}
+% \input{scratch}
+% \input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

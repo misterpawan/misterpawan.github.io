@@ -1,0 +1,923 @@
+\section{Statistical Inference}
+
+
+\begin{frame}{Motivation for Statistical Inference...}
+\pause 
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.08]{election}
+\end{figure}
+\end{column} \pause 
+
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item On the left, US exit poll results 
+\item Poll on Trump Vs Biden
+\item Sample size of 15,318
+\item Error margin shown in grey
+\item Draw conclusions from the sample data
+\item Will inference fail? How much it can fail?
+\item How confident we are of this?
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+
+\end{frame}
+
+
+\begin{frame}{Motivation for Statistical Inference...}
+\pause 
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{figure}
+\includegraphics[scale=0.25]{bihar2} \\ \pause 
+\includegraphics[scale=0.48]{bihar1} 
+\end{figure}
+\end{column}
+\begin{column}{0.3\textwidth}
+\begin{itemize}
+\item On the left, poll of polls showing clear majority for MAHAGATHBANDHAN
+\item After election, NDA has full majority
+\item How do we estimate such errors?
+\end{itemize}
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+
+\begin{frame}{Definition of Statistical Inference...}
+\pause 
+
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{alertblock}{Definition of Statistical Inference}
+\yellow{Statistical inference} is a collection of methods that deal with drawing conclusions from data that are prone to random variation. \pause
+\begin{itemize}
+\item knowledge of probability is used \pause 
+\item we need to work with real data \pause 
+\item distribution of the data may not be known
+\end{itemize}
+\end{alertblock} 
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.5]{inf2}
+\end{figure} \pause 
+\begin{itemize}
+\item Two types: Frequentist and Bayesian 
+\end{itemize}
+\end{column}
+\end{columns} \pause 
+\begin{alertblock}{Statistical Inference Problem}
+To determine an unknown quantity, \pause get some data, \pause  and then estimate the required quantity using this data.
+\end{alertblock}
+
+
+\end{frame}
+
+
+\begin{frame}{Frequentist or Classical Inference...}
+\pause 
+
+\yellow{Recall:} A statistical inference problem is to estimate an unknown quantity \pause 
+\begin{alertblock}{Frequentist Inference}
+\pause 
+Here the \yellow{unknown} quantity is assumed to be fixed quantity and not random. \pause So, the unknown quantity $\theta$ is to be estimated by the observed data. \pause
+\begin{itemize}
+\item Let $\theta$ be the percentage of people who will vote for a given candidate \pause 
+\begin{itemize}
+\item $\hat{\Theta} = \dfrac{Y}{n},$ $Y$ is the number of people among randomly chosen ones who will vote for candidate \pause
+\item Although, $\theta$ is non random, we estimate it via $\hat{\Theta},$ a random variable \pause 
+\item Here $\hat{\Theta}$ is random variable, because it depends on random sample
+\end{itemize}
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Bayesian Inference...}
+\pause 
+
+\begin{alertblock}{What is Bayesian Inference?}
+\pause 
+Here the unknown quantity $\Theta$ is assumed to be a random variable. \pause Furthermore, we assume to have some \yellow{initial} guess about the distribution of $\Theta.$ \pause After we \yellow{observe} the data, we can update the distribution of $\Theta$ using \yellow{Bayes rule}. 
+\pause 
+
+\begin{itemize}
+\item Consider communication systems in which information is transmitted in the form of bits \pause 
+\item In each transmission, \pause the transmitter sends a 1 with probability $p,$ \pause and sends a 0 with probability $1-p$ \pause 
+\item Hence, if $\Theta$ is the transmitted bit, \pause then $\Theta \sim \text{Bernoulli}(p)$ \pause 
+\item Let us assume that at receiver end we get the output $X$ \pause 
+\item The \yellow{problem} now is to estimate $\Theta$ from the noisy output $X$ \pause 
+\item We use the \yellow{prior} knowledge that $\Theta \sim \text{Bernoulli}(p)$
+\end{itemize}
+
+\end{alertblock}
+
+
+\end{frame}
+
+
+\begin{frame}{What is Random Sampling? Motivation with an example...}
+\pause 
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.4]{random}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.6\textwidth}
+\begin{enumerate}
+\item Choose a random sample of size $n: X_1, \dots, X_n$ \yellow{with replacement} \pause 
+\item We chose a person uniformly at random from the population and let $X_1$ be the height of that person. \pause Here, every person in the population has the same chance of being chosen \pause 
+\item To determine the value of $X_2,$ again we choose a person uniformly (and independently from the first person) at random and let $X_2$ be the height of that person. \pause Again, every person in the population has the same chance of being chosen
+\end{enumerate}
+\end{column}
+\end{columns}
+\pause 
+\begin{itemize}
+\item In general, $X_i$ is the height of the $i$th person that is chosen uniformly and independently from the population \pause 
+\item \yellow{why do we do the sampling with replacement?} \pause 
+\begin{itemize}
+\item if the population is large, then the probability of choosing one person twice is extremely low \pause 
+\item big advantage of sampling \yellow{with replacement} is that $X_i$'s will be independent \pause 
+\item that is, working with \yellow{independently and identically distributed} makes analysis simpler
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Definition of Random Sample...}
+\pause 
+
+\begin{alertblock}{Definition of Random sample}
+The collection of random variables $X_1, X_2, X_3, ..., X_n$ is said to be a \yellow{random sample} of size $n$ \pause if they are \yellow{independent} and \yellow{identically distributed (i.i.d.)}, i.e., \pause 
+\begin{enumerate}
+\item $X_1, X_2, X_3, ..., X_n$ are \yellow{independent} random variables, and
+\item they have the \yellow{same} distribution, i.e, \pause 
+\begin{align*}
+F_{X_1}(x) = F_{X_2}(x) = \dots = F_{X_n}(x), \quad \text{for all}~x \in \mathbb{R} 
+\end{align*}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Point Estimator and Sample Mean...}
+\pause 
+
+\begin{alertblock}{Definition of Sample Mean}
+Let $X_1, X_2, \dots, X_n$ be \yellow{random sample}. \pause That is, here $X_1, X_2, \dots, X_n$ are \yellow{i.i.d}. \pause That is, following holds true for \yellow{i.i.d.} random variables \pause 
+\begin{enumerate}
+\item The $X_i$'s are independent \quad (since they are i.i.d.) \pause 
+\item $F_{X_1}(x) = F_{X_2}(x) = \dots = F_{X_n}(x) = F_X(x)$ \quad (the CDFs are same) \pause 
+\item $E[X_i] = E[X] = \mu < \infty$ \pause 
+\item $0 < \text{Var}(X_i) = \text{Var}(X) = \sigma^2 < \infty$
+\end{enumerate} \pause 
+Then the \yellow{sample mean} is defined as follows \pause 
+\begin{align*}
+\bar{X} = \dfrac{X_1 + X_2 + \dots + X_n}{n}
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Recall: Properties of Sample Mean...}
+\pause 
+
+\begin{alertblock}{Properties of sample mean, $\bar{X}$}
+\begin{enumerate}
+\item $E[\bar{X}] = \mu, \quad \text{Var}(\bar{X}) = \dfrac{\sigma^2}{n}$ \pause 
+\item \yellow{Weak law of large numbers (WLLN)} \pause 
+\begin{align*}
+\lim_{n \rightarrow \infty} P(|\bar{X} - \mu| \geq \epsilon) = 0
+\end{align*} \pause 
+\vspace{-0.4cm}
+\item \yellow{Central limit theorem:} The random variable \pause 
+\begin{align*}
+Z_n = \dfrac{\bar{X} - \mu}{\sigma / \sqrt{n}} = \dfrac{X_1 + X_2 + \dots + X_n - n \mu}{\sqrt{n} \sigma}
+\end{align*}  \pause 
+converges in distribution to the \yellow{standard normal random variable} \pause 
+\begin{align*}
+\lim_{n \rightarrow \infty} P(Z_n \leq x) = \Phi(x), \quad \text{for all}~x \in \mathbb{R},
+\end{align*} \pause 
+where $\Phi(x)$ is \yellow{standard normal CDF}. 
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Order Statistics and its PDF and CDF...}
+\pause 
+
+\begin{alertblock}{Order Statistics and its PDF and CDF}
+Let $X_1, X_2, \dots, X_n$ be random sample from a continuous distribution with CDF $F_X(x).$ \pause \yellow{If we order the random variables from smallest to largest} \pause i.e., $X_{(1)} < X_{(2)} < \dots < X_{(n)}$ with $$X_{(1)} = \min(X_1, X_2, \cdots, X_n) \quad \text{and} \quad X_{(n)} = \max(X_1, X_2, \dots, X_n),$$ \pause then $X_{(i)}'$s is called \yellow{order statistics}. \pause
+The \yellow{CDF} and \yellow{PDF} of $X_{(i)}$ are given by \pause 
+\vspace{-0.3cm}
+\begin{align*}
+f_{X_{(i)}} &= \dfrac{n!}{(i-1)! (n-i)!} f_X(x) [F_X(x)]^{i-1} [1- F_X(x)]^{n-i} \\
+F_{X_{(i)}} &= \sum_{k=i}^n \binom{n}{k} [F_X(x)]^k [1 - F_X(x)]^{n-k}
+\end{align*} \pause 
+Also, the \yellow{joint PDF} of $X_{(1)}, X_{(2)}, \cdots, X_{(n)}$ is given by \pause 
+\vspace{-0.2cm}
+\begin{align*}
+f_{X_{(1)}, \dots, X_{(n)}}(x_1,\dots,x_n) = \begin{cases}
+n! \, f_X(x_1, f_X(x_2) \cdots f_X(x_n)) \quad &\text{for}~x_1 \leq x_2 \leq \cdots \leq x_n \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Example of Order Statistics...}
+\pause 
+
+\begin{example}[Order Statistics]
+Let $X_1, X_2, \dots, X_4$ be a random variable from the Uniform(0,1) distribution, \pause and let $X_{(1)}, X_{(2)}, X_{(3)}, X_{(4)}$ be the \yellow{order statistics} of $X_1, X_2, \dots, X_4.$ \\  \pause Find the PDFs of $X_{(1)}, X_{(2)},$ and $X_{(4)}.$   
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Point Estimator, Biased and Unbiased Estimators...}
+\pause 
+
+\begin{alertblock}{Definitions: point estimator, bias and unbiased estimators}
+\begin{enumerate}
+\item Let $\theta$ be an \yellow{unknown} parameter to be estimated. For example, $\theta = E[X]$ \pause 
+\item Let $X_1, X_2, \dots, X_n$ be a random sample 
+using which we want to estimate $\theta.$ Here $X_i$'s have same distribution \pause  
+\item To estimate $\theta$ we define \yellow{point estimator} $\hat{\Theta}$ as follow \pause 
+\begin{align*}
+\hat{\Theta} = h(X_1, X_2, \dots, X_n)
+\end{align*} \pause 
+\vspace{-0.6cm}
+\item There can be many possible point estimators, which one to choose? \pause 
+\begin{itemize}
+\item For example if $\theta = E[X],$ then $\hat{\Theta} = h(X_1, \dots, X_n) = \dfrac{X_1 + \dots + X_n}{n}$
+\end{itemize} \pause 
+\item {\bf Bias:} The \yellow{bias} of a point estimator $\hat{\Theta}$ is defined as \pause 
+\begin{align*}
+B(\hat{\Theta}) = E[\hat{\Theta}] - \theta
+\end{align*} \pause 
+\vspace{-0.6cm}
+\begin{itemize}
+\item If bias is close to 0, then $\hat{\Theta}$ is closer to $\theta$ \pause 
+\item We say that $\hat{\Theta}$ is an \yellow{unbiased estimator} for a parameter $\theta$ if \pause 
+\begin{align*}
+B(\hat{\Theta}) = 0, \quad \text{for all possible values of }~\theta
+\end{align*}
+\end{itemize}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Unbiased Estimator is not Necessarily a Good Estimator...}
+\pause 
+
+\begin{alertblock}{Fact}
+Show that unbiased estimator is \yellow{not} necessarily a good estimator.
+\end{alertblock}
+
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Mean Squared Error...}
+\pause 
+
+\begin{alertblock}{Mean squared error}
+The \yellow{mean squared error (MSE)} of a point estimator $\hat{\Theta}$ denoted by MSE($\hat{\Theta}$) is defined as \pause 
+%\vspace{-0.4cm}
+\begin{align*}
+\text{MSE}(\hat{\Theta}) = E[(\hat{\Theta} - \theta)^2]
+\end{align*}  
+\end{alertblock}
+\pause 
+\begin{example}[Application of MSE]
+Let $X_1, X_2, \dots, X_n$ be a random sample from a distribution with mean $E[X_i] = \theta,$ and variance 
+$\text{Var}(X_i) = \sigma^2.$ \pause For the following two estimators for $\theta$ \pause 
+\begin{enumerate}
+\item $\hat{\Theta_1} = X_1$ \pause 
+\item $\hat{\Theta}_2 = \bar{X} = \dfrac{X_1 + X_2 + \dots + X_n}{n}$ 
+\end{enumerate} \pause 
+Find MSE($\hat{\Theta}_1$) and MSE($\hat{\Theta}_2$) and show that for $n>1$ \pause 
+\begin{align*}
+\text{MSE}(\hat{\Theta}_1) > \text{MSE}(\hat{\Theta}_2)
+\end{align*}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+\begin{frame}{Relationship of MSE, Variance, and Bias...}
+\pause 
+
+\begin{alertblock}{Property}
+If $\hat{\Theta}$ is a point estimator for $\theta,$ 
+\begin{align*}
+\text{MSE}(\hat{\Theta}) =\text{Var}(\hat{\Theta}) + B(\hat{\Theta})^2
+\end{align*}
+\end{alertblock}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+\begin{frame}{Consistent Estimator...}
+\pause 
+
+\begin{alertblock}{Definition of Consistent Estimator}
+Let $\hat{\Theta}_1, \hat{\Theta}_2, \dots, \hat{\Theta}_n, \dots, $ be a sequence of point 
+estimators of $\theta.$ \pause We say that $\hat{\Theta}_n$ is a \yellow{consistent estimator} of $\theta,$ if \pause 
+\begin{align*}
+\lim_{n \rightarrow \infty} P(|\hat{\Theta}_n - \theta| \geq \epsilon) = 0, \quad \text{for all}~\epsilon > 0 
+\end{align*}  
+\end{alertblock}
+
+\begin{alertblock}{Theorem}
+\pause 
+Let $\hat{\Theta}_1, \hat{\Theta}_2, \dots, $ be a sequence of point estimators of $\theta.$ \pause If 
+\begin{align*}
+\lim_{n \rightarrow \infty} \text{MSE}(\hat{\Theta}_n) = 0
+\end{align*} \pause 
+then $\hat{\Theta}_n$ is a \yellow{consistent estimator} of $\theta$
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+
+\begin{frame}{Definition of Sample Variance and Sample Standard Deviation...}
+\pause 
+
+\begin{alertblock}{Sample Variance and Sample Standard Deviation}
+Let $X_1, X_2, \dots, X_n$ be a random variable with mean $E[X_i] = \mu < \infty,$ and variance $0 < \text{Var}(X_i) < \sigma^2 < \infty.$ \pause The \yellow{sample variance} of this random sample is defined as \pause 
+\begin{align*}
+S^2 = \dfrac{1}{n-1} \sum_{k=1}^n (X_k - \bar{X})^2 = \dfrac{1}{n-1} \left( \sum_{k=1}^n X_k^2 - n \bar{X} \right)
+\end{align*} \pause 
+We can check that sample variance is an unbiased estimator of $\sigma^2.$ \pause The \yellow{sample standard deviation} 
+is defined as \pause 
+\begin{align*}
+S = \sqrt{S^2}
+\end{align*} \pause 
+and it is usually used as an estimator for $\sigma.$ \pause Also, $S$ is an unbiased estimator of $\sigma$ 
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}
+\begin{example}[Sample Mean, Sample Variance, Sample Standard Deviation]
+Let $T$ be the time that is needed for a specific task in a factory to be completed. \pause In order to estimate the mean and variance of $T,$ we observe a random sample $T_1,T_2, \cdots, T_6.$ \pause Thus, $T_i$'s are i.i.d. and have the same distribution as $T.$ \pause We obtain the following values (in minutes):
+$$18,21,17,16,24,20.$$ \pause 
+Find the values of the sample mean, the sample variance, and the sample standard deviation for the observed sample.
+\end{example}
+\end{frame}
+
+
+
+\input{scratch}
+
+\subsection{Maximum Likelihood Estimation} 
+
+\begin{frame}
+\begin{example}
+I have a bag that contains 3 balls. \pause Each ball is either red or blue, \pause but I have no information in addition to this. \pause Thus, the number of blue balls, call it $\theta,$ might be 0, 1, 2, or 3. \pause I am allowed to choose 4 balls at random from the bag with replacement. \pause We define the random variables $X_1, X_2, X_3,$ and $X_4$ as follows \pause 
+\begin{align*}
+X_i = \begin{cases}
+1 \quad &\text{if the}~ith~\text{chosen ball is blue} \\
+0 \quad &\text{if the}~ith~\text{chosen ball is red} 
+\end{cases}
+\end{align*} \pause 
+\vspace{-0.3cm}
+We observe here that $X_i$'s are i.i.d. and $X_i \sim \text{Bernoulli}\left(\dfrac{\theta}{3} \right).$ \pause After the experiment, we observe the values for $X_i$'s \pause 
+\vspace{-0.2cm}
+\begin{align*}
+x_1 = 1, \: x_2 = 0, \: x_3 = 1, \: x_4 = 1.
+\end{align*} \pause 
+From above, we have 3 blue balls and 1 red ball. \pause Answer the following \pause 
+\begin{enumerate}
+\item Find the probability of the observed sample $(x_1, x_2, x_3, x_4) = (1,0,1,1)$ for each possible $\theta$ \pause 
+\item Find the value of $\theta$ that maximizes the probability of the observed sample
+\end{enumerate}
+\end{example}
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Likelihood and log likelihood Function...}
+\pause 
+
+\begin{alertblock}{Definition of Likelihood and log likehood Function}
+\pause 
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a distribution with a parameter $\theta.$ \pause Suppose that we have observed $X_1=x_1, X_2=x_2, \dots, X_n=x_n.$ \pause 
+\begin{enumerate}
+\item If $X_i$'s are discrete, then the \yellow{likelihood function} is defined as \pause 
+\begin{align*}
+L(x_1, x_2, \dots, x_n; \theta) = P_{X_1, X_2, \dots, X_n} (x_1, x_2, \dots, x_n; \theta)
+\end{align*} \pause 
+\vspace{-0.4cm}
+\item If $X_i$'s are jointly continuous, \pause then the \yellow{likelihood function} is defined as  \pause 
+\begin{align*}
+L(x_1, x_2, \dots, x_n; \theta) = f_{X_1, X_2, \dots, X_n} (x_1, x_2, \dots, x_n; \theta)
+\end{align*} \pause 
+\vspace{-0.4cm}
+\end{enumerate}
+In some problems, it is easier to work with the \yellow{log likelihood function} given by \pause 
+\begin{align*}
+\text{ln}\, L(x_1, x_2, \dots, x_n; \theta)
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example}
+\begin{example}[Example]
+Find the likelihood function for the following random sample \pause 
+\begin{enumerate}
+\item $X_i \sim \text{Binomial}(3, \theta)$ and we have observed $(x_1, x_2, x_3, x_4) = (1,3,2,2)$ \pause 
+\item $X_i \sim \text{Exponential}(\theta)$ and we have observed $(x_1, x_2, x_3, x_4) = (1.23,3.32,1.98,2.12)$
+\end{enumerate}
+\end{example}
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+
+
+\begin{frame}{Maximum Likelihood Estimator...}
+\pause 
+
+\begin{alertblock}{Definition of maximum likelihood estimator}
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a distribution with a parameter $\theta.$ \pause Given that we have observed $X_1=x_1, X_2=x_2, \dots, X_n=x_n,$ a maximum likelihood estimate of $\theta,$ shown by $\hat{\theta}_{ML}$ is a value of $\theta$ that maximizes the likelihood function \pause 
+\begin{align*}
+L(x_1, x_2, \dots, x_n; \theta) 
+\end{align*} \pause 
+A \yellow{maximum likelihood estimator (MLE)} of the parameter $\theta,$ shown by $\hat{\theta}_{ML}$ is a random variable $\hat{\theta}_{ML} = \hat{\theta}_{ML}(X_1,X_2, \dots, X_n)$ whose value when $X_1=x_1, X_2=x_2, \dots, X_n=x_n$ is given by $\hat{\theta}_{ML}.$
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Example of Maximum Likelihood Estimator...}
+\pause 
+
+\begin{example}
+For the following examples, find the \yellow{maximum likelihood estimator (MLE)} of $\theta:$ \pause 
+\begin{enumerate}
+\item $X_i \sim \text{Binomial}(m, \theta),$ and we have observed $X_1, X_2, \dots, X_n$ \pause 
+\item $X_i \sim \text{Exponential}(\theta)$ and we have observed $X_1, X_2, \dots, X_n$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+\begin{frame}{Example of Maximum Likelihood Estimators...}
+\pause 
+
+\begin{example}[Example of maximum likelihood estimator]
+Suppose that we have observed the random sample $X_1, X_2, X_3, ..., X_n,$ where $X_i \sim N(\theta_1, \theta_2)$ 
+so 
+\begin{align*}
+f_{X_i} (x_i; \theta_1, \theta_2) = \dfrac{1}{\sqrt{2 \pi \theta_2}} e^{- \dfrac{(x_i - \theta_1)^2}{2 \theta_2}}
+\end{align*} \pause 
+Find  the \yellow{maximum likelihood estimators} for $\theta_1$ and $\theta_2.$
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+%
+\begin{frame}{Asymptotic Properties of MLEs...}
+\pause 
+
+\begin{alertblock}{Asymptotic Properties of MLEs}
+\pause 
+
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a distribution with a parameter $\theta.$ \pause Let 
+$\hat{\Theta}_{ML}$ denote the maximum likelihood estimator (MLE) of $\theta.$ \pause Then, under some mild regularity conditions, \pause 
+\begin{enumerate}
+\item $\hat{\Theta}_{ML}$ is \yellow{asymptotically consistent}, \pause i.e., \pause 
+%\begin{align*}
+$ \lim_{n \rightarrow \infty} P(|\hat{\Theta}_{ML} - \theta| > \epsilon) = 0 $ \pause 
+%\end{align*}
+\item $\hat{\Theta}_{ML}$ is \yellow{asymptotically unbiased,} i.e., \pause 
+%\begin{align*}
+$ \lim_{n \rightarrow \infty} E[\hat{\Theta}_{ML}] = \theta $ \pause 
+%\end{align*}
+\item As $n$ becomes large, $\hat{\Theta}_{ML}$ is approximately a normal random variable. \pause More precisely, the random variable \pause 
+\begin{align*}
+\dfrac{\hat{\Theta}_{ML} - \theta}{\sqrt{\text{Var}(\hat{\Theta}_{ML})}} 
+\end{align*} \pause 
+converges in distribution to $N(0,1).$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Solved Example 1 ...}
+\pause 
+\begin{example}
+Show the following: \pause 
+\begin{enumerate}
+\item Let $\hat{\Theta}_1$ be an \yellow{unbiased estimator} for $\theta,$ and $W$ is a zero mean random variable. \pause Show that \[ \hat{\Theta}_2 = \hat{\Theta}_1 + W \] is also an \yellow{unbiased estimator} for $\theta$ \pause 
+\item Let $\hat{\Theta}_1$ be an estimator for $\theta$ such that $E[\hat{\Theta}_1] = a\theta + b,$ where 
+$a \neq 0.$ \pause Show that \[ \hat{\Theta}_2 = \dfrac{\hat{\Theta}_1 - b}{a} \]  is an \yellow{unbiased estimator} for $\theta$
+\end{enumerate}
+\end{example}
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}
+Let $X_1, X_2, \dots, X_n$ be a random variable from a Uniform($0,\theta$) distribution, where $\theta$ is unknown. \pause Consider the estimator \[ \hat{\Theta}_n = \max \{ X_1, X_2, \cdots, X_n \} \] \pause 
+\begin{enumerate}
+\item Find the bias of $\hat{\Theta}_n, B(\hat{\Theta}_n)$ \pause 
+\item Find the MSE of $\hat{\Theta}_n, \text{MSE}(\hat{\Theta}_n)$ \pause 
+\item Is $\hat{\Theta}_n$ a consistent estimator of $\theta?$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a $\text{Geometric}(\theta)$ distribution, where $\theta$ is unknown. \pause Find the maximum likelihood estimator (MLE) of $\theta$ based on this random sample.
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a $\text{Uniform}(0,\theta)$ distribution, where $\theta$ is unknown. \pause Find the \yellow{maximum likelihood estimator (MLE)} of $\theta$ based on this random sample.
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+
+
+
+\begin{frame}{Interval Estimation and Confidence Level...} 
+\pause 
+
+\begin{alertblock}{Interval Estimation and Confidence Level}
+\begin{enumerate}
+\item Let $X_1, X_2, \dots, X_n$ be random sample from a distribution with a parameter $\theta$ to be estimated \pause 
+\item Suppose we observed $X_1=x_1, X_2 = x_2, \dots, X_n = x_n,$ and obtained point estimate $\hat{\theta}$ of $\theta$ \pause 
+\item Without additional information, we don't know whether $\hat{\theta}$ is close to $\theta$ \pause 
+\item In an \yellow{interval estimation}, instead of just one value $\hat{\theta},$ we produce an interval $[\hat{\theta}_{\ell}, \hat{\theta}_h]$ that is likely to include true value of $\theta$ \pause 
+\item The \yellow{confidence level} is the probability that the interval that we construct includes the real value of $\theta$ \pause 
+\item The smaller the interval, the higher the precision with which we can estimate $\theta,$ and higher the confidence level
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Interval Estimation with Confidence Level...}
+\pause 
+\begin{alertblock}{Interval Estimation}
+\begin{itemize}
+\item Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a distribution with a parameter $\theta$ that is to be estimated \pause 
+\item An interval estimator with confidence level $1-\alpha$ consists of two estimators 
+$\hat{\Theta}_l(X_1, X_2, \dots, X_n)$ and $\hat{\Theta}_h(X_1, X_2, \cdots, X_n)$ such that \pause 
+\begin{align*}
+P \left( \hat{\Theta}_l \leq \theta ~\text{and}~ \hat{\Theta}_h \geq \theta \right) \geq 1 - \alpha,
+\end{align*} \pause 
+for every possible value of $\theta$ \pause 
+\item Equivalently, we say that $[\hat{\Theta}_l, \hat{\Theta}_h]$ is a $(1- \alpha)100\%$ confidence interval for $\theta$ \pause
+\item The randomness in these terms is due to $\hat{\Theta}_l$ and $\hat{\Theta}_h,$ not $\theta$ \pause
+\item Here $\hat{\Theta}_l$ and $\hat{\Theta}_h$ are random variables because they are functions of $X_1, \dots, X_n$
+\end{itemize}
+
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Steps on Finding Interval Estimators...}
+\pause 
+
+\begin{enumerate}
+\item Let $X$ be a continuous random variable with CDF $F_X(x) = P(X \leq x)$ \pause 
+\item We are interested in finding two values $x_l$ and $x_h$ such that \pause 
+\begin{align*}
+P \left( x_l \leq X \leq x_h \right) = 1 - \alpha 
+\end{align*} \pause 
+\item We can choose this as follows
+\begin{align*}
+P(X \leq x_l) = \dfrac{\alpha}{2} \quad \text{and} \quad P(X \geq x_h) = \dfrac{\alpha}{2} 
+\end{align*} \pause 
+\item That is, we have from above
+\begin{align*}
+F_X(x_l) = \dfrac{\alpha}{2} \quad \text{and} \quad F_X(x_h) = 1 - \dfrac{\alpha}{2}
+\end{align*} \pause 
+\item Rewriting these equations by using inverse, we have 
+\begin{align*}
+x_l = F_X^{-1}\left( \dfrac{\alpha}{2} \right) \quad \text{and} \quad x_h = F_X^{-1} \left( 1 - \dfrac{\alpha}{2} \right)
+\end{align*}
+\end{enumerate}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Plot of confidence Interval...}
+\pause 
+
+\begin{figure}
+\includegraphics[scale=1.0]{confidence}
+\end{figure}
+\begin{itemize}
+\item $[x_l, x_h]$ is a $(1 - \alpha)$ interval for $X,$ that is, $P\left( x_l \leq X \leq x_h \right) = 1 - \alpha$
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Example of Interval Estimation...}
+\pause 
+
+\begin{example}
+Let $Z \sim N(0,1),$ find $x_l$ and $x_h$ such that 
+\begin{align*}
+P\left( x_l \leq Z \leq x_h \right) = 0.95
+\end{align*}
+\end{example}
+
+Test
+
+\end{frame}
+
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+\begin{frame}{Plots of PDF and Confidence Interval...}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.85]{confidence1}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.85]{confidence2}
+\end{figure}
+\end{column}
+\end{columns} \pause 
+\begin{alertblock}{How do we find interval estimators?} \pause 
+A general approach is to start with a point estimator $\hat{\Theta},$ such as the MLE, and create 
+the interval $[\hat{\Theta}_l, \hat{\Theta}_h]$ around it such that \pause 
+\begin{align*}
+P \left( \theta \in [\hat{\Theta}_l, \hat{\Theta}_h] \right) \geq 1 - \alpha
+\end{align*} \pause 
+How can we do this?
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Find a Confidence Interval...}
+\pause 
+\begin{example}[Find a Confidence Interval]
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a normal distribution $N(\theta,1).$ \pause Find a 95\% confidence interval for $\theta.$ \pause Verify that the random variables $$Q_1 = \bar{X}-\theta \quad \text{and} \quad Q_2 = \sqrt{n} (\bar{X}- \theta)$$ are both valid pivots.
+\end{example}
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Pivotal Quantity...}
+\pause 
+
+\begin{alertblock}{Pivotal Quantity}
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a distribution with a parameter $\theta$ that is to be estimated. \pause The random variable $Q$ is said to be a \yellow{pivot or a pivotal quantity}, \pause if it has the following properties: \pause 
+It is a function of the observed data $X_1, X_2, X_3, \dots, X_n$ and the unknown parameter $\theta,$ \pause but it does not depend on any other unknown parameters: \pause 
+$$Q = Q(X_1, X_2, \dots, X_n, \theta).$$ \pause 
+The probability distribution of $Q$ does not depend on $\theta$ or any other unknown parameters.
+\end{alertblock}
+\end{frame}
+
+
+
+\begin{frame}{Steps for Pivotal Method...}
+\pause 
+
+\begin{alertblock}{Steps for Pivotal Method for Confidence Interval}
+\begin{enumerate}
+\item First, find a pivotal quantity $Q(X_1,X_2, \dots, X_n, \theta)$ \pause 
+\item Find an interval for $Q$ such that \pause 
+\[ P(q_l \leq Q \leq q_h) = 1 - \alpha \] \pause 
+\vspace{-0.6cm}
+\item Using algebraic manipulations, convert the above equation to an equation of the form
+\[ P(\hat{\Theta}_l \leq \theta \leq \hat{\Theta}_h) = 1 - \alpha \]
+\end{enumerate} \pause 
+Some remarks on how exactly to perform these steps: \pause 
+\begin{enumerate}
+\item The most important is crucial one is the first step \pause 
+\item For many important cases, statisticians have already found the pivotal quantities \pause 
+\item Many of the interval estimation problems you encounter are of the forms for which general confidence intervals have been found previously \pause 
+\item To solve many confidence interval problems, it suffices to write the problem in a format similar to a previously solved problem 
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+\begin{example}
+Let $X_1, X_2, X_3, \dots, X_n$ be a random sample from a distribution with known variance $\text{Var}(X_i)=\sigma^2,$ and unknown mean $E[X_i]=\theta.$ \pause Find a $(1-\alpha)$ confidence interval for $\theta.$ \pause Assume that $n$ is large.
+\end{example}
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Summarize Interval Estimators...}
+\pause 
+
+\begin{alertblock}{Summary}
+
+\begin{enumerate}
+
+\item \yellow{Assumptions:} A random sample $X_1, X_2, X_3, \dots, X_n$ is given from a distribution with known variance $\text{Var}(X_i) = \sigma^2 < \infty;$ $n$ is large. \pause 
+
+\item \yellow{Parameter to be Estimated:} $\theta = E[X_i]$ \pause 
+
+\item \yellow{Confidence Interval:} \[ \hat{X} - z_{\alpha/2} \dfrac{\sigma}{\sqrt{n}}, \hat{X} + z_{\alpha/2} \dfrac{\sigma}{\sqrt{n}}  \]
+is approximately a $(1-\alpha)100\%$ confidence interval for $\theta$ \pause 
+
+\item Above, we have used CLT, hence, we found an approximation to confidence interval 
+
+\end{enumerate}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of Computing Confidence Interval...}
+\pause 
+
+\begin{example}
+An engineer is measuring a quantity $\theta.$ \pause It is assumed that there is a random error in each measurement, so the engineer will take $n$ measurements and report the average of the measurements as the estimated value of $\theta.$ \pause Here, n is assumed to be large enough so that the central limit theorem applies. \pause If $X_i$ is the value that is obtained in the $i$th measurement, we assume that
+\[ X_i = \theta + W_i, \]
+where $W_i$ is the error in the $i$th measurement. \pause We assume that the $W_i$'s are i.i.d. with $E[W_i]=0$ and $\text{Var}(W_i)=4$ square units. \pause The engineer reports the average of the measurements 
+\[ \bar{X} = \dfrac{X_1 + X_2 + \dots + X_n}{n} \] \pause 
+How many measurements does the engineer need to make until he is $90\%$ sure that the final error is less than 0.25 units? \pause In other words, what should the value of n be such that
+\[ P(\theta - 0.25 \leq \bar{X} \leq \theta + 0.25) \geq 0.90? \]
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+\begin{frame}{Confidence Interval with Unknown Variance...}
+\pause 
+
+\begin{alertblock}{Confidence interval with unknown variance}
+\begin{enumerate}
+\item \yellow{An upper bound for $\sigma^2:$} Suppose that we can somehow show that
+$ \sigma \leq \sigma_{\max}, $
+where $\sigma_{\max} < \infty.$ \pause Then if we replace $\sigma$ above by $\sigma_{\max},$ the interval gets bigger. \pause The interval 
+\[ \left[ \bar{X}-z_{\dfrac{\alpha}{2}} \dfrac{\sigma_{\max}}{\sqrt{n}}, \quad \bar{X} + z_{\dfrac{\alpha}{2}} \dfrac{\sigma_{\max}}{\sqrt{n}} \right] \]  
+is still a valid $(1 - \alpha)100\%$ confidence interval for $\theta$ \pause 
+\item \yellow{Estimate $\sigma^2:$} Note that here, since $n$ is large, we should be able to find a relatively good estimate for $\sigma^2.$ \pause After estimating $\sigma^2,$ we can use that estimate and
+\[ \left[ \bar{X}-z_{\dfrac{\alpha}{2}} \dfrac{\sigma}{\sqrt{n}}, \quad \bar{X} + z_{\dfrac{\alpha}{2}} \dfrac{\sigma}{\sqrt{n}} \right] \] to find an approximate $(1- \alpha)100\%$ \yellow{confidence interval} for $\theta$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+

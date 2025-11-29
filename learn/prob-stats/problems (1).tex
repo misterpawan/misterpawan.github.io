@@ -1,0 +1,504 @@
+\section{Problems}
+
+%\begin{comment}
+%
+\begin{frame}{Distributing Assignments Among People}
+
+\pause 
+
+\begin{alertblock}{Problem}
+Suppose there are 4 people and 9 different assignments. Each person should receive one assignment. Assignments for different people should be different. How many ways are there to do it?
+\end{alertblock} 
+
+\pause 
+
+\begin{alertblock}{Quiz}
+Where does this problem fit in our combination and permutation table?
+\end{alertblock}
+
+\end{frame}
+%
+%%\begin{comment}
+%
+\begin{frame}{Distributing Assignments Among People}
+
+\pause 
+
+\begin{alertblock}{Problem}
+Suppose there are 4 people and 9 different assignments. Each person should receive one assignment. Assignments for different people should be different. How many ways are there to do it?
+\end{alertblock} 
+
+\pause 
+
+\begin{block}{Finding the type of problem}
+\begin{itemize}
+\item This is a problem of selecting assignments for 4 people \pause 
+\item Here assignments and people are different: so a ordered case \pause 
+\item No repetitions: same assignment is not given to two persons \pause 
+\item It is a case of ordered without repetitions, i.e., $k-$permutations
+\end{itemize}
+\end{block}
+\end{frame}
+%
+%
+\begin{frame}{Distributing Assignments Among People}
+
+\pause 
+
+\begin{alertblock}{Problem}
+Suppose there are 4 people and 9 different assignments. Each person should receive one assignment. Assignments for different people should be different. How many ways are there to do it?
+\end{alertblock} 
+
+\pause 
+
+\begin{block}{Answer}
+\begin{itemize}
+\item Let us have a look at the possibilities \pause 
+\begin{tabular}{|l|l|l|l|l|}
+\hline 
+Persons & 1 & 2 & 3 & 4 \\ \hline
+Number of options & 9 & 8 & 7 & 6 \\ \hline
+\end{tabular} \pause 
+\item The answer is $\dbinom{9!}{(9-4)!} = 9 \times 8 \times 7 \times 6 = 3024$
+\end{itemize}
+\end{block}
+\end{frame}
+%
+%
+\begin{frame}{Distributing Assignments Among People: Twist}
+\pause 
+
+\begin{alertblock}{Problem with a twist!}
+There are 4 people and 9 different assignments. We need to distribute all assignments among people. No assignment should be assigned to two people. Every person can be given arbitrary number of assignments from 0 to 9. How many ways are there to do it?
+\end{alertblock}
+
+\pause 
+
+\begin{alertblock}{Quiz}
+Which category this problem belongs to? \includegraphics[scale=0.02]{pondering}
+\end{alertblock}
+
+\end{frame}
+%
+\begin{frame}{Distributing Assignments Among People: Twist}
+\pause 
+\begin{alertblock}{Problem with a twist!}
+There are 4 people and 9 different assignments. We need to distribute all assignments among people. No assignment should be assigned to two people. Every person can be given arbitrary number of assignments from 0 to 9. How many ways are there to do it?
+\end{alertblock}
+\pause 
+
+\begin{block}{Attempt to analyze the problem and fit it into a known case}
+\begin{itemize}
+\item Each person receives several assignments; look at one by one \pause 
+\item First person can be assigned arbitrary number of assignments \pause 
+\begin{itemize}
+\item It is a case of counting all possible subsets of assignments
+\end{itemize} \pause 
+\item Same assignment can't be given to two persons, the number of subsets of assignments for second person depends on what we chose for first person! \yellow{How to attack this problem?}
+\end{itemize}
+\end{block}
+
+\end{frame}
+%
+%
+%
+\begin{frame}{Distributing Assignments Among People: Twist}
+\pause 
+\begin{alertblock}{Problem with a twist!}
+There are 4 people and 9 different assignments. We need to distribute all assignments among people. No assignment should be assigned to two people. Every person can be given arbitrary number of assignments from 0 to 9. How many ways are there to do it?
+\end{alertblock}
+
+\pause 
+
+\begin{block}{Attempt to solve the problem and fit it into a known case}
+\begin{itemize}
+\item \yellow{Idea:} What if you look from other point of view? \pause 
+\item Rather than giving assignments to people, assign people to assignments \pause 
+\end{itemize}
+\end{block}
+
+\end{frame}
+%
+%
+%
+\begin{frame}{Distributing Assignments Among People: Twist}
+\pause 
+\begin{alertblock}{Problem with a twist!}
+There are 4 people and 9 different assignments. We need to distribute all assignments among people. No assignment should be assigned to two people. Every person can be given arbitrary number of assignments from 0 to 9. How many ways are there to do it?
+\end{alertblock}
+\pause 
+
+\begin{block}{Attempt to solve the problem and fit it into a known case}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+\hline
+Assignments & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ \hline
+Options & 4 & 4 & 4 & 4 & 4 & 4 & 4 & 4 & 4  \\ \hline
+\end{tabular}
+\pause 
+\begin{itemize}
+\item There are $4^9 = 262144$ choices! This was a case of \yellow{Tuples}!
+\end{itemize}
+\end{block}
+
+\end{frame}
+%
+%\end{comment}
+
+
+
+\begin{frame}{Quiz-1}
+\begin{figure}
+\includegraphics[scale=0.15]{Quiz-1}
+\end{figure}
+\Huge \quad https://tinyurl.com/y2g93ofb 
+%https://tinyurl.com/y2g93ofb
+\normalsize
+\end{frame}
+
+
+\begin{frame}{Distributing Candies Among Kids}
+\pause 
+\begin{alertblock}{Problem}
+There are 15 identical candies. How many ways are there to distribute them among 7 kids?
+\end{alertblock}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.4]{candy2}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Distributing Candies Among Kids}
+\pause 
+\begin{alertblock}{Problem}
+There are 15 identical candies. How many ways are there to distribute them among 7 kids?
+\end{alertblock}
+\pause 
+\begin{block}{Analyzing the problem, and fitting it into the known case}
+\begin{itemize}
+\item When distributing candies, we pick one of 7 kids \pause 
+\item Since all the candies are same, \yellow{repetitions are allowed} \pause 
+\item Since the candies to be distributed are identical, \yellow{ordering doesn't matter} \pause 
+\item This is a case of \yellow{combinations with repetitions}
+\end{itemize}
+
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}{Distributing Candies Among Kids: Solution Finally!}
+\pause 
+\begin{alertblock}{Problem}
+There are 15 identical candies. How many ways are there to distribute them among 7 kids?
+\end{alertblock}
+\pause 
+\begin{block}{Analyzing the problem, and fitting it into the known case}
+\begin{itemize}
+\item Number of combinations = size of combination \pause 
+\item Number of options = Number of kids \pause 
+\item The answer is $\dbinom{15+(7-1)}{(7-1)} = \dbinom{21}{3} = 54264$
+\end{itemize}
+
+\end{block}
+\end{frame}
+
+%\begin{comment}
+
+\begin{frame}{Fair Distributions..}
+\pause 
+\begin{alertblock}{A problem with previous distribution...}
+No kid will like not having even a single candy. Infact, a kid would like to have it all! How can we change the problem?
+\end{alertblock}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.15]{candy3}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Fair Distributions..}
+\pause 
+\begin{block}{A problem with previous distribution...}
+We want that each kid receives atleast one candy!
+\end{block}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.3]{candy4}
+\end{figure} \pause 
+Let us change our previous problem so that each kid is ensured \yellow{atleast one} candy!
+\end{frame}
+
+
+
+
+\begin{frame}{Distributing Candies with Fair Distribution...}
+\pause 
+\begin{alertblock}{Question}
+There are 15 identical candies. How many ways are there to distribute them among 7 kids in such a way that each kid receives \yellow{at least 1} candy?
+\end{alertblock}
+\pause 
+
+\begin{alertblock}{Quiz}
+\begin{itemize}
+\item Does our previous approach work here? What should you do? \pause 
+\item Can we reduce this problem to previous problem? If yes, how?
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Distributing Candies with Fair Distribution...}
+\pause 
+
+\begin{alertblock}{Question}
+There are 15 identical candies. How many ways are there to distribute them among 7 kids in such a way that each kid receives \yellow{at least 1} candy?
+\end{alertblock}
+\pause 
+
+\begin{block}{Idea}
+\begin{itemize}
+\item Give kids atleast one candy. Then we are left with 15-7=8 candies... \pause 
+\item Now we can distribute these 8 candies as in previous problem! \pause 
+\item It becomes a problem of \yellow{Combinations with Repetitions} \pause 
+\begin{itemize}
+\item \#combinations = 8; \quad \#options = 7
+\end{itemize} \pause 
+\item Answer = $\dbinom{8+(7-1)}{(7-1)} = \dbinom{14}{6} = 3003$
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+
+\begin{frame}{How many kids can have no candies?}
+\pause 
+
+\begin{alertblock}{Question}
+Assume that 15 identical candies are distributed among 7 kids. How many ways are there that will leave some kids without any candy?
+\end{alertblock}
+\pause 
+
+\begin{figure}
+\includegraphics[scale=0.2]{candy5}
+\end{figure}
+\pause 
+
+\begin{block}{Hint}
+Use the answer to previous two problems!
+\end{block}
+
+\end{frame}
+
+
+\begin{frame}{Numbers with Fixed Sum of Digits}
+\pause 
+\begin{alertblock}{Problem}
+How many non-negative integer numbers are there below 10 000 such that their sum of digits is equal to 9?
+\end{alertblock}
+\pause 
+\begin{block}{Understanding the problem...}
+\begin{itemize}
+\item It is clear that we have nine options for the 1st digit \pause 
+\item But what next? How many options for the 2nd digit?  \pause 
+\item It is already tricky... 
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+
+
+\begin{frame}
+
+\begin{alertblock}{Problem}
+How many non-negative integer numbers are there below 10 000 such that their sum of digits is equal to 9?
+\end{alertblock} \pause 
+
+\begin{itemize}
+\item There are \yellow{four} positions to fill \pause 
+\[ \yellow{\ast \: \ast \: \ast \: \ast} \] \pause 
+\item The \yellow{sum of the digits must be 9}. We can \yellow{start with all zeros!}
+\[ \yellow{0 \: 0 \: 0 \: 0} \] \pause 
+\end{itemize}
+
+\end{frame}
+
+%
+%
+\begin{frame}
+\begin{alertblock}{Problem}
+How many non-negative integer numbers are there below 10 000 such that their sum of digits is equal to 9?
+\end{alertblock} \pause 
+\begin{itemize}
+\item Idea: How many ways we can distribute 9 ones in 4 places? \pause 
+\item Multiple ones will go to at least one of the four places, and get added \pause 
+\item This belongs to the category: ``unordered with repetitions" \pause 
+\item \#combinations = 9; \quad \#options = 4  \pause 
+\item Hence, answer is $\dbinom{9 + (4-1)}{(4-1)} = \dbinom{12}{3} = 220$
+\end{itemize}
+\end{frame}
+
+
+%%\begin{comment}
+%
+%
+\begin{frame}{Numbers with Fixed Sum of Digits: A Twist}
+\pause 
+\begin{alertblock}{Problem}
+How many non-negative integer numbers are there below 10 000 such that their sum of digits is equal to 10?
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item Looks very similar to the previous one; Distribute ten ones between four positions \pause 
+\item Combinations of size 10 among 4 options \pause 
+\item Hence, answer is $\dbinom{10+(4-1)}{(4-1)} = \dbinom{13}{3} = 286$ \pause 
+\item \yellow{But this is wrong! Why? The answer is off by 4!}
+\end{itemize}
+\end{frame}
+
+%
+\begin{frame}{Numbers with Fixed Sum of Digits: A Twist}
+\pause 
+\begin{alertblock}{Problem}
+How many non-negative integer numbers are there below 10 000 such that their sum of digits is equal to 10?
+\end{alertblock} \pause 
+\begin{itemize}
+\item When we assign all 10 ones to one position, but digits can be only upto 9 \pause 
+\item We need to substract the additional cases! How? \pause 
+\item By our previous approach, we would have distributed errorenously at either of the four places of four digit number \pause 
+\item Since there are 4 cases where we could have assigned 10, these are the extra cases \pause 
+\item \yellow{Hence, final correct answer = 286-4 = 282}
+\end{itemize}
+\end{frame}
+
+%
+%
+%
+%
+\begin{frame}{Numbers with Non-increasing Digits Problem}
+\pause 
+\begin{alertblock}{Problem}
+How many four-digit numbers are there such that their
+digits are not increasing? Three-digit numbers are also four-digit, they just start with 0
+\end{alertblock} \pause 
+\begin{itemize}
+\item If we try to count options for each position and apply the product rule, there are problems \pause 
+\item 10 options for the first position, but for the second the number of options depends on the first number \pause 
+\item Usual approach doesn't work; try from another angle!
+\end{itemize}
+\end{frame}
+
+
+%
+%
+\begin{frame}{Numbers with Non-increasing Digits Problem}
+\pause 
+\begin{alertblock}{Problem}
+How many four-digit numbers are there such that their
+digits are not increasing? Three-digit numbers are also four-digit, they just start with 0
+\end{alertblock} \pause 
+\begin{itemize}
+\item We pick digits from 0 to 9 to be in our number \pause 
+\item Once we picked four digits, our number is uniquely determined \pause 
+\item Order of picks does not matter; repetitions are allowed \pause 
+\item \#combinations = 4; \quad \#options = 10 \pause 
+\item The answer is $\dbinom{4 + (10-1)}{(10-1)} = \dbinom{13}{4} = 715$
+\end{itemize}
+\end{frame}
+
+
+
+%
+\begin{frame}{Group Work}
+\pause 
+\begin{alertblock}{Fact}
+Group learning is a wonderful way to learn and share knowledge.
+\end{alertblock} 
+\begin{figure}
+\includegraphics[scale=0.09]{group}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Splitting into Working Groups}
+\pause 
+\begin{alertblock}{Problem}
+There are 12 students in the class. How many ways are there to split them into working groups of size 2 to work on the same assignment?
+\end{alertblock} \pause 
+\begin{itemize}
+\item This problems is more tricky; There are several ways to solve it \pause 
+\item But we need to combine several ideas \pause 
+\item How do we approach this problem?
+\end{itemize}
+\end{frame}
+%
+%
+\begin{frame}{Splitting into Working Groups}
+\pause 
+\begin{alertblock}{Problem}
+There are 12 students in the class. How many ways are there to split them into working groups of size 2 to work on the same assignment?
+\end{alertblock} \pause 
+\begin{itemize}
+\item We have to pick 2 people out of 12 in a working group \pause 
+\item Order in the group does not matter, so combinations, so there are $\dbinom{12}{2}$ ways to do it \pause 
+\item For the second group we have 10 people left, there are $\dbinom{10}{2}$ options, so on \pause 
+\item So, overall we have the following options
+\[ \dbinom{12}{2} \times \dbinom{10}{2} \times \dbinom{8}{2} \times \dbinom{6}{2} \times \dbinom{4}{2} \times \dbinom{2}{2} \] \pause 
+\item \yellow{Is this correct answer?} \pause \yellow{No! Why?}
+\end{itemize}
+\end{frame}
+
+
+%
+%
+\begin{frame}
+\begin{itemize}
+\item Let us number the students...
+\end{itemize} \pause 
+\begin{figure}
+\includegraphics[scale=0.35]{12-kids}
+\end{figure} \pause 
+\begin{itemize}
+\item According to our enumeration, we could have the following
+\[ \{ 3,7 \}, \{ 1,5 \}, \{ 6, 9 \}, \{ 11, 2 \}, \{ 8, 12 \}, \{ 4,10 \} \]
+\[ \{ 1, 5 \}, \{ 3,7 \}, \{ 6, 9 \}, \{ 11,2 \}, \{ 8, 12\}, \{ 4, 10 \} \] \pause 
+\item That is, ordering across groups also does not matter!
+\end{itemize}
+\end{frame}
+
+
+%
+%
+\begin{frame}{Finally, the solution}
+\begin{alertblock}{Our Problem}
+There are 12 students in the class. How many ways are there to split them into working groups of size 2 to work on the same assignment?
+\end{alertblock} \pause
+\begin{itemize}
+\item That is, ordering across groups also does not matter! \pause 
+\item We had 6! redundant splitting, which we need to divide by \pause 
+\item We have counted each assignment 6! times, hence, after dividing, \yellow{the answer is}
+\[ \dbinom{12}{2} \times \dbinom{10}{2} \times \dbinom{8}{2} \times \dbinom{6}{2} \times \dbinom{4}{2} \times \dbinom{2}{2} \times \dfrac{1}{6!} = \dfrac{12!}{6! \times 2^6} = 10395 \]
+\end{itemize}
+\end{frame}
+
+
+%
+%
+%%\end{comment}
+%
+%%\section*{Importance of Probability and Statistics}
+%
+%%\begin{frame}{Importance of Probability and Statistics}
+%%
+%%\end{frame}
+%
+%
+%%\end{comment}
+%
+%
+
+
+
+
+

@@ -1,0 +1,100 @@
+\section{Tuples}
+
+\begin{frame}{Tuples}
+\begin{alertblock}{Question}
+Suppose we have a set of $n$ symbols. How many different
+sequences of length $k$ we can form out of these symbols?
+\end{alertblock}
+\begin{itemize}
+\item can apply the same argument as above! (product rule!) \pause 
+\item there are $n$ possibilities to pick the first letter \pause 
+\item similarly, There are $n$ possibilities to pick the second letter, and so on... \pause 
+\item thus, the answer is a product of $n$ by itself $k$ times, that
+is $n^k$
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Number of Number Plates}
+\pause 
+Consider the typical vehicle number plate in India \pause 
+\begin{figure}
+\includegraphics[scale=0.35]{plate2}
+\end{figure} \pause 
+\begin{itemize}
+\item the first two letters denote state \pause 
+\item the following two-digit number stands for district number \pause 
+\item the following two-letter is RTO series \pause 
+\item the last four digits is the vehicle number ranging from 0000 to 9999
+\end{itemize} \pause 
+\begin{alertblock}{Question}
+How many vehicles are there? 
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Tuples with Restrictions (Combine Sum and Product Rule)} 
+\pause 
+\begin{alertblock}{Question}
+How many integer numbers are there between 0 and 9999 that have exactly one 
+5 digit?
+\end{alertblock} \pause
+\begin{itemize}
+\item Numbers between 0 and 9999 are sequences
+of digits of length 4 \pause 
+\item Three digital numbers correspond to
+sequences starting with 0 \pause 
+\item We can place the unique 5 at any of four positions \pause 
+\item This gives us 4 cases; if we compute the number of
+sequences in all four cases, we can get the answer by the
+rule of sum \pause 
+\item If we fix 5 in one place, then there are $5 \times 5 \times 5 = 125$ sequences \pause 
+\item There are 4 ways to arrange 5 among 4 places \pause 
+\item Hence, there are $4 \times 125 = 500$ four digit numbers below 10,000 with exactly one 5 
+\end{itemize}
+\end{frame}
+
+\section*{Permutations}
+\begin{frame}{Permutations}
+\pause 
+\begin{alertblock}{Definition}
+Tuples of length $k$ without repetitions are called
+\yellow{$k-$permutations}
+\end{alertblock}
+\pause 
+\begin{alertblock}{Question}
+\pause 
+Suppose we have a set of $n$ symbols. How many different
+sequences of length $k$ we can form out of these symbols if
+we are not allowed to use the same symbol twice?
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item Observe that if $n<k$ then there are no
+$k-$permutations: there are simply not enough different
+letters \pause 
+\item So it is enough to solve the problem for the case $k \leq n$
+\end{itemize} \pause 
+\begin{figure}
+\includegraphics[scale=0.3]{perm}
+\end{figure} \pause 
+\begin{itemize}
+\item Hence there are 
+%\begin{align*}
+\[ n \times (n-k) \times \cdots (n-k+1) \]
+%\end{align*} 
+$k-$permutations, which is \yellow{$n! / (n-k)!$}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Permutation Examples}
+\pause 
+\begin{alertblock}{Question}
+In how many ways we can arrange $n$ different books in $n$ different bins on shelf?
+\end{alertblock}
+\pause 
+\begin{alertblock}{Answer}
+Hint: Use previous result with $k=n.$ 
+\end{alertblock}
+\end{frame}

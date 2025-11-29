@@ -1,0 +1,188 @@
+\section[Counting]{Basic Counting}
+
+%\section{Basic Counting}
+
+%\begin{comment}
+
+\begin{frame}{Why Counting?}
+\pause 
+\begin{itemize}
+\item counting is a basic task in mathematics \pause 
+\item \yellow{Our objective:} To tell how many objects are there without actually counting \pause 
+\item \yellow{applications of counting:} \pause 
+\begin{itemize}
+\item number of steps of an algorithm \pause 
+\item estimating probability of occurrence of an event (\yellow{in this course}) \pause 
+\item proofs such as Pigeon Hole Principle (PHP) 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Brief History of Counting}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.33]{bone4}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \alert{Ishango Bone} is possibly the \yellow{oldest} mathematical artefact still in existence \pause 
+\item It is dates back to the Upper Paleolithic period of human history, and is approximately \yellow{20,000 years old.} \pause 
+\item The bone is 10 cm long and contains a series of notches, which many scientists believe were used for counting.
+\end{itemize}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Brief History of Counting}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.33]{mult200}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item This tablet shows a \yellow{multiplication table} that was created around \yellow{2600 BCE} in the Sumerian city of Shuruppak \pause 
+\item The table has three columns. The dots in the first two columns represent distances ranging from around 6 meters to 3 kilometres. The third column contains the product of the first two \pause 
+\item Sumer was a region of ancient Mesopotamia in the Middle East
+\end{itemize}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{How do we count?}
+%    \begin{alertblock}{Question-1}
+%    How many numbers are there between 1 and 10?
+%    \end{alertblock}
+%    \pause 
+%    \begin{alertblock}{Answer}
+%     10
+%    \end{alertblock}
+    \pause 
+    \begin{alertblock}{Question-2}
+    How many numbers are there between 21 and 31?
+    \end{alertblock}
+    \pause 
+    \begin{alertblock}{Answer}
+     11
+    \end{alertblock}
+    \pause 
+    \begin{alertblock}{Question-3}
+    How many numbers are there between $m$ and $n, \: m<n?$
+    \end{alertblock}
+    \pause 
+    \begin{alertblock}{Answer}
+     $m-n+1$
+    \end{alertblock}
+    
+\end{frame}
+
+\begin{frame}{How do we count?}
+    \begin{alertblock}{Question-1}
+    How many numbers between 33 and 67 are divisible by 4?
+    \end{alertblock}
+    %\pause 
+    \vspace{5cm}
+%    \begin{alertblock}{Answer}
+%     
+%    \end{alertblock}
+    
+\end{frame}
+
+\section{Sum Rule}
+
+\begin{frame}{Sum Rule: Statement and Example}
+\pause 
+\begin{alertblock}{Sum Rule}
+If there are $m$ objects of first type and there are $n$ objects of second type, then 
+there are $n+m$ objects of one of the two types.
+\end{alertblock}
+
+\pause 
+
+\begin{alertblock}{Sum Rule Example}
+How many of the Pizza or Burgers places are there?
+\begin{figure}
+\includegraphics[scale=0.25]{sum1.png}
+\end{figure}
+\end{alertblock}
+\pause 
+\begin{alertblock}{Answer}
+There are 7 Pizzas and there are 5 Burgers, hence, by sum rule, we have
+7 + 5 = 12
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Another Sum Rule Example}
+\pause 
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{alertblock}{Example}
+A piece stays in the bottom left corner of a
+chessboard. In one move it can move one step to
+the right or one step up. How many moves are
+needed to get to the position on the picture?
+\end{alertblock}
+\end{column}
+\pause 
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{chess}
+\end{figure}
+\end{column}
+\end{columns}
+\pause 
+\begin{itemize}
+\item There are \yellow{two} types of moves: \pause move right and move up \pause 
+\item To get to the column 4, we need 3 moves to the right \pause 
+\item To get to the row 6, we need 5 moves up \pause 
+\item \yellow{Applying sum rule:} In total, we need 3+5=8 moves
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Caution using Sum Rule!}
+\pause 
+\begin{alertblock}{Question}
+Count all integers from 1 to 10 that are divisible by 2 or by 3
+\end{alertblock}
+
+\pause
+
+\begin{alertblock}{Answer}
+\begin{itemize}
+\item There are 5 numbers divisible by 2: \quad 2, 4, 6, 8, 10 \pause 
+\item There are 3 numbers divisible by 3: \quad 3, 6, 9 \pause 
+\item Hence, by sum rule, the answer is: \quad 5+3 = 8
+\end{itemize} \pause 
+Is this correct answer? \pause \yellow{No} \\ \pause 
+Let us count directly: 2,3,4,6,8,9,10, that is the answer is 7
+\end{alertblock}
+\pause 
+\begin{alertblock}{Caution with Sum Rule}
+In the rule of sum, \yellow{no object should belong to both types!}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+

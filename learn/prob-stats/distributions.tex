@@ -1,0 +1,415 @@
+%\section{Quiz}
+%
+%\begin{frame}
+%\begin{center}
+%Attend the Quiz on Gradescope!
+%\end{center}
+%\end{frame}
+%
+\section{Special Distributions}
+
+
+\subsection{Uniform Distribution}
+
+\begin{frame}{Motivation for Uniform Distribution: Distribution of a Die Roll...}
+\pause 
+
+\begin{alertblock}{Example: Motivation for Uniform Distribution}
+Consider rolling a fair die. The possible outcomes are $\{1,2,3,4,5,6 \}.$ Then the PMF is given by 
+
+\begin{align*}
+p(x) = \begin{cases}
+\dfrac{1}{6}, \quad &x \in \{1,2,3,4,5,6\} \\
+0, \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+
+We note here that $\sum_{x \in \mathbb{Z}}p(x) = 1.$ We note here that PMF takes uniform values for all values of $X=x.$
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Uniform Distribution...}
+\pause
+
+\begin{alertblock}{Definition: Uniform Distribution}
+Motivated from the previous example, we now define \yellow{uniform distribution} on $\{ 1,2, \dots, n \}$ by 
+\begin{align*}
+p(x) = \begin{cases}
+		\dfrac{1}{n}, \quad &x \in \{ 1,2, \dots, n \} \\
+		0, \quad &otherwise 
+\end{cases}
+\end{align*}
+We verify here that $\sum_{x \in \mathbb{Z}} p(x) = 1.$
+\end{alertblock}
+\end{frame}
+
+
+\subsection{Bernoulli Distribution}
+
+\begin{frame}{Bernoulli Distribution}
+\begin{alertblock}{Bernoulli distribution}
+A random variable $X$ is called a \yellow{Bernoulli random variable} with parameter $p,$ denoted by 
+$X \sim Bernoulli(p),$ if its \yellow{PMF} is given by 
+\begin{align*}
+P_X(x) = \begin{cases}
+      p \quad &\text{for}~x=1, \\
+      1-p \quad &\text{for}~x=0, \\
+      0 \quad &\text{otherwise},  
+\end{cases}
+\end{align*}
+where $0 < p < 1.$ \pause 
+\begin{itemize}
+\item This models random experiments that have \yellow{two} possible outcomes \pause 
+\item \yellow{Example:} You take a pass-fail exam. You either \yellow{pass or fail}  \pause 
+\item \yellow{Example:} A coin is tossed, the outcome is either \yellow{heads or tails}
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+%
+
+\subsection{Geometric Distribution}
+
+
+\begin{frame}{Geometric Distribution}
+\pause 
+
+\begin{alertblock}{Definition of Geometric Distribution}
+A random variable $X$ is called \yellow{geometric random variable} with parameter $p,$ denoted by 
+$X \sim Geometric(p),$ if its \yellow{PMF} is given by 
+\begin{align*}
+P_X(k) = \begin{cases}
+      p(1-p)^{k-1}, \quad &\text{for}~k=1,2,3,\dots \\
+      0, \quad &\text{otherwise},
+\end{cases}
+\end{align*}  
+where $0<p<1.$ \pause 
+\begin{itemize}
+\item \yellow{Example:} Suppose we have an unfair coin with $P(H)=p.$ \pause We \yellow{toss the coin until we obtain first heads.} \pause Let RV $X$ be the total number of tosses. \pause Then $X$ have \yellow{geometric} distribution. \pause 
+\item \yellow{Caution:} Some books define geometric random variable $X$ as total number of failures before observing first success. Then \pause 
+\begin{align*}
+P_X(k) = \begin{cases}
+      p(1-p)^{\yellow{k}}, \quad &\text{for}~k=1,2,3,\dots \\
+      0, \quad &\text{otherwise},
+\end{cases}
+\end{align*}  
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+\subsection{Binomial Distribution}
+
+
+\begin{frame}{Binomial Distribution}
+\pause 
+
+\begin{alertblock}{Definition of Binomial Distribution}
+A random variable $X$ is called \yellow{Binomial random variable} with parameters $n$ and $p,$ denoted by $X \sim Binomial(n,p),$ if the \yellow{PMF} is given by \pause 
+\begin{align*}
+P_X(k) = \begin{cases}
+      \binom{n}{k} p^k (1-p)^{n-k} \quad &\text{for}~k=0,1,2, \cdots, n \\
+      0 \quad &\text{otherwise}, 
+\end{cases}
+\end{align*} 
+where $0 < p < 1.$ \pause 
+\begin{itemize}
+\item \yellow{Example:} Consider an unfair coin with $P(H)=p.$ Consider tossing the coin $n$ times and let $X$ be the total number of heads we observe. Then $X$ is a \yellow{Binomial} with parameters $n$ and $p.$ \pause 
+\item Binomial($n,p$) is a sum of $n$ independent \yellow{Bernoulli}($p$) random variables. \pause 
+\item If $X_1, X_2, \dots, X_n$ are independent \yellow{Bernoulli}($p$) random variables, then $X = X_1 + \cdots + X_n$ has \yellow{Bernoulli}($n,p$) distribution. \pause 
+\item We verify that \quad $\sum_{x \in \mathbb{Z}} P_X(x) = \sum_{x=0}^n \binom{n}{x} p^x (1-p)^{n-x} = 1$
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+
+\begin{frame}{Example}
+\begin{alertblock}{Example}
+Let $X \sim Binomial(n,p)$ and $Y \sim Binomial(m,p)$ be two independent random variables. 
+We define a random variable $Z = X + Y.$ What is the \yellow{PMF} of $Z?$ 
+\end{alertblock}
+\vspace{5cm}
+\end{frame}
+
+
+\begin{frame}{Scratch Space...}
+
+\end{frame}
+
+
+\begin{frame}{Scratch Space...}
+
+\end{frame}
+
+\subsection{Poisson Distribution}
+
+\begin{frame}{Motivation for Poisson Distribution...}
+\pause
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item Imagine you are an Uber driver \pause 
+\item To maximize profit, you want to remain close to an area with more requests
+\item How can you use probability to predict requests for car ride?
+\end{itemize}
+\end{column} 
+\pause 
+\begin{column}{0.6\textwidth}
+\begin{figure}
+\includegraphics[scale=0.18]{ride}
+\end{figure}
+\end{column}
+\end{columns}
+
+\pause 
+\begin{alertblock}{Example}
+Given that there are on average 5 requests for car ride per minute from certain area. What is the probability of $k$ requests from this area in next 1 minute?
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Introduce Poisson Using an Example...}
+\pause 
+\begin{alertblock}{Example}
+Given that there are on average 5 requests for car ride per minute from certain area. What is the probability of $k$ requests from this area in next 1 minute?
+\end{alertblock}
+\begin{itemize}
+\item What do we know for this problem? \pause There are requests for car ride! \pause 
+\item There are two possibilities: request (1) or no request (0): \pause binary choices \pause 
+\item Sounds familiar? \yellow{Yes!} \pause Recall: How many heads in $n$ trials? \pause 
+\item The problem here is: we don't have $n$ trials, instead a time interval! So? \pause 
+\item \yellow{Key idea:} Want to use discrete distribution, so anyhow convert time to discrete intervals \pause  
+\begin{align*}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline 
+0 & 0 & 1 & 0 & 1 & \dots & \dots & 0 & 1 & 0 & 1 & 1 & 0 \\
+\hline 
+\end{tabular}
+\end{align*}
+\pause 
+\begin{itemize}
+\item break a minute into 60 seconds; \pause each second is independent trial with request or no request \pause 
+\item Let $X=$ number of requests in a minute \pause 
+\item $E[X] = \lambda = 5 = np,$ where $p$ is the probability of request \pause 
+\end{itemize}
+\item We now identify this problem as $X \sim Binomial(n=60, p = 5/60)$ \pause 
+\item $P(X = k) = \binom{60}{k} (\dfrac{5}{60})^k \left( 1 - \dfrac{5}{60} \right)^{n-k}$
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}{Motivation for Possion Distribution...}
+\pause 
+\begin{alertblock}{Example}
+Given that there are on average 5 requests for car ride per minute from certain area. What is the probability of $k$ requests from this area in next 1 minute?
+\end{alertblock}
+\begin{itemize}
+\item We identified this problem as $X \sim Binomial(n=60, p = 5/60)$ \pause 
+\item $P(X = k) = \binom{60}{k} (\dfrac{5}{60})^k \left( 1 - \dfrac{5}{60} \right)^{n-k}$ 
+\item There is a problem! \pause What is that? \pause Time is continuous! \pause 
+\item Since time is continuous, no guarantee that there will be only one request per second \pause 
+\item What do we do now? \pause We can make the interval smaller, take time intervals as milliseconds? \pause 
+\item But there is still no guarantee that there will be only one request per millisecond \pause 
+\item What should we do next? \pause Here comes calculus... \pause to go from discrete to continuous...
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Binomial in the Limit is Poisson Distribution...}
+\pause
+Derivation: 
+\vspace{6cm}
+
+\end{frame}
+
+
+\begin{frame}{Definition of Poisson Distribution...}
+\pause 
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\begin{alertblock}{Definition of Poisson}
+A random variable $X$ is said to be a Poisson random variable with parameter $\lambda,$ shown as 
+$X \sim Poisson(\lambda),$ if its range is $R_X = \{ 0,1,2, \dots, \},$ and its PMF is given by 
+\begin{align*}
+P_X(k) =
+\begin{cases}
+\dfrac{e^{-\lambda} \lambda^k}{k!}, \quad &k \in R_X \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+\end{alertblock}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.55]{poisson}
+\end{figure}
+\end{column}
+\end{columns}
+\vspace{1cm}
+\begin{itemize}
+\item Simeon-Denis Poisson, was a French mathematician (1781-1840)
+\item He published his first paper at 18, became professot at 21
+\item He published over 300 papers	
+\end{itemize}
+\end{frame}
+
+\section{Examples of Distributions}
+
+
+
+\begin{frame}{Example of Poisson Distribution...}
+\pause
+
+\begin{alertblock}{Example}
+We want to send a bit string of length $n=10^4.$ \pause  The probability that a bit can be corrupted is $p=10^{-6}.$ \pause What is the probability that the message will arrive \yellow{uncorrupted}?
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item We can solve this usung a Poisson with \yellow{$\lambda = np = 10^4 10^{-6}$} \pause 
+\item With \yellow{$X \sim \text{Poisson}(0.01)$} be the number of corrupted bits \pause 
+\item Using the PMF for Poisson \pause 
+\begin{align*}
+P(X=0) &= \dfrac{\lambda^i}{i!} e^{-\lambda} \\
+&= \dfrac{0.01^0}{0!} e^{-0.01} \\
+&\approx 0.9900498 
+\end{align*}
+\item We could have solved this using Binomial \yellow{$X \sim \text{Binomial}(10^4, 10^{-6}).$} This may have been harder to compute! \pause 
+\item When \yellow{$n$ large, and $p$ small:} can use Poisson!
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Another Example of Poisson Distribution...}
+\pause 
+
+\begin{alertblock}{Example of Poisson Distribution}
+The Poisson distribution is often used to model the number of events that occur independently
+at any time in an interval of time or space, with a \yellow{constant} average rate. \pause Earthquakes are a good example of this. \pause Suppose there are an average of 2.8 major earthquakes in the world each year. \pause What is the probability of getting more than one major earthquake next year?
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item Let $X \sim \text{Poisson}(2.8)$ be the number of major earthquakes next year. We want $P(X > 1).$ \pause 
+\item We can use $$P(X>1) = 1 - P(X=0) - P(X = 1).$$ Using PMF for Poisson \pause 
+\begin{align*}
+P(X>1) &= 1 - P(X=0) - P(X = 1) \\ 
+&= 1 - e^{-2.8} \dfrac{2.8^0}{0!} - e^{-2.8}\dfrac{2.8^1}{1!} \\ 
+&= 1 - e^{-2.8} - 2.8e^{-2.8} \\
+&\approx 1 - 0.06 - 0.17 = 0.77
+\end{align*}
+
+\end{itemize}
+\end{frame}
+
+\section{Expectations of Some Distributions}
+
+\begin{frame}{Expectation of Poisson Distribution...}
+\pause 
+
+\begin{alertblock}{Expectation of Poisson}
+Let  
+$X \sim Poisson(\lambda),$ with PMF given by 
+\begin{align*}
+P_X(k) =
+\begin{cases}
+\dfrac{e^{-\lambda} \lambda^k}{k!}, \quad &k \in R_X \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+Show that the expectation $E[X] = \lambda.$
+\end{alertblock}
+\pause 
+\begin{block}{Proof}
+\begin{align*}
+E[X] &= \sum_{x=0}^{\infty} x \dfrac{e^{- \lambda} \lambda^x }{x!} = \sum_{x=1}^{\infty} x \dfrac{e^{- \lambda} \lambda^x }{x!} = e^{-\lambda} \sum_{x=1}^{\infty} \dfrac{\lambda^x}{(x-1)!} \\
+&= e^{-\lambda} \sum_{z=0}^{\infty} \dfrac{\lambda^{z+1}}{z!} 
+= \lambda e^{-\lambda} \sum_{z=0}^{\infty} \dfrac{\lambda^z}{z!} = \lambda.
+\end{align*}
+\end{block}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Expectation of Binomial Distribution...}
+\pause
+
+\begin{alertblock}{Expectation of a Binomial Distribution}
+Show that \yellow{$E[X] = np,$} where $X \sim \text{Binomial}(n,p), 0<p<1$ with PMF given as follows
+\begin{align*}
+P_X(k) = \begin{cases}
+       \binom{n}{k} p^k (1-p)^{n-k} \quad &\text{for}~k=0,1,2, \cdots, n \\
+       0 \quad &\text{otherwise}, 
+\end{cases}
+\end{align*} 
+
+\end{alertblock}
+\pause
+\begin{block}{Proof}
+\vspace{-0.5cm}
+\begin{align*}
+ E[X] &= \sum_{x=0}^n x \binom{n}{x} p^x q^{n-x} = \sum_{x=1}^n x \binom{n}{x} p^x q^{n-x}. 
+\end{align*}
+\vspace{-0.5cm}
+\begin{align*}
+\text{For}~ 0 < x \leq n, \quad x \binom{n}{x} = x \dfrac{n!}{(n-x)!x!} = \dfrac{n!}{(n-x)!(x-1)!} = n \binom{n-1}{x-1},
+\end{align*}
+\vspace{-0.5cm} 
+\begin{align*}
+\implies \quad E[X] = \sum_{x=1}^n n \binom{n-1}{x-1} p^x q^{n-x} = \sum_{z=0}^{n-1}n \binom{n-1}{z} p^{z+1}q^{n-1-z} = \yellow{np}.
+\end{align*}
+\end{block}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

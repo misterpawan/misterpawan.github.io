@@ -1,0 +1,571 @@
+\section{Continuous Random Variable}
+
+
+\begin{frame}{Continuous Random Variable}
+\begin{alertblock}{Definition: Continuous Random Variable}
+A random variable $X$ with CDF $F_X(x)$ is said to be \yellow{continuous} if $F_X(x)$ is a \yellow{continuous} function for all $x \in \mathbb{R}.$
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item CDF is \yellow{always} a continuous function whereas PMF may not be continuous \pause 
+\item We will usually assume that the CDF of a continuous R.V. is \yellow{differentiable} \pause
+\item Although PMF does not makes sense for continuous random variable, we define \yellow{probability density function}
+\end{itemize}
+\end{frame}
+
+\section{Probability Density Functions}
+
+\begin{frame}{Probability Density Function...}
+\pause 
+
+\begin{itemize}
+\item The \yellow{probability density function} (PDF) would be defined as probability per unit length \pause 
+\item Consider a continuous random variable $X$ and define $f_X(x)$ as follows
+\begin{align*}
+f_X(x) = \lim_{\Delta \to 0^+} \dfrac{P(x < X \leq x + \Delta)}{\Delta}
+\end{align*} \pause 
+\item Here, $f_X(x)$ gives the \yellow{probability density} at point $x$ \pause 
+\item We recall that 
+%\begin{align*}
+$P(x < X \leq x + \Delta) = F_X(x + \Delta) - F_X(x).$
+%\end{align*} 
+\pause 
+\item We then have 
+\begin{align*}
+f_X(x) &= \lim_{\Delta \to 0} \dfrac{F_X(x + \Delta) - F_X(x)}{\Delta} 
+= \dfrac{dF_X(x)}{dx} = F'_X(x)
+\end{align*}
+%we assume that $F_X(x)$ is differentiable.
+\end{itemize}
+\pause 
+\begin{alertblock}{Definition of Probability Density Function}
+Let $X$ be a continuous R.V. with continuous CDF $F_X(x).$ The function $f_X(x)$ defined by 
+\begin{align*}
+f_X(x) = \dfrac{dF_X(x)}{dx} = F'_X(x),
+\end{align*}
+is called the \yellow{probability density function} of $X.$ We assume that $F_X(x)$ is differentiable.
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example of CDF and PDF for Continuous Random Variable...}
+\pause
+
+\begin{alertblock}{Example: Derive PDF from CDF for Continuous R.V}
+Let $X$ be a \yellow{continuous} random variable. \pause Let $X$ denote a real number chosen uniformly at random. \pause Here uniformly means that all intervals in $[a,b]$ that have same length must have same probability. 	\pause The CDF is given by:
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\vspace{-5cm}
+\begin{align*}
+F_X(x) = \begin{cases}
+0 \quad &\text{for}~x<a \\
+\dfrac{x-a}{b-a} \quad &\text{for}~a \leq x \leq b \\
+1 \quad &\text{for}~x>b
+\end{cases}
+\end{align*} \pause 
+\begin{itemize}
+\item \yellow{Does not matter} if we use $<$ or $\leq.$ That is, $P(X<2) = P(X \leq 2)$
+\end{itemize}
+%\pause 
+\begin{align*}
+f_X(x) = \begin{cases}
+\dfrac{1}{b-a} \quad &a<x<b \\
+0 \quad &x<a \: \text{or} \: x > b
+\end{cases}
+\end{align*}
+\end{column} %\pause 
+\begin{column}{0.5\textwidth}
+\includegraphics[scale=0.42]{pdf2}
+\end{column}
+\end{columns}
+\end{alertblock}
+\end{frame}
+
+
+
+\begin{frame}{Properties of PDF...}
+\pause 
+
+\begin{itemize}
+\item Since the PDF is the derivative of CDF, we have \pause 
+\begin{align*}
+F_X(x) = \int_{-\infty}^x f_X(u) \, du
+\end{align*}  \pause 
+\item $P(a < X \leq b) = F_X(b) - F_X(a) = \int_a^b f_X(u) \, du$ \pause 
+\item $\int_{-\infty}^{\infty} f_X(u) \, du = 1$
+\end{itemize}
+\pause 
+\begin{alertblock}{Properties of PDF}
+\begin{itemize}
+\item $f_X(x) \geq 0$ for all $x \in \mathbb{R}$ \pause 
+\item $\int_{-\infty}^{\infty} f_X(u) \, du = 1$ \pause 
+\item $P(a < X \leq b) = F_X(b) - F_X(a) = \int_a^b f_X(u) \, du$ \pause 
+\item More generally, for a set $A, \quad P(x \in A) = \int_A f_X(u) \, du$  \pause 
+\item If $A = [0,1] \cup [3,4]: P(X \in A) = \int_0^1 f_X(u) \, du + \int_3^4 f_X(u) \, du$ 
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example: PDF and CDF of Continuous Random Variable}
+\begin{alertblock}{Example: PDF and CDF of Continuous R.V.}
+\begin{align*}
+f_X(x) = \begin{cases}
+ce^{-x} \quad &x \geq 0 \\
+0 \quad &otherwise
+\end{cases}
+\end{align*}
+where $c$ is a positive constant. 
+\pause 
+\begin{enumerate}
+\item Find $c$ \pause 
+\item Find the CDf of $X, F_X(x)$ \pause 
+\item Find $P(1 < X < 3)$ 
+\end{enumerate}
+\end{alertblock} 
+\pause 
+\end{frame}
+
+
+
+\begin{frame}{Answer to previous problem...}
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.1\textheight}
+\end{frame}
+
+
+\begin{frame}{Answer to previous problem...}
+
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.1\textheight}
+\end{frame}
+
+
+\begin{frame}{Range, Expectation, Variance of Continuous Random Variable...}
+\pause
+
+\begin{alertblock}{Definition: Range of Continuous Random Variable}
+The \yellow{range} of a random variable $X$ is the set of possible values of the random variable. If $X$ is a \yellow{continuous} random variable, we can define the \yellow{range} of $X$ as the set of real numbers $x$ for which the PDF is larger than zero, i.e,
+\begin{align*}
+R_X  = \{ x \mid f_X(x) > 0 \}
+\end{align*}
+\end{alertblock}
+
+\pause 
+\begin{alertblock}{Definition: Expected Value of Continuous R.V}
+Recall that the expected value of discrete R.V. is \pause 
+\begin{align*}
+EX = \sum_{x_k \in R_x} x_k P_X(x_k)
+\end{align*} \pause 
+Replacing \yellow{sum by integral}, and \yellow{PMF by PDF} we have 
+\begin{align*}
+EX = \int_{-\infty}^{\infty} x f_X(x) \, dx
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of Expected Value of Continuous Random Variable...}
+\pause 
+
+\begin{alertblock}{Example}
+Let $X \sim \text{Uniform}(a,b).$ Find $EX.$
+\end{alertblock}
+\vspace{5cm}
+%\hspace{8cm} \rule{.1mm}{1.1\textheight}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+\begin{frame}{Expected Value of a Function of Continuous Random Variable...}
+\pause 
+
+\begin{alertblock}{Expected Value of a Function of Continuous Random Variable...}
+Recall that for the discrete random variable we had \pause 
+\begin{align*}
+E[g(X)] = \sum_{x_k \in R_X} g(x_k) P_X(x_k).
+\end{align*} \pause 
+By changing the \yellow{sum to integral} and changing \yellow{PMF to PDF,} we have 
+\begin{align*}
+E[g(X)] = \int_{-\infty}^{\infty} g(x) f_X(x) \, dx
+\end{align*} \pause 
+We recall that the \yellow{linearity} of $E[\cdot]$ holds: \pause 
+\begin{enumerate}
+\item $E[aX + b] = aE[X] + b$ for all $a,b \in \mathbb{R}$
+\item $E[X_1 + X_2 + \dots + X_n] = E[X_1] + E[X_2] + \dots + E[X_n]$ 
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of Expected Value for Continuous Random Variable...}
+\pause 
+
+\begin{alertblock}{Example}
+Let the PDF of a \yellow{continuous} R.V. be given by 
+\begin{align*}
+f_X(x) = \begin{cases}
+x + \dfrac{1}{2} \quad &0 \leq x \leq 1 \\
+0 \quad &\text{otherwise}. 
+\end{cases}
+\end{align*}
+Find $E[X^n], n \in \mathbb{N}.$ 
+\end{alertblock}
+\vspace{3cm}
+
+\end{frame}
+
+
+
+\begin{frame}{Variance of a Continuous Random Variable...}
+\pause 
+
+\begin{alertblock}{Definition: Variance of Continuous Random Variable}
+Recall that the \yellow{variance} of a random variable is defined as \pause 
+\begin{align*}
+\text{Var}(X) = E[(X - \mu_X)^2] = E[X^2] - E[X]^2.
+\end{align*} \pause 
+So, for a \yellow{continuous} random variable, we have \pause 
+\begin{align*}
+\text{Var}(X) &= E[(X - \mu_X)^2] = \int_{-\infty}^{\infty} (x - \mu_X)^2 f_X(x) \, dx \\
+&= E[X^2] - E[X]^2 = \int_{-\infty}^{\infty} x^2 f_X(x)\, dx - \mu_X^2
+\end{align*} \pause 
+%\begin{itemize} 
+%\item 
+Recall that for $a,b \in \mathbb{R},$ we have 
+\begin{align*}
+\text{Var}(aX + b) = a^2 \text{Var}(X).
+\end{align*}
+%\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example: Expected Value and Variance}
+\begin{alertblock}{Example}
+Consider the following PDF of the \yellow{continuous} random variable $X$ \pause 
+\begin{align*}
+f_X(x) = \begin{cases}
+\dfrac{3}{x^4} \quad &x \geq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+
+\end{alertblock}
+\vspace{4cm}
+\end{frame}
+
+
+
+
+\begin{frame}{Functions of Continuous Random Variable...}
+\pause 
+
+\begin{alertblock}{Example of a function of continuous random variable}
+Let $X \sim \text{\yellow{Uniform}}(0,1),$ and let $Y = e^X.$ \pause 
+\begin{itemize}
+\item Find the CDF of $Y$ \pause 
+\item Find the PDF of $Y$ \pause 
+\item Find $E[Y]$
+\end{itemize} \pause 
+Find the \yellow{mean} and \yellow{variance} of $X.$
+\end{alertblock}
+\vspace{4cm}
+
+\end{frame}
+
+
+
+\begin{frame}{Answer to previous problem...}
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+\begin{frame}{Answer to previous problem...}
+
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+\begin{frame}{Example: Function of Continuous Random Variable...}
+\pause
+
+\begin{alertblock}{Example}
+Let $X \sim \text{Uniform}(-1,1)$ and $Y = X^2.$ Find the CDF and PDF of $Y.$
+\end{alertblock}
+
+\vspace{4cm}
+
+\end{frame}
+
+
+\begin{frame}{Answer to previous problem...}
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+\begin{frame}{Answer to previous problem...}
+
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+\section{Method of Transformation}
+
+
+\begin{frame}{Method of Transformation}
+\begin{alertblock}{Method of Transformation}
+We are interested in finding the PDF of the \yellow{function of random variable}
+\[ Y = g(X). \] \pause 
+To this end, \yellow{method of transform} can be used if $g$ satisfies the following \pause 
+\begin{enumerate}
+\item $g(x)$ is \yellow{differentiable} \pause 
+\item $g(x)$ is a \yellow{strictly increasing} function
+\begin{itemize} \pause 
+\item That is, if $x_1 < x_2,$ then $g(x_1) < g(x_2)$
+\end{itemize} 
+\end{enumerate} \pause 
+We can \yellow{directly} find the PDF of $Y$ using the following formula
+\begin{align*}
+f_Y(x) = \begin{cases}
+\dfrac{f_X(x_1)}{g'(x_1)} = f_X(x_1) \cdot \dfrac{dx_1}{dy} \quad &\text{where}~g(x_1)=y \\
+0 \quad &\text{if}~g(x)=y~\text{\yellow{does not} have a solution} 
+\end{cases}
+\end{align*}
+\end{alertblock}
+
+
+\end{frame}
+
+
+
+\begin{frame}{Proof of Method of Transformation for strictly increasing... }
+%\pause 
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+\begin{frame}{Proof of Method of Transformation for strictly decreasing... }
+%\pause 
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+
+\begin{frame}{Method of Transformation for Monotonic Function for Monotonic Functions...}
+\pause 
+
+\begin{alertblock}{Method of Transformation for Monotonic Function}
+Let $X$ be a \yellow{continuous} random variable and $g: \mathbb{R} \rightarrow \mathbb{R}$ be a \yellow{strictly monotonic differentiable function}. \pause Let $Y = g(X).$ \pause Then the PDF of $Y$ is given by \pause 
+\begin{align*}
+f_Y(y) = \begin{cases}
+\dfrac{f_X(x_1)}{|g'(x_1)|} = f_X(x_1) \cdot |\dfrac{dx_1}{dy}| \quad &\text{where}~g(x_1)=y \\
+0 \quad &\text{if}~g(x)=y~\text{does not have a solution}
+\end{cases}
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example: Using Method of Transformation to Find PDF of Function of Random Variable }
+
+\begin{alertblock}{Example: Method of Transformation}
+Consider the PDF of the continuous random variable $X$ \pause 
+\begin{align*}
+f_X(x) = \begin{cases}
+4x^3 \quad &0<x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+and let $Y=\dfrac{1}{X}.$ Find $f_Y(y).$
+\end{alertblock}
+\vspace{4cm}
+
+\end{frame}
+
+
+
+\begin{frame}{Method of Transformation for Piecewise Continuous Functions...}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.45]{transformation}
+\caption{Partition a function to monotone parts}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Method of Transform}
+Let $X$ be a continuous random variable with domain $R_X.$ \pause Let $Y = g(X).$ \pause Assuming that we can partition $R_X$ into finite number of intervals such that $g(x)$ is strictly monotone and differentiable on each partition. \pause Then the PDF of $Y$ is 
+\begin{align*}
+f_Y(y) = \sum_{i=1}^n \dfrac{f_X(x_i)}{|g'(x_i)|} = \sum_{i=1}^n f_X(x_i) \cdot |\dfrac{dx_i}{dy}|
+\end{align*} \pause 
+where $x_1, x_2, \dots, x_n$ are real solutions to $g(x)=y.$
+\end{alertblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Example: Method of Transformation...}
+\pause 
+
+\begin{alertblock}{Example}
+Consider the PDF of the random variable $X$ \pause 
+\begin{align*}
+f_X(x) = \dfrac{1}{\sqrt{2 \pi}} e^{-x^2/2}, \quad \text{for all}~x \in \mathbb{R}
+\end{align*}
+and let $Y = X^2.$ \pause Find the PDF $f_Y(y).$
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item Does this satisfy the criteria for applying method of transformation? \pause 
+\item Can we partition $R_X$ into intervals such that $g(x)$ is monotone? \pause 
+\item On which intervals $g(x)$ is monotone?  
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solution to Previous Question... }
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+\begin{frame}{Solution to Previous Question... }
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

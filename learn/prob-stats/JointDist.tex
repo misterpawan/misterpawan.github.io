@@ -1,0 +1,1076 @@
+\section{Joint Distributions: Two Random Variables}
+
+\begin{frame}{Definition of Joint Probability Mass Function...}
+\pause 
+
+\begin{alertblock}{Definition of Joint Probability Mass Function}
+The \yellow{joint probability mass function} of two \yellow{discrete} random variables $X$ and $Y$ is defined as follows \pause 
+\begin{align*}
+P_{XY} (x,y) = P(X=x, Y=y).
+\end{align*} \pause 
+\vspace{-0.6cm}
+
+\begin{itemize}
+\item The \yellow{joint range} for $X$ and $Y$ is \pause 
+\begin{align*}
+R_{XY} = \{ (x,y) \mid P_{XY} > 0 \}
+\end{align*} \pause 
+\vspace{-0.5cm}
+
+\item In particular, if $R_X = \{ x_1, x_2, \dots \}, \pause \: R_Y = \{ y_1, y_2, \dots \},$ then \pause 
+\begin{align*}
+R_{XY} \subset R_X \times R_Y = \{ (x_i,y_j) \mid x_i \in R_X, \, y_j \in R_Y \}
+\end{align*}
+\vspace{-0.5cm}
+\item \yellow{Sum of joint probabilities must sum to 1:} \quad $\sum_{(x_i, y_j) \in R_{XY}} P_{XY}(x_i, y_j)=1$
+
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\subsection{Computing probabilities with joint distributions}
+
+
+\begin{frame}{Computing Probabilities with Joint Distributions...}
+\pause 
+
+\begin{alertblock}{Computing Joint Probability}
+For any $A \subset \mathbb{R}^2,$ we have \pause 
+\begin{align*}
+P((X,Y) \in A) = \sum_{(x_i, y_j) \in (A \cap R_{XY}) } P_{XY}(x_i,y_j)
+\end{align*}
+\end{alertblock}
+\pause 
+\begin{alertblock}{Marginal PMF: Computing Individual Probabilities from Joint PMF}
+\pause 
+We can obtain \yellow{PMF} of $X$ from its \yellow{joint PMF} with $Y$ as follows \pause 
+$$P_X(x) = P(X = x) = \sum_{y_j \in R_Y} P(X = x, Y = y_j) = \sum_{y_j \in R_Y} P_{XY} (x, y_j), \quad \text{for any}~x \in R_X$$ \pause 
+We call $P_X(x)$ the \yellow{marginal PMF} of $X.$ Similarly, we have \pause 
+$$ P_Y(y) = \sum_{x_i \in R_X} P_{XY} (x_i, y), \quad \text{for any} \: y \in R_Y $$
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Example}
+\begin{alertblock}{Example}
+Let $X$ and $Y$ be two random variables with \yellow{joint PMF} as follows: \pause 
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{tabular}{|c|c|c|c|}
+\hline
+& Y=0 & Y = 1 & Y = 2 \\ \hline 
+X = 0 & $\dfrac{1}{6}$ & $\dfrac{1}{4}$ & $\dfrac{1}{8}$ \\ \hline 
+X = 1 & $\dfrac{1}{8}$ & $\dfrac{1}{6}$ & $\dfrac{1}{6}$ \\ \hline
+\end{tabular} 
+\end{column}
+\pause 
+
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.2]{pmfXY}
+\end{figure}
+\end{column}
+\end{columns}
+\begin{enumerate}
+\item Find $P(X=0, Y \leq 1)$ \pause 
+\item Find the \yellow{marginal PMFs} of $X$ and $Y$ \pause 
+\item Find $P(Y=1 \mid X = 0)$ \pause 
+\item Are $X$ and $Y$ \yellow{independent}?
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+\input{scratch}
+\input{scratch}
+
+
+
+\subsection{Joint Cumulative Distribution function}
+
+
+
+
+\begin{frame}{Joint Cumulative Distribution Function...}
+\pause 
+
+\begin{alertblock}{Definition of Joint Cumulative Distribution Function}
+\pause 
+
+Let $X$ and $Y$ be two random variables. \pause The \yellow{joint cumulative distribution} function of $X$ and $Y$ is given as follows \pause 
+\begin{align*}
+F_{XY}(x,y) = P(X \leq x, Y \leq y)
+\end{align*}
+\end{alertblock}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item $F_{XY}(x,y) = P((X \leq x)\cap (Y \leq y))$ \pause 
+\item Above definition is applicable to discrete and continuous cases \pause 
+\item $0 \leq F_{XY}(x,y) \leq 1$
+\end{itemize}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.25]{cdfXY}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+\subsection{Marginal CDF}
+
+
+\begin{frame}{Marginal CDF...}
+\pause 
+
+\begin{alertblock}{Definition of Marginal CDF}
+\pause 
+
+Let $X$ and $Y$ be two random variables with \yellow{joint CDF} $F_{XY}(x,y).$ \pause  The \yellow{marginal CDFs} denoted by $F_X(x)$ and $F_Y(y)$ is given as follows: \pause 
+\begin{align*}
+F_{XY} (x, \infty) = P(X \leq x, Y \leq \infty) = P(X \leq x) = F_X(x)
+\end{align*} \pause 
+Similarly, $F_Y(y) = F_{XY}(\infty, y).$ \pause 
+Hence, the \yellow{marginal CDFs} are: \pause 
+
+\[
+\begin{aligned}
+F_X(x) &= F_{XY}(x, \infty) = \lim_{y \rightarrow \infty} F_{XY}(x,y) \quad \text{for any}~x \\  \pause 
+F_Y(y) &= F_{XY}(\infty, y) = \lim_{x \rightarrow \infty} F_{XY}(x,y) \quad \text{for any}~y
+\end{aligned} 
+\]
+
+\pause 
+
+Moreover, we have the following \yellow{properties} \pause 
+
+\[
+\begin{aligned}
+F_{XY}(\infty, \infty) = 1, \pause \quad F_{XY}(-\infty, y) = 0, \pause \quad F_{XY}(x, -\infty) = 0
+\end{aligned}
+\]
+
+\end{alertblock}	
+
+\end{frame}
+
+
+
+
+
+\subsection{Example of Joint PMF and Joint CDF}
+
+
+
+\begin{frame}{Example of Joint PMF and Joint CDF...}
+\pause 
+
+\begin{alertblock}{Solved Example on Joint PDF and Joint CDF}
+\pause 
+
+Let $X \sim \text{Bernoulli}(p)$ and $Y \sim \text{Bernoulli}(q)$ be independent, where 
+$0<p,q < 1.$ \pause Find the joint PMF and joint CDF for $X$ and $Y.$ 
+
+\end{alertblock}
+
+\vspace{3cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Plot of Joint CDF}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.9]{JointCDF5_3}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Figure shows the values of $F_{XY}(x,y)$ in different regions \pause 
+\item Note that in general we need three dimensional graph to show a joint CDF of two random variables
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Computing Probability of a Rectangular Patch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
+\begin{alertblock}{A result}
+\vspace{-0.3cm}
+\begin{align*}
+P(x_1 < X \leq x_2, y_1 < Y \leq y_2) = F_{XY}(x_2,y_2) - F_{XY}(x_1,y_2) - F_{XY}(x_2,y_1) +F_{XY}(x_1,y_1)
+\end{align*}
+\end{alertblock}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.26]{rect1}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.22]{rect2}
+\end{figure}
+\end{column}
+\end{columns}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.26]{rect3}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.21]{rect4}
+\end{figure}
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Conditional PMF and Conditional CDF}
+
+\begin{frame}{Conditional PMF and Conditional CDF...}
+\pause 
+
+\begin{alertblock}{Example Motivation for Conditional PMF and CDF}
+\pause 
+I roll a fair die. \pause Let $X$ be the observed number. \pause Find the \yellow{conditional PMF} of $X$ given that we know the observed number was less than 5.
+\end{alertblock}
+Solution:\\
+
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Conditional PMF and Conditional CDF...}
+\pause 
+
+\begin{alertblock}{Definition of Conditional PMF and Conditional CDF}
+\pause 
+
+Let $X$ be a \yellow{discrete} random variable and $A$ be \yellow{any} event. \pause The \yellow{conditional PMF} of $X$ given $A$ is defined as  \pause 
+
+\[
+\begin{aligned}
+P_{X|A}(x_i) &= P(X=x_i | A) \\ \pause 
+&= \dfrac{P(X = x_i~\text{and}~A)}{P(A)}, \quad \text{for any}~x_i \in R_X 
+\end{aligned}  
+\]
+
+\pause 
+
+The \yellow{conditional CDF} of $X$ is given by \pause 
+\begin{align*}
+F_{X|A}(x) = P(X \leq x \mid A).
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Conditional PMF of $X$ given $Y$...}
+\pause 
+
+\begin{alertblock}{Conditional PMF of $X$ and $Y$}
+\pause 
+
+For \yellow{discrete} random variables $X$ and $Y,$ \pause the \yellow{conditional PMFs} of $X$ and $Y$ is defined as follows \pause 
+
+\[
+\begin{aligned}
+P_{X|Y}(x_i, y_j) &= \dfrac{P_{XY}(x_i, y_j)}{P_Y(y_j)} \\ \pause 
+P_{Y|X}(x_i, y_j) &= \dfrac{P_{XY}(x_i, y_j)}{P_X(x_i)} 
+\end{aligned} 
+\]
+
+\pause 
+for \yellow{any} $x_i \in R_X$ and $y_j \in R_Y.$
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Independent Random Variables}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Independent Random Variables...}
+\pause 
+
+\begin{alertblock}{Definition of Independent Random Variables}
+\pause 
+
+Let $X,Y$ be two random variables, then they are \yellow{independent} if \pause 
+\begin{align*}
+P_{XY} (x,y) = P_X(x) P_Y(y) \quad \text{for all}~x,y
+\end{align*}
+\pause 
+In other words, $X$ and $Y$ are \yellow{independent} if \pause 
+\begin{align*}
+F_{XY}(x,y) = F_X(x) F_Y(y), \quad \text{for all}~x,y
+\end{align*}
+
+\begin{itemize}
+\item If $X$ and $Y$ are \yellow{independent} if \pause  
+\begin{align*}
+P_{X|Y}(x_i|y_j) = P(X=x_i \mid Y=y_j) = \dfrac{P_{XY}(x_i,y_j)}{P_Y(y_j)} = \dfrac{P_X(x_i)P_Y(y_j)}{P_Y(y_i)} = P_X(x_i) 
+\end{align*}
+\end{itemize}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Example of Joint and Marginal PDF and Conditional PMF...}
+\pause 
+
+\begin{alertblock}{Example}
+Consider the set of points in set $G$ defined as follows \pause 
+\begin{align*}
+G = \{ (x,y) \mid x,y \in \mathbb{Z}, \quad |x|+|y| \leq 2 \}.
+\end{align*} \pause 
+If we pick a point $(X,Y)$ from this grid at random, \pause then the probability of choosing a point is $1/13.$  \pause 
+\begin{enumerate}
+\item Find the \yellow{joint and marginal PMFs} of $X$ and $Y.$ \pause 
+\item Find the \yellow{conditional PMF} of $X$ given $Y=1.$ \pause 
+\item Are $X$ and $Y$ \yellow{independent}?
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\subsection{Conditional Expectation}
+
+\begin{frame}{Definition of Conditional Expectation...}
+\pause 
+
+\begin{alertblock}{Definition of Conditional Expectation}
+Let $A$ be any event. \pause Let $X$ and $Y$ be two random variables with ranges $R_X$ and $R_Y$ respectively. \pause Then the \yellow{conditional expectations} are defined as follows \pause 
+\begin{align*}
+E[X \mid A] &= \sum_{x_i \in R_X} x_i P_{X \mid A} (x_i) \\
+E[X \mid Y = j_j] &= \sum_{x_i \in R_X} x_i P_{X \mid Y} (x_i \mid y_j) 
+\end{align*} 
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Example of Conditional Expectation}
+\pause 
+
+\begin{alertblock}{Example}
+Consider the set of points in set $G$ defined as follows \pause 
+\begin{align*}
+G = \{ (x,y) \mid x,y \in \mathbb{Z}, \quad |x|+|y| \leq 2 \}.
+\end{align*} \pause 
+If we pick a point $(X,Y)$ from this grid at random, \pause then the probability of choosing a point is $1/13.$  \pause 
+\begin{enumerate}
+\item Find $E[X \mid Y = 1]$ \pause 
+\item Find $E[X \mid -1 < Y < 2]$ \pause 
+\item Find $E[|X| \mid -1 < Y < 2]$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Law of Total Probability...}
+\pause 
+
+\begin{alertblock}{Law of Total Probability}
+\pause 
+\begin{itemize}
+\item \yellow{Law of Total Probability} \pause 
+\begin{align*}
+P(X \in A) = \sum_{y_j \in R_Y} P(X \in A \mid Y = y_j)P_Y(y_j), \quad \text{for any set}~A
+\end{align*} \pause 
+\item \yellow{Law of Total Expectation:} \pause 
+\begin{enumerate}
+\item If $B_1, B_2, \dots$ is a \yellow{partition} of sample space $S$ \pause 
+\begin{align*} 
+E[X] = \sum_i E[X \mid B_i] P(B_i)
+\end{align*} \pause 
+\item For a RV $X$ and a \yellow{discrete} RV $Y$ \pause 
+\begin{align*}
+E[Y] = \sum_{y_j \in R_Y} E[X \mid Y = y_j]P_Y(y_j)
+\end{align*}
+\end{enumerate}
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solved Example}
+\pause 
+\begin{alertblock}{Solved Example 1}
+Let $X \sim \text{Geometric}(p).$ Find $E[X].$ [Hint: condition on first coin toss.]
+\end{alertblock}
+\vspace{6cm}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Solved Example}
+\pause 
+\begin{alertblock}{Solved Example 2}
+Number of customers $N$ visiting a fast food restaurant follows Poisson distribution $N \sim \text{Poisson}(\lambda).$ \pause Each customer arriving in this restaurant purchases a drink with probability $p,$ \pause which is independent from other customers. \pause What is the average number of customers who purchase drinks?
+\end{alertblock}
+\vspace{6cm}
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\subsection{Functions of Two Random Variables}
+
+
+\begin{frame}{PMF and Expectation of Two Random Variables...}
+\pause 
+
+\begin{alertblock}{PMF and Expectations of Two Random Variables}
+\begin{itemize}
+\item Let $X,Y$ be two RVs and suppose $Z = g(X,Y), g: \mathbb{R}^2 \rightarrow \mathbb{R}.$ \pause \\ 
+Then the PMF of $Z$ is \pause  
+\begin{align*}
+P_Z(z) = P(g(X,Y)=z) = \sum_{(x_i,y_j) \in A_z} P_{XY}(x_i,y_j),
+\end{align*} \pause 
+where $A_z = \{ (x_i, y_j) \in R_{XY}: g(x_i, y_j) = z \}$ \pause 
+\item The \yellow{expectation} is given as follows \pause 
+\begin{align*}
+E[g(X,Y)] = \sum_{(x_i, y_j) \in R_{XY}} g(x_i, y_j) \, P_{XY}(x_i, y_j)
+\end{align*}
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Linearity of Expectation for Two Random Variable...}
+\pause 
+
+\begin{alertblock}{Linearity of Expectation for Two RV}
+Let $X,Y$ be two discrete RVs. Then $E[X+Y] = E[X] + E[Y].$
+\end{alertblock}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+\begin{frame}{PMF of Difference of Two Geometric Distributions...}
+\pause 
+
+\begin{alertblock}{PMF of Difference}
+Let $X, Y \sim Geometric(p)$ be two random variables. Let $Z = X - Y.$ Find the PMF of $Z.$
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Conditional Expectation Revisited...}
+\pause 
+
+\begin{itemize}
+\item We recall that the \yellow{conditional expectation} of $X$ given $Y=y$ is \pause 
+\begin{align*}
+E[X \mid Y=y] = \sum_{x_i \in R_X} x_i \, P_{X \mid Y} (x_i \mid y)
+\end{align*} \pause 
+\vspace{-0.5cm}
+\item Here $E[X \mid Y=y]$ is a \yellow{function of $y.$} That is $g(y) = E[X \mid Y=y]$ \pause 
+\item We can think of $g(Y) = E[X \mid Y]$ as a random variable \pause 
+\item If $Y$ is a RV with range $R_Y = \{ y_1, y_2, \cdots \},$ then \pause 
+\begin{align*}
+E[X \mid Y] = \begin{cases}
+E[X \mid Y = y_1] \quad & \text{with probability}~P(Y = y_1) \\
+E[X \mid Y = y_1] \quad & \text{with probability}~P(Y = y_2) \\
+\vdots  &\vdots
+\end{cases}
+\end{align*} \pause 
+\vspace{-0.5cm}
+\item For an example, let $X = aY + b.$ Then $E[X \mid Y = y] = E[aY+b \mid Y=y] = ay+b$ \pause 
+\vspace{-0.3cm}
+\begin{align*}
+g(y) = ay+b, \quad E[X|Y] = a Y + b
+\end{align*} \pause 
+\vspace{-0.5cm}
+\item Since $E[X \mid Y]$ is a RV, we can find its PMF, CDF, Variance, etc
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Solved Example on Conditional Expectation as a Random Variable...}
+\pause 
+
+\begin{alertblock}{Solved Example}
+Let $X,Y$ be RV with joint PMF given as follows \pause 
+\begin{table}
+\begin{tabular}{|l|l|l|}
+\hline 
+        & $Y=0$          & $Y=1$ \\  \hline 
+$X = 0$ & $\dfrac{1}{5}$ & $\dfrac{2}{5}$ \\ \hline  
+$X = 1$ & $\dfrac{2}{5}$ & $0$ \\
+\hline
+\end{tabular}
+\end{table} \pause 
+Let $Z = E[X \mid Y].$ \pause 
+\begin{enumerate}
+\item Find the \yellow{Marginal PMFs} of $X$ and $Y.$ \pause 
+\item Find the \yellow{conditional PMF} of X given Y=0 and Y=1, i.e., find $P_{X \mid Y}(x | 0)$ and $P_{X \mid Y}(x | 1)$ \pause 
+\item Find the PMF of $Z$ \pause 
+\item Find $E[Z],$ and check that $E[Z]=E[X]$ \pause 
+\item Find $\text{Var}(Z)$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Fact...}
+\pause 
+\begin{alertblock}{Fact}
+Let $X,Y$ be two RVs and $g,h$ be two functions of $X$ and $Y$ respectively. Show that 
+\begin{align*}
+E[g(X)h(Y) \mid X] = g(X)E[h(Y) \mid X]
+\end{align*} 
+\end{alertblock}
+\colorbox{red}{\begin{minipage}{1.6cm}
+Solution
+\end{minipage}}
+
+\vspace{6cm}
+\end{frame}
+
+
+
+
+\begin{frame}{Iterated Expectations...}
+\pause 
+
+\begin{alertblock}{Law of Iterated Expectations}
+Let $X,Y$ be two RVs, then we have 
+\begin{align*}
+E[X] = E[E[X \mid Y]]
+\end{align*}
+\end{alertblock}
+\colorbox{red}{\begin{minipage}{1.4cm}
+Proof
+\end{minipage}}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Example on Application of Iterated Expectation...}
+\pause 
+
+\begin{alertblock}{Solved Example 2}
+Number of customers $N$ visiting a fast food restaurant follows Poisson distribution $N \sim \text{Poisson}(\lambda).$ \pause Each customer arriving in this restaurant purchases a drink with probability $p,$ \pause which is independent from other customers. \pause What is the average number of customers who purchase drinks?
+\end{alertblock}
+\colorbox{red}{\begin{minipage}{1.6cm}
+Solution
+\end{minipage}}
+\vspace{6cm}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Expectation for Independent RV...}
+\pause 
+
+\begin{alertblock}{Expectation for Independent RVs}
+Let $X,Y$ be two independent RVs. Then we have the following 
+\begin{enumerate}
+\item $E[X \mid Y] = E[X]$
+\item $E[g(X) \mid Y] = E[g(X)]$
+\item $E[XY] = E[X] E[Y]$
+\item $E[g(X)h(Y)] = E[g(X)] E[h(Y)]$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Conditional Variance...}
+\pause 
+
+\begin{alertblock}{Definition of Conditional Variance}
+Let $X,Y$ be two RVs. \pause By $\text{Var}(X \mid Y=y)$ the \yellow{conditional variance} of $X$ given $Y=y.$ \pause 
+Let $\mu_{X \mid Y}(y) = E[X \mid Y=y].$ Then \pause 
+\begin{align*}
+\text{Var}(X \mid Y = y) = E[X^2 \mid Y=y] - \mu_{X \mid Y}(y)^2
+\end{align*} 
+\end{alertblock}
+\colorbox{red}{\begin{minipage}{1.4cm}
+Proof
+\end{minipage}}
+\vspace{4cm}
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Example ...}
+\pause 
+
+\begin{alertblock}{Solved Example}
+Let $X,Y$ be RV with joint PMF given as follows
+\begin{table}
+\begin{tabular}{|l|l|l|}
+\hline 
+        & $Y=0$          & $Y=1$ \\  \hline 
+$X = 0$ & $\dfrac{1}{5}$ & $\dfrac{2}{5}$ \\ \hline  
+$X = 1$ & $\dfrac{2}{5}$ & $0$ \\
+\hline
+\end{tabular}
+\end{table} 
+Let $Z = E[X \mid Y]$ and $V = \text{Var}(X \mid Y).$
+\begin{enumerate}
+\item Find the PMF of V
+\item Find $E[V]$
+\item Verify that $\text{Var}(X) = E[V] + \text{Var}(Z)$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+
+
+
+\begin{frame}{Law of Total Variance...}
+\pause 
+
+\begin{alertblock}{Law of Total Variance}
+Let $X,Y$ be two RVs. \pause The \yellow{law of total variance} says that \pause 
+\begin{align*}
+\text{Var}(X) = E[\text{Var}(X \mid Y)] + \text{Var}(E[X \mid Y])
+\end{align*}
+\end{alertblock}
+Proof: \\
+\vspace{5cm}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Problem 1}
+\begin{alertblock}{Solved Problem 1}
+Let $X,Y$ be two independent RVs with the same CDFs $F_X$ and $F_Y.$ Let 
+\begin{align*}
+Z &= \max(X,Y) \\
+W &= \min(X,Y)
+\end{align*}
+Find the CDFs of $Z$ and $W.$
+\end{alertblock}
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+\begin{frame}{Solved Problem 2..}
+\pause 
+
+\begin{alertblock}{Solved Problem 2}
+Let $X,Y$ be two RVs with: \quad  
+%\begin{align*}
+$R_{XY} = \{ (i,j) \in \mathbb{Z}^2 \mid \quad i,j \geq 0, |i-j| \leq 1 \}.$
+%\end{align*}  \pause 
+\pause The joint PMF is given by \pause 
+%\vspace{-0.5cm}
+\begin{align*}
+P_{XY}(i,j) = \dfrac{1}{6 \cdot 2^{\text{min}(i,j)}}, \quad \text{for}~(i,j) \in R_{XY}.
+\end{align*} \pause 
+%\vspace{-0.4cm}
+\begin{itemize}
+\item Plot $R_{XY}$ in the XY plane \pause 
+\item Find the marginal PMFs $P_X(i), P_Y(j)$ \pause 
+\item Find $P(X=Y \mid X < 2)$ \pause 
+\item Find $P(1 \leq X^2 + Y^2 \leq 5)$ \pause 
+\item Find $P(X = Y)$ \pause 
+\item Find $E[X \mid Y = 2]$ \pause 
+\item Find \text{Var}$(X \mid Y = 2)$
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Solved Problem 3}
+\pause 
+\begin{alertblock}{Solverd Problem 3}
+Let $N \sim \text{Poisson}(\lambda)$ denote the Poisson distribution, where $N$ is the number of customers visiting a supermarket in a day. \pause Whenever a customer arrives at the supermarket, they buy a 1L milk bottle with probability $p,$ which is independent from other customer choices. \pause Let $X$ denote the number of customers who purchase milk. \pause Moreover, let $Y$ denote the number of customers that do not purchase milk, then $X+Y = N.$ Answer the following: \pause 
+\begin{enumerate}
+\item Find the marginal PMFs of $X$ and $Y$
+\item Find the joint PMF of $X$ and $Y$
+\item Are $X$ and $Y$ independent? 
+\item Find $E[X^2Y^2]$
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

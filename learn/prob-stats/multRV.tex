@@ -1,0 +1,698 @@
+\section{Multiple Random Variables}
+
+
+\subsection{Joint PDF and Joint CDF of Multiple Random Variables}
+
+\begin{frame}{Multiple Random Variable: Joint PDF, Joint CDF...}
+\pause 
+
+\begin{alertblock}{Joint PDF, Joint CDF}
+Let $X_1, X_2, \cdots, X_n$ be $n$ \yellow{discrete} RVs. \pause
+\begin{itemize}
+\item The \yellow{joint PMF} of $X_1, X_2, \cdots, X_n$ is defined as 
+\begin{align*}
+P( \, (X_1, X_2, \cdots, X_n) \in A \, ) = P(X_1 = x_1, X_2 = x_2, \cdots, X_n = x_n)
+\end{align*} \pause
+\vspace{-0.5cm} 
+\item Let $X_1, X_2, \cdots, X_n$ be $n$ \yellow{continuous} RVs, \pause then \yellow{PDF} is denoted by $$f_{X_1 X_2 \cdots X_n}(x_1, x_2, \cdots, x_n),$$ and the \yellow{probability} is computed as follows \pause 
+\begin{align*} 
+P((X_1, X_2, \cdots, X_n) \in A) = \int \cdots \int_A \cdots \int f_{X_1 X_2 \cdots X_n} (x_1, x_2, \cdots, x_n) \, dx_1 \cdots dx_n
+\end{align*} \pause 
+
+\end{itemize} 
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
+\begin{alertblock}{Multiple Random Variables: Marginal PDF and Joint CDF...}
+\pause 
+
+\begin{itemize}
+\item The \yellow{marginal PDF} of RV $X_i$ can be obtained \pause by \yellow{integrating} out all other $X_j's,$ for example, \pause 
+\begin{align*}
+f_{X_1}(x_1) = \int_{-\infty}^{\infty} \cdots \int_{-\infty}^{\infty} f_{X_1 X_2 \dots X_n} \, dx_2 dx_3 \cdots dx_n 
+\end{align*} \pause 
+\vspace{-0.2cm}
+\item The \yellow{joint CDF} of $n$ random variables $X_1, X_2, \dots, X_n$ is defined as \pause 
+\begin{align*}
+F_{X_1,X_2,\dots,X_n}(x_1, x_2, \dots, x_n) = P(X_1 \leq x_1, X_2 \leq x_2, \dots, X_n \leq x_n)
+\end{align*}
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Example}
+\pause 
+
+\begin{example}[Three jointly continuous RVs]
+Let $X,Y$ and $Z$ be three \yellow{jointly continuous} random variables \pause with \yellow{joint PDF} \pause 
+\begin{align*}
+f_{XYZ}(x,y,z) = \begin{cases}
+c(x + 2y + 3z) \quad &0 \leq x, y, z \leq 1 \\
+0 \quad &\text{otherwise} 
+\end{cases} 
+\end{align*} \pause 
+\begin{enumerate}
+\item Find the constant $c$ \pause 
+\item Find the \yellow{marginal PDF} of $X$
+\end{enumerate}
+\end{example}
+\end{frame}
+
+
+
+\input{scratch}
+
+
+
+
+\begin{frame}{Independence of Multiple Random Variables...}
+\pause 
+
+\begin{alertblock}{Independence of Multiple Random Variables}
+The $n$ random variables $X_1, X_2, \dots, X_n$ are \yellow{independent} if for all $(x_1, x_2, \cdots, x_n) \in \mathbb{R}^n$ \pause 
+\begin{align*}
+F_{X_1, X_2, \dots, X_n} (x_1, x_2, \dots, x_n) = F_{X_1}(x_1) F_{X_2}(x_2) \cdots F_{X_n}(x_n)
+\end{align*} \pause 
+\vspace{-0.5cm}
+\begin{itemize}
+\item If $X_1, X_2, \dots, X_n$ are \yellow{discrete}, then they are \yellow{independent} if \pause 
+\begin{align*}
+P_{X_1, X_2, \dots, X_n} (x_1, x_2, \dots, x_n) = P_{X_1}(x_1) P_{X_2}(x_2) \cdots P_{X_n}(x_n)
+\end{align*} \pause 
+\vspace{-0.5cm}
+\item If $X_1, X_2, \dots, X_n$ are \yellow{continuous}, then they are \yellow{independent} if \pause 
+\begin{align*}
+f_{X_1, X_2, \dots, X_n} (x_1, x_2, \dots, x_n) = f_{X_1}(x_1) f_{X_2}(x_2) \cdots f_{X_n}(x_n)
+\end{align*} \pause 
+\vspace{-0.5cm}
+\item If random variables $X_1, X_2, ...,X_n$ are \yellow{independent}, then we have
+\begin{align*}
+E[X_1,X_2, \cdots, X_n] = E[X_1]E[X_2] \cdots E[X_n]
+\end{align*}
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Independent and Identically Distributed Random Variables (I.I.D.)}
+\pause 
+
+\begin{alertblock}{Definition of I.I.D.}
+Random variables $X_1, X_2, ..., X_n$ are said to be \yellow{independent and identically distributed (i.i.d.)} \pause  if they are \yellow{independent}, \pause and they have the \yellow{same marginal} distributions: \pause 
+\begin{align*}
+F_{X_1}(x) = F_{X_2}(x_2) = \dots = F_{X_n}(x), \quad \text{for all}~ x \in \mathbb{R} 
+\end{align*} \pause 
+\begin{itemize}
+\item If we flip the same coin N times and record
+the outcome, then $X_1, \dots, X_n$ are I.I.D.
+\item Verify that these I.I.D. variables will have \yellow{same} mean and variances 
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\subsection{Sums of Random Variables}
+
+\begin{frame}{Expectation and Variance...}
+\pause 
+
+\begin{alertblock}{Expectation and Variance}
+Let $Y = X_1 + X_2 + \cdots + X_n.$ The we have the following \pause 
+\begin{itemize}
+\item The expectation of $Y$ is \pause 
+\vspace{-0.5cm}
+\begin{align*}
+E[Y] = E[X_1] + E[X_2] + \cdots E[X_n]
+\end{align*} \pause 
+\vspace{-0.5cm}
+\item We recall that \pause 
+\vspace{-0.3cm}
+\begin{align*}
+\text{Var}(X_1 + X_2) = \text{Var}(X_1) + \text{Var}(X_2) + 2 \text{Cov}(X_1, X_2)
+\end{align*} \pause 
+\vspace{-0.3cm}
+In general, for $Y,$ we have \pause 
+\begin{align*}
+\text{Var}\left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n \text{Var}(X_i) + 2 \sum_{i<j} \text{Cov} (X_i, X_j)
+\end{align*} \pause 
+\vspace{-0.6cm}
+\item If $X_1, X_2, \dots, X_n$ are \yellow{independent}, then \pause 
+\begin{align*}
+\text{Var} \left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n \text{Var}(X_i)
+\end{align*} 
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+
+
+\begin{frame}{Example...}
+\pause 
+
+\begin{example}[Who will receive the present?]
+N  people sit around a round table, where $N>5.$ \pause Each person tosses a coin. \pause Anyone whose outcome is different from his/her two neighbors will receive a present. \pause Let $X$ be the number of people who receive presents. \pause Find $E[X]$ and $\text{Var}(X).$
+\end{example}
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{PDF of the Sum of Multiple Random Variables...}
+\pause 
+
+\begin{alertblock}{PDF of the Sum of Multiple RVs}
+We recall that if $Y=X_1 + X_2,$ and $X_1$ and $X_2$ being independent, we have \pause
+\begin{align*}
+f_Y(y) = f_{X_1}(y) * f_{X_2}(y) = \int_{-\infty}^{\infty} f_{X_1}(x) f_{X_2}(y-x)\, dx 
+\end{align*}
+For multiple variable case, i.e., if $Y = X_1 + X_2 + \cdots + X_n,$ we have 
+\begin{align*}
+f_Y(y) = f_{X_1}(y) * f_{X_2}(y) * \cdots * f_{X_n}(y) 
+\end{align*}
+\begin{itemize}
+\item However, it is computationally difficult!
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Moment Generating Functions...}
+\pause 
+
+\begin{alertblock}{Recall Moments}
+Recall that the \yellow{$n$th moment} of a random variable $X$ is defined to be $E[X^n].$ \pause The 
+$n$th central moment of $X$ is defined to be $E[(X - E[X])^n].$ 
+\end{alertblock} \pause 
+
+\begin{alertblock}{Recall Moment Generating Functions}
+The \yellow{moment generating function (MGP)} of a random variable $X$ is a function 
+$M_X(s)$ 
+\[ M_X(s) = E[e^{sX}] \] \pause 
+The MGF of $X$ is said to exist if there exists a positive constant $a$ such that 
+$M_X(s)$ is finite for all $s \in [-a,a].$
+\end{alertblock}
+\end{frame}
+
+
+
+\begin{frame}{Example of Computing MGF...}
+\pause 
+
+\begin{alertblock}{Compute MGF}
+Find the MGF of the following random variables
+\begin{enumerate}
+\item $X$ is a discrete random variable with PMF 
+\begin{align*}
+P_X(k) = \begin{cases}
+\dfrac{1}{3} \quad &k=1 \\
+\dfrac{2}{3} \quad &k=2
+\end{cases}
+\end{align*}
+\item $Y$ is $\text{Uniform}(0,1)$ random variable
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\input{scratch}
+
+
+\begin{frame}{Finding Moments from MGF...}
+\pause 
+
+\begin{alertblock}{Finding Moments Using Taylor Series}
+We have the following Taylor series expansion \pause 
+\begin{align*}
+e^{sX} = \sum_{k=0}^{\infty} \dfrac{(sX)^k}{k!} = \sum_{k=0}^{\infty} \dfrac{X^k s^k}{k!}
+\end{align*} \pause 
+The the moment $M_X(s)$ is given as \pause 
+\begin{align*}
+M_X(s) = E[e^{sX}] = \sum_{k=0}^{\infty} E[X^k] \dfrac{s^k}{k!}
+\end{align*} \pause 
+Hence, $k$th moment of $X$ is the coefficient of $\dfrac{s^k}{k!}$ in the Taylor series of $M_X(s).$
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of Computing Moments Using Taylor Expansion...}
+\pause 
+
+\begin{alertblock}{Example}
+Let $U \sim \text{Uniform}(0,1).$ Find $E[Y^k]$ using $M_Y(s).$
+\end{alertblock}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+\begin{frame}{MGF Using Derivatives...}
+\pause 
+
+\begin{alertblock}{Higher Moments Using Derivatives}
+Recall that the coefficient of $\dfrac{s^k}{k!}$ in Taylor series of $M_X(s)$ is obtained by taking $k$th derivative and evaluating it at $s=0.$ \pause 
+\begin{align*}
+M_X(s) &= \sum_{k=0}^{\infty} E[X^k] \dfrac{s^k}{k!} \\
+E[X^k] &= \dfrac{d^k}{ds^k} M_X(s) \mid_{s=0}
+\end{align*}	
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of Computing Moments...}
+\pause 
+
+\begin{alertblock}{Example}
+Let $X \sim \text{Exponential}(\lambda).$ Find the MGF of $X,$ $M_X(s)$ and the moments $E[X^k].$
+\end{alertblock}
+\end{frame}
+
+
+\input{scratch}
+
+
+\begin{frame}{Example of Computing Moments...}
+\pause 
+
+\begin{alertblock}{Example}
+Let $X \sim \text{Poisson}(\lambda).$ Find the MGF of $X.$
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Moment of Sum of Independent RVs...}
+\pause 
+
+\begin{alertblock}{Moment of sum of independent RVs}
+If $X_1, X_2, \dots, X_n$ are $n$ independent RVs, then \pause 
+\begin{align*}
+M_{X_1+X_2+ \cdots + X_n}(s) = M_{X_1}(s) M_{X_2}(s) \cdots M_{X_n}(s). 
+\end{align*} 
+\end{alertblock}
+\vspace{6cm}
+
+\end{frame}
+
+
+\begin{frame}{Example of Sum of Independent RVs...}
+\pause 
+
+\begin{alertblock}{Example}
+If $X \sim \text{Binomial}(n,p)$ find the MGF of $X.$
+\end{alertblock}
+\vspace{6cm}
+
+\end{frame}
+
+
+\subsection{Random Vectors}
+
+
+\begin{frame}{Definition of Random Vector...}
+\pause 
+
+\begin{alertblock}{Definition of Random Vector and Expectation}
+When dealing with multiple RVs, it is useful to use vector and matrix notations. \pause 
+This helps using a compact notation and tools from linear algebra. \pause Let $X_1, X_2, \dots, X_n$ be $n$ independent RVs, then random vector is defined as \pause 
+\begin{align*}
+X = \begin{bmatrix}
+X_1 \\
+X_2 \\ 
+\vdots \\
+X_n
+\end{bmatrix} \quad E[X] = \begin{bmatrix}
+E[X_1] \\
+E[X_2] \\ 
+\vdots \\
+E[X_n]
+\end{bmatrix}
+\end{align*} \pause 
+We call $X$ a \yellow{random vector} and $E[X]$ is the expectation of random vector.   
+\begin{itemize}
+\item CDF is $F_X(x) = F_{X_1,X_2, \dots, X_n}(x_1, x_2, \dots, x_n)=P(X_1 \leq x_1, \dots, X_n \leq x_n)$
+\item If $X$ is jointly continuous, the PDF is denoted as 
+\begin{align*}
+f_X(x) = f_{X_1,X_2, \dots, X_n}(x_1, x_2, \dots, x_n)
+\end{align*}
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Random Matrix and Expectation...}
+\pause 
+
+\begin{alertblock}{Random matrix, Expectation}
+A \yellow{random matrix} is a matrix whose elements are \yellow{random} variables. \pause 
+\begin{align*}
+M = \begin{bmatrix}
+X_{11} & X_{12} & \dots & X_{1n} \\
+X_{21} & X_{22} & \dots & X_{2n} \\
+\vdots & \vdots & \vdots & \vdots \\
+X_{m1} & X_{m2} & \dots & X_{mn}
+\end{bmatrix} 
+\quad 
+E[M] = \begin{bmatrix}
+E[X_{11}] & E[X_{12}] & \dots & E[X_{1n}] \\
+E[X_{21}] & E[X_{22}] & \dots & E[X_{2n}] \\
+\vdots & \vdots & \vdots & \vdots \\
+E[X_{m1}] & E[X_{m2}] & \dots & E[X_{mn}]
+\end{bmatrix} 
+\end{align*} \pause 
+Here $M$ is called the \yellow{random matrix}, and $E[M]$ is the \yellow{expectation} of random matrix. \pause 
+\begin{itemize}
+\item If $Y = AX + b, A \in \mathbb{R}^{m \times n}, b \in \mathbb{R}^m,$ then $E[Y] = AE[X]+b$
+\item Also, if $X_1, X_2, \cdots, X_k$ are $k$ $n$-dimensional RVs, then \pause 
+\begin{align*}
+E[X_1 + X_2 + \cdots X_k] = E[X_1] + E[X_2] + \cdots + E[X_k].
+\end{align*} 
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Variance of a Sum of Random Variables...}
+\pause 
+
+\begin{alertblock}{Variance of Multiple Random Variables}
+Let $X_1, X_2, \dots, X_n$ be $n$ random variables. \pause Then we have the following \pause 
+\begin{align*}
+\text{Var} \left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n \text{Var}(X_i) + 2 \sum_{i<j} \text{Cov}(X_i, X_j) 
+\end{align*}
+\pause 
+If $X_1, X_2, \dots, X_n$ are \yellow{independent}, then we have \pause 
+\begin{align*}
+\text{Var}\left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n \text{Var}(X_i)
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of Multiple Random Variable...}
+\pause 
+
+\begin{example}[Example]
+Consider $N$ friends sitting around a round table. \pause Let $N>5.$ \pause They decide to play a game: each person tosseses a coin, \pause and it the outcome the coin toss of the person tossing the coin is different from the outcome of the coin toss of its neighbors, \pause then the person receives a gift. \pause Let $X$ denote the number of people who receive presents. Find $E[X]$ and $\text{Var}(X).$ 
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Correlation and Covariance Matrix...}
+\pause 
+
+\begin{alertblock}{Definition of Correlation and Covariance Matrix}
+For a random vector $X,$ the \yellow{correlation matrix} $R_X$ and \yellow{covariance matrix} $C_X$ is \pause 
+\begin{align*}
+R_X &= E[XX^T] = \begin{bmatrix}
+X_1^2 & X_1X_2 & \dots X_1 X_n \\ 
+X_2X_1 & X_2^2 & \dots & X_2X_n \\
+\vdots & \vdots & \vdots & \vdots \\
+X_nX_1 & X_nX_2 & \dots & X_n^2
+\end{bmatrix} = \begin{bmatrix}
+E[X_1^2] & E[X_1X_2] & \dots & E[X_1X_n] \\
+E[X_2X_1] & E[X_2^2] & \dots & E[X_2X_n] \\
+\vdots & \vdots & \vdots & \vdots \\
+E[X_nX_1] & E[X_n X_2] & \dots & E[X_n^2]
+\end{bmatrix} \\
+C_X &= E[(X-E[X])(X - E[X])^T] 
+= \begin{bmatrix}
+\text{Var}(X_1) & \text{Cov}(X_1, X_2) & \dots & \text{Cov}(X_1, X_n) \\
+\text{Cov}(X_2, X_1) & \text{Var}(X_2) & \dots & \text{Cov}(X_2, X_n) \\
+\vdots & \vdots & \vdots & \vdots \\
+\text{Cov}(X_n,X_1) & \text{Cov}(X_n,X_2) & \dots & \text{Var}(X_n)
+\end{bmatrix} 
+\end{align*}
+\pause 
+\begin{enumerate}
+\item $C_X = R_X - E[X]E[X]^T$ \pause 
+\item If $Y= AX + b, A \in \mathbb{R}^{m \times n}, b \in \mathbb{R}^m,$ then $C_Y = AC_XA^T$ 
+\end{enumerate}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Example of Correlation and Covariance Matrices...}
+\pause 
+
+\begin{example}[Example of correlation and covariance matrices]
+Let $X$ and $Y$ be jointly continuous random variables with joint PDF \pause 
+\begin{align*}
+f_{X,Y} = \begin{cases}
+\dfrac{3}{2} x^2 + y \quad &0 < x,y < 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+\pause 
+
+Let $U = \begin{bmatrix}
+X \\
+Y
+\end{bmatrix}$ be the random vector. \pause Find the \yellow{correlation and covariance matrices} of $U.$
+
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Properties of Covariance Matrix...}
+\pause 
+
+\begin{alertblock}{Properties of Covariance}
+We have the following properties for \yellow{covariance matrix:} \pause 
+\begin{enumerate}
+\item The covariance matrix $C_X$ is \yellow{symmetric matrix} \pause 
+\item The covariance matrix $C_X$ is \yellow{positive semi-definite (PSD)} \pause 
+\item The covariance matrix is \yellow{positive definite} if and only if all its \yellow{eigenvalues are larger than zero} \pause 
+\item The covariance matrix is \yellow{positive definite} if and only if $\text{det}(C_X)>0$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Example of Covariance Matrix...}
+\pause 
+
+\begin{example}[Example of covariance matrix]
+Consider two independent random variables $X$ and $Y.$ \pause Let $X$ and $Y$ follow Uniform$(0,1)$ distribution. \pause Let the random vectors $U$ and $V$ be defined as \pause 
+\begin{align*}
+U = \begin{bmatrix}
+X \\ X + Y
+\end{bmatrix}, \quad V = \begin{bmatrix}
+X \\ Y \\ X + Y
+\end{bmatrix} 
+\end{align*}  \pause 
+Are the matrices $C_U$ and $C_V$ positive definite?
+\end{example}	
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+\begin{frame}{Denition of Cross-Correlation and Cross-Covariance Matrix...}
+\pause 
+
+\begin{alertblock}{Definition of Cross Correlation and Cross Covariance Matrices}
+Let $X$ and $Y$ be two random vectors, \pause we define the \yellow{cross-correlation matrix} of $X$ and $Y$ as \pause 
+\begin{align*}
+R_{XY} = E[XY^T] 
+\end{align*} \pause 
+Similarly the \yellow{cross-covariance matrix} of $X$ and $Y$ random \yellow{vectors} is defined as \pause 
+\begin{align*}
+C_{XY} = E[(X - E[X])(Y - E[Y])^T]
+\end{align*}
+\end{alertblock}
+\end{frame}
+
+
+\subsection{Functions of Random Vectors and Method of Transformations}
+
+\begin{frame}{Functions of Random Variables...}
+\pause 
+
+\begin{alertblock}{Method of Transformation for Functions of Randome Vectors}
+Consider a function of random vector: $Y = G(X),$ \pause where $G: \mathbb{R}^n \rightarrow \mathbb{R}^n$ is \yellow{continuous and invertible} function with \yellow{continuous partial derivatives}. \pause If $H = G^{-1},$ then $X = H(Y).$  
+\pause 
+\vspace{-0.2cm}
+\begin{align*}
+X = \begin{bmatrix}
+X_1 \\ X_2 \\ \vdots \\ X_n
+\end{bmatrix} = \begin{bmatrix}
+H_1(Y_1, Y_2, \dots, Y_n) \\
+H_2(Y_1, Y_2, \dots, Y_n) \\
+\vdots \\
+H_n(Y_1, Y_2, \dots, Y_n)
+\end{bmatrix}
+\end{align*}
+\pause   
+%\vspace{-0.8cm}
+Then the \yellow{PDF} of $Y,$ denoted by $f_{Y_1,Y_2, \dots, Y_n}(y_1, y_2, \dots, y_n)$ is given as follows \pause 
+%\vspace{0.3cm}
+\begin{align*}
+f_Y(y) = f_X(H(y)) \, |J|, \quad \quad \text{where}~J = \text{det} \begin{bmatrix}
+\dfrac{\partial H_1}{\partial y_1} & \dfrac{\partial H_1}{\partial y_2} & \dots & \dfrac{\partial H_1}{\partial y_n} \\
+\dfrac{\partial H_2}{\partial y_1} & \dfrac{\partial H_2}{\partial y_2} & \dots & \dfrac{\partial H_2}{\partial y_n} \\
+\vdots & \vdots & \vdots & \vdots \\
+\dfrac{\partial H_n}{\partial y_1} & \dfrac{\partial H_n}{\partial y_2} & \cdots & \dfrac{\partial H_n}{\partial y_n} 
+\end{bmatrix}
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Example of Method of Transform for Function of Random Vector...}
+\pause 
+
+\begin{example}[Example of Method of Transform for Function of Random Vector]
+Let $Y = AX + b,$ where $X$ is a $n$ dimensional random vector, \pause $A$ be a fixed (non-random) $n$ by $n$ matrix, \pause and $b$ be a fixed $n$-dimensional vector. \pause Find the \yellow{PDF} of $Y$ in terms of $X.$	 
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+
+
+\begin{frame}{Definition of Jointly Normal or Gaussian Random Vectors...}
+\pause 
+
+\begin{alertblock}{Definition of Jointly Normal Random Vectors}
+\begin{enumerate}
+\item Random variables $X_1, X_2, \dots, X_n$ are \yellow{jointly normal}, \pause if the linear combination \pause 
+\[ a_1 X_1 + a_2 X_2 + \dots + a_n X_n, \quad a_1, a_2, \dots, a_n \in \mathbb{R} \] 
+is a \yellow{normal} variable \pause 
+\item A random vector $X = [X_1, X_2, \dots, X_n]$ is said to be \yellow{normal vector}, \pause if the random vectors $X_1, X_2, \dots, X_n$ are \yellow{jointly normal} \pause  
+\item Consider a random vector $Z$ whose components $Z_i \sim N(0,1),$ and they are \yellow{I.I.D.} \pause Then the PDF of $Z$ is  \pause 
+\vspace{-0.4cm}
+\begin{align*}
+f_Z(z) = \dfrac{1}{(2 \pi)^{n/2}} \exp \left\{ - \dfrac{1}{2} z^Tz \right\}
+\end{align*} \pause 
+\vspace{-0.4cm}
+\item For a normal random vector $X,$ with mean $m$ and covariance $C,$ \pause the \yellow{PDF} is \pause 
+\vspace{-0.3cm}
+\begin{align*}
+f_X(x) = \dfrac{1}{(2 \pi)^{n/2}\sqrt{\text{det} \, C}} \exp \left\{ - \dfrac{1}{2} (x-m)^T C^{-1} (x-m) \right\}
+\end{align*}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

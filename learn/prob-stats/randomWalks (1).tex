@@ -1,0 +1,155 @@
+\section{Random Walks}
+
+% \begin{frame}{Random Walks, Choice Trees, and Probability}
+% \begin{center}
+% Movie of 1st Brownian Motion
+% \end{center}
+% \end{frame}
+
+% \begin{frame}{Random Walks, Choice Trees, and Probability}
+% \begin{center}
+% Movie of 2nd Brownian Motion
+% \end{center}
+% \end{frame}
+
+\begin{frame}{Random Walk, Probability}
+\begin{figure}
+\includegraphics[scale=0.25]{randWalk2}
+\end{figure} \pause 
+\begin{itemize}
+\item Consider a person at $x=0,$ he can travel one step to the right or to the left \pause 
+\begin{itemize}
+\item He can travel one step to the right with probability $q$ \pause 
+\item He can travel one step to the left with probability $(1-q)$
+\end{itemize}
+\end{itemize} \pause 
+\begin{alertblock}{Simple Random Walk in 1D}
+A walk is called \yellow{simple random walk} in 1D if there is a \yellow{equal} probability of either going to right or going to the left. Above, we set $p=q=1/2$
+\end{alertblock} \pause 
+\begin{alertblock}{Question}
+What is the probability that the person after $i$th step is at $x=0?$
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Analysis of Simple Random Walk in 1D}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.25]{randWalk2}
+\end{figure} \pause 
+Draw the choice tree (Hint: Galton Board!): \\
+\vspace{4cm}
+\end{frame}
+
+\begin{frame}{Analysis of Biased Random Walk in 1D, Binomial Distribution}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.25]{randWalk2}
+\end{figure} \pause 
+Draw the choice tree for \yellow{unbiased random walk, derive binomial distribution:} \\
+\vspace{4cm}
+\end{frame}
+
+
+\begin{frame}{Random Walkers on 2D Grid...}
+\pause 
+\begin{columns}
+\begin{column}{0.3\textwidth}
+\begin{figure}
+\includegraphics[scale=0.2]{randWalk2D1}
+\end{figure}
+\end{column}
+
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item Alice starts at point A, and each second, walks one edge right or up (if a point has two options, each direction has a 50% chance) until Alice reaches point B. 
+\pause 
+\item At the same time, Bob starts at point B, and each second he walks one edge left or down (if a point has two options, each direction has a 50% chance) in order to reach point A. 
+\pause 
+\item What is the probability Alice and Bob meet during their random walks?
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Solution: Random Walkers on 2D Grid...}
+\pause 
+\begin{columns}
+\begin{column}{0.3\textwidth}
+\begin{figure}
+\includegraphics[scale=0.2]{randWalk2D4}
+\end{figure}
+\end{column}
+
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item If Alice and Bob meet, they can meet only at the blue circles, which is after both have taken 5 steps
+\pause 
+\item Number of ways they could have taken the 5 steps is $2^5$ each, so combined, by product rule they can take $2^5 2^5 = 4^5 = 1024$ total paths!
+\pause 
+\item The number of ways Bob can reach the blue dots is given by binomial coefficients or Pascal's triangle! Same for Alice \pause 
+\begin{itemize}
+\item Total ways Bob and Alice could meet at blue dots is square of binomial cofficients
+\end{itemize} \pause 
+\item Hence, the total number of ways Bob and Alice could meet
+\[ 1^2 + 5^2 + 10^2 + 5^2 + 1^2 = 252 \]
+\item The probability that they meet is 
+\[ 252/1024 = 24.6\% \]
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+%\end{comment}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

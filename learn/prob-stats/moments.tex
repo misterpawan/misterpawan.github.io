@@ -1,0 +1,141 @@
+\section{Higher Order Moments and Moment Generating Function}
+
+\begin{frame}{Higher Order Moments...}
+\begin{alertblock}{Define $n$th moment}
+The \yellow{$n$th moment} about the mean or \yellow{$n$th central moment} of a real valued random variable $X$ is defined as follows
+\begin{align*}
+\mu_n = E[(X - E[X])^n],
+\end{align*}
+where $E$ is the \yellow{expectation} operator. 
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item The \yellow{zeroth} central moment $\mu_0$ is 1 \pause 
+\item The \yellow{first} central moment $\mu_1$ is 0 (not the same as expected value!) \pause 
+\begin{itemize}
+\item \yellow{First} central moment about \yellow{origin} is indeed expectation!
+\end{itemize} \pause 
+\item The \yellow{second} central moment $\mu_2$ is called \yellow{variance}, denoted by $\sigma^2$ 
+\end{itemize}
+\pause 
+\begin{alertblock}{Generating Moments...}
+Is there a quick way to generate moments?
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Moment Generating Function...}
+\pause 
+
+\begin{alertblock}{Moment Generating Function}
+The moment generating function $M_X(t) $ is the expectation value 
+\begin{align*}
+M_X(t) = E[e^{tX}] = \sum_x e^{tx} p_X(x)
+\end{align*}
+\end{alertblock}
+
+\begin{alertblock}{Lemma}
+\begin{itemize}
+\item $M_X(0) = 1$
+\item $E[X] = M_X'(0),$ where ' is the derivative w.r.t. $t$
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Moment Generating Function for Binomial Distribution...}
+\pause 
+
+\begin{itemize}
+\item Let $X$ be a discrete random variable whose PMF is given by \yellow{Binomial} distribution with parameters $n$ and $p$ \pause 
+\item The moment generating function is given by \pause 
+\begin{align*}
+M_X(t) &= \sum_{x=0}^n \binom{n}{x} p^x (1-p)^{n-x} e^{tx} \\
+&= \sum_{x=0}^n \binom{n}{x} (e^tp)^x (1-p)^{n-x} \\
+&= (e^t p + 1 - p).
+\end{align*}
+\pause 
+Differentiating w.r.t. $t,$ we have \pause 
+\begin{align*}
+M_X'(t) = n(e^t p + 1 - p)^{n-1} pe^t.
+\end{align*} \pause 
+\item Setting $t=0,$ \quad $M_X'(0) = np = E[X]$
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Moment Generating Function for Poisson Distribution...}
+\pause 
+\begin{itemize}
+\item Let $X$ be the random variable whose PMF is a \yellow{Poisson} distribution with parameter $\lambda.$ \pause 
+\item The moment generating function is \pause 
+\begin{align*}
+M_X(t) &= \sum_{x=0}^{\infty} e^{- \lambda} \: \dfrac{\lambda^x}{x!} e^{tx} \\
+&= \sum_{x=0}^{\infty} e^{-\lambda} \: \dfrac{(\lambda e^t)^x}{x!} \\
+&= e^{\lambda (e^t -1)} 
+\end{align*} \pause 
+\item Differentiating w.r.t. to $t,$ \pause 
+\begin{align*}
+M_X'(t) = e^{\lambda (e^t - 1)} \: \lambda e^t  
+\end{align*} \pause 
+\item Setting $t=0, \quad M_X'(0) = \lambda$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Variance Using Moment Generating Function...}
+\pause 
+
+\begin{alertblock}{Variance Using Moment Generating Function}
+\begin{align*}
+\text{Var}(X) = M_X''(0) - M_X'(0)^2
+\end{align*}
+\end{alertblock}
+
+\vspace{5cm}
+
+\end{frame}
+
+
+
+\begin{frame}{Computing Variance Using Moment Generating Function...}
+\pause 
+\begin{alertblock}{Computing Variance using moment generating function}
+Let $X$ be a discrete random variable whose PMF is a binomial distribution with parameters $n$ and $p.$ It has mean $\mu = np$ and the moment generating function is 
+\begin{align*}
+M_X(t) = (e^t p + 1 - p)^n
+\end{align*} \pause 
+Find the Variance using $M_X(t).$ 
+\end{alertblock}
+\vspace{4cm}
+\end{frame}
+
+
+
+\begin{frame}{Computing Variance Using Moment Generating Function...}
+\pause 
+\begin{alertblock}{Computing Variance using moment generating function}
+Let $X$ be a discrete random variable whose PMF is a Poisson distribution with mean $\lambda.$ The moment generating function is 
+\begin{align*}
+M_X(t) = e^{\lambda(e^t -1)} 
+\end{align*} \pause 
+Find the Variance using $M_X(t).$ 
+\end{alertblock}
+\vspace{4cm}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+

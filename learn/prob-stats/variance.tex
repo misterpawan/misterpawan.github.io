@@ -1,0 +1,172 @@
+\section{Variance and Standard Deviation: Understand Variability in Data}
+
+\begin{frame}{Variance}
+
+\begin{alertblock}{Motivation for Variance}
+
+\begin{itemize}
+
+\item The expectation value $E(X)$ (also called the mean) of a discrete
+random variable is a rather \yellow{coarse} measure of how $X$ is
+distributed. For example, consider the following three
+situations: \pause 
+\begin{itemize}
+\item You get Rs 1000 \pause 
+\item A fair coin is tossed, and if it is head you get Rs 2000 \pause 
+\item A number is chosen from 1 to 1000 and if you can guess this, you get Rs 1 Million 
+\end{itemize} \pause 
+\item Let $X$ be the discrete random variable corresponding to your
+winnings. In all three cases, $E(X) = Rs~1000,$ but you will agree
+that \yellow{your chances of actually getting any money are quite
+different in all three cases.} \pause 
+\item The three cases differ in the spread of PMF. This can be measured by \yellow{Variance.} \pause 
+\item Recall Saint Petersburg Paradox! High Risk High Reward!
+\end{itemize}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Variance and Standard Deviation...}
+\pause 
+\begin{alertblock}{Variance}
+Let $\mu = E[X].$ The \yellow{variance} Var($X$) of $X$ is defined by \pause 
+\begin{align*}
+\text{Var}(X) = E((X - \mu)^2) = \sum_x (x - \mu)^2 f_X(x)
+\end{align*}
+\pause 
+The \yellow{positive} square root is called the \yellow{standard deviation} and it is usually denoted by \yellow{$\sigma,$} hence \pause 
+\begin{align*}
+\sigma (X) = \sqrt{\sum_x (x - \mu)^2 f_X(x)} = \sqrt{\text{Var}(X)}.
+\end{align*}
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Example of Computing Variance...}
+\pause 
+
+\begin{alertblock}{Example}
+Let $X$ be the value on one roll of a 6-sided die. Recall that $E[X]= 7/2.$ What is 
+$Var(X)?$
+\end{alertblock}
+
+\vspace{5cm}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Variance}
+
+\begin{alertblock}{Motivation for Variance}
+
+\begin{itemize}
+
+\item The \yellow{expectation value} $E(X)$ (also called the mean) of a discrete
+random variable is a rather \yellow{coarse} measure of how $X$ is
+distributed. For example, consider the following three
+situations: \pause 
+\begin{itemize}
+\item You get Rs 1000 \pause 
+\item A fair coin is tossed, and if it is head you get Rs 2000 \pause 
+\item A number is chosen from 1 to 1000 and if you can guess this, you get Rs 1 Million 
+\end{itemize} \pause 
+\end{itemize}
+\end{alertblock}
+\pause
+
+\begin{block}{Calculate Variance}
+\begin{itemize}
+\item \yellow{First case:} There is only one outcome and it is the mean, variance is 0 \pause 
+\item \yellow{Second case:} $\text{Var}(X) = \dfrac{1}{2} (2000 - 1000)^2 + \dfrac{1}{2}(0 -1000)^2 = 10^6$ \pause 
+\item \yellow{Third case:} $\text{Var}(X) = 10^{-3}(10^6 - 10^3)^2 + 999 \times 10^{-3}(0 - 10^3)^2 \approx 10^9$
+\end{itemize}
+\end{block}
+
+
+\end{frame}
+
+\begin{frame}{Remarks on Expectation, Variance, Standard Deviation...}
+\pause
+
+\begin{alertblock}{Example}
+If you are told that the average starting salary for someone working at Company Statistix is Rs 70,000, you may think, “Wow! That’s great.” \pause But if the standard deviation for starting salaries at Company Statistix is Rs 20,000, that’s a lot of variation in terms of how much money you can make, \pause so the average starting salary of Rs 70,000 isn’t as informative in the end, is it?
+\end{alertblock}
+
+\pause 
+
+\begin{itemize}
+\item If the standard deviation was only Rs 5,000, you would have a much better idea of what to expect for a starting salary at that company \pause 
+\item Without calculating standard deviation, you can’t get a handle on whether the data are close to the average
+\end{itemize}
+
+\pause 
+
+\begin{alertblock}{Same Standard Deviation Does Not Imply Same Dataset}
+ For example, the data sets 199, 200, 201 and 0, 200, 400 both have the same average (200) yet they have very different standard deviations. \pause The first data set has a very small standard deviation (s=1) compared to the second data set (s=200).
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Another expression for the variance}
+
+\begin{alertblock}{Theorem (Another Expression for Variance)}
+If $X$ is a discrete random variable with mean \yellow{$\mu,$} then 
+\begin{align*}
+\text{Var}(X) = E[X^2] - \mu^2
+\end{align*}
+\end{alertblock}
+\pause 
+\begin{block}{Proof}
+\begin{align*}
+\text{Var}(X) &= \sum_x (x - \mu)^2 p_X(x) = \sum_x (x^2 -2\mu x + \mu^2) p_X(x) \\
+&= \sum_x x^2 p_X(x) -2 \mu \sum_x x \, p_X(x) + \mu^2 \sum_x p_X(x) \\
+&= E[X^2] - 2 \mu E[X] + \mu^2 = E[X^2] - \mu^2	
+\end{align*}
+\end{block}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Properties of Variance...}
+\pause 
+
+\begin{alertblock}{Theorem}
+Let $X$ be a discrete random variable and \yellow{$\alpha$} a constant. Then 
+\begin{align*}
+\text{Var}(\alpha X) = \alpha^2 \text{Var}(X) \quad \text{and} \quad \text{Var}(X + \alpha) = \text{Var}(X)
+\end{align*}
+\end{alertblock}
+\vspace{5cm}
+
+
+\end{frame}
+
+
+
+\begin{frame}{Computing Variance: Binomial}
+\begin{alertblock}{Variance of Binomial Distribution}
+Let $X \sim \text{Binomial}(n,p).$ Then the variance $\text{Var}(X) = np(1-p).$
+\end{alertblock}
+\vspace{5cm}
+\end{frame}
+
+
+\begin{frame}{Variance of Binomial Distribution...}
+ 
+
+\end{frame}
+
+\begin{frame}{Variance of Binomial Distribution...}
+ 
+
+\end{frame}

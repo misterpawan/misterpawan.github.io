@@ -1,0 +1,749 @@
+\section{Bayesian Inference}
+
+
+\begin{frame}{Recall: Statistical Inference...}
+\pause
+
+
+\begin{alertblock}{Statistical Inference: Compare frequentist and Bayesian}
+\yellow{General setup for a statistical inference problem:} \pause There is an unknown quantity that we would like to estimate. We get some data. \pause From the data, we estimate the desired quantity.
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Frequentist Approach}
+In that approach, the unknown quantity $\theta$ is assumed to be a \yellow{fixed (non-random)} quantity that is to be estimated by the observed data.
+\end{alertblock}
+\end{column}
+\pause 
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Bayesian Approach}
+In the Bayesian framework, we treat the unknown quantity, $\Theta,$ as a random variable.  More specifically, we assume that we have some \yellow{initial guess} about the distribution of $\Theta.$ This distribution is called the \yellow{prior distribution}. After observing some data, we update the distribution of $\Theta$ (based on the observed data).
+\end{alertblock}
+\end{column}
+\end{columns}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Motivating Example...}
+\pause 
+
+\begin{example}[Motivating Example]
+\pause 
+
+Suppose that you would like to estimate the portion of voters in your town that plan to vote for Party $A$ in an upcoming election. \pause To do so, you take a random sample of size $n$ from the likely voters in the town. \pause Since you have a limited amount of time and resources, your sample is relatively small. \pause Specifically, suppose that $n=20.$ After doing your sampling, you find out that 6 people in your sample say they will vote for Party $A.$
+
+\end{example}
+
+\vspace{4cm}
+
+\end{frame}
+
+
+\begin{frame}
+\begin{itemize}
+\item Let $\theta$ be the true portion of voters in your town who plan to vote for Party A. You might want to estimate $\theta$ as
+\[ \hat \theta = 6/20=0.3 \] \pause 
+\item In fact, in absence of any other data, that seems to be a reasonable estimate. However, you might feel that $n=20$ is too small. \pause 
+\item Thus, your guess is that the error in your estimation might be too high. \pause 
+\item While thinking about this problem, you remember that the data from the previous election is available to you. \pause 
+\item You look at that data and find out that, in the previous election, $40\%$ of the people in your town voted for Party A. \pause 
+\item How can you use this data to possibly improve your estimate of $\theta$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item Although the portion of votes for Party $A$ changes from one election to another, the change is not usually very drastic. \pause 
+\item Therefore, given that in the previous election $40\%$ of the voters voted for Party $A,$ you might want to model the portion of votes for Party $A$ in the next election as a random variable $\Theta$ with a probability density function, $f_{\Theta}(\theta),$ that is mostly concentrated around $\theta=0.4.$ \pause 
+\item For example, you might want to choose the density such that
+\[ E[\Theta]=0.4 \] \pause 
+\item That is, before taking your random sample of size $n=20,$ this is your guess about the distribution of $\Theta.$ \pause 
+\item Therefore, you initially have the prior distribution $f_{\Theta}(\theta).$ Then you collect some data, shown by $D.$ \pause 
+\item More specifically, here your data is a random sample of size n=20 voters, 6 of whom are voting for Party $A.$ \pause 
+\item you can then proceed to find an updated distribution for $\Theta,$ called the posterior distribution, using Bayes' rule:
+\begin{align}
+    f_{\Theta|D}(\theta|D)=\frac{P(D|\theta)f_{\Theta}(\theta)}{P(D)}.
+\end{align}
+\item We can now use the posterior density, $f_{\Theta|D}(\theta|D)$ to further draw inferences about $\Theta$
+\end{itemize}
+\end{frame}
+
+
+
+\input{scratch}
+
+
+
+
+
+\begin{frame}{Bayesian Inference...}
+\pause 
+
+\begin{alertblock}{Bayesian Inference: main ideas}
+\begin{enumerate}
+\item The goal is to draw inferences about an unknown variable $X$ by observing a related random variable $Y$ \pause
+\item The \yellow{unknown} variable is modelled as a random variable $X,$ with \yellow{prior distribution}
+$f_X(x),$ if $X$ is continuous, $P_X(x),$ if $X$ is discrete \pause 
+\item After observing the value of the random variable $Y,$ we find the \yellow{posterior distribution} of $X.$ \pause This is the conditional PDF (or PMF) of $X$ given $Y=y,$
+$f_{X|Y}(x|y)$ or $P_{X|Y}(x|y)$ \pause 
+\item The \yellow{posterior distribution} is usually found using Bayes' formula. \pause Using the posterior distribution, we can then find point or interval estimates of $X$ \pause 
+\item Note that in the above setting, $X$ or $Y$ (or possibly both) could be random vectors
+\end{enumerate}
+ 
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Prior and Posterior...}
+\pause 
+
+\begin{alertblock}{Prior and Posterior}
+\begin{enumerate}
+\item Using our notation for PMF and CDF, we have  \pause 
+\[ P_{X|Y}(x|y) = \dfrac{P_{Y|X}(y|x) P_X(x)}{P_Y(y)} \] \pause 
+\item If $X$ is continuous RV and $Y$ is discrete, \pause 
+\[ P_{X|Y}(x|y) = \dfrac{P_{Y|X}(y|x) f_X(x)}{P_Y(y)}  \] \pause 
+\item To find the denominator $P_Y(y)$ or $f_Y(y),$ we often use the \yellow{law of total probability} \pause 
+\item Here $f_{X|Y}(x|y)$ is called \yellow{posterior distribution}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}
+Let $X \sim \text{Uniform}(0,1).$ \pause Suppose that we know \pause  
+\[ Y \mid X = x \sim \text{Geometric}(x). \] \pause 
+Find the posterior density of $X$ given $Y=2, f_{X|Y}(x|2)$
+\end{example}
+\end{frame}
+
+\input{scratch}
+
+
+\begin{frame}{Maximum Apriori Estimation (MAP)...}
+\pause 
+
+\begin{alertblock}{Definiton of MAP}
+The \yellow{posterior distribution}, $f_{X|Y}(x|y)$ (or $P_{X|Y}(x|y)$), contains \yellow{all} the knowledge about the unknown quantity $X.$ \pause Therefore, we can use the \yellow{posterior distribution} to find \yellow{point or interval estimates} of $X.$ \pause One way to obtain a point estimate is to choose the value of $x$ that \yellow{maximizes} the \yellow{posterior PDF (or PMF)}. \pause This is called the \yellow{maximum a posteriori (MAP) estimation.} \pause 
+\begin{figure}
+\includegraphics[scale=0.85]{MAP}
+\caption{\orange{Here $\hat{x}_{MAP}$ is the value of $X$ for which the posterior $f_{X|Y}(x|y)$ is maximized}}
+\end{figure}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Finding the MAP Estimate...}
+\pause 
+
+\begin{alertblock}{MAP Estimate}
+We note that $f_{Y}(y)$ does not depend on the value of $x.$ \pause  Hence, to find the MAP estimate of $X$ given 
+that we have observed $Y=y,$ \pause we find the value of $x$ that maximizes 
+\[ f_{Y|X}(y|x) f_X(x). \] \pause 
+Whenever, $X$ or $Y$ is discrete, \pause we replace PDF by its PMF. 
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of MAP Estimate...}
+\pause 
+
+\begin{example}[Example of MAP Estimate]
+Let $X$  be a continuous random variable with the following PDF: \pause 
+\[
+f_X(x) = \begin{cases}
+2x \quad &\text{if}~0 \leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\] \pause 
+Moreover, let \pause  
+\[
+Y | X = x \sim \text{Geometric}(x).
+\] \pause 
+Find the \yellow{MAP estimate} of $X$ given $Y=3.$
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+\begin{frame}{Comparison of MAP to ML Estimator...}
+\pause 
+
+\begin{alertblock}{Comparison of ML and MAP}
+\begin{enumerate}
+\item Let $Y=y$ be observed value. \pause The \yellow{maximum likelihood (ML) estimate} of $X$ is the value of $x$ that maximizes 
+\[ f_{Y|X}(y|x). \] \pause 
+The \yellow{ML estimate} is shown by $\hat{x}_{ML}.$  \pause 
+\item On the other hand, \pause the \yellow{MAP estimate} of $X$ is the value of $x$ that maximizes 
+\[ f_{Y|X}(y|x)f_X(x) \] \pause 
+\item The two expressions are somewhat similar. \pause The MAP has one extra term $f_X(x)$ \pause 
+\item If $X$ is uniformly distributed over a finite interval, \pause then \yellow{ML and MAP estimate} is same
+\end{enumerate}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}
+Suppose that the signal $X \sim N(0, \sigma^2_X)$ is transmitted over a communication channel. \pause Assume that the received signal is given by
+$$Y=X+W,$$
+where $W \sim N(0, \sigma^2_W)$ is independent of $X.$ \pause 
+\begin{enumerate}
+\item Find the ML estimate of $X,$ given $Y=y$ is observed \pause 
+\item Find the MAP estimate of $X,$ given $Y=y$ is observed
+\end{enumerate}
+\end{example}
+\end{frame}
+
+
+
+
+\begin{frame}{Minimum Mean Squared Error (MMSE) Estimation...}
+\pause 
+
+\begin{alertblock}{MMSE}
+\begin{enumerate}
+\item The posterior distribution, $f_{X|Y}(x|y),$ contains all the knowledge that we have about the unknown quantity $X.$ \pause 
+\item To find a point estimate of $X,$ we can just choose a summary statistic of the posterior such as its mean, median, or mode \pause 
+\item If we choose the mode (the value of $x$ that maximizes $f_{X|Y}(x|y)$), we obtain the MAP estimate of $X$ \pause 
+\item Another possibility would be to choose the posterior mean, i.e.,
+$\hat{x} = E[X|Y=y]$ 
+\end{enumerate} \pause 
+The \yellow{minimum mean squared error} (MMSE) estimate of the random variable $X,$ \pause given that we have observed $Y=y,$ is given by \pause 
+\[ \hat{x}_M = E[X|Y=y].\]
+
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Example of MMSE Computation...}
+\pause 
+
+\begin{example}
+Let X be a continuous random variable with the following PDF \pause 
+\[ 
+f_X(x) = \begin{cases}
+2x \quad &\text{if}~0 \leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\] \pause 
+Moreover, we are given that \pause 
+\[ 
+f_{Y|X}(y|x) = \begin{cases}
+2xy - x + 1 \quad &\text{if}~0 \leq y \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\]
+\pause 
+Find the \yellow{MMSE estimate} of $X,$ given $Y=y$ is observed.
+\end{example} \pause 
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+
+\begin{frame}{Mean Squared Error (MSE) ...} 
+\pause 
+
+\begin{alertblock}{MSE}
+Let $\hat{X} = g(Y)$ be an estimator of the random variable $X,$ given that we have observed the random variable $Y.$ \pause The \yellow{mean squared error (MSE)} of this estimator is defined as \pause 
+\[
+E[(X−X)^2] = E[(X−g(Y))^2]
+\] \pause 
+The \yellow{MMSE estimator} of $X,$ \pause 
+\[ \hat X_M = E[X|Y],\] \pause 
+has the \yellow{lowest MSE} among \yellow{all} possible estimators.
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Additional Properties of MMSE Estimator...}
+\pause 
+
+\begin{alertblock}{Properties of MMSE}
+\begin{enumerate}
+\item The MMSE estimator, $\hat{X}_M = E[X|Y],$ is an \yellow{unbiased estimator} of $X,$ i.e., \pause 
+\[
+E[\hat{X}_M] = E[X], \quad E[\tilde{X}] = 0 
+\] \pause
+\vspace{-0.5cm}
+\item The \yellow{estimation error}, $\tilde{X},$ and $\hat{X}_M$ are \yellow{uncorrelated} \pause 
+\[
+\text{Cov}(\tilde{X}, \hat{X}_M) = 0
+\] \pause 
+\vspace{-0.6cm}
+\item Moreover, the following holds \pause 
+\begin{align*}
+\text{Var}(X) &= \text{Var}(\hat{X}_M) + \text{Var}(\tilde{X}), \\
+E[X^2] &= E[\hat{X}^2_M] + E[\tilde{X}^2]
+\end{align*}
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example of MMSE, MSE...}
+\pause 
+
+\begin{example}
+Let $X \sim N(0,1)$ and 
+\[ 
+Y = X + W 
+\] \pause 
+where $W \sim N(0,1)$ is independent of $X.$ \pause Answer the following \pause 
+\begin{enumerate}
+\item Find the MMSE estimator of $X$ given $Y,$ $(\hat{X}_M)$ \pause 
+\item Find the MSE of this estimator, using $MSE = E[(X − \hat X_{M})^2]$ \pause 
+\item Check that $E[X^2]=E[\hat X^2_M] + E[\tilde{X}^2]$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+\begin{frame}{Linear MMSE Estimator...}
+\pause 
+
+\begin{alertblock}{Linear MMSE Estimator}
+The \yellow{linear MMSE} estimator of the random variable X, given that we have observed Y, is given by \pause 
+\begin{align*}
+\hat{X}_L = \dfrac{\text{Cov}(X,Y)}{\text{Var}(Y)} (Y - E[Y]) + E[X] 
+= \dfrac{\rho \sigma_X}{\sigma_Y}(Y - E[Y]) + E[X]
+\end{align*} \pause 
+The estimation error, defined as $\tilde{X} = X − \hat{X}_L,$ satisfies the orthogonality principle: \pause 
+\begin{align*}
+E[\tilde{X}] &= 0 \\
+\text{Cov}(\tilde{X}, Y) &= E[\tilde{X}Y] = 0
+\end{align*} \pause 
+The MSE of the linear MMSE is given by \pause 
+\begin{align*}
+E[(X - X_L)^2] = E[\tilde{X}^2] = (1 - \rho^2)\text{Var}(X)
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Solved Example of Linear MMSE Estimator...}
+\pause 
+
+\begin{example}[inear MMSE Estimator]
+Suppose $X \sim \text{Uniform}(1,2)$ and given $X=x,$ $Y$ is exponential with parameter $\lambda = \dfrac{1}{x}.$  \pause 
+\begin{enumerate}
+\item Find the linear MMSE estimate of $X$ given $Y$ \pause 
+\item Find the MSE of this estimator \pause 
+\item Check that $E[\tilde{X}Y]=0$	
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Estimation of Random Vectors...}
+\pause 
+
+\begin{alertblock}{MMSE Estimate of Random Vector}
+\begin{align*}
+X = \begin{bmatrix}
+X_1 \\ X_2 \\ \vdots \\ X_m
+\end{bmatrix}, \quad Y = \begin{bmatrix}
+Y_1 \\ Y_2 \\ \vdots \\ Y_n
+\end{bmatrix}, \quad \hat{X}_M = E[X|Y] = \begin{bmatrix}
+E[X_1|Y_1, Y_2, \cdots, Y_n] \\
+E[X_2|Y_1, Y_2, \cdots, Y_n] \\
+\vdots
+E[X_m|Y_1, Y_2, \cdots, Y_n] \\
+\end{bmatrix}
+\end{align*} \pause 
+\begin{enumerate}
+\item The above conditional expectations might be too complicated computationally \pause 
+\item For random vectors, it is very common to consider simpler estimators such as the linear MMSE
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Linear MMSE for Random Vectors...}
+\pause 
+
+\begin{alertblock}{Linear MMSE for Random Vectors}
+Let the estimator $\hat{X}_L$ for the random vector be of the form 
+\[ \hat{X}_L = AY + b \] \pause 
+For two random variables $X$ and $Y,$ linear estimator of $X$ given $Y$ is \pause 
+\begin{align*}
+\hat{X}_L = \dfrac{\text{Cov}(X,Y)}{\text{Var}(Y)}(Y - E[Y]) + E[X] = \dfrac{\text{Cov}(X,Y)}{\text{Cov}(Y,Y)} (Y - E[Y]) + E[X]
+\end{align*}  \pause 
+For random vector, the linear MMSE estimator of the random vector $X$ is \pause 
+\begin{align*}
+\hat{X}_L = C_{XY}C_Y^{-1} (Y - E[Y]) + E[X],
+\end{align*} \pause 
+where $C_Y = E[(Y - E[Y])(Y - E[Y])^T], \quad C_{XY} = E[(X - E[X])(Y - E[Y])^T].$
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Using Orthogonality Principle to Find MMSE Estimators...}
+\pause 
+
+\begin{alertblock}{Orthogonality Principle}
+\begin{itemize}
+\item Consider vector $X$ given that we observed vector $Y.$ \pause Let $\hat{X}_L$ be the vector estimate with MMSE \pause 
+\vspace{-0.4cm}
+\begin{align*}
+\hat{X}_L = \begin{bmatrix}
+\hat{X}_1 \\ \vdots \\ \hat{X}_m 
+\end{bmatrix}, \quad \text{MMSE} = \sum_{k=1}^m E[(X_k - \hat{X}_k)^2]
+\end{align*} \pause 
+\vspace{-0.5cm}
+\item To minimize the MSE, it suffices to minimize each $E[(X_k - \hat{X}_k)^2]$ \pause 
+\item Assuming that our estimator is linear $\hat{X}_L = \sum_{k=1}^n a_k Y_k + b$ \pause 
+\item Error in our estimate is
+%\begin{align*}
+$\tilde{X} = X - \hat{X}_L = X - \sum_{i=1}^n a_k Y_k - b$ \pause 
+%\end{align*}
+\item Linear estimator must satisfy \yellow{orthogonality principle}: $$E[\tilde{X}]=0, \quad \text{Cov}(\tilde{X}, Y_j) = E[\tilde{X}Y_j] = 0, \quad \forall j=1,\dots,n$$
+\end{itemize}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Solved Example of Linear Estimator...}
+\pause
+
+\begin{example}[Linear Estimator]
+Let $X$ be an unobserved random variable with $E[X]=0, \text{Var}(X)=4.$ \pause Assume that we have observed $Y_1$ and $Y_2$ given by \pause 
+\begin{align*}
+Y_1 &= X + W_1 \\
+Y_2 &= X + W_2,
+\end{align*} \pause 
+where $E[W_1] = E[W_2] = 0, \text{Var}(W_1)=1,$ and $\text{Var}(W_2)=4.$ \pause Assume that $W_1, W_2,$ and $X$ are independent random variables. \pause Find the \yellow{linear MMSE} estimator of $X,$ given $Y_1$ and $Y_2.$
+\end{example}
+
+\end{frame}
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Bayesian Hypothesis Testing...}
+\pause 
+
+\begin{itemize}
+\item How do we decide between two given hypothesis: $H_0$ and $H_1?$ \pause 
+\item In the \yellow{Bayesian} setting, \pause we assume the we know \pause 
+\begin{itemize}
+\item the \yellow{prior probabilities} $H_0$ and $H_1:$ $P(H_0) = p_0$ and $P(H_1)= p_1$ \pause 
+\item We observe the RV, $Y.$ \pause Also, we know the distribution under these hypotheses \pause 
+\[ 
+f_Y(y \mid H_0), \quad \text{and} \quad f_Y(y \mid H_1) 
+\]
+\end{itemize} \pause 
+\item Using \yellow{Bayes rule}, we can obtain the \yellow{posterior probabilities} \pause 
+\[
+P(H_0 \mid Y=y) = \dfrac{f_Y(y \mid H_0) P(H_0)}{f_Y(y)}, \quad 
+P(H_1 \mid Y=y) = \dfrac{f_Y(y \mid H_1) P(H_1)}{f_Y(y)}  
+\] \pause 
+\vspace{-0.5cm}
+\item We choose $H_0$ if $P(H_0 \mid Y=y) \geq P(H_1 \mid Y=y),$ \pause or $f_Y(y|H_0)P(H_0)\geq f_Y(y|H_1)P(H_1)$
+\end{itemize} \pause 
+\begin{alertblock}{Definition of MAP Hypothesis Test}
+Choose the hypothesis with the \yellow{highest posterior probability}, $P(H_i \mid Y=y).$ \pause Equivalently, choose hypothesis $H_i$ with the highest $f_Y(y \mid H_i)P(H_i).$
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Solved Example of MAP Hypothesis Test...}
+\pause 
+
+\begin{example}[MAP Hypothesis Test]
+Suppose that the random variable $X$ is transmitted over a communication channel.\pause Assume that the received signal is given by 
+\[ Y = X+W,\]
+where $\tilde{W} N(0,\sigma^2)$ is independent of $X.$ \pause Suppose that $X=1$ with probability $p,$ and $X = −1$ with probability $1−p.$ \pause The goal is to decide between $X=1$ and $X = −1$ by observing the random variable $Y.$ \pause Find the \yellow{MAP test} for this problem.
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+\begin{frame}{Average Error Probability for Hypothesis Test, and a Solved Example...}
+\pause 
+
+\begin{alertblock}{Average Error Probability for Hypothesis Test}
+The \yellow{average error probability} for a \yellow{hypothesis test} can be written as \pause 
+\begin{align*}
+   P_e =P( \text{choose }H_1 | H_0) P(H_0)+ P( \text{choose }H_0 | H_1) P(H_1).
+ %  \hspace{30pt} (9.6)
+\end{align*}
+\end{alertblock}
+
+\begin{example}[Average Error Probability]
+Suppose that the random variable $X$ is transmitted over a communication channel.\pause Assume that the received signal is given by 
+\[ Y = X+W,\]
+where $W \sim N(0,\sigma^2)$ is independent of $X.$ \pause Suppose that $X=1$ with probability $p,$ and $X = −1$ with probability $1−p.$ \pause The goal is to decide between $X=1$ and $X = −1$ by observing the random variable $Y.$ \pause Find the \yellow{Average Error Probability} for this problem.
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+
+\begin{frame}
+\begin{figure}
+\includegraphics[scale=1.2]{errorProb}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Minimum Cost Hypothesis Test...}
+\pause 
+
+\begin{alertblock}{Minimum Cost Hypothesis Test}
+Assuming the following costs \pause 
+\begin{itemize}
+\item $C_{10}:$ The cost of choosing $H_1,$ given that $H_0$ is true \pause 
+\item $C_{01}:$ The cost of choosing $H_0,$ given that $H_1$ is true
+\end{itemize} \pause 
+We choose $H_0$ if and only if \pause 
+\begin{align}
+    \frac{f_{Y}(y|H_0)}{f_{Y}(y|H_1)} \geq \frac{P(H_1)C_{01}}{P(H_0) C_{10}}.
+\end{align} \pause 
+Equivalently, we choose $H_0$ if and only if \pause 
+\begin{align*}
+    P(H_0|y) C_{10} \geq  P(H_1|y) C_{01}.
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Minimum Cost Hypothesis Test...}
+\pause 
+
+\begin{example}[Minimum Cost Hypothesis Test]
+A surveillance system is in charge of detecting intruders to a facility. \pause There are two hypotheses to choose from: \pause 
+\begin{itemize}
+\item $H_0:$ No intruder is present \pause 
+\item $H_1:$ There is an intruder
+\end{itemize}
+\pause  
+The system sends an alarm message if it accepts $H_1.$ \pause Suppose that after processing the data, we obtain $P(H_1|y)=0.05.$ \pause Also, assume that the cost of missing an intruder is 10 times the cost of a false alarm. \pause Should the system send an alarm message (accept $H_1$)?
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Bayesian Interval Estimation...}
+\pause 
+
+\begin{alertblock}{Bayesian Credible Intervals}
+Given the observation $Y=y,$ \pause the interval $[a,b]$ is said to be a $(1−\alpha)100\%$ \yellow{credible interval} for $X,$ if the \yellow{posterior probability} of $X$ being in $[a,b]$ is equal to $1−\alpha.$ \pause In other words, \pause 
+\begin{align}
+    P(a \leq X \leq b |Y=y)=1-\alpha.
+\end{align}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Example for Bayesian Credible Intervals...}
+\pause 
+\begin{example}[Bayesian Credible Intervals]
+Let $X$ and $Y$ be \yellow{jointly normal} and $X \sim N(0,1), Y \sim N(1,4),$ and $\rho(X,Y)=1/2.$ \pause Find a $95\%$ \yellow{credible interval} for $X,$ given $Y=2$ is observed.
+\end{example}
+\end{frame}
+
+
+
+
+\input{scratch}
+\input{scratch}
+
+
+
+
+\subsection{Solved Examples}
+
+
+\begin{frame}{Solved Example 1...}
+\pause 
+
+\begin{example}[Solved example 1]
+Consider two random variables X and Y with the joint PMF given in \pause 
+\begin{table}
+\begin{tabular}{|l|l|l|}
+\hline 
+ & $Y=0$ & $Y=1$  \\ \hline 
+ $X=0$ & $\dfrac{1}{5}$ & $\dfrac{2}{5}$ \\ \hline 
+ $X=1$ & $\dfrac{2}{5}$ & 0 \\ \hline 
+\end{tabular}
+\end{table} \pause 
+\begin{enumerate}
+\item Find the linear \yellow{MMSE estimator} of $X$ given $Y, (\hat{X}_L)$ \pause 
+\item Find the \yellow{MMSE estimator} of $X$ given $Y, (\hat{X}M)$ \pause 
+\item Find the \yellow{MSE} of $\hat{X}M$
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+
+\input{scratch}
+\input{scratch}
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Solved Example...}
+\pause 
+\begin{example}
+Consider Example 9.9 in which $X$ is an unobserved random variable with $E[X]=0, \text{Var}(X)=4.$ \pause Assume that we have observed $Y_1$ and $Y_2$ given by \pause 
+\begin{align*}
+Y_1 &= X + W_1 \\
+Y_2 &= X + W_2,
+\end{align*} \pause 
+where $E[W_1] = E[W_2] = 0, \text{Var}(W_1)=1,$ and $\text{Var}(W_2)=4.$ \pause Assume that $W_1, W_2,$ and $X$ are independent random variables. \pause Find the \yellow{linear MMSE} estimator of $X$ given $Y_1$ and $Y_2$ using the vector formula \pause 
+\begin{align*}
+\hat{X}_L = C_{XY}C_Y^{-1} (Y - E[Y]) + E[X]
+\end{align*}
+\end{example}
+\end{frame}
+
+
+\input{scratch}
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}
+Let $C_{ij}$ be the cost of choosing $H_i$ given that $H_j$ is true. \pause 
+%\begin{itemize}
+%\item $C_{00}:$ The cost of choosing $H_0,$ given that $H_0$ is true.
+%\item $C_{10}:$ The cost of choosing $H_1,$ given that $H_0$ is true.
+%\item $C_{01}:$ The cost of choosing $H_0,$ given that $H_1$ is true.
+%\item $C_{11}:$ The cost of choosing $H_1,$ given that $H_1$ is true.
+%\end{itemize}
+Our goal is to find the decision rule such that the average cost is minimized. \pause It is reasonable to assume that the associated cost to a correct decision is less than the cost of an incorrect decision. \pause That is, $C_{00} < C_{10}$ and $C_{11} < C_{01}.$ \pause The average cost is \pause 
+   \begin{align*}
+    C =& \sum_{i,j} C_{ij} P( \text{choose }H_i | H_j) P(H_j)\\
+    =& C_{00} P( \text{choose }H_0 | H_0) P(H_0)+ C_{01} P( \text{choose }H_0 | H_1) P(H_1) \\
+     &+C_{10} P( \text{choose }H_1 | H_0) P(H_0)+ C_{11} P( \text{choose }H_1 | H_1) P(H_1).
+  \end{align*} 
+  \pause 
+  Show that the decision rule can be stated as follows: Choose $H_0$ if and only if
+  \begin{align*}
+   f_{Y}(y|H_0)P(H_0) (C_{10}-C_{00}) \geq f_{Y}(y|H_1)P(H_1)(C_{01}-C_{11})
+  \end{align*}
+  
+\end{example}
+
+\end{frame}
+
+
+\include{scratch}
+
+
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{example}
+Consider the following random variable \pause 
+\begin{align*}
+X \sim N(0,4) \quad \text{and} \quad Y|X = x \sim N(x,1)
+\end{align*} \pause 
+We are given the observed random sample $Y_1, Y_2, \cdots, Y_{25}$ such that given $X=x,$ the $Y_i$'s are i.i.d. and have the same distribution as $Y|X=x.$ \pause Given that we have observed 
+\[ 
+\overline{Y} = \dfrac{Y_1 + Y_2 + \dots + Y_n}{n} = 0.56,
+\]  \pause 
+find a $95\%$ credible interval for $X.$
+\end{example}
+
+\end{frame}
+
+
+
+\include{scratch}
+
+
+
+
+
+
+
+
+
+
+

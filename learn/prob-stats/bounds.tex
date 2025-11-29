@@ -1,0 +1,631 @@
+\section{Bounds}
+
+\subsection{Union Bound}
+
+\begin{frame}{Union bound and extension...}
+\pause 
+
+\begin{alertblock}{Union Bound}
+Recall the \yellow{inclusion exclusion} principle: \pause 
+\begin{align*}
+P(\left( \cup_{i=1}^n A_i \right)) = \sum_{i=1}^n &P(A_i) - \sum_{i<j} P(A_i \cap A_j) \\
+&+ \sum_{i<j<k} P(A_i \cap A_j \cap A_k) - \cdots + (-1)^{n-1} P \left( \cap_{i=1}^n A_i \right)
+\end{align*} \pause 
+\vspace{-0.5cm}
+\begin{itemize}
+\item \yellow{union bound} states that probability of union of events is smaller than the sum of first term. \pause That is for $n=2,$ we have \pause 
+\begin{align*}
+P(A \cup B) \leq P(A) + P(B),
+\end{align*} \pause 
+ For any events $A_1, A_2, \dots, A_n,$ we have \pause 
+ \vspace{-0.5cm}
+ \begin{align*}
+ P\left( \cup_{i=1}^n A_i \right) \leq \sum_{i=1}^n P(A_i) \quad \text{\yellow{(Union Bound)}}
+ \end{align*}
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Generalized Union Bounds and Bonferroni Inequalities...}
+\pause 
+
+\begin{alertblock}{Generalized Union Bounds}
+Let $A_1, A_2, \dots, A_n$ be events, then 
+%\vspace{-0.4cm}
+\begin{align*}
+P(\left( \cup_{i=1}^n A_i \right)) &\leq \sum_{i=1}^n P(A_i) \\
+P(\left( \cup_{i=1}^n A_i \right)) &\geq   \sum_{i=1}^n P(A_i) - \sum_{i<j} P(A_i \cap A_j) \\
+P(\left( \cup_{i=1}^n A_i \right)) &\geq   \sum_{i=1}^n P(A_i) - \sum_{i<j} P(A_i \cap A_j) + \sum_{i<j<k} P(A_i \cap A_j \cap A_k) \\
+\dots \dots & \quad  \dots  \quad \dots \dots \quad \dots \dots 
+\end{align*} \pause 
+\vspace{-0.7cm}
+\begin{enumerate}
+\item If we stop at the \yellow{second} term, we obtain a \yellow{lower} bound \pause 
+\item If we stop at the \yellow{third} term, we obtain an \yellow{upper} bound, etc \pause 
+\item In general, if we write an \yellow{odd} number of terms, we get an \yellow{upper} bound \pause 
+\item If we write an \yellow{even} number of terms, we get a \yellow{lower} bound
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+% \begin{frame}{Solved Example Using Union Bound...}
+% \pause 
+
+% \begin{example}[Application of Union Bound]
+% Consider the random graph denoted $G(n,p),$ a graph with $n$ nodes and $p$ denotes the probability of an edge 
+% between pair of nodes. \pause Let $B_n$ be the event that this graph has at least one node. Show that 
+% \begin{align*}
+% P(B_n) \geq n(1-p)^{n-1} - \binom{n}{2} (1-p)^{2n-3}.
+% \end{align*}
+
+% \end{example}
+
+% \end{frame}
+
+
+%\input{scratch}
+
+\subsection{Markov and Chebyshev Inequalities}
+
+
+\begin{frame}{Markov and Chebyshev Inequalities...}
+\pause 
+
+\begin{alertblock}{Markov and Chebyshev Inequalities}
+If $X$ is any \yellow{nonnegative} random variable, then \pause 
+\begin{align*}
+P(X \geq a) \leq \dfrac{E[X]}{a}.
+\end{align*} \pause 
+This inequality is called \yellow{Markov inequality}. \pause Moreover, let $b>0,$ then \pause 
+\begin{align*}
+P( \, |X - E[X]| \geq b \,) \leq \dfrac{\text{Var}(X)}{b^2} 
+\end{align*} \pause 
+The above inequality is called \yellow{Chebyshev inequality.} \\
+\begin{itemize}
+\item Chebyshev inequality states that the difference between $X$ and $E[X]$ is bounded by $\text{Var}(X)$ 
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+
+
+\input{scratch}
+
+
+
+
+\begin{frame}{Example of Markov Inequality...}
+\pause 
+
+\begin{example}[Markov Inequality]
+Let $X \sim \text{Binomial}(n,p).$ \pause Using \yellow{Markov inequality}, find an upper bound on $P(X \geq \alpha n),$ where $p < \alpha < 1.$ \pause Verify this bound for $p=1/2$ and $\alpha = 3/4.$
+\end{example}
+%\vspace{6cm}
+
+\end{frame}
+
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Example of Chebychev Inequality...}
+\pause 
+
+\begin{example}[Chebychev Inequality]
+Let $X \sim \text{Binomial}(n,p).$ \pause Using \yellow{Chebyshev inequality}, find an upper bound on $P(X \geq \alpha n),$ where $p < \alpha < 1.$ \pause Verify this bound for $p=1/2$ and $\alpha = 3/4.$
+\end{example}
+%\vspace{6cm}
+
+\end{frame}
+
+\input{scratch}
+
+
+\begin{frame}{Chernoff Bounds...}
+\pause 
+
+\begin{alertblock}{Chernoff Bound}
+Let $X$ be a random variable and $a \in \mathbb{R}.$ \pause Let $M_X(s) = E[e^{sX}]$ be the \yellow{moment generating function}. \pause Then the following holds \pause 
+\begin{align*}
+P(X \geq a) &\leq e^{-sa} M_X(s), \quad \text{for all}~s>0 \\
+P(X \leq a) &\leq e^{-sa} M_X(s), \quad \text{for all}~s<0 
+\end{align*}  \pause 
+Since, the above holds for any $s,$ we have the following \pause 
+\begin{align*}
+P(X \geq a) &\leq \min_{s>0} \, e^{-sa} M_X(s) \\
+P(X \leq a) &\leq \min_{s<0} \, e^{-sa} M_X(s)
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+	
+\input{scratch}
+
+
+
+% \begin{frame}{Example: Application of Chernoff Bound...}
+% \pause 
+
+% \begin{example}[Application of Chernoff bound]
+% Let $X \sim \text{Binomial(n,p)}.$ \pause Find an upper bound for $P(X \geq \alpha n)$ using \yellow{Chernoff bound}. \pause Assume $p< \alpha < 1.$ \pause Verify the bound for $p=1/2$ and $\alpha = 3/4.$
+% \end{example}
+
+% \end{frame}
+
+% \input{scratch}
+
+
+
+% \begin{frame}{Comparison between Markov, Chebyshev, and Chernoff Bounds...}
+% \pause 
+
+% \begin{example}[Comparison between Markov, Chebyshev, and Chernoff Bound]
+% Let $X \sim \text{Binomial}(n,p).$ \pause Find the upper bounds for $P(X \geq \alpha n)$ using Markov, Chebyshev, and Chernoff bounds. 
+% \end{example}
+% %\vspace{6cm}
+
+% \end{frame}
+
+
+\begin{frame}{Cauchy Schwarz Inequality...}
+\pause 
+
+
+\begin{alertblock}{Cauchy Schwarz Inequality}
+For any two random variables $X$ and $Y$ we have 
+\begin{align*}
+E[XY] \leq \sqrt{E[X^2]E[Y^2]}
+\end{align*}
+where equality holds if and only if $X = \alpha Y,$ for some constant $\alpha \in \mathbb{R}.$
+\end{alertblock}
+
+
+\begin{figure}
+\includegraphics[scale=0.3]{cauchy} \quad 
+\includegraphics[scale=2.1 ]{schwarz}
+\caption{Left: Cauchy, Right: Schwarz}
+\end{figure} 
+
+
+
+
+\end{frame}
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Example of Cauchy Schwarz...}
+\pause 
+
+\begin{example}[Application of Cauchy Schwarz]
+For any two random variables $X$ and $Y,$ show that \pause  
+\begin{align*}
+|\rho(X,Y)| \leq 1
+\end{align*} \pause 
+using \yellow{Cauchy Schwarz inequality}. \pause Furthermore, show that $|\rho(X,Y)|=1$ if and only if $Y=aX + b$ for some constants $a,b \in \mathbb{R}.$ 
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+
+
+
+\begin{frame}{Convex Functions and Jensen's Inequality...}
+\pause 
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Definition of convex function}
+A function $g:I \rightarrow \mathbb{R}$ is \yellow{convex} if for any two points $x$ and $y$ in $I$ 
+and any $\alpha \in [0,1],$ we have \pause 
+\begin{align*}
+g(\alpha x + (1 - \alpha)y) \leq \alpha g(x) + (1 - \alpha)g(y)
+\end{align*}  \pause 
+If the above inequality is $\geq,$ then the function $g$ is \yellow{concave.}
+\begin{itemize}
+\item Here $\alpha x + (1 - \alpha)y$ is the weighted average of $x$ and $y$ \pause 
+\item Here $\alpha g(x) + (1 - \alpha)g(y)$ is the weighted average of $x$ and $y$
+\end{itemize}
+\end{alertblock}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.18]{convex}
+\end{figure} \pause 
+\begin{itemize}
+\item From the definition of convexity on left, we conclude 
+\begin{align*}
+E[g(X)] \geq g(E[X])
+\end{align*} 
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+\begin{frame}{Jensen's Inequality...}
+\pause 
+
+\begin{alertblock}{Jensen's inequality}
+If $g(x)$ is a \yellow{convex function} on $R_X,$ and $E[g(X)]$ and $g(E[X])$ are finite, then \pause 
+\begin{align*}
+E[g(X)] \geq g(E[X]).
+\end{align*} \pause 
+\begin{itemize}
+\item To know whether a function is convex, \pause a useful method for differentiable function is \yellow{second derivative test}: \pause A twice differentiable function $g:I \rightarrow \mathbb{R}$ is convex \yellow{if and only if} $g''(x) \geq 0$ for all $x \in I$ \pause 
+\item For example, $g(x) = x^2$ is convex in $\mathbb{R}$
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Application of Jensen's Inequality...}
+\pause 
+
+\begin{example}[Jensen's Inequality]
+Consider a random variable $X$ with $E[X]=10,$ and $X$ being positive. \pause Estimate the following quantities \pause
+\begin{enumerate}
+\item $E[\dfrac{1}{X+1}]$ \pause 
+\item $E[e^{\dfrac{1}{X+1}}]$ \pause 
+\item $E[\text{ln} \, \sqrt{X}]$ 
+\end{enumerate}
+\end{example}
+
+\end{frame}
+
+
+\input{scratch}
+\input{scratch}
+
+
+\section{Law of Large Numbers}
+
+\subsection{Sample Mean, Expectation and Variance}
+
+
+
+
+
+
+
+
+\begin{frame}{Definition of Sample Mean}
+\begin{alertblock}{Definition of Sample Mean}
+Let $X_1, X_2, \dots, X_n$ be $n$ \yellow{i.i.d.} random variables, \pause then the \yellow{sample mean} $\overline{X}$ is defined as follows \pause 
+\begin{align*}
+\overline{X} = \dfrac{X_1 + X_2 + \dots + X_n}{n}
+\end{align*} \pause 
+It is easy to establish the following: \pause 
+\begin{enumerate}
+\item $E[\bar{X}] = E[X]$ \pause 
+\item $\text{Var}(\bar{X}) = \dfrac{\text{Var}(X)}{n}$
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+\input{scratch}
+
+
+\subsection{Weak Law of Large Numbers}
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Weak Law of Large Numbers...}
+\pause 
+
+\begin{alertblock}{Weak Law of Large Numbers}
+Let $X_1, X_2, \dots, X_n$ be \yellow{i.i.d.} random variables with mean $E[X_i]= \mu < \infty.$ Then for any $\epsilon > 0,$ \pause 
+\begin{align*}
+\lim_{n \rightarrow \infty} P(|\bar{X} - \mu| \geq \epsilon) = 0
+\end{align*}
+\end{alertblock}
+\vspace{5cm}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Central Limit Theorem...}
+\pause 
+
+\begin{alertblock}{Central Limit Theorem}
+Let $X_1, X_2, \dots, X_n$ be \yellow{i.i.d. random variables} with expected value $E[X_i] = \mu < \infty
+$ and variance $0 < \text{Var}(X_i) = \sigma^2 < \infty.$ Then, the random variable \pause
+\begin{align*}
+Z_n = \dfrac{\bar{X} - \mu}{\sigma / \sqrt{n}} = \dfrac{X_1 + X_2 + \dots + X_n - n \mu}{\sqrt{n} \sigma}
+\end{align*} \pause 
+converges in distribution to the \yellow{standard normal random variable} as $n$ goes to infinity, that is \pause 
+\begin{align*}
+\lim_{n \rightarrow \infty} P(X_n \leq x) = \Phi(x), \quad \text{for all}~x \in \mathbb{R},
+\end{align*}
+where $\Phi(x)$ is the \yellow{standard normal CDF.} \pause 
+\begin{itemize}
+\item It does not matter what the distribution of $X_i$ is \pause 
+\item The $X_i$ can be discrete, continuous, or mixed random variables
+\end{itemize}
+\end{alertblock}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{enumerate}
+\item Let $X_i$ be Bernoulli($p$)
+\item Then $E[X_i]=p, \text{Var}(X_i)=p(1-p)$
+\item $Y_n = X_1 + X_2 + \dots + X_n$ has Binomial($(n,p)$)
+\item Hence, 
+\begin{align*}
+Z_n = \dfrac{Y_n - np}{\sqrt{np(1-p)}}
+\end{align*}
+\item The figure on the right shows PMF of $Z_n$ for different values of $n$
+\item As we observe, the shape of PMF gets closer to a normal PDF 
+\end{enumerate}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.32]{clt}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{enumerate}
+\item Let $X_i$ be Uniform$(0,1)$ \pause 
+\item Then $E[X_i]=1/2, \text{Var}(X_i)=1/12$ \pause 
+\item Hence, 
+\begin{align*}
+Z_n = \dfrac{X_1 + X_2 + \dots + X_n - n/2}{\sqrt{n/12}}
+\end{align*} \pause 
+\item The figure on the right shows PMF of $Z_n$ for different values of $n$ \pause 
+\item As we observe, the shape of PMF gets closer to a normal PDF \pause 
+\end{enumerate}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.32]{clt3}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \begin{frame}{How to Apply The Central Limit Theorem (CLT)?}
+% \begin{alertblock}{How to Apply The Central Limit Theorem (CLT)}
+% \begin{enumerate}
+% \item Write the random variable of interest, $Y,$ as the sum of $n$ i.i.d. random variables
+% \vspace{-0.3cm}
+% \begin{align*}
+% Y = X_1 + X_2 + \dots + X_n
+% \end{align*}
+% \pause 
+% \vspace{-0.4cm}
+% \item Find $E[Y]$ and Var($Y$) by noting that 
+% \begin{align*}
+% E[Y] = n \mu, \quad \text{Var}(Y) = n \sigma^2, \quad \text{where}~ \mu = E[X_i], \, \sigma^2 = \text{Var}(X_i) 
+% \end{align*} \pause
+% \vspace{-0.5cm}
+% \item From CLT, we conclude that \pause 
+% \vspace{-0.4cm}
+% \begin{align*}
+% \dfrac{Y - E[Y]}{\sqrt{\text{Var}(Y)}} = \dfrac{Y - n \mu}{\sqrt{n} \sigma}
+% \end{align*}
+% is approximately standard normal, hence, we have \pause 
+% \begin{align*}
+% P(y_1 \leq Y \leq y_2) = P \left( \dfrac{y_1 - n\mu}{\sqrt{n} \sigma} \leq \dfrac{Y-n \mu}{\sqrt{n} \sigma} \leq \dfrac{y_2 - n \mu}{\sqrt{n} \sigma} \right) 
+% \approx \Phi \left( \dfrac{y_2 - n \mu}{\sqrt{n} \sigma} \right) - \Phi \left( \dfrac{y_1 - n \mu}{\sqrt{n} \sigma} \right)
+% \end{align*}
+% \end{enumerate}
+% \end{alertblock}
+% \end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \begin{frame}{Example of Application of CLT...}
+% \pause 
+
+% \begin{example}[Applications of CLT]
+% A bank teller serves customers standing in the queue one by one. \pause Suppose that the service time $X_i$ for customer $i$ has mean $E[X_i]=2$ (minutes) and $\text{Var}(X_i)=1.$ \pause We assume that service times for different bank customers are independent. \pause Let $Y$ be the total time the bank teller spends serving 50 customers. \pause Find $P(90<Y<110).$
+% \end{example}
+% \end{frame}
+
+% \input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+% \begin{frame}{Example of Application of CLT...}
+% \pause
+% \begin{example}[Applications of CLT]
+% In a communication system each data packet consists of 1000 bits. \pause Due to the noise, each bit may be received in error with probability 0.1. \pause It is assumed bit errors occur independently. \pause Find the probability that there are more than 120 errors in a certain data packet.
+% \end{example}
+% \end{frame}
+
+
+
+
+
+
+
+
+
+% \input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+% \begin{frame}{Example of Application of CLT...}
+% \pause 
+
+% \begin{example}
+% There are 100 men on a plane. \pause Let $X_i$ be the weight (in pounds) of the $i$th man on the plane. \pause Suppose that the $X_i$'s are i.i.d., and $E[X_i] = \mu =170$ and $\sigma_{X_i} = \sigma =30.$ \pause Find the probability that the total weight of the men on the plane exceeds 18,000 pounds.
+% \end{example}
+% \end{frame}
+
+
+
+
+
+
+
+
+
+
+
+% \input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \begin{frame}{Application of CLT...}
+% \pause 
+
+% \begin{example}{Applications of CLT}
+% Let $X_1 , X_2, \dots, X_n$ be i.i.d. $\text{Exponential}(\lambda)$ random variables with $\lambda=1.$ \pause Let 
+% \begin{align*}
+% \bar{X} = \dfrac{X_1 + X_2 + \cdots + X_n}{n}.
+% \end{align*} \pause 
+% How  large should $n$ be such that \pause 
+% \begin{align*}
+% P(0.9 \leq \bar{X} \leq 1.1) \geq 0.95?
+% \end{align*}
+% \end{example}
+% \end{frame}
+
+
+
+
+
+
+
+
+% \input{scratch}
+% \input{scratch}
+
+
+

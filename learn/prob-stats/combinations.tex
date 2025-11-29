@@ -1,0 +1,747 @@
+\section{Combinations}
+
+%\begin{comment}
+
+\begin{frame}{Combinations}	
+\pause 
+\begin{alertblock}{Question}
+You are organizing a car journey. \pause You have
+\yellow{five} friends, \pause but there are only \yellow{three} vacant
+places in you car. \pause What is the number of ways
+of taking three of your five friends to the
+journey?
+\end{alertblock}
+
+\pause 
+
+\begin{alertblock}{Above Question Reformulated}
+We are essentially asking: What is the \yellow{number of ways of choosing 3 elements out of a set containing 5 elements?}
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{Answer to Previous Question...}
+
+\pause 
+
+\begin{alertblock}{Answer}
+\begin{itemize}
+\item There are \yellow{five} choices of the first friend, \pause
+\yellow{four} choices of the second friend, and
+\yellow{three} choices of the third friend \pause 
+\item \yellow{How many choices are there for choosing 3 friends, assuming ordering?} \pause 
+\item In total, there are $5 \times 4 \times 3 = 60$ choices \yellow{assuming ordering} \pause 
+\item But each group of \yellow{three} friends is counted
+$3! = 6$ times, \pause that is, a group $\{a, b, c\}$ is counted as
+$abc, acb, bac, bca, cab, cba$ \pause 
+\item Thus, we \yellow{need to divide by 3!}, the \yellow{answer is $(5 \times 4 \times 3)/3! = 10$} \pause 
+\item Since ordering does not matter, we call them \yellow{combinations!} \pause 
+\item We define combinations in next slide...
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Combinations: $k-$combination}
+\begin{alertblock}{Definition of $k-$combination}
+For a set $S,$ \yellow{a $k-$combination} is a subset of $S$
+of size $k$
+\end{alertblock}
+\pause 
+
+\begin{alertblock}{Definition of $k-$combinations}
+The \yellow{number of $k-$combinations} of an $n$
+element set is denoted by $\dbinom{n}{k}.$ \\ 
+Pronounced:``$n$ choose $k$". Proof by example!
+\end{alertblock}
+\pause 
+
+\begin{alertblock}{Number of $k-$combinations}
+The number of $k-$combinations of an $n$ element set is given by \[ \dfrac{n!}{(n-k)!} \]
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{Derive formula for n choose k...}
+\begin{figure}
+\includegraphics[scale=0.5]{nck}
+\end{figure}
+\end{frame}
+
+\section{Pascal's Triangle and Combinations...}
+
+\begin{frame}{Pascal triangle...}
+\pause 
+\begin{alertblock}{Question}
+There are $n$ students. What is the number of
+ways of forming a team of $k$ students out of
+them?
+\end{alertblock}
+
+\pause 
+
+\begin{exampleblock}{Answer}
+$\dbinom{n}{k}$
+\end{exampleblock}
+
+\pause 
+
+\begin{block}{A result...}
+$\dbinom{n}{k} = \dbinom{n-1}{k-1} + \dbinom{n-1}{k}$
+\end{block}
+
+\end{frame}
+
+
+\begin{frame}{Proof of previous identity...}
+\pause 
+\begin{theorem}{Prove the following}
+$\dbinom{n}{k} = \dbinom{n-1}{k-1} + \dbinom{n-1}{k}$
+\end{theorem}
+\pause 
+\begin{itemize}
+\item Fix one of the students, call him Ramesh \pause 
+\item Then there are two types of teams: \pause 
+\begin{itemize}
+\item Teams without Ramesh: $\dbinom{n-1}{k-1}$ \pause 
+\item Teams with Ramesh: $\dbinom{n-1}{k}$ \pause 
+\item Apply \yellow{sum rule to conclude the proof}
+\end{itemize}
+\end{itemize} \pause 
+\begin{block}{Hence recursion for $n$ choose $k$ is...}
+$\dbinom{n}{k} = \dbinom{n-2}{k-2} + \dbinom{n-2}{k-1} + \dbinom{n-2}{k-1} + \dbinom{n-2}{k} = \cdots $
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Pascal's Triangle}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.35]{pascal00}
+\end{figure} \pause 
+\begin{alertblock}{Quiz}
+Do you know how to grow Pascal's triangle? What is the rule?
+\end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Pascal's Triangle and Many Relations...}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.35]{pascal0}
+\end{figure}
+\end{frame}
+
+%\end{}
+
+
+
+\begin{frame}{Pascal's Triangle and Triangular Numbers}
+
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+
+\begin{figure}
+\includegraphics[scale=0.3]{triangular2}
+\end{figure}
+
+\pause 
+\begin{itemize}
+\item If we look at the indicated colors, we obtain counting numbers, triangular numbers, etc
+\end{itemize}
+
+\end{column} %\pause 
+
+\begin{column}{0.5\textwidth}
+
+\begin{figure}
+\includegraphics[scale=0.37]{triangular}
+\end{figure}
+
+%\pause 
+
+\begin{itemize}
+\item Triangular numbers are the number of dots \pause 
+\item Add one more row and dots to get next triangular number
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+
+\end{frame}
+
+
+\begin{frame}{Pascal's Triangle: Horizontal Sums and Exponents of 11}
+\pause 
+
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+
+\begin{figure}
+\includegraphics[scale=0.32]{triangular3}
+\end{figure}
+\pause 
+
+
+\begin{itemize}
+\item The horizontal sums are $2^i,$ $i$ is the $i$th row
+\end{itemize}
+
+
+\end{column} \pause 
+
+\begin{column}{0.5\textwidth}
+
+\begin{figure}
+\includegraphics[scale=0.37]{triangular4}
+\end{figure}
+\pause 
+
+\begin{itemize}
+\item The row entries are digits of powers of 11 \pause 
+\item The entries of the $i$th row are digits of $11^i$
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+
+\end{frame}
+
+
+\begin{frame}{Pascal's Triangle and Symmetry}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.45]{pascal2}
+\end{figure}
+\end{frame}
+
+%%
+\begin{frame}{Proof of symmetry...}
+\begin{theorem}
+Prove that
+%\begin{align*}
+\[ \binom{n}{k} = \binom{n}{n-k} \]
+%\end{align*}
+\end{theorem}
+\pause
+\begin{itemize}
+\item $\binom{n}{k}$ is the number of ways of selecting
+a team of size $k$ out of $n$ students \pause 
+\item $\binom{n}{n-k}$ is the number of ways of selecting
+a team of size $n-k$ out of $n$ students
+\end{itemize}
+\pause 
+\begin{block}{Answer}
+%\begin{align*}
+\[ \binom{n}{k} = \dfrac{n!}{k! (n-k)!} = \dfrac{n!}{(n-k)! k!} \]
+%\end{align*}
+\end{block}
+\end{frame}
+
+%%
+%\begin{frame}{Embedded Animation}
+%\animategraphics[loop,controls,width=\linewidth]{10}{pascals-gif2-}{0}{16}
+%\end{frame}
+
+%\begin{frame}
+%\begin{figure}[ht]
+%\includemovie[
+%  poster,
+%  text={\small(Loading Circle-m-increase3.mp4)}
+%]{6cm}{6cm}{Circle-m-increase3.mp4}
+%\end{figure}
+%\end{frame}
+
+%\begin{frame}
+%\begin{center}
+%    \animategraphics[autoplay,loop,scale=0.5]{19}{pascal-gif}{}{}
+%\end{center}
+%\end{frame}
+
+\begin{frame}{Row Sums of Pascal's Triangle...}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.26]{pascal3}
+\end{figure}
+\end{column} \pause
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{pascal4}
+\end{figure}
+\end{column}
+\end{columns}
+\pause 
+\begin{theorem}
+The sum of all the numbers in the $n$-th row of Pascal’s triangle is equal to $2^n:$
+%\begin{align*}
+\[ \binom{n}{0} + \binom{n}{1} + \cdots + \binom{n}{n-1} + \binom{n}{n} = 2^n \]
+%\end{align*}
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+\begin{theorem}[Prove this...]
+The sum of all the numbers in the $n$-th row of Pascal’s triangle is equal to $2^n:$
+%\begin{align*}
+\[ \binom{n}{0} + \binom{n}{1} + \cdots + \binom{n}{n-1} + \binom{n}{n} = 2^n \]
+%\end{align*}
+\end{theorem} \pause 
+\begin{itemize}
+\item The base case (0-th row) holds \pause 
+\item We’ll show that the \yellow{sum of each row is twice the sum of the previous row} \pause 
+\item $\binom{n}{k}$ is the number of \yellow{$k$-subsets} of a set of size $n$ \pause 
+\item The sum $\binom{n}{k}$ for all $k$ (from $0$ to $n$) is the number of all subsets of an $n$ element set; this is $2^n$ by the \yellow{product rule} (how?)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Alternating Row Sum in Pascal}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.34]{pascal5}
+\end{figure}
+\pause 
+\begin{theorem}
+For $n>0,$ \quad $\sum_{k=0}^n (-1)^k \binom{n}{k} = 0$
+\end{theorem}
+\pause 
+\vspace{0.5cm}
+\begin{itemize}
+\item Hint: Number of odd size subsets = Number of even size subsets
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Counting Problems...}
+\pause 
+\begin{alertblock}{Question}
+What is the number of 5-card hands dealt off of a standard 52-card deck?
+\end{alertblock}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.24]{2C}
+\includegraphics[scale=0.24]{3H}
+\includegraphics[scale=0.24]{KH}
+\includegraphics[scale=0.24]{9D}
+\includegraphics[scale=0.24]{QS}
+\end{figure}
+\pause 
+\begin{block}{Answer}
+\[ \binom{52}{5} = \dfrac{52!}{5!47!} = \dfrac{52 \times 52 \times 50 \times 49 \times 48}{5 \times 4 \times 3 \times 2 \times 1} = 2598960 \]
+\end{block}
+\end{frame}
+
+\begin{frame}{Counting Problems ...}
+\pause 
+\begin{alertblock}{Question}
+What is the number of 5-card hands with two hearts and three spades?
+\end{alertblock} \pause 
+\begin{figure}
+\includegraphics[scale=0.24]{QH}
+\includegraphics[scale=0.24]{3H}
+\includegraphics[scale=0.24]{KS}
+\includegraphics[scale=0.24]{9S}
+\includegraphics[scale=0.24]{QS}
+\end{figure}
+\pause 
+\begin{block}{Answer}
+\begin{itemize}
+\item Number of ways of picking 2 hearts from 13 hearts \pause 
+\item Number of ways of picking 3 spades from 13 spades \pause 
+\item Now apply product rule! \pause 
+\item The answer is: $\dbinom{13}{2} \dbinom{13}{2} = 22308$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Counting Problems...}
+\begin{alertblock}{Question}
+What is the number of non-negative integers with at most four digits at least one of which is equal to 7?
+\end{alertblock}
+\pause 
+
+\begin{itemize}
+\item Total number of 4 digit numbers = $10^4$ \pause 
+\item Total number of 4 digit number that does not contain 7 = $9^4$ \pause 
+\item Hence, the answer is $10^4 - 9^4 = 3439$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Counting Problems...}
+\pause 
+\begin{alertblock}{Question}
+What is the number of non-negative integers with at most four digits whose digits are increasing?
+\end{alertblock}
+\pause 
+
+\begin{itemize}
+\item We can choose 4 different digits and we can rearrange them in increasing order \pause 
+\item Hence, it is nothing but picking 4 different digits out of 10 digits! \pause 
+\item Hence, the answer is $\dbinom{10}{4} = 210$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Counting Problems...}
+\pause 
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{alertblock}{Question}
+A piece can move one
+step up or one step to
+the right. What is the
+number of ways of getting from the cell [0, 0]
+(bottom left corner) to
+the cell [5, 3]?
+\end{alertblock}
+\end{column} \pause 
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{chess2}
+\end{figure}
+\end{column}
+\end{columns} \pause 
+\begin{itemize}
+\item We want to go to the cell [5,3]. How many ways we can go? \pause 
+\item Any path to [5,3] \yellow{must} involves 3 moves right and 5 moves up! \pause 
+\item Hence, answer is $\dbinom{8}{3} = 56$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Answer using Pascal's triangle...}
+\pause 
+The answer to the previous problems can be found using Pascal's triangle: \pause 
+\begin{figure}
+\includegraphics[scale=0.27]{chess3}
+\end{figure} \pause 
+It is now only a matter of filling the (5,3) cell...
+\end{frame}
+
+\section*{Combinations with or without repetitions}
+\pause 
+
+\begin{frame}{Combinations with or without repetitions...}
+So far we have considered selections of $k$ items out of $n$ possible options. Consider $n$ = 2 and $n$ = 3 options: $a, b, c$
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+& With repetitions & Without repetitions \\ \hline
+Ordered &  \phantom{\begin{tabular}{@{}c@{}c@{}} (a,a), (a,b), (a,c) \\ (b,a), (b,b), (b,c) \\ (c,a), (c,b), (c,c) \end{tabular}} &  \\ \hline 
+Unordered & & \phantom{\{a, b\}, \{a, c\}, \{b, c\}} \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}{Combinations with or without repetitions...}
+\pause 
+So far we have considered selections of $k$ items out of $n$ possible options. Consider $n$ = 2 and $n$ = 3 options: $a, b, c$
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+& With repetitions & Without repetitions \\ \hline
+Ordered &  \begin{tabular}{@{}c@{}c@{}} (a,a), (a,b), (a,c) \\ (b,a), (b,b), (b,c) \\ (c,a), (c,b), (c,c) \end{tabular} & \phantom{\begin{tabular}{@{}c@{}c@{}} (a,b), (a,c) \\ (b,a), (b,c) \\ (c,a), (c,b) \end{tabular}} \\ \hline 
+Unordered & & \phantom{\{a, b\}, \{a, c\}, \{b, c\}} \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Combinations with or without repetitions...}
+So far we have considered selections of $k$ items out of $n$ possible options. Consider $n$ = 2 and $n$ = 3 options: $a, b, c$
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+& With repetitions & Without repetitions \\ \hline
+Ordered &  \begin{tabular}{@{}c@{}c@{}} (a,a), (a,b), (a,c) \\ (b,a), (b,b), (b,c) \\ (c,a), (c,b), (c,c) \end{tabular} & \begin{tabular}{@{}c@{}c@{}} (a,b), (a,c) \\ (b,a), (b,c) \\ (c,a), (c,b) \end{tabular} \\ \hline 
+Unordered & & \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Combinations with or without repetitions...}
+So far we have considered selections of $k$ items out of $n$ possible options. Consider $n$ = 2 and $n$ = 3 options: $a, b, c$
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+& With repetitions & Without repetitions \\ \hline
+Ordered &  \begin{tabular}{@{}c@{}c@{}} (a,a), (a,b), (a,c) \\ (b,a), (b,b), (b,c) \\ (c,a), (c,b), (c,c) \end{tabular} & \begin{tabular}{@{}c@{}c@{}} (a,b), (a,c) \\ (b,a), (b,c) \\ (c,a), (c,b) \end{tabular} \\ \hline 
+Unordered & & \{a,b\}, \{a,c\}, \{b,c\} \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}{Combinations with or without repetitions...}
+So far we have considered selections of $k$ items out of $n$ possible options. Consider $k$ = 2 and $n$ = 3 options: $a, b, c$
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+& With repetitions & Without repetitions \\ \hline
+Ordered &  \begin{tabular}{@{}c@{}c@{}} (a,a), (a,b), (a,c) \\ (b,a), (b,b), (b,c) \\ (c,a), (c,b), (c,c) \end{tabular} & \begin{tabular}{@{}c@{}c@{}} (a,b), (a,c) \\ (b,a), (b,c) \\ (c,a), (c,b) \end{tabular} \\ \hline 
+Unordered & \begin{tabular}{@{}c@{}} \{a,b\}, \{a,c\}, \{b,c\} \\ \{a,a\}, \{b,b\}, \{c,c\} \end{tabular}  & \{a,b\}, \{a,c\}, \{b,c\} \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+%\end{comment}
+
+
+\begin{frame}{Combinations with or without repetitions...}
+\pause 
+
+So far we have considered selections of $k$ items out of $n$ possible options. The formulas we have derived are the following:
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+& With repetitions & Without repetitions \\ \hline
+Ordered &  \begin{tabular}{@{}c@{}} Tuples \\ $n^k$  \end{tabular} & \begin{tabular}{@{}c@{}} $k-$permutations \\ $\dfrac{n!}{(n-k)!}$  \end{tabular} \\ \hline 
+Unordered &   & \begin{tabular}{@{}c@{}} Combinations \\ $\dbinom{n}{k}$ \end{tabular} \\ \hline
+\end{tabular}
+\end{center}
+\pause 
+\begin{itemize}
+\item What about the case "unordered" and "with repetitions"? \pause 
+\item Is it worth knowing? Is there any formula? \pause 
+\item Let us try to find out...
+\end{itemize}
+
+\end{frame}
+
+
+%\begin{comment}
+
+\begin{frame}{Example of Unordered Selections with Repetitions: Voting in an Election?}
+\pause 
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item Assume that There are $k$ voters that vote for one of $n$ candidates
+Ballot \pause 
+\item All votes equally matter \pause 
+\item So votes are unordered \pause 
+\item Candidates can be voted for several times \pause 
+\item So, voters as a group, pick $k$ people out of $n$ with repetitions
+\end{itemize}
+\end{column} \pause 
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.5]{vote3}
+\end{figure}
+\end{column}
+\end{columns} \pause 
+
+\begin{columns}
+\begin{column}{0.75\textwidth}
+\begin{block}{Question}
+So, what could be your answer?
+\end{block}
+\end{column} 
+\begin{column}{0.3\textwidth}
+\begin{figure}
+\includegraphics[scale=0.03]{pondering}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Another example...}
+\pause 
+\begin{columns}
+\begin{column}{0.75\textwidth}
+\begin{alertblock}{Problem}
+We have an unlimited supply of tomatoes, cucumbers, and onions. We want to make a salad out of 4 units among these three ingredients (we do not have to use all ingredients). How many different salads we can make?
+\end{alertblock}
+\end{column}
+\pause 
+\begin{column}{0.3\textwidth}
+\begin{figure}
+\includegraphics[scale=0.15]{salad2}
+\end{figure}
+\end{column}
+\end{columns} \pause 
+
+\begin{itemize}
+\item We pick 4 items out of 3 options \yellow{with repetitions} \pause 
+\item Order \yellow{does not} matter; Still do not know how to count \pause 
+\item We will list all possible salads, then count them \pause 
+\item But we want to do it wisely!
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Solution continued...}
+\pause 
+\mydef{1}{Our goal: To pick 4 items out of 3 salads (Onions, Bell Peppers, Cucumber)}
+\pause 
+\begin{itemize}
+\item Let us list all possible combinations...
+\end{itemize}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.16]{salad}
+\end{figure}
+\pause 
+\begin{itemize}
+\item There are 15 possible combinations. Do we see any structure?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Larger Salad for Solving our Problem}
+\pause 
+\begin{itemize}
+\item Let us consider choosing 7 items out of unlimited supply of 4 salad items as follows...
+\end{itemize}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.05]{bellpepper2}
+\includegraphics[scale=0.05]{tomato}
+\end{figure}
+\pause 
+\begin{itemize}
+\item One possible way to select 7 items out of 4 (with repetitions) is
+\begin{figure}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.05]{bellpepper2}
+\includegraphics[scale=0.05]{tomato}
+\includegraphics[scale=0.05]{tomato}
+\end{figure}
+\pause 
+\item Do you already see a way to find all possible combinations?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Combinations with Repetitions...}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.05]{bellpepper2}
+\includegraphics[scale=0.05]{tomato}
+\includegraphics[scale=0.05]{tomato}
+\end{figure}
+\pause 
+\begin{itemize}
+\item In the figure above, does the ordering of items matter? \pause \yellow{No!}
+\item If we indeed fix the ordering, then it is about putting delimiters, isn't it? \pause 
+\begin{figure}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.05]{bellpepper2}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.05]{tomato}
+\includegraphics[scale=0.05]{tomato}
+\end{figure} \pause 
+\item The number of ways we can put the delimiters determine the number of combinations
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{How many delimiters are needed?}
+\pause 
+Recall, we want to put delimiters...
+\begin{figure}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.05]{bellpepper2}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.05]{tomato}
+\includegraphics[scale=0.05]{tomato}
+\end{figure}
+\pause 
+\begin{alertblock}{Question}
+How many delimiters are needed when we want to select 7 items out of 4 choices?
+\end{alertblock}
+\pause 
+\begin{itemize}
+\item Form the example above, we need 3=(4-1) delimiters! \pause 
+\item Total number of objects (7 items + 3 delimiters) is 10 \pause 
+\item The problem now reduces to arranging 3 delimiters among 10 items! Voila! 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Combinations with repetitions...}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.057]{onion2}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{cu}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.05]{bellpepper2}
+\includegraphics[scale=0.035]{point3}
+\includegraphics[scale=0.05]{tomato}
+\includegraphics[scale=0.05]{tomato}
+\end{figure}
+\pause 
+\begin{itemize}
+\item For the example above, we need to arrange 3 items among 10 items \pause 
+\item Hence, the answer is 
+%\begin{align*}
+\[ \binom{7 + 4 -1}{4 - 1} = \binom{10}{3} \]
+%\end{align*}
+\pause 
+\item Can you now generalize this formula? \pause 
+\end{itemize}
+\begin{block}{Formula for combinations with repetitions}
+The formula for number of combinations of size $k$ of $n$ objects with repetitions is 
+%\begin{align*}
+\[ \binom{k+n-1}{n-1} \]
+%\end{align*}
+\end{block}
+\end{frame}
+
+
+\begin{frame}
+\begin{block}{Formula for combinations with repetitions}
+The formula for number of combinations of size $k$ of $n$ objects with repetitions is 
+%\begin{align*}
+\[ \binom{k+n-1}{n-1} \]
+%\end{align*}
+\end{block} \pause 
+\begin{itemize}
+\item We can now fill the remaining puzzle in our table...
+\end{itemize} \pause 
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+& With repetitions & Without repetitions \\ \hline
+Ordered &  \begin{tabular}{@{}c@{}} Tuples \\ $n^k$  \end{tabular} & \begin{tabular}{@{}c@{}} $k-$permutations \\ $\dfrac{n!}{(n-k)!}$  \end{tabular} \\ \hline 
+Unordered & \begin{tabular}{@{}c@{}} Combinations+Repet. \\ $\binom{k+n-1}{n-1}$ \end{tabular}  & \begin{tabular}{@{}c@{}} Combinations \\ $\binom{n}{k}$ \end{tabular} \\ \hline
+\end{tabular}
+\end{center}
+
+
+
+\end{frame}
+

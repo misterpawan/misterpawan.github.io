@@ -1,0 +1,1405 @@
+\section{Conditional Probability, Bayes Theorem}
+
+
+
+% %\begin{comment}
+% %
+%
+%
+\begin{frame}{Motivation for Conditional Probability with an Example ...}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \yellow{Experiment:} Throw two dice $A$ and $B$ simultaneously \pause 
+\item \yellow{Event:} Odd number on first die \pause 
+\item \yellow{Question:} What is the probability of the event $E?$
+\end{itemize} \pause 
+\vspace{2cm}
+\begin{itemize}
+\item \yellow{Event:} Odd number on first die $A,$ given that even shows on die $B$  \pause 
+\item \yellow{Question:} What is the probability of the event $E?$
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+% %
+% %
+% %
+% %
+% %
+%
+%
+\begin{frame}{Motivation for Conditional Probability with an Example with Dice...}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Question}
+Roll two 6-sided dice, yielding
+values $D_1$ and $D_2.$ Let $E$ be the event $D_1 + D_2 = 4.$ What is $P(E)?$ 
+\end{alertblock}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item $|S| = $ \pause 
+\item $E = $
+\end{itemize} \pause 
+\vspace{0.5cm}
+$P(E) = $
+\end{column}
+\end{columns} \pause 
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Question}
+Roll two 6-sided dice, yielding
+values $D_1$ and $D_2.$ Let $E$ be the event $D_1 + D_2 = 4.$ 
+Let $F$ be the event $D_1=2.$
+What is $P(E, \text{given}~F~\text{already observed})?$ 
+\end{alertblock} \pause 
+\end{column}
+\begin{column}{0.5\textwidth}
+$P(E|F) = $
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+% %
+% %
+%
+%
+\section{Define Conditional Probability and Chain Rule}
+%
+%
+% %
+%
+%
+%
+\begin{frame}{Define Conditional Probability...}
+\pause 
+\begin{alertblock}{Definition of Conditional Probability}
+The \yellow{conditional probability} of $E$ given $F$ is the probability that $E$ occurs
+given that $F$ has already occurred. This is known as conditioning on $F.$ \pause 
+\begin{itemize}
+\item It is denoted by $P(E \, | \, F)$ \pause 
+\item It means $P(E, \text{given}~F~\text{already observed})$ \pause 
+\item \yellow{Sample space} is \yellow{all} possible outcomes consistent with $F$ (i.e., $S \cap F$) \pause 
+\item \yellow{Event} is \yellow{all} outcomes in $E$ consistent with $F$ (i.e., $E \cap F$)
+\end{itemize}
+\pause 
+With equally likely outcomes: \\
+%\begin{align*}
+\[ P(E|F) = \dfrac{|E \cap F|}{|S \cap F|} = \dfrac{|E \cap F|}{|F|} \]
+%\end{align*}
+\end{alertblock}
+\end{frame}
+% %
+% %
+% %
+% %
+% %
+%
+%
+\begin{frame}{Graphical Illustration/Example of Conditional Probability...}
+\begin{figure}
+\includegraphics[scale=0.4]{cond11}
+\end{figure}
+\begin{itemize}
+\item \yellow{Question:} What is $P(E)?$ \pause \quad Here $P(E) = \dfrac{8}{50} \approx 0.16$ \pause 
+\item \yellow{Question:} What is $P(E \, | \, F)?$ \pause \quad Here $P(E \, | \, F) = \dfrac{3}{14} \approx 0.21$
+\end{itemize}
+\end{frame}
+
+% %
+% %
+% %
+% %
+%
+\begin{frame}{Probability of Receiving Spam Emails...}
+\pause 
+\begin{alertblock}{Email Spam Conditional Probability Problem}
+24 emails are sent, 6 each to 4 users. 
+\begin{itemize}
+\item 10 of the 24 emails are spam.
+\item All possible outcomes are equally likely.
+\end{itemize}
+\end{alertblock}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Question-1}
+Let event $E$ = user 1 receives 3 spam emails. What is $P(E)?$
+\end{alertblock}
+\end{column}
+\pause 
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Question-2}
+Let event $F$ = user 2 receives
+6 spam emails. What is $P(E|F)?$
+\end{alertblock}
+\end{column}
+\end{columns}
+\vspace{3cm}
+\end{frame}
+
+
+%
+%
+%
+%
+%
+\begin{frame}{Law of Total Probability...}
+\pause 
+\begin{alertblock}{Conditional Probability Implies Chain Rule...}
+\[ P(E|F) = \dfrac{P(E \cap F)}{P(F)} \implies P(E \cap F) = P(F) P(E | F)\]
+\yellow{These hold even when outcomes are not equally likely!}
+\end{alertblock} \pause 
+\begin{alertblock}{Law of Total Probability (Theorem)}
+\[ P(E) = P(E \, | \, F) P(F) + P(E | F^c) P(F^c) \]
+\end{alertblock} \pause 
+Proof: \\
+\vspace{4cm}
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Compute $P(E)$ from $P(E|F)$ Using Probability Tree...}
+\pause 
+\begin{alertblock}{Problem}
+Flips a fair coin. \pause 
+\begin{itemize}
+\item \yellow{If heads:} roll a fair 6-sided die. \pause 
+\item \yellow{Else:} roll a fair 3-sided die.
+\end{itemize} \pause 
+You win if you roll a 6. What is P(winning)?
+\end{alertblock}
+Solution using probability tree: \\
+\vspace{4cm}
+\end{frame}
+
+
+
+
+
+
+
+
+\begin{frame}{Compute $P(E)$ from $P(E|F)$ Using Total Probability...}
+\pause 
+\begin{alertblock}{Problem}
+Flip a fair coin. \pause 
+\begin{itemize}
+\item \yellow{If heads:} roll a fair 6-sided die. \pause 
+\item \yellow{Else:} roll a fair 3-sided die.
+\end{itemize} \pause 
+You win if you roll a 6. What is P(winning)?
+\end{alertblock}
+Solution using \yellow{total probability:} \\
+\vspace{4cm}
+\end{frame}
+
+%\end{comment}
+
+
+%\begin{comment}
+
+
+\begin{frame}{Bayes Theorem. Why?}
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.35]{spam11}
+\end{figure}
+\end{column}
+\pause 
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item We can easily calculate how many
+spam emails contain ``Dear":
+\[ P(E|F) = P(\text{Dear} | \text{Spam}) \] \pause 
+\item But what is the probability that an
+email containing ``Dear" is spam?
+\[ P(F|E) = P(\text{Spam email} | \text{Dear})  \]
+\end{itemize}
+\end{column} \pause 
+\yellow{Bayes theorem} relates $P(E|F)$ and $P(F|E).$
+\end{columns}
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Bayes Theorem}
+\pause 
+\begin{alertblock}{Bayes Theorem}
+For any events $E$ and $F$ where $P(E)>0$ and $P(F)>0,$
+\[ P(F|E) = \dfrac{P(E|F)P(F)}{P(E)} \]
+\end{alertblock}
+
+Proof of Bayes Theorem: 
+\vspace{3cm}
+\end{frame}
+
+
+%
+%
+\begin{frame}{Bayes Theorem with Total Probability...}
+\pause 
+\begin{alertblock}{Bayes Theorem}
+For any events $E$ and $F$ where $P(E)>0$ and $P(F)>0,$
+\[ P(F|E) = \dfrac{P(E|F)P(F)}{P(E|F)P(F) + P(E|F^c)P(F^c)} \]
+\end{alertblock}
+
+Proof of Bayes Theorem: 
+\vspace{3cm}
+\end{frame}
+
+
+
+
+\begin{frame}{Bayes Theorem Used in Spam Emails Example...}
+\pause 
+\begin{alertblock}{Spam Email Example}
+Given the following:
+\begin{itemize}
+\item 60\% of all email in 2016 is spam \pause 
+\item 20\% of spam has the word ``Dear" \pause 
+\item 1\% of non-spam (aka ham) has the word ``Dear"
+\end{itemize} \pause 
+You get an email with the word ``Dear" in it.
+What is the probability that the email is spam?
+\end{alertblock}
+Solution:\\
+\vspace{3cm}
+\end{frame}
+
+
+%
+\begin{frame}{Application of Bayes Theorem...}
+\begin{alertblock}{Example}
+A test is 98\% effective at detecting a disease (``true positive").
+However, the test has a ``false positive" rate of 1\%. The 0.5\% of the US population has disease.
+What is the likelihood you have the disease, if you test positive?
+\end{alertblock}
+Solution: \\
+\vspace{3cm}
+\end{frame}
+
+
+
+
+
+
+%\begin{comment}
+
+\begin{frame}{Conditional Probability...}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{bowl}
+\end{figure} \pause 
+\begin{itemize}
+\item consider two bowls $A$ and $B$ \pause 
+\item bowl $A$ contains 1 blue and 4 yellow marbles \pause 
+\item bowl $B$ contains 3 blue and 2 yellow marbles
+\end{itemize} 
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \yellow{Blue:} event of picking blue \pause 
+\item \yellow{Yellow:} event of picking yellow \pause 
+\item What is $Pr(Blue), Pr(Yellow)?$ 
+\end{itemize} 
+\yellow{Answer:} 
+\vspace{4cm}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+\begin{frame}{Conditional Probability...}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{bowl}
+\end{figure} \pause 
+\begin{itemize}
+\item What is Pr(Blue) given that only bowl $A$ is allowed?
+\end{itemize} 
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\yellow{Answer:} Pr(Blue | A) = probability to choose blue given that bowl A is \yellow{fixed}
+\vspace{4cm}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Conditional Probability and Choice Tree...}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{bowl}
+\end{figure} \pause 
+\begin{itemize}
+\item \yellow{Question:} What is $P(A|blue)?$ \pause 
+\item \yellow{Question:} Is $P(A|blue) = P(blue|A)?$
+\end{itemize} 
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\yellow{Answer:}\\
+\vspace{4cm}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+%
+\begin{frame}{Conditional Probability and Choice Tree...}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{bowl}
+\end{figure} \pause 
+\begin{itemize}
+\item Draw choice tree, given that, after picking, \yellow{the ball is not placed back in bowl}
+\end{itemize} 
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+%\end{comment}
+
+
+
+\section{The Monty Hall Problem}
+
+\section{Problems Using Bayes Theorem}
+
+
+
+
+
+\begin{frame}{Conditional Probability and Game of Chance Movie...}
+\pause 
+\begin{center}
+%\tiny
+Movie Monty Hall Brooklyn Video Here!
+%\normalsize
+\end{center}
+\end{frame}
+
+%
+%
+%
+%
+
+
+\begin{frame}{Conditional Probability and Game of Chance Movie...}
+\pause 
+\begin{center}
+%\tiny
+Movie Monty Hall Movie 21 Video Clip Here!
+%\normalsize
+\end{center}
+\end{frame}
+
+
+%
+%
+%
+\begin{frame}{Conditional Probability and Game of Chance Movie...}
+\pause
+\begin{center}
+\tiny
+Movie Monty Hall Youtube Video Here
+\normalsize
+\end{center}
+\end{frame}
+
+
+%
+% \begin{frame}
+% \begin{center}
+% Another Monty Hall Youtube Movie Here!
+% \end{center}
+% \end{frame}
+% %
+% %
+% %
+% %
+
+
+
+\begin{frame}{Conditional Probability and Game of Chance...}
+\pause 
+%\begin{columns}
+%\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item There is a game show. \pause The show host shows you 
+\yellow{three} doors \pause 
+\item Behind one of the doors, there is a \yellow{car}, \pause and in other two 
+there are \yellow{goats} \pause 
+\item Rules of the Game Show: \pause 
+\begin{itemize}
+\item you are allowed to pick a door \yellow{without} opening \pause 
+\item then the host opens a door \pause 
+\end{itemize}
+\item \yellow{Question:} if the host always opens goat door, \pause is it wise to change your door?
+\end{itemize}
+%\end{column} \pause 
+%\begin{column}{0.65\textwidth}
+
+%\end{column}
+%\end{columns}
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Solution to Monty Hall Problem with Graphical Illustration}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.4]{monty11}
+\caption{Graphical illustration of Monty hall problem. Source: Google}
+\end{figure}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Solution to Game Show: Choice Tree, Conditional Probability}
+\pause 
+Let us look into all possible (exhaustive) cases: \pause 
+\begin{table}
+\begin{tabular}{l|l|l|l|l}
+\hline 
+\yellow{Door You Choose} & \yellow{Prize in Door} & \yellow{Host Opens} & \yellow{Stay} & \yellow{Switch} \\ \hline \pause 
+1 & 1 & 2/3 & \yellow{win} & loose \\  \hline  \pause
+1 & 2 & 3 & loose & \yellow{win} \\ \hline \pause
+1 & 3 & 2 & loose & \yellow{win} \\ \hline \pause
+2 & 1 & 3 & loose & \yellow{win} \\ \hline \pause
+2 & 2 & 1/3 & \yellow{win} & loose \\ \hline \pause
+2 & 3 & 1 & loose & \yellow{win} \\ \hline \pause
+3 & 1 & 2 & loose & \yellow{win} \\ \hline \pause
+3 & 2 & 1 & loose & \yellow{win} \\ \hline \pause
+3 & 3 & 1/2 & \yellow{win} & loose \\ \hline  
+\end{tabular}
+\caption{\yellow{Exhaustive} list of possibilities}
+\end{table}
+
+\begin{block}{Conclusion}
+If you switch, the probability that you win a car is $2/3,$ \pause and if you switch, \pause  the probability that you win goat is $1/3.$
+\end{block}
+
+\end{frame}
+
+
+%\end{comment}
+
+%\begin{comment}
+
+
+\begin{frame}{Solution to Monty Hall Problem with Choice/Decision Tree}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.25]{monty22}
+\caption{Graphical illustration of Choice Tree of Monty hall problem. Source: Google}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Using Bayes Theorem in Monty Hall's Problem...}
+\pause 
+\begin{itemize}
+\item Let $H$ be the hypothesis ``door 1 has a car behind it," and $E$ be the evidence that Monty has revealed a door with a goat behind it \pause 
+\item Then the problem can be restated as calculating $P(H \mid E),$ the conditional probability of $H$ given $E$ \pause 
+\item Since every door either has a car or a goat behind it, the hypothesis ``$H^c$" is the same as ``door 1 has a goat behind it"
+\end{itemize}
+\pause 
+Write the following in words: \\
+\begin{itemize}
+\item $P(H) = $
+\item $P(H^c) = $
+\item $P(E|H) = $
+\item $P(E | H^c) = $ \pause 
+\item $P(H|E) = \dfrac{P(E|H) P(H)}{P(E|H)P(H) + P(E|H^c) P(H^c)}=$
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Random Monty Hall Problem...}
+\begin{alertblock}{Random Monty Hall Problem}
+This result depends crucially on the fact that Monty was always guaranteed to open a door with a goat behind it, regardless of what door you picked initially. That is, $P(E \mid H) = P(E \mid H^c)P(E \mid H).$ Now consider what would happen if Monty randomly opened a door we did not pick and it contained a goat. What is the probability that our first pick is correct, regardless of which specific door we picked?
+\end{alertblock}
+Solution: \\
+\vspace{4cm}
+\end{frame}
+
+
+
+
+%
+\begin{frame}{Problem Similar to Monty Hall Problem...}
+\pause
+\begin{alertblock}{Problem Similar to Monty Hall...}
+Suppose we have 3 cards identical in form except that both sides of the first
+card are colored red, both sides of the second card are colored black, and one side of the
+third card is colored red and the other side is colored black.
+The 3 cards are mixed up in a hat, and 1 card is randomly selected and put down on the
+ground. If the upper side of the chosen card is colored red, what is the probability that the
+other side is colored black?
+\end{alertblock}
+\vspace{4cm}
+\end{frame}
+
+
+%\end{comment}
+
+
+
+
+
+
+\begin{frame}{Attendance Quiz-3}
+\Large
+\begin{center}
+\url{https://tinyurl.com/y3d5s2l8}
+\end{center}
+\normalsize
+\end{frame}
+
+
+\begin{frame}{Example of Bayes Theorem...}
+\pause 
+\begin{alertblock}{Question on Bayes Theorem}
+A diagnostic test has a probability 0.95 of giving a \yellow{positive result} when applied to a person suffering from a certain disease, \pause and a probability 0.10 of giving a \yellow{(false) positive} when applied to a non-sufferer. \pause It is estimated that 0.5 \% of the population are sufferers. \pause Suppose that the test is now administered to a person about whom we have no relevant information relating to the disease (apart from the fact that he/she comes from this population). \pause Calculate the following probabilities:
+\begin{itemize}
+\item that the test result will be positive; \pause 
+\item that, given a positive result, the person is a sufferer; \pause 
+\item that, given a negative result, the person is a non-sufferer; \pause 
+\item that the person will be misclassified.
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solution to Question on Previous Slide...}
+\pause 
+
+\begin{columns}
+
+\begin{column}{0.3\textwidth}
+\yellow{Define events:} \\
+\begin{itemize}
+\item  $T=$ test positive \pause 
+\item $S=$ sufferer \pause 
+\item $M=$ misclassified
+\end{itemize}
+\pause 
+\yellow{What do we have:} \\
+\begin{itemize}
+\item $P(T \, | \, S) = $ \pause 
+\item $P(T \, | \, S^c) = $ \pause 
+\item $P(S) = $
+\end{itemize}
+\end{column}
+\pause 
+%\vrule 
+%\rule{1cm}{1cm}
+%\textcolor{blue}{\rule{0.2cm}{5cm}}
+\hspace{-50pt}
+\vrule{}
+
+\begin{column}{0.7\textwidth}
+\yellow{We want to calculate:} \pause 
+\begin{itemize}
+\item $P(T) = $ \pause 
+\item $P(S \, | \, T) = $ \pause 
+\item $P(S^c \, | \, T^c) = $ \pause 
+\item $P(M) = $ \pause 
+\end{itemize}
+\end{column}
+
+
+\end{columns}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Some Problems in Probability...}
+\pause 
+\begin{alertblock}{Problem: Boy/Girl Problem}
+On the morning of January 1, a hospital nursery has 3 boys and some number of girls. \pause That night, a woman gives birth to a child, and the child is placed in the nursery. \pause On January 2, a statistician conducts a survey \pause and selects a child at random from the nursery (including the newborn and every child from January 1). \pause The selected child is a boy. \pause \yellow{What is the probability the child born on January 1 was a boy?} 
+\end{alertblock}
+\yellow{Solution:}
+\vspace{4cm}
+\end{frame}
+
+
+\begin{frame}{Solution to Boy Girl Problem...}
+\pause
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Probability of Seeing a Car...}
+\pause 
+\begin{alertblock}{Problem: Probability of seeing a car}
+If the probability of seeing a car on the highway in 30 minutes is 0.95, \pause what is the probability of seeing a car on the highway in 10 minutes? (assume a constant default probability)
+\end{alertblock}
+\yellow{Solution:}\\
+\vspace{5cm}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Skewed Die Problem...}
+\pause
+\begin{alertblock}{Problem: Skewed Die Problem}
+A standard dice has the 6 showing with a probability of 1/6, which is the same as every other number. A loaded dice has the 6 showing with 1/2 the probability of the other numbers. What is the probability of rolling a 6?
+\end{alertblock}
+\yellow{Solution:} \\
+\vspace{5cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Spam Email Problems...}
+\pause 
+\begin{alertblock}{Problem}
+It is estimated that 50\% of emails are spam emails. \pause Some software has been
+applied to filter these spam emails before they reach your inbox. \pause  A certain brand of software claims that it can detect 99\% of spam emails, \pause and the probability for a false positive (a non-spam email detected as spam) is 5\%. 
+\pause
+\yellow{Now if an email is detected as spam, then what is the probability that it is in fact a
+non-spam email?}
+\end{alertblock}
+\vspace{5cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+\begin{frame}{Scratch Space for Spam Email Problems...}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Graded Attendance Quiz-1}
+\Large
+\begin{center}
+\url{https://tinyurl.com/y2ecaw28}
+\end{center}
+\normalsize
+\vspace{1cm}
+\begin{itemize}
+\item Please attempt the quiz in the link above
+\item Login to this form \yellow{only with IIIT account}
+\item There are \yellow{two} questions
+\item Remember to answer questions before hitting submit
+\item Answers to this will be discussed in tutorials
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+\section{Independence}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Definition of Independence}
+\pause 
+\begin{alertblock}{Definition of independent events}
+Two events $E$ and $F$ are defined to be \yellow{independent} if  \pause 
+\begin{align*}
+P(E \cap F) = P(E) P(F).
+\end{align*}
+\pause 
+Otherwise, $E$ and $F$ are called \yellow{dependent events.} \\ \pause 
+If $E$ and $F$ are \yellow{independent}, then \pause 
+%\begin{align*}
+\[ P(E \mid F) = P(E). \]
+%\end{align*}
+\end{alertblock}
+\yellow{Solution:}\\
+\vspace{3cm}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Examples of independent events...}
+\begin{alertblock}{Example}
+Roll two 6-sided dice, yielding values $D_1$ and $D_2.$ Let us consider the following events:
+\begin{itemize}
+\item $E: D_1=1$
+\item $F: D_2 = 6$
+\item $G: D_1 + D_2 = 5$
+\item That is, $G = \{ (1,4), (2,3), (3,2), (4,1) \}$
+\end{itemize}
+\begin{enumerate}
+\item Are $E$ and $F$ \yellow{independent}? \pause 
+\item Are $E$ and $G$ \yellow{independent}?
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{General Definition of Independence...}
+\pause 
+\begin{alertblock}{Definition of independence for 3 events}
+\yellow{Three} events $E, F, $ and $G$ are \yellow{independent} if 
+\begin{itemize}
+\item $P(E \cap F \cap G) = P(E)P(F)P(G)$ \pause 
+\item $P(E \cap F) = P(E) P (F)$ \pause 
+\item $P(E \cap G) = P(E) P(G)$ \pause 
+\item $P(F \cap G) = P(F) P(G)$
+\end{itemize}
+\end{alertblock}
+
+\begin{alertblock}{General Definition for many events}
+The $n$ events $E_1, E_2, \dots, E_n$ are \yellow{independent} if 
+\begin{itemize}
+\item[] for $r=1,\dots,n:$
+\item[] \hspace{1cm} for \yellow{every} subset $E_1, E_2, \dots, E_r:$
+\item[] \hspace{2cm}   $P(E_1 \cap E_2 \cap \dots \cap E_r) = P(E_1)P(E_2) \cdots P(E_r)$ 
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Example of general independence...}
+\pause
+\begin{alertblock}{Question}
+Each roll of 6-sided die is an independent trial. Two rolls with output $D_1$ and $D_2.$
+Consider the following events: 
+\begin{itemize}
+\item $E: D_1 = 1$
+\item $F: D_2 = 6$
+\item $G: D_1 + D_2 = 7$
+\item $G = \{ (1,6), (2,5), (3,4), (4,3), (5,2), (6,1)\}$ 
+\end{itemize} 
+Answer the following:
+\begin{enumerate}
+\item Are $E$ and $F$ \yellow{independent}?
+\item Are $E$ and $G$ \yellow{independent}?
+\item Are $F$ and $G$ \yellow{independent}?
+\item Are $E,F,G$ \yellow{independent}? 
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solution to problem on previous slide...}
+%\pause 
+We have 
+\begin{tabular}{lll}
+$E: D_1=1$ & $F: D_2 = 6$ & $G: D_1 + D_2 = 7$
+\end{tabular}
+\vspace{6cm}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Independent Trials...}
+\pause
+\begin{alertblock}{Definition of Independent Trials}
+A set of $n$ trials are called \yellow{independent trials} if \pause 
+\begin{enumerate}
+\item Each of the $n$ trials have \yellow{same} set of possible outcomes \pause 
+\item The trials are \yellow{independent} if an event in one subset of trials is independent of events in other subsets of trials
+\end{enumerate}
+\end{alertblock}
+\pause 
+\begin{alertblock}{Examples of Independent Trials...}
+\pause 
+\begin{itemize}
+\item Flip a coin $n$ times \pause 
+\item Roll a die $n	$ times \pause 
+\item Send a multiple choice survey to $n$ people \pause 
+\item Send $n$ web requests to $k$ different servers
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+
+\begin{frame}{Examples involving independent trials...}
+\pause 
+\begin{figure}
+\includegraphics[scale=0.38]{network}
+\end{figure}
+
+\pause 
+
+\begin{alertblock}{Problem}
+Consider the parallel network above: \pause 
+\begin{itemize}
+\item $n$ \yellow{independent} routers, each with probability $p_i$ of functioning, where $1 \leq i \leq n$ \pause 
+\item $E=$ functional path from $A$ to $B$ exists. 
+\end{itemize}	\pause 
+What is $P(E)?$
+\end{alertblock}
+
+
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+
+\begin{frame}{Examples involving independent trials...}
+\begin{alertblock}{Problem: coin toss}
+Suppose we flip a coin $n$ times. Each coin flip is an independent trial with
+probability $p$ of coming up heads. Write an expression for the following:
+\pause 
+\begin{itemize}
+\item P($n$ heads on $n$ coin flips) \pause 
+\item P($n$ tails on $n$ coin flips) \pause 
+\item P(first $k$ heads, then $n-k$ tails) \pause 
+\item P(exactly $k$ heads on $n$ coin flips)
+\end{itemize}
+\end{alertblock}
+\vspace{3cm}
+
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+% \begin{frame}{Solution to parallel network problem...}
+
+% \end{frame}
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\begin{frame}{Biased Coin, Independence, Infinite Sample Space, Total Probability, Bayes Theorem...}
+\pause
+\begin{alertblock}{Problem}
+A \yellow{biased} coin (with probability of obtaining a Head equal to
+$p$ > 0 is tossed \yellow{repeatedly and independently} until the first head is observed.
+Compute the probability that the first head appears at an even numbered
+toss.
+\end{alertblock}
+\pause 
+\begin{block}{Solution to the problem...} \pause 
+What are sample space and events in this problem? \pause 
+\begin{enumerate}
+\item Sample space, $S=$ all possible infinite binary sequences of coin toss. \pause 
+\item Consider event $H_1:$ head on first toss. \pause
+\item Consider event $E:$ first head on even numbered toss.	
+\end{enumerate}
+\yellow{We want to compute $P(E).$} \\ \pause 
+\yellow{How do we solve problems like this?}
+\end{block}
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\begin{frame}{Solution...}
+
+
+\end{frame}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Solution...}
+
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Coin Toss Example...}
+\pause
+\begin{alertblock}{Problem}
+A coin for which P(Heads) = $p$ is tossed until two successive
+Tails are obtained. 
+Find the probability that the experiment is completed on the $n$th toss.
+\end{alertblock}
+\pause 
+\begin{block}{Solution}
+What are sample space and events? \pause 
+\begin{enumerate}
+\item Sample space, S: all possible infinite sequences of tosses \pause 
+\item event $E_ 1:$ first toss is $H$ \pause 
+\item event $E_2:$ first two tosses are $TH$ \pause 
+\item event $E_3:$ first two tosses are $TT$ \pause 
+\item event $F_n:$ experiment completed on the $n$th toss.
+\end{enumerate}
+\end{block}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solution to problem in previous slide...part-1}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solution to problem in previous slide...part-2}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solution to problem in previous slide...part-3}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Properties of conditional probabilities...}
+\pause 
+\begin{alertblock}{Properties}
+For any events $A,B,$ and $E$ we have the following: \pause 
+\begin{itemize}
+\item $0 \leq P(A \cap E) \leq 1$ \pause 
+\item $P(A \mid E) = 1 - P(A^c \mid E)$ \pause 
+\item $P(A \cap B \mid E) = P(B \cap A \mid E)$ \pause  
+\item $P(A \cap B \mid E) = P(B \mid E)P(A \mid B \cap E)$ \pause 
+\item $P(A \mid B \cap E) = \dfrac{P(B \mid A \cap E)P(A \mid E)}{P(B \mid E)}$
+\end{itemize}
+\end{alertblock}
+\vspace{3cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Scratch Space for Proving Conditional Probabilities...}
+\pause
+
+\end{frame}
+
+
+
+
+
+
+\section{Conditional Independence}
+
+
+
+
+
+\begin{frame}{Conditional Independence...}
+\pause 
+\begin{alertblock}{Definition of conditional independence}
+Two events $A$ and $B$ are \yellow{conditionally independent} given $E$ if 
+\[ P(A \cap B | E) = P(A \mid E) P(B \mid E) \]
+\end{alertblock}
+\pause 
+\begin{alertblock}{Fact on Conditional Independence}
+$A$ and $B$ independent \yellow{does not mean} that $A$ and $B$ are independent given $E.$	
+That is, 
+\begin{align*}
+P(A \cap B) = P(A) P(B) \yellow{\centernot\implies} P(A \cap B \mid E) = P(A \mid E) P(B \mid E)
+\end{align*}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Quiz on independence...}
+\pause 
+\begin{alertblock}{Quiz-1}
+Two events $E$ and $F$ are \yellow{independent} if  
+\begin{enumerate}
+\item Knowing that $F$ happens means that $E$ can’t happen \pause 
+\item Knowing that $F$ happens doesn’t change probability that $E$ happened.
+\end{enumerate}
+\end{alertblock}
+\pause
+What is your answer?
+\pause 
+\begin{alertblock}{Quiz-1}
+Are $E$ and $F$ independent in the following pictures (not to scale)?
+\begin{figure}
+\includegraphics[scale=0.3]{ind11}
+\end{figure}
+\end{alertblock}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Mutually Exclusive and Independent Events...}
+\pause
+
+\begin{alertblock}{Quiz}
+When are two events both mutually exclusive and independent?
+\end{alertblock}
+\vspace{5cm}
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{More Problems on Independent Trials...}
+%\pause
+\begin{alertblock}{Problem: String-part 1}
+There are $m$ strings that are hashed unequally into a hash table with $n$ buckets. Each string hashed is an independent trial with probability $p_i$ of getting hashed into bucket $i.$ What is $P(E)$ if 
+%\pause 
+\begin{itemize}
+\item $E=$ bucket 1 has $\geq 1$ string hashed into it? %\pause 
+%\item $E=$ at least 1 of buckets 1 to $k$ has $\geq 1$ string hashed into it?	
+\end{itemize}
+\end{alertblock}
+\vspace{4cm}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{More Problems on Independent Trials...}
+%\pause
+\begin{alertblock}{Problem: String-part 2}
+There are $m$ strings that are hashed unequally into a hash table with $n$ buckets. Each string hashed is an independent trial with probability $p_i$ of getting hashed into bucket $i.$ What is $P(E)$ if 
+%\pause 
+\begin{itemize}
+%\item $E=$ bucket 1 has $\geq 1$ string hashed into it? \pause 
+\item $E=$ at least 1 of buckets 1 to $k$ has $\geq 1$ string hashed into it?	
+\end{itemize}
+\end{alertblock}
+\vspace{4cm}
+\end{frame}

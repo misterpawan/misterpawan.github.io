@@ -1,0 +1,290 @@
+\section{Mixed Random Variable}
+
+
+%
+\begin{frame}{Mixed Random Variable...}
+\pause 
+
+\begin{alertblock}{Example of mixed random variable}
+Let $X$ be a continuous random variable with the following PDF
+\begin{align*}
+f_X(x) = \begin{cases}
+2x \quad &0\leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+Let 
+\begin{align*}
+Y = g(X) = \begin{cases}
+X \quad &0 \leq X \leq \dfrac{1}{2} \\
+\dfrac{1}{2} \quad &X>\dfrac{1}{2}
+\end{cases}
+\end{align*}
+Find the CDF of $Y.$
+\end{alertblock}
+
+\end{frame}
+%
+%
+%
+%\input{scratch}
+%
+%
+\begin{frame}{Plot of the Mixed Random Variable Example}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.5]{mixed2}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item the CDF is not continuous, so Y is not a continuous random variable \pause 
+\item the CDF is not in the staircase form, so it is not a discrete random variable either \pause 
+\item It is indeed a mixed random variable \pause 
+\item there is jump at $y=1/2$ \pause 
+\item amount of jump is 1 - 1/4 = 3/4 \pause 
+\item CDF is continuous at other points
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+\subsection{CDF of mixed RV}
+
+
+
+\begin{frame}{CDF of mixed RV as a sum of continuous and discrete RV...}
+\pause 
+
+\begin{itemize}
+\item In the previous example, CDF of $Y$ was \pause 
+\begin{align*}
+F_Y(y) = \begin{cases}
+1 \quad &y \geq 1/2 \\
+y^2 \quad &0 \leq y < 1/2 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+\item The CDF can be written as a sum of continuous and discrete part \pause 
+\begin{align*}
+F_Y(y) = C(y) + D(y),
+\end{align*} \pause 
+where the continuous part is \pause 
+\begin{align*}
+C(y) = \begin{cases}
+1/4 \quad &y \geq 1/2 \\
+y^2 \quad &0 \leq y < 1/2 \\
+0 \quad &y < 0
+\end{cases}
+\end{align*} \pause 
+and the discrete part is \pause  
+\begin{align*}
+D(y) = \begin{cases}
+3/4 \quad &y \geq 1/2 \\
+0 \quad &y<1/2
+\end{cases}
+\end{align*}
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+\begin{frame}{Example of Computing Probabilities with Mixed Random Variable...}
+\pause 
+
+\begin{alertblock}{Example of mixed random variable}
+Let $X$ be a continuous random variable with the following PDF
+\begin{align*}
+f_X(x) = \begin{cases}
+2x \quad &0\leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}
+Let 
+\begin{align*}
+Y = g(X) = \begin{cases}
+X \quad &0 \leq X \leq \dfrac{1}{2} \\
+\dfrac{1}{2} \quad &X>\dfrac{1}{2}
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item Find $P(1/4 \leq Y \leq 3/8)$ \pause 
+\item Find $P(Y \geq 1/4)$ \pause 
+\item Find $E[Y]$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{CDF of a mixed RV as a sum of Continuous and Discrete CDF...}
+\pause 
+
+\begin{alertblock}{CDF of Mixed Random Variable}
+\pause 
+
+The CDF of mixed random variable $Y$ can be written as a sum of continuous and discrete/staircase function $$F_Y(y) = C(y) + D(y).$$ \pause We differentiate the continuous part $c(y) = \dfrac{dC(y)}{dy},$ where ever $C(y)$ is differentiable. \pause Let $\{ y_1, y_2, \dots, \}$ be the set of jump points of $D(y),$ i.e., the points for which $P(Y=y_k)>0.$ \pause  We have 
+\begin{align*}
+\int_{-\infty}^{\infty} c(y) \, dy + \sum_{y_k} P(Y = y_k) = 1
+\end{align*} \pause 
+The expected value of $Y$ can be obtained as  \pause 
+\begin{align*}
+E[Y] = \int_{-\infty}^{\infty} y \, c(y) \, dy + \sum_{y_k} y_k \,  P(Y = y_k)
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Check the Validity of CDF of Mixed RV...}
+\pause 
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.5]{mixed2}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+\begin{align*}
+F_Y(y) = C(y) + D(y),
+\end{align*} \pause 
+where the continuous part is \pause 
+\begin{align*}
+C(y) = \begin{cases}
+1/4 \quad &y \geq 1/2 \\
+y^2 \quad &0 \leq y < 1/2 \\
+0 \quad &y < 0
+\end{cases}
+\end{align*} \pause 
+and the discrete part is \pause  
+\begin{align*}
+D(y) = \begin{cases}
+3/4 \quad &y \geq 1/2 \\
+0 \quad &y<1/2
+\end{cases}
+\end{align*}
+\end{column}
+\end{columns}
+Check that \[
+\int_{-\infty}^{\infty} c(y) \, dy + \sum_{y_k} P(Y = y_k) = 1
+\]
+
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Computing Probabilities of Mixed Random Variable...}
+\pause 
+
+\begin{alertblock}{Problem: Computing probabilities of mixed RV}
+Let $X$ be a continuous random variable with the following PDF \pause 
+\begin{align*}
+f_X(x) = \begin{cases}
+2x \quad &0\leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+Let 
+\begin{align*}
+Y = g(X) = \begin{cases}
+X \quad &0 \leq X \leq \dfrac{1}{2} \\
+\dfrac{1}{2} \quad &X>\dfrac{1}{2}
+\end{cases}
+\end{align*} \pause 
+\begin{itemize}
+\item Find $P(1/4 \leq Y \leq 3/8)$ \pause 
+\item Find $P(Y \geq 1/4)$ \pause 
+\item Find $E[Y]$
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+\input{scratch}
+
+
+
+
+\subsection{Solved Problems}
+
+\begin{frame}{Solved Problem 1}
+\pause 
+\begin{alertblock}{Problem 1}
+Let $X$ be a random variable with CDF \pause 
+\begin{align*}
+F_X(x) = \begin{cases}
+1 \quad &x \geq 1 \\
+\dfrac{1}{2} + \dfrac{x}{2} \quad &0 \leq x < 1 \\
+0 \quad &x < 0
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item Is the RV $X$ discrete, continuous, or mixed type? \pause 
+\item Find the PDF of $X, f_X(x)$ \pause 
+\item Find $E(e^X)$ \pause 
+\item Find $P(X=0 \mid X \leq 0.5)$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+\input{scratch}
+\input{scratch}
+
+
+\begin{frame}{Solved Problem 2}
+\begin{alertblock}{Problem 2}
+Let $X \sim \text{Uniform}(-2,2)$ be a continuous random variable. Let $Y = g(X)$ where 
+\begin{align*}
+g(x) = \begin{cases}
+1 \quad &x > 1 \\
+x \quad &0 \leq x \leq 1 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} 
+Find the CDF of $Y.$
+\end{alertblock}
+\end{frame}
+
+
+
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,178 @@
+\section{Set Theory}
+
+\begin{frame}{Review of Set theory}
+\pause 
+\begin{center}
+\begin{alertblock}{Definition of a Set}
+A set is a collection of things (called elements).
+\end{alertblock}
+\end{center}
+\pause
+\begin{alertblock}{Remarks and Examples}
+\begin{itemize}
+\item ordering of elements in set \yellow{does not} matter \pause 
+\item set of \yellow{natural} numbers $\mathbb{N} = \{ 1, 2, 3, \dots\}$ \pause 
+\item Set of \yellow{integers} $\mathbb{Z} = \{ \dots, -3, -2, -1, 0, 1, 2, 3\}$ \pause 
+\item Set of \yellow{rational} numbers $\mathbb{Q},$ set of \yellow{real} numbers $\mathbb{R}$ \pause 
+\item $[2,3] = \{ x: 2 \leq x \leq 3\},$ a \yellow{closed} interval on real line \pause 
+\item $(-1,2) = \{ x: -1 < x < 2\},$ an \yellow{open} interval on real line \pause 
+\item $(1,3] = \{ x: 1 < x \leq 3\},$ a \yellow{half open/closed} interval on real line 
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Review of Set Theory Continued}
+\pause 
+\begin{itemize}
+\item A set $A$ is called \yellow{subset} of a set $B$ if every element of $A$ is also an element of $B.$ It is denoted by $A \subseteq B$ \pause 
+\item Two sets $A$ and $B$ are said to be \yellow{equal} if $A \subseteq B$ and $B \subseteq A$ \pause 
+\item A set with no elements is called \yellow{empty set or null set}, denoted by $\phi$ \pause 
+\item The \alert{universal set} is the set of all things that we could possibly consider in the context we are studying \pause 
+\begin{itemize}
+\item every set A is a \yellow{subset} of the \yellow{universal} set
+\end{itemize} \pause 
+\item A set $S$ is called \yellow{countable}, if there exists a \yellow{bijective} function
+\begin{align*}
+f:S \rightarrow \mathbb{N}
+\end{align*} \pause 
+\item The sets $\mathbb{N}, \mathbb{Q}$ are \yellow{countable} \pause 
+\item A set with finite number of elements is called \yellow{finite} set \pause 
+\item A set which is countable and not finite is called \yellow{countably infinite}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Set Theory: Venn Diagram}
+\pause 
+\begin{itemize}
+\item Venn diagrams are useful in analysing the relationship between sets \pause 
+\begin{figure}
+\includegraphics[scale=0.3]{venn}
+\end{figure} \pause 
+\item Venn diagram showing subset relationship
+\begin{figure}
+\includegraphics[scale=0.3]{subset}
+\end{figure}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Set Operations: Union}
+\pause 
+\begin{itemize}
+\item The union of two sets is a set containing all elements that are in $A$ or in $B.$ Here $A$ union $B$ is denoted by $A \cup B$ \pause 
+\begin{itemize}
+\item Example: $\{1,2\} \cup \{2,3 \} = \{ 1,2,3 \}$
+\end{itemize} \pause 
+\begin{figure}
+\includegraphics[scale=0.34]{union}
+\end{figure} \pause 
+\item Similarly, we define union of three or more sets as follows
+\begin{align*}
+A_1 \cup A_2 \cup \cdots \cup A_k = \cup_{i=1}^k A_i
+\end{align*}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Quiz}
+\begin{itemize}
+\item If $A$ and $B$ are countable, then $A \cup B$ is also countable
+\end{itemize}
+\vspace{5cm}
+\end{frame}
+
+
+\begin{frame}{Quiz}
+\begin{itemize}
+\item Countable union of countable sets is countable
+\end{itemize}
+\vspace{5cm}
+\end{frame}
+
+
+\begin{frame}{Set Operations: Intersection}
+\pause 
+\begin{itemize}
+\item The union of two sets is a set containing all elements that are in $A$ \alert{and} in $B.$ Here $A$ intersection $B$ is denoted by $A \cap B$ \pause 
+\begin{itemize}
+\item Example: $\{1,2\} \cap \{2,3 \} = \{ 2 \}$
+\end{itemize} \pause 
+\begin{figure}
+\includegraphics[scale=0.34]{inter}
+\end{figure} \pause 
+\item Similarly, we define intersection of three or more sets as follows \pause 
+\begin{align*}
+A_1 \cap A_2 \cap \cdots \cap A_k = \cap_{i=1}^k A_i
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Set Operations: Complement}
+\pause 
+\begin{itemize}
+\item The \alert{complement} of a set $A$ denoted by $A^c$ is the set of all elements 
+that are in the universal set $S,$ but \alert{not} in $A$ \pause 
+\begin{figure}
+\includegraphics[scale=0.37]{compl}
+\end{figure}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Set Operations: Set Difference}
+\pause 
+\begin{itemize}
+\item The \alert{set difference} denoted by $A-B$ consists of elements that are in $A,$ but \alert{not} in $B$ \pause 
+\item For example, if $A=\{1,2,3\}$ and $B=\{3,5\},$ then $A-B=\{1,2\}$ \pause 
+\begin{figure}
+\includegraphics[scale=0.37]{diff}
+\end{figure} \pause 
+\item Two sets $A$ and $B$ are \alert{mutually exclusive or disjoint} if they have 
+no shared element, i.e., $A \cap B = \phi$
+\end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Cartesian Product of Sets}
+\begin{alertblock}{Define Cartesian Product of Sets}
+Cartesian product of two sets $A = \{ a_1, a_2, \cdots, a_m\}$ and $B = \{ b_1, b_2, \cdots, b_n\}$ denoted by $A \times B$ is defined as follows
+\[ A \times B = \cup_{i,j} \{ (a_i, b_j) \} \]
+\end{alertblock}
+\vspace{3cm}
+\end{frame}
+
+
+\begin{frame}{Set Theory: Partition of a Set}
+\pause 
+\begin{itemize}
+\item A collection of nonempty sets $A_1, A_2, \dots, $ is a \alert{partition} of a set $A$ if they are \alert{disjoint} and their union is $A$ \pause 
+\begin{figure}
+\includegraphics[scale=0.4]{partition}
+\end{figure}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{DeMorgan and Distributive Laws}
+\pause 
+\begin{itemize}
+\item \alert{De Morgan's Law} \pause 
+\begin{itemize}
+\item For any sets $A_1, A_2, \dots, A_n,$ we have \pause 
+\begin{align*}
+(A_1 \cup A_2 \cdots \cup A_n)^c &= A_1^c \cap A_2^c \cap \cdots \cap A_n^c \\
+(A_1 \cap A_2 \cdots \cap A_n)^c &= A_1^c \cup A_2^c \cup \cdots \cup A_n^c \\ 
+\end{align*} 
+\end{itemize} \pause 
+\item \alert{Distributive Law} \pause 
+\begin{itemize}
+\item $A \cap (B \cup C) = (A \cap B ) \cup (A \cap C)$ \pause 
+\item $A \cup (B \cup C) = (A \cup B) \cap (A \cup C)$
+\end{itemize}
+\end{itemize}
+\end{frame}
+

@@ -1,0 +1,836 @@
+\section{Random Variables}
+%%
+%%
+%%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\begin{frame}{Random Variables}
+\pause 
+\begin{alertblock}{Examples of typed variables in C}
+In some languages, such as, C/C++. we have the concept of a \yellow{typed variable}: \pause 
+\begin{itemize}
+\item \yellow{int} i = 4;
+\item \yellow{float} x = 10;
+\item \yellow{char} y = 'x';
+\end{itemize}
+\end{alertblock}
+\pause 
+\begin{alertblock}{Examples of random variable}
+Let $X$ denote the outputs after we roll a die, then 
+\[ X = 3 \]
+means that after rolling a die, we obtain 3 as output. 
+
+\pause Since the number that is going to be assigned to \yellow{variable} $X$ is going to be \yellow{random}, it is called \yellow{random variable}.
+\end{alertblock}
+
+\end{frame}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\begin{frame}{Define Random Variable}
+\pause 
+\begin{alertblock}{Definition of Random Variable}
+A \yellow{random variable} $X$ is a function from the sample space to the real numbers. 
+\[ X:S \rightarrow \mathbb{R}. \] \pause 
+\begin{itemize}
+\item We usually denote random variables by \yellow{capital} letters: $X,Y, \dots$ \pause 
+\item Random variable is a function with \yellow{domain} $S$ and \yellow{co-domain} $\mathbb{R}$ \pause 
+\item The range of a random variable is the set of possible values of $X$
+\end{itemize}
+\end{alertblock}
+\pause 
+\begin{alertblock}{Examples of Random Variables...}
+Find the range of the following random variables:
+\begin{itemize}
+\item I toss a coin 10 times. Let X be the number of heads I observe \pause 
+\item I toss a coin until the first tail appears. Let $Y$ be the total number of coin tosses
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Quiz on Random Variable...}
+\pause 
+\begin{alertblock}{Quiz on Random Variable}
+Consider an Experiment: 3 coins are flipped. Let $X$ be the number of tails. 
+Answer the following: \pause 
+\begin{itemize}
+\item What is the value of $X$ for the following outcomes?  \pause 
+\begin{itemize}
+\item $(H,H,H)$
+\item $(T,T,H)$
+\end{itemize} \pause 
+\item What is the event when $X=2?$ \pause 
+\item What is $P(X=2)?$
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Random Variables are Not Events!}
+\pause
+\begin{alertblock}{Remarks on Random variables}
+\begin{itemize}
+\item random variables are \yellow{not} events! \pause 
+\item when a random variable is \yellow{assigned} a value, then it becomes event
+\end{itemize}
+\end{alertblock}
+\vspace{1cm}
+
+\begin{table}
+\begin{tabular}{lll}
+\hline 
+$X=x$ & Set of Outcomes & $P(X=k)$ \\   \hline 
+$X=0$ & $\{ (T,T,T) \}$ & $1/8$ \\  
+$X=1$ & $\{ (H,T,T), (T,H,T), (T,T,H) \}$ & $3/8$ \\  
+$X=2$ & $\{ (H,H,T), (H,T,H), (T,H,T) \}$ & $3/8$ \\ 
+$X=3$ & $\{ (H,H,H) \}$ & $1/8$ \\  
+$X \geq 4$ & $\{ \:	 \}$ & $0$ \\  
+\end{tabular}
+\caption{Consider an experiment where 3 coins are flipped, and $X$ denotes number of heads}
+\end{table}
+
+\end{frame}
+
+
+
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Discrete Random Variables...}
+\pause
+
+\begin{alertblock}{Recall: countable sets}
+A set $A$ is \yellow{countable} if either it is a \yellow{ finite} set, or it can be put in \yellow{1-1 correspondence} with set of natural numbers. 
+\end{alertblock}
+\pause 
+
+\begin{alertblock}{Discrete Random Variables}
+A random variable $X$ is called \yellow{discrete random variable}, if its range is \yellow{countable}. 
+\end{alertblock}
+\pause 
+
+\begin{alertblock}{Types of Random Variables...} \pause 
+There are three types of random variables: \pause 
+\begin{enumerate}
+\item discrete random variables \pause 
+\item continuous random variables \pause 
+\item mixed random variables
+\end{enumerate}
+\end{alertblock}
+
+
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Examples of Types of Random Variables...}
+\pause
+
+\begin{alertblock}{Examples of random variables}
+\begin{enumerate}
+\item I toss a coin 100 times. Let $X$ be the number of heads I observe \pause 
+\item I toss a coin until the first heads appears. Let $Y$ be the total number of coin tosses \pause 
+\item Random variable $T$ defined as the time (in hours) from now until next earthquake occurs in a certain city \pause 
+\item Let $X$ be the height of students in a class
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+%
+%
+%
+%
+%
+%
+%
+
+
+
+\begin{frame}{Probability Mass Function...}
+\pause 
+\begin{alertblock}{Definition of probability mass function and some remarks...}
+Let $X$ be a random variable with range $R_X = \{ x_1, x_2, \dots, \},$ which is \yellow{finite or countably infinite}. \pause The function 
+\[ P_X(x_k) = P(X = x_k), \: \text{for}~k=1,2,3, \dots \] 
+is called \yellow{probability mass function (PMF)} of $X.$
+\pause
+\begin{itemize}
+\item Hence, probability mass function $P_X(x_k)$ is a \yellow{shorthand} for $P(X = x_k)$ \pause
+\item The subscript in $P_X(x_k)$ indicates that it is the PMF of random variable $X$ \pause 
+\item For \yellow{discrete} random variable, PMF is also called \yellow{probability distribution} \pause 
+\item The term probability distribution function is almost always reserved for \yellow{cumulative } distribution(to be introduced)	
+\end{itemize}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Example of PMF...}
+\pause
+\begin{alertblock}{Examples of PMF}
+We toss a \yellow{fair} coin twice. \pause Let $X$ be the random variable denoting the number of heads we observe. \pause 
+\begin{enumerate}
+\item Find the range of random variable $X,$ i.e., $R_X$ \pause 
+\item Find the PMF of random variable $X$
+\end{enumerate}
+\end{alertblock}
+\pause 
+\begin{block}{Answer}
+\begin{itemize}
+\item Sample space $S = \{ HH, HT, TH, TT \}.$ No. of heads: 0,1,2. Hence, $R_X = \{ 0,1,2 \}$ \pause 
+\item Since the range is finite set, thus countable, $X$ is a discrete random variable \pause 
+\item We now find the PMF of $X: P_X (k) = P(X = k)~\text{for}~k=0,1,2 $ \pause 
+\begin{align*}
+P_X (0) &= P(X = 0) = P(TT) = 1/4 \\
+P_X(1) &= P(X=1) = P(\{ HT, TH \}) = 1/4 + 1/4 = 1/2 \\
+P_X(2) &= P(X = 2) = P(HH) = 1/4
+\end{align*}
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}
+\begin{figure}
+\includegraphics[scale=0.5]{pmf1}
+\end{figure} \pause 
+\begin{itemize}
+\item Consider an experiment of rolling a six-sided die \pause 
+\item The sample space or \yellow{support} of $X$ is $\{ 1,2,3,4,5,6 \}$ \pause 
+\item Here $X$ is a \yellow{discrete} random variable, and PMF of $X$ is \pause 
+\begin{align*}
+P_X(x) = \begin{cases}
+&1/6, \quad x \in \{ 1,2,3,4,5,6\} \\
+&0, \quad \text{otherwise}
+\end{cases}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Example of PMF...}
+\pause 
+\begin{alertblock}{Problem on PMF}
+Consider an \yellow{unfair} coin for which $P(H)=p.$ \pause We toss the coin repeatedly until we observe a head for the first time. \pause Let $Y$ be the total number of times the coin was tossed. \pause 
+\begin{enumerate}
+\item Is $Y$ a discrete random variable? \pause 
+\item Find PMF of the random variable $Y$
+\end{enumerate}
+
+\end{alertblock}
+
+\begin{block}{Answer to the problem}
+We have 
+\begin{align*}
+P_Y(1) &= P(Y=1) = P(H) = p \\
+P_Y(2) &= P(Y=2) = P(TH) = (1-p)p \\
+&\vdots \\
+P_Y(k) &= P(Y=k) = P(TT\cdots TH) = (1-p)^{k-1} p
+\end{align*}
+\end{block}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Properties of PMF...}
+\pause 
+
+\begin{alertblock}{Properties of PMF}
+\begin{enumerate}
+\item $0 \leq P_X(x) \leq 1$ for all $x$ \pause 
+\item $\sum_{x \in R_X} P_X(x) = 1$  \pause 
+\item For any set $A \subset R_X, P(X \in A) = \sum_{x \in A} P_X(x)$
+\end{enumerate}
+\end{alertblock}
+\vspace{5cm}
+
+\end{frame}
+
+
+%
+%
+
+\begin{frame}{Check Properties of PMF...}
+\pause 
+\begin{alertblock}{Problem on PMF}
+Consider an \yellow{unfair} coin for which $P(H)=p.$ \pause We toss the coin \yellow{repeatedly} until we observe a head for the first time. \pause Let $Y$ be the total number of times the coin was tossed. \pause 
+\begin{enumerate}
+\item Check $\sum_{y \in R_Y} P_Y(y)=1,$ \quad here $R_Y$ is the \yellow{range} of random variable $Y$ \pause 
+\item If $p=1/2, $ \quad find $P(2 \leq Y < 5)$
+\end{enumerate}
+
+\end{alertblock}
+\vspace{4cm}
+
+
+\end{frame}
+
+
+\begin{frame}{Independent Random Variables...}
+\pause 
+
+\begin{alertblock}{Independent Random Variables}
+We consider two random variables \yellow{independent} if \pause 
+\[ P(X=x, Y=y) = P(X=x)P(Y=y), \quad \text{for all}~x,y \] \pause 
+In general, if two random variables are \yellow{independent}, then \pause 
+\[ P(X \in A, X \in B) = P(X \in A) P(Y \in B), \quad \text{for all sets}~A~\text{and}~B \]
+Also, we have \pause 
+\[ P(Y=y \mid X = x) = P(Y=y), \quad \text{for all}~x,y \]
+\end{alertblock}
+
+\end{frame}
+
+
+%
+%
+%
+
+\begin{frame}{Example: independent random variables, PMF}
+\pause 
+\begin{alertblock}{Problem}
+We toss a coin twice, and let $X$ denote the number of heads we observe. \pause After this, we then toss the coin two more times and define $Y$ to be the number of heads we observe. \pause What is 
+$P((X<2) ~\text{and}~ (Y>1))?$
+\end{alertblock}
+\vspace{5cm}
+
+\end{frame}
+
+
+\section{Expectation}
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+
+\begin{frame}{Definition of Expectation..}
+\pause 
+
+\begin{alertblock}{Definition of Expectation}
+The \yellow{expectation} of a \yellow{discrete} random variable $X$ is defined as \pause 
+\begin{align*}
+E[X] = \sum_{x:p(x)>0} p(x) \cdot x
+\end{align*} \pause 
+\begin{itemize}
+\item Note we sum over all values of $X$ that have \yellow{non-zero} probability \pause 
+\item Other names of expectations: mean, expected value, weighted average, center of mass, first moment
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+
+
+\begin{frame}{Example of Expectation...}
+\pause 
+
+\begin{alertblock}{Example of Expectation...}
+What is the \yellow{expected} value of 6-sided die roll?
+\end{alertblock}
+\pause 
+
+\begin{block}{Answer to the question}
+\begin{itemize}
+\item \yellow{Define a random variable:} $X = \text{RV for value of a roll}$ \pause 
+\item \yellow{Find PMF:}  \pause 
+\begin{align*}
+P(X=x) = \begin{cases}
+      1/6, \quad &x \in \{ 1, \dots, 6 \} \\
+      0, \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+\item \yellow{Calculate Expectation:} \pause 
+\begin{align*}
+E[X] = 1 \left( \dfrac{1}{6}  \right) + 2 \left( \dfrac{1}{6}  \right) + 3 \left( \dfrac{1}{6}  \right) + 4 \left( \dfrac{1}{6}  \right) + 5 \left( \dfrac{1}{6}  \right) + 6 \left( \dfrac{1}{6}  \right) = \left( \dfrac{7}{2} \right) = 3.5
+\end{align*}
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+
+
+\begin{frame}{Recall: Linear Functions...}
+\pause 
+
+\begin{alertblock}{Definition of linear function}
+Let $A,B$ be two \yellow{vector spaces.} \pause A function $f:A \rightarrow B$ is called \yellow{linear} function if the following holds: \pause 
+\begin{itemize}
+\item $f(u+v) = f(u)+f(v)$ \pause 
+\item $f(cu) = c f(u), c$ is \yellow{scalar}
+\end{itemize}
+\pause 
+Equivalent definition is: \pause 
+\begin{align*}
+f(\alpha u + \beta u) = \alpha f(u) + \beta f(v), \quad \forall u,v \in A, \quad \alpha,\beta~\text{scalars}
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+
+
+\begin{frame}{Quiz on linear functions...}
+\pause 
+\begin{alertblock}{Problem on linear function}
+Which of the following functions are linear? \pause 
+\begin{enumerate}
+\item $f(x) = x$ \pause 
+\item $f(x) = ax + b$  \pause 
+\item $f(x) = 10$ \pause 
+\item $f(x) = Ax + b$ \pause 
+\item $f(x) = 3\sin x$ \pause 
+\item $f(x,y) = 3x + 4y$ \pause 
+\item $f(x,y,z) = 3 + x + y + z$ \pause 
+\item $f \begin{pmatrix}
+x \\ y \\ z
+\end{pmatrix} = \begin{pmatrix}
+x + y \\
+y - z \\ 
+z
+\end{pmatrix}$
+\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+
+
+\begin{frame}{Properties of Expectation...}
+\pause 
+
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Linearity of Expectation}
+\[ E[aX + b] = a E[X] + b \]
+\end{alertblock}
+\pause 
+\end{column}
+\begin{column}{0.5\textwidth}
+Let $X =$ 6 sided dice roll. Let $Y = 2X-1.$ If $E[X]=3.5,$ then what is 
+$E[Y]=?$
+\end{column}
+\end{columns}
+
+\pause 
+
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Expectation of a sum}
+\[ E[X+Y] = E[X] + E[Y] \]
+\end{alertblock}
+\pause 
+\pause 
+\end{column}
+\begin{column}{0.5\textwidth}
+Consider two dice rolls. Let $X$ = roll of dice 1, $Y=$ roll of die 2, then 
+$E[X+Y] = ?$
+\end{column}
+\end{columns}
+
+\pause 
+
+
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Expectation of a function of random variable}
+\[ E[g(X)] = \sum_x g(x) p(x) \]
+\end{alertblock}
+\pause 
+\end{column}
+\begin{column}{0.5\textwidth}
+Let $X =$ 6 sided dice roll. Let $g(x) = x^2.$ If $E[X]=3.5,$ then what is 
+$E[g(X)]=?$
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+
+
+
+\begin{frame}{Proof of Linearity of Expectation...}
+%\pause 
+
+\begin{center}
+\fbox{ $E[aX + b] = a \, E[X] + b$ }
+\end{center}
+
+\vspace{6cm}
+
+\end{frame}
+
+
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+
+
+
+\begin{frame}{Proof of Expectation of Function of a Random Variable...}
+%\pause 
+\begin{center}
+\fbox{ $E[g(X)] = \sum_x g(x) \, p(x)$ }
+\end{center}
+
+\vspace{6cm}
+
+\end{frame}
+
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+%%
+
+
+\begin{frame}{Quiz on Expectation...}
+\pause 
+
+\begin{alertblock}{Question on Expectation}
+Let $X$ be a discrete random variable, whose PMF is given as follows
+\begin{align*}
+P_X(x_k) = \begin{cases}
+    \dfrac{1}{3}, \quad \text{for}~x \in \{-1, 0, 1 \}, \\
+    0, \quad \text{otherwise}. 
+\end{cases}
+\end{align*}
+Let $Y = |X|.$ What is $E[Y]?$
+%\begin{enumerate}
+%\item 0
+%\item $\dfrac{4}{5}$
+%\item $\dfrac{2}{3}$
+%\item $\dfrac{1}{3}$
+%\end{enumerate}
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{Expectation and Game of Chance...}
+\pause 
+
+\begin{alertblock}{Expectation and Game of Chance Problem}
+Consider a game where a die is rolled. After the roll, the total money you gain 
+is the output of the die. How much money would you like to pay to play this game? 
+\end{alertblock}
+
+\vspace{5cm}
+
+\end{frame}
+
+\begin{frame}{Expectation versus Reality}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.4]{expectation}
+        % \caption{Caption}
+        % \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+
+%%
+
+\section{Saint Petersberg Paradox}
+
+\begin{frame}{Saint Petersberg Paradox...}
+\pause 
+
+\begin{alertblock}{Saint Petersberg Paradox}
+Consider a fair coin. \pause We toss the coin, if it is heads,the game ends, and you win Rs 2. \pause If it turns out to be tails, I toss it again. \pause If it is heads on the second toss, you win Rs 4. \pause If not, I toss it again, and if it is heads on the third toss,you win Rs 8. \pause In general, if the first heads appears at the $n$th toss, then you win Rs $2^n.$ \pause
+
+There is an entrance fee to play this game. What is the maximum amount of money you would pay to play this game?
+\end{alertblock}
+
+\end{frame}
+
+
+%%
+%%
+
+\begin{frame}{Analyzing Solution to Saint Petersberg Paradox Problem...}
+\pause 
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\vspace{-0.8cm}
+\begin{table}
+\begin{tabular}{llll}
+$n$ & Prize & Prob & Utility \\ \hline 
+1 & Rs 2 & 1/2 & Rs 2 \\
+2 & Rs 4 & 1/4 & Rs 4 \\
+3 & Rs 8 & 1/8 & Rs 8 \\
+4 & Rs 16 & 1/16 & Rs 16 \\
+5 & Rs 32 & 1/32 & Rs 32 \\
+6 & Rs 64 & 1/64 & Rs 64 \\
+7 & Rs 128 & 1/128 & Rs 128 \\
+8 & Rs 252 & 1/252 & Rs 252 \\
+\vdots & \vdots & \vdots & \vdots\\
+\end{tabular}
+\end{table}
+\end{column} \pause 
+
+\begin{column}{0.6\textwidth}
+Let us make some observations. \pause 
+\begin{itemize}
+\item If we pay Rs 1, then if the game ends in 1st toss, then we get Rs 2. That is we gain Rs 1. \pause  
+\item If we pay say Rs 10, and the game ends in 3rd toss, then we get Rs 8, and we loose Rs 2. 
+\item Naturally, we wonder what is the expected value? 
+\end{itemize}
+\end{column}
+\end{columns}
+\begin{alertblock}{Expected Value for Saint Petersberg Paradox...}
+\vspace{-0.5cm}
+\begin{align*}
+E[X] &= 1 \times \dfrac{1}{2} + 4 \times \dfrac{1}{4} + 8 \times \dfrac{1}{8} \dots = 1 + 1 + 1 + \dots = \infty
+\end{align*} \pause 
+So, are you willing to pay any amount to play this game given that in theory you can win upto Rs $\infty?$ \pause Can you see why this seems to be a paradox?
+\end{alertblock}
+\end{frame}
+
+
+
+\begin{frame}{Analyzing Solution to Saint Petersberg Paradox Problem...}
+\begin{alertblock}{Expected Value for Saint Petersberg Paradox...}
+\vspace{-0.5cm}
+\begin{align*}
+E[X] &= 1 \times \dfrac{1}{2} + 4 \times \dfrac{1}{4} + 8 \times \dfrac{1}{8} \dots = 1 + 1 + 1 + \dots = \infty
+\end{align*} \pause 
+So, are you willing to pay any amount to play this game given that in theory (on average) you can win upto Rs $\infty?$ \pause Can you see why this seems to be a paradox?
+\end{alertblock}
+\pause 
+%\newline
+\vspace{1cm}
+
+It is \yellow{paradoxical} because of the following reasons: \pause 
+\begin{itemize}
+\item In reality, very few would pay even Rs 15 to play this game. \pause \yellow{Why?} \pause 
+\item \yellow{Paradox:} you should be willing to pay any amount, \pause but you \yellow{won't} be willing to do so!
+\end{itemize}
+
+\end{frame}
+
+
+%
+
+\begin{frame}{Analyzing Solution to Saint Petersberg Paradox Problem...}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\vspace{-0.8cm}
+\begin{table}
+\begin{tabular}{lllll}
+$n$ & Prize & Prob & Utility & Exp. \\ \hline 
+1 & Rs 2 & 1/2 & Rs 2 & 1 \\
+2 & Rs 4 & 1/4 & Rs 4 & 1 \\
+3 & Rs 8 & 1/8 & Rs 8 & 1 \\
+4 & Rs 16 & 1/16 & Rs 16 & 1 \\
+5 & Rs 32 & 1/32 & Rs 32 & 1 \\
+6 & Rs 64 & 1/64 & Rs 32 & 0.5 \\
+7 & Rs 128 & 1/128 & Rs 32 & 0.25 \\
+8 & Rs 252 & 1/252 & Rs 32 & 0.125 \\
+\vdots & \vdots & \vdots & \vdots & \vdots \\
+\end{tabular}
+\end{table}
+\end{column} 
+
+\pause 
+
+\begin{column}{0.5\textwidth}
+Let us make some observations. \pause 
+\begin{itemize}
+\item If we pay Rs 1, then if the game ends in 1st toss, then we get Rs 2. That is we gain Rs 1. \pause  
+\item If we pay say Rs 10, and the game ends in 32nd toss, then on average, we get Rs 6, and we loose Rs 2. \pause 
+\item Naturally, we wonder what amount we should be willing to pay? 
+\end{itemize}
+\end{column}
+\end{columns} \pause 
+\begin{alertblock}{Expected Value for Saint Petersberg Paradox...}
+\vspace{-0.5cm}
+\begin{align*}
+E[X] &= 1 \times \dfrac{1}{2} + 4 \times \dfrac{1}{4} + 8 \times \dfrac{1}{8} \dots = 1 + 1 + 1 + 1 + 1 + 0.5 + 0.25 + \dots \approx 6
+\end{align*} \pause 
+So, we should not pay more than Rs 6 or much lower than this!
+\end{alertblock}
+\end{frame}
+

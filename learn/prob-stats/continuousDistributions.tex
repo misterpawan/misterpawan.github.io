@@ -1,0 +1,1119 @@
+\section{Continuous Distributions}
+
+\subsection{Uniform Distribution}
+
+\begin{frame}{Special Continuous Distributions: Uniform Distribution...}
+\pause 
+
+\begin{alertblock}{Recall: Uniform Distribution}
+The PDF of $X \sim \text{Uniform}(a,b)$ is given by \pause 
+\begin{align*}
+f_X = \begin{cases}
+\dfrac{1}{b-a} \quad &a<x<b \\
+0 \quad &x<a~\text{or}~x>b
+\end{cases}
+\end{align*} 
+\end{alertblock} \pause 
+\begin{itemize}
+\item The expectation $E[X]$ is given by \pause 
+\begin{align*}
+E[X] = \int_{-\infty}^{\infty} x f_X(x) \, dx = \int_a^b \dfrac{1}{b-a} \, dx = \dfrac{a+b}{2}
+\end{align*} \pause 
+\item To find the variance, we have \pause 
+\begin{align*}
+E[X^2] &= \int_{-\infty}^{\infty} x^2 f_X(x) \, dx = \int_a^b x^2 \left( \dfrac{1}{b-a} \right) \, dx = \dfrac{a^2 + ab + b^2}{3}
+\end{align*} \pause 
+\item Hence the variance is: 
+%\begin{align*}
+$\quad \text{Var}(X) = E[X^2] - (E[X])^2 = \dfrac{(b-a)^2}{12}$
+%\end{align*}
+\end{itemize}
+\end{frame}
+
+
+
+\subsection{Exponential Distribution}
+
+
+\begin{frame}{Special Distribution: Exponential Distributions...}
+\pause 
+
+\begin{alertblock}{Definition of Exponential Distribution}
+Let $X$ be a continuous random variable. Here $X$ is said to have \yellow{exponential distribution} 
+with parameter $\lambda>0$ shown as $X \sim \text{Exponential}(\lambda),$ if its \yellow{PDF} is given as follows
+\begin{align*}
+f_X(x) = \begin{cases}
+\lambda e^{-\lambda x} \quad &x>0 \\
+0 \quad &\text{otherwise}	
+\end{cases}
+\end{align*}
+\end{alertblock}
+\pause 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.28]{exp}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+%\begin{itemize}
+%\item 
+The \yellow{CDF} is given by 
+\begin{align*}
+F_X(x) = \int_0^x \lambda e^{-\lambda t} \, dt = 1 - e^{-\lambda t}
+\end{align*} \pause 
+%\item 
+The \yellow{expectation} is \pause 
+\begin{align*}
+E[X] &= \int_0^{\infty} x \lambda e^{-\lambda x} \, dx = \dfrac{1}{\lambda} \int_0^{\infty} y e^{-y} \\
+&= \dfrac{1}{\lambda} [-e^{-y} - y e^{-y}]_0^{\infty} = \dfrac{1}{\lambda}
+\end{align*}
+%\end{itemize}
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Special Distribution: Exponential Distributions...} 
+
+\begin{alertblock}{Definition of Exponential Distribution}
+Let $X$ be a continuous random variable. Here $X$ is said to have \yellow{exponential distribution} 
+with parameter $\lambda>0$ shown as $X \sim \text{Exponential}(\lambda),$ if its \yellow{PDF} is given as follows
+\begin{align*}
+f_X(x) = \begin{cases}
+\lambda e^{-\lambda x} \quad &x>0 \\
+0 \quad &\text{otherwise}	
+\end{cases}
+\end{align*}
+\end{alertblock}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.3]{exp}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.5\textwidth}
+Var($X$) is given by:
+\begin{align*}
+E[X^2] &= \int_0^{\infty} x^2 \lambda e^{-\lambda x} \, dx 
+= \dfrac{1}{\lambda^2} \int_0^{\infty} y^2 e^{-y} \, dy \\
+&= \dfrac{1}{\lambda^2} \left[ -2 e^{-y} - 2ye^{-y} - y^2 e^{-y} \right]_0^{\infty} = \dfrac{2}{\lambda^2} 
+\end{align*} \pause 
+\begin{align*}
+\text{Var}(X) = E[X^2] - (E[X])^2 = \dfrac{2}{\lambda^2} - \dfrac{1}{\lambda^2} = \dfrac{1}{\lambda^2}
+\end{align*}
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+
+\begin{frame}{Exponential Distribution is Memoryless...}
+\pause 
+
+\begin{alertblock}{Exponential distribution is memoryless}
+If $X$ is \yellow{exponential} random variable with parameter $\lambda>0,$ then $X$ is a \yellow{memoryless} variable: \pause 
+\begin{align*}
+P(X > x + a \mid X > a) = P(X > x), \quad \text{for}~a,x \geq 0.
+\end{align*}
+\end{alertblock}
+\pause 
+
+\begin{align*}
+P(X > x+a \mid X > a) &= \dfrac{P(X>x+a, X>a)}{P(X > a)} \\
+&= \dfrac{P(X> x+a)}{P(X>a)} = \dfrac{1 - F_X(x+a)}{1 - F_X(a)} \\
+&= \dfrac{e^{-\lambda(x+a)}}{e^{-\lambda a}} = e^{-\lambda x} \\
+&= P(X > x)
+\end{align*}
+
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+
+
+\subsection{Standard Normal Distribution}
+
+%
+%
+%
+%
+
+\begin{frame}{Normal (Gaussian) Distribution...}
+\pause 
+
+\begin{alertblock}{Definition of Standard Normal Random Variable}
+A continuous random variable $Z$ is said to be a \yellow{standard normal (standard Gaussian) random variable}, \pause shown as $Z \sim N(0,1),$ \pause if its \yellow{PDF} is given by \pause 
+\begin{align*}
+f_Z(z) = \dfrac{1}{\sqrt{2 \pi}} e^{-\dfrac{z^2}{2}}, \quad \text{for all}~ z\in \mathbb{R} 
+\end{align*}
+\end{alertblock} \pause 
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.45]{normal}
+\end{figure}
+\end{column} \pause 
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item Most important Probability Distribution! \pause 
+\item \yellow{Central Limit Theorem} (TODO): \pause 
+\begin{itemize}
+\item If we add \yellow{large} number of random variable, then the distribution of the \yellow{sum is normal} (proof later) \pause 
+\end{itemize} \pause 
+\item Here $1/\sqrt{2 \pi}$ is there to make area under curve 1
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+%
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+
+\begin{frame}{Mean and Variance of Standard Normal Distribution...}
+\pause 
+
+\begin{alertblock}{Mean and Variance of Standard Normal Distribution}
+Let $Z$ be a \yellow{normal distribution}, i.e., $Z \sim N(0,1),$ then $E[Z]=0$ and $\text{Var}(Z)=1.$
+\end{alertblock}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Recall}
+If $g(u): \mathbb{R} \rightarrow \mathbb{R}.$ If $g(u)$ is an \yellow{odd function}, i.e., $g(-u) = -g(u),$ and $$\left|\int_0^{\infty} g(u) \, du \right| < \infty,$$ then 
+\begin{align*}
+\int_{-\infty}^{\infty} g(u) \, du = 0.
+\end{align*} 
+\end{alertblock}
+\end{column} \pause 
+
+\begin{column}{0.5\textwidth}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+%
+%
+%
+
+
+\begin{frame}{Answer to previous problem...}
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+
+
+% \begin{frame}{Answer to previous problem...}
+
+% %\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+% \hspace{8cm} \rule{.1mm}{1.0\textheight}
+% \end{frame}
+
+
+
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+% %
+%
+
+\begin{frame}{CDF of Standard Normal Distribution...}
+\pause 
+
+\begin{alertblock}{Definition of CDF of Standard Normal Distribution}
+The CDF of the \yellow{standard normal distribution} is denoted by $\Phi$ \pause 
+\begin{align*}
+\Phi(x) = P(Z \leq x) = \dfrac{1}{\sqrt{2\pi}} \int_{-\infty}^x e^{-\dfrac{u^2}{2}} \, du 
+\end{align*}
+\end{alertblock}
+\pause 
+
+\begin{itemize}
+\item The integral \alert{does not} have a \yellow{closed} form solution! \pause 
+\item However, values of $F(Z)$ have been \yellow{tabulated} \pause 
+\item The \yellow{CDF} of any \yellow{normal} distribution can be written in terms of $\Phi$ function
+\end{itemize}
+
+\end{frame}
+
+
+
+% %
+% %
+% %
+% %
+
+
+\begin{frame}{CDF of Standard Normal Distribution...}
+\pause 
+
+\begin{figure}
+\includegraphics[scale=0.7]{phi}
+\end{figure}
+
+The $\Phi$ function satisfies the following properties: \pause 
+\begin{itemize}
+\item $\lim_{x \rightarrow \infty} = 1, \quad \lim_{x \rightarrow -\infty} = 0$ \pause 
+\item $\Phi(0) = \dfrac{1}{2}$ \pause 
+\item $\Phi(-x) = 1- \Phi(x), ~\text{for all}~x \in \mathbb{R}$
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Bound for $\Phi$ Function...}
+\pause 
+
+\begin{alertblock}{Bound for $\Phi$ Function}
+Let $Z \sim N(0,1).$ We recall that 
+\begin{align*}
+\Phi(x) = P(Z \leq x).
+\end{align*}
+For all $x \geq 0,$ the \yellow{$\Phi-$function} satisfies the following bound
+\begin{align*}
+\dfrac{1}{\sqrt{2 \pi}} \dfrac{x}{x^2 + 1} e^{-x^2/2} \leq 1 - \Phi(x) \leq \dfrac{1}{\sqrt{2 \pi}} \dfrac{1}{x} e^{-x^2/2}
+\end{align*}
+\end{alertblock}
+
+\end{frame}
+
+
+
+\input{scratch}
+
+
+\input{scratch}
+
+%
+\subsection{Normal Distribution}
+
+\begin{frame}{Normal Random Variable...}
+\pause 
+
+\begin{alertblock}{Definition of Normal Random Variables}
+\begin{itemize}
+\item Have seen the \yellow{standard normal RV}, can obtain \yellow{any normal RV} by \pause  \yellow{shifting} and \yellow{scaling}
+\begin{align*}
+X = \sigma Z + \mu, \quad \text{where}~\sigma > 0
+\end{align*} \pause 
+\item We have \yellow{expectation} of $X, E[X]$ \pause 
+\begin{align*}
+E[X] &= \sigma E[Z] + \mu = \mu, \\
+\text{Var}(X) &= \sigma^2 \text{Var}(Z) = \sigma^2
+\end{align*} \pause 
+\item In this case, we write $X \sim N(\mu, \sigma^2)$ \pause 
+\item Conversely, if $X \sim N(\mu, \sigma^2),$ then $Z=\dfrac{X - \mu}{\sigma}$ is \yellow{standard RV}, i.e., $Z \sim N(0,1)$
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+\subsection{PDF and CDF of Normal RV}
+
+\begin{frame}{CDF and PDF of Normal Random Variable...}
+\pause 
+
+\begin{alertblock}{CDF and PDf of Normal Random Variable}
+\begin{itemize}
+\item To find the \yellow{CDF} of $X \sim N(\mu, \sigma^2),$ we have the following \pause 
+\[
+\begin{aligned}
+F_X(x) &= P(X \leq x) \pause 
+= P(\sigma Z + \mu \leq x) \\ \pause 
+&= P \left(Z \leq \dfrac{x - \mu}{\sigma} \right) \pause 
+= \Phi \left(\dfrac{x - \mu}{\sigma} \right).
+\end{aligned}
+\]
+\pause 
+\item To find the \yellow{PDF} of $X,$ we have the following \pause 
+\[
+\begin{aligned}
+f_X(x) &= \dfrac{d}{dx} F_X(x) \pause = \dfrac{d}{dx} \Phi \left(\dfrac{x - \mu}{\sigma} \right) \\ \pause 
+&= \dfrac{1}{\sigma} \Phi' \left(\dfrac{x - \mu}{\sigma} \right) \pause 
+= \dfrac{1}{\sigma} f_Z(\dfrac{x - \mu}{\sigma}) \\  \pause 
+&= \dfrac{1}{\sigma \sqrt{2 \pi}} e^{-\dfrac{(x - \mu)^2}{2 \sigma^2}}
+\end{aligned}
+\]
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+%
+\begin{frame}{Summary: PDF, CDF, Computing Probabilities for Normal RV...}
+\pause 
+
+\begin{alertblock}{PDF, CDF, Compute Probabilities of Normal RV}
+If $X$ is a \yellow{normal RV} with mean $\mu$ and variance $\sigma^2,$ i.e., \pause $$X \sim N(\mu, \sigma^2),$$ \pause then \pause 
+\[
+\begin{aligned}
+f_X(x) &= \pause \dfrac{1}{\sigma \sqrt{2 \pi}} e^{-\dfrac{(x - \mu)^2}{2 \sigma^2}} \\ \pause 
+F_X(x) &= \pause P(X \leq x) \pause = \Phi \left(\dfrac{x - \mu}{\sigma} \right) \\  \pause 
+P(a < X \leq b) &= \pause \Phi \left(\dfrac{b - \mu}{\sigma} \right) - \Phi \left(\dfrac{a - \mu}{\sigma} \right)
+\end{aligned} 
+\]
+\end{alertblock}
+
+\end{frame}
+
+
+
+\begin{frame}{Solved Example...}
+\pause 
+
+\begin{alertblock}{Solved Example}
+Let $X \sim N(-5, 4)$ \pause 
+\begin{itemize}
+\item Find $P(X < 0)$ \pause 
+\item Find $P(-7 < X < -3)$  \pause 
+\item Find $P(X > -3 \mid X > -5)$
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+\input{scratch}
+
+\input{scratch}
+
+
+\begin{frame}{Linear Transformation of a Normal RV is a Normal RV...}
+\pause 
+
+\begin{alertblock}{Theorem}
+If $X \sim N(\mu_X, \sigma_X^2),$ and $Y = aX + b, $ where $a,b \in \mathbb{R},$ then $Y \sim N(\mu_Y, \sigma_Y^2)$ where 
+\begin{align*}
+\mu_Y = a \mu_X + b, \quad \sigma_Y^2 = a^2 \sigma_X^2.
+\end{align*}
+\end{alertblock}
+\vspace{5cm}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Gamma Distribution}
+
+
+%
+%
+%
+%
+
+
+\begin{frame}{Gamma Distribution...}
+\pause 
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item Widely used distribution \pause 
+\item Related to exponential and normal \pause 
+\end{itemize}
+\begin{alertblock}{Gamma Function: Extension of Factorial Function}
+The \yellow{Gamma function} denoted by $\Gamma (x)$ is an \yellow{extension} of the factorial 
+function to real numbers. \pause Recall: If $n \in \{1, 2, 3, \dots \},$ then \pause 
+\begin{align*}
+\Gamma (n) = (n-1)! 
+\end{align*}  \pause 
+Generally, for any positive number $\alpha, \Gamma(\alpha)$ is defined as 
+\begin{align*}
+\Gamma (\alpha) = \int_0^{\infty} x^{\alpha - 1} e^{-x} \, dx, \quad \text{for}~\alpha > 0.
+\end{align*}
+\end{alertblock}
+\end{column}
+\pause 
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\includegraphics[scale=0.42]{gamma}
+\caption{Gamma function for positive real values}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\subsection{Properties of Gamma Function}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+
+\begin{frame}{Properties of the Gamma Function...}
+\pause 
+
+\begin{alertblock}{Properties of Gamma Function}
+
+\begin{enumerate}
+\item $\Gamma(\alpha) = \int_0^{\infty} x^{\alpha - 1} e^{-x} \, dx$ \quad \text{(Definition of Gamma Function!)} \pause 
+\item $\int_0^{\infty} x^{\alpha - 1} e^{-\lambda x} \, dx = \dfrac{\Gamma(\alpha)} {\lambda^{\alpha}}, \quad \text{for}~\lambda > 0$ \pause 
+\item $\Gamma (\alpha + 1) = \alpha \Gamma(\alpha)$ \pause 
+\item $\Gamma(n) = (n-1)!, \quad \text{for}~n=1,2,3,\dots$ \pause 
+\item $\Gamma\left(\dfrac{1}{2} \right) = \sqrt{\pi}$
+\end{enumerate}
+
+\end{alertblock}
+
+
+\end{frame}
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Proof of Properties of Gamma Function...}
+\pause 
+
+\begin{itemize}
+\item [2.] $\int_0^{\infty} x^{\alpha - 1} e^{-\lambda x} \, dx = \dfrac{\Gamma(\alpha)}{\lambda^{\alpha}}, \quad \text{for}~\lambda > 0$
+\end{itemize}
+
+\vspace{5cm}
+
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\begin{frame}{Proof of Properties of Gamma Function...}
+\pause 
+
+\begin{itemize}
+\item [3.] $\Gamma (\alpha + 1) = \alpha \Gamma(\alpha)$
+\item [4.] $\Gamma(n) = (n-1)!, \quad \text{for}~n=1,2,3,\dots$
+\end{itemize}
+
+\vspace{5cm}
+
+\end{frame}
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\begin{frame}{Proof of Properties of Gamma Function...}
+\pause 
+
+\begin{itemize}
+\item [5.] $\Gamma\left(\dfrac{1}{2} \right) = \sqrt{\pi}$
+\end{itemize}
+
+\vspace{2cm}
+
+\pause 
+
+\begin{itemize}
+\item We show this in three steps: \pause 
+\begin{enumerate}
+\item First we show a fact from calculus that \yellow{$d \, xdy = r\, dr \, d\theta$} \pause 
+\item Second we show that the constant in normal distribution is $1/\sqrt{2 \pi}$ \pause 
+\item Finally, using above, we then show the final result stated above
+\end{enumerate}
+\end{itemize}
+
+\end{frame}
+
+
+
+%
+%
+%
+
+
+\begin{frame}{Step-1: \quad Proof that \quad $dxdy = r\, dr \, d\theta$}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[scale=0.4]{fig2}
+\end{figure}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+
+\end{column}
+
+\end{columns}
+\end{frame}
+
+
+
+
+%
+%
+%
+%
+
+
+\begin{frame}{Step-2: \quad Proof that Constant in the Normal Distribution is $1/ \sqrt{2 \pi}$}
+
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\begin{frame}{Step-3: \quad Proof of \quad $\Gamma(1/2) = \sqrt{\pi}$}
+
+%\hspace{5pt} {\color{red} \vrule width 1pt} \hspace{5pt}%
+\hspace{8cm} \rule{.1mm}{1.0\textheight}
+\end{frame}
+
+
+
+%
+%
+%
+%%\input{scratch}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\begin{frame}{Solved Problem on Gamma Function...}
+\pause 
+
+\begin{alertblock}{Problem on Gamma Function}
+\begin{itemize}
+\item Find $\Gamma(7/2)$
+\item Find the value of the following integral 
+\begin{align*}
+I = \int_0^{\infty} x^6 e^{-5x} \, dx
+\end{align*}
+\end{itemize}
+\end{alertblock}
+\vspace{4cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Gamma Distribution...}
+\pause 
+
+\begin{alertblock}{Definition of Gamma Distribution}
+A continuous random variable $X$ is said to have a \yellow{gamma distribution} with parameters 
+$\alpha > 0$ and $\lambda > 0,$ shown as $X \sim \text{Gamma}(\alpha, \lambda),$ if its \yellow{PDF} is given by  \pause 
+\begin{align*}
+f_X(x) = \begin{cases}
+\dfrac{\lambda^{\alpha} x^{\alpha - 1} e^{-\lambda x}}{\Gamma(\alpha)}, \quad &x>0 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*}	
+\end{alertblock}
+\pause 
+\begin{alertblock}{Exponential is a special case of Gamma distribution}
+For $\alpha = 1,$ we obtain
+\begin{align*}
+f_X(x) = \begin{cases}
+\lambda e^{-\lambda x} \quad &x>0 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+\begin{enumerate}
+\item That is, $\text{Gamma}(1,\lambda) = \text{Exponential}(\lambda)$ \pause 
+\item Sum of $n$ independent Exponential($\lambda$) RVs is Gamma$(n, \lambda)$ RV (\yellow{proof: try!	})
+\end{enumerate}
+
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Properties of Gamma Function...}
+\pause 
+
+\begin{alertblock}{Properties of Gamma Function}
+Let $X \sim \text{Gamma}(n,\lambda), \alpha>0, \lambda>0.$  
+\begin{align*}
+f_X(x) = \begin{cases}
+\dfrac{\lambda^{\alpha} x^{\alpha - 1} e^{-\lambda x}}{\Gamma(\alpha)}, \quad &x>0 \\
+0 \quad &\text{otherwise}
+\end{cases}
+\end{align*} \pause 
+Prove the following: \pause 
+\begin{enumerate}
+\item $\int_0^{\infty} f_X(x) = 1$ \pause 
+\item $E[X] = \dfrac{\alpha}{\lambda}$ \pause 
+\item $\text{Var}(X) = \dfrac{\alpha}{\lambda^2}$
+\end{enumerate}	
+\end{alertblock}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\input{scratch}
+
+
+
+\subsection{Solved Problems}
+
+
+\begin{frame}{Solved Problem 1}
+
+\begin{alertblock}{Problem 1}
+Let $U \sim \text{Uniform}(0,1)$ and $X = -ln(1-U).$ Show that $X \sim \text{Exponential}(1).$ 
+\end{alertblock}
+Solution:\\
+
+\vspace{5cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solved Problem 2}
+
+\begin{alertblock}{Problem 2}
+Let $X \sim N(2,4)$ and $Y = 3-2X.$ \pause 
+\begin{itemize}
+\item Find $P(X > 1)$ \pause 
+\item Find $P(-2 < Y < 1)$ \pause 
+\item Find $P(X>2 \mid Y < 1)$
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\input{scratch}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solved Problem 3}
+
+\begin{alertblock}{Problem 3}
+Let $X \sim N(0, \sigma^2).$ Find $E[\: |X| \:].$
+\end{alertblock}
+Solution: \\
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Solved Problem 4}
+
+\begin{alertblock}{Problem 4}
+Show that 
+\begin{align*}
+I = \int_{-\infty}^{\infty} e^{-x^2/2} \, dx = \sqrt{2 \pi}
+\end{align*}
+\end{alertblock}
+\vspace{6cm}
+
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
