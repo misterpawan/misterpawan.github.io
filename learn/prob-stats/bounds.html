@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bounds & Inequalities - Probability & Statistics</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 1rem;
+        }
+
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .interactive-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-gray-200 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-gray-400 dark:text-slate-500">/</span>
+                    <span class="text-gray-600 dark:text-slate-300 font-medium">Unit 5: Bounds</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="multiple-rv.html"
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Prev:
+                        Multiple RVs</a>
+                    <a href="law-of-large-numbers.html"
+                        class="text-sm font-medium text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Next:
+                        LLN & CLT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-gray-50/0 to-gray-50/0 dark:via-slate-900/0 dark:to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
+                Bounds & Inequalities
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Tools to estimate probabilities when the exact distribution is unknown or hard to compute.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- 1. Union Bound -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3 text-sm">1</span>
+                Union Bound (Boole's Inequality)
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    The probability of a union of events is at most the sum of their individual probabilities. This
+                    holds <strong>regardless</strong> of independence.
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm">
+                    $$ P\left( \bigcup_{i=1}^n A_i \right) \leq \sum_{i=1}^n P(A_i) $$
+                </div>
+                <p>
+                    <strong>Bonferroni Inequalities:</strong> Including more terms from the Inclusion-Exclusion
+                    Principle gives alternating upper and lower bounds.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. Markov & Chebyshev -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mr-3 text-sm">2</span>
+                Markov & Chebyshev Inequalities
+            </h2>
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div
+                    class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Markov's Inequality</h3>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">
+                        For a <strong>non-negative</strong> RV \( X \) and \( a > 0 \):
+                    </p>
+                    <div
+                        class="text-center p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg font-mono text-sm text-cyan-600 dark:text-cyan-400">
+                        $$ P(X \geq a) \leq \frac{E[X]}{a} $$
+                    </div>
+                </div>
+                <div
+                    class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Chebyshev's Inequality</h3>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">
+                        For any RV \( X \) with finite mean and variance, and \( k > 0 \):
+                    </p>
+                    <div
+                        class="text-center p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg font-mono text-sm text-cyan-600 dark:text-cyan-400">
+                        $$ P(|X - \mu| \geq k) \leq \frac{\text{Var}(X)}{k^2} $$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Chernoff Bound -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mr-3 text-sm">3</span>
+                Chernoff Bound
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    Chernoff bounds provide exponentially decaying estimates for tail probabilities using the Moment
+                    Generating Function \( M_X(s) \).
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm">
+                    $$ P(X \geq a) \leq \min_{s>0} e^{-sa} M_X(s) $$
+                </div>
+            </div>
+
+            <!-- Interactive Bounds Explorer -->
+            <div class="bg-gray-50 dark:bg-slate-900/50 rounded-xl p-6 border border-gray-200 dark:border-slate-700/50">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Interactive Bounds Explorer</h3>
+                <p class="text-sm text-gray-600 dark:text-slate-400 mb-6">
+                    Compare the true tail probability \( P(X \geq a) \) with Markov and Chebyshev bounds for an
+                    Exponential(\( \lambda=1 \)) distribution.
+                    <br> Note: Chebyshev applies to \( |X-\mu| \), so we plot the one-sided equivalent for comparison
+                    where applicable.
+                </p>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Threshold \( a \):
+                        <span id="a-val" class="text-gray-900 dark:text-white">2</span></label>
+                    <input type="range" min="1.1" max="5" step="0.1" value="2" class="w-full accent-emerald-500"
+                        id="a-slider">
+                </div>
+
+                <div
+                    class="h-80 w-full relative border border-gray-200 dark:border-transparent rounded-lg bg-white dark:bg-slate-800/30 p-4">
+                    <canvas id="boundsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Cauchy-Schwarz & Jensen -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600 dark:text-pink-400 mr-3 text-sm">4</span>
+                Other Important Inequalities
+            </h2>
+
+            <div class="space-y-8">
+                <!-- Cauchy-Schwarz -->
+                <div
+                    class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Cauchy-Schwarz Inequality</h3>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">
+                        Relates expectations of products to products of expectations.
+                    </p>
+                    <div
+                        class="text-center p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg font-mono text-sm text-pink-600 dark:text-pink-400">
+                        $$ |E[XY]| \leq \sqrt{E[X^2]E[Y^2]} $$
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-slate-500 mt-2 text-center">Implies \( |\rho(X,Y)| \leq 1
+                        \)</p>
+                </div>
+
+                <!-- Jensen's Inequality -->
+                <div
+                    class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Jensen's Inequality</h3>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">
+                        For a <strong>convex</strong> function \( g(x) \) (like \( x^2 \) or \( e^x \)):
+                    </p>
+                    <div
+                        class="text-center p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg font-mono text-sm text-pink-600 dark:text-pink-400">
+                        $$ E[g(X)] \geq g(E[X]) $$
+                    </div>
+                    <div
+                        class="mt-4 h-48 w-full relative border border-gray-200 dark:border-transparent rounded-lg bg-gray-50 dark:bg-slate-900/30 p-2 flex items-center justify-center">
+                        <!-- Simple SVG visualization of Jensen's -->
+                        <svg viewBox="0 0 200 100" class="w-full h-full">
+                            <!-- Curve g(x) = x^2 approx -->
+                            <path d="M 20 80 Q 100 80 180 20" fill="none" stroke="currentColor" stroke-width="2"
+                                class="text-indigo-500" />
+                            <!-- Chord -->
+                            <line x1="40" y1="75" x2="160" y2="30" stroke="currentColor" stroke-width="1"
+                                stroke-dasharray="4" class="text-gray-400" />
+                            <!-- Points -->
+                            <circle cx="100" cy="52.5" r="3" class="fill-pink-500" /> <!-- E[g(X)] on chord -->
+                            <circle cx="100" cy="65" r="3" class="fill-cyan-500" /> <!-- g(E[X]) on curve -->
+                            <!-- Labels -->
+                            <text x="110" y="52" class="text-[10px] fill-pink-500">E[g(X)]</text>
+                            <text x="110" y="75" class="text-[10px] fill-cyan-500">g(E[X])</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Quiz Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Check Your Understanding</h2>
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div
+                    class="quiz-item bg-white dark:bg-slate-800/30 p-6 rounded-xl border border-gray-200 dark:border-slate-700/30 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">1. Markov Application</h3>
+                    <p class="text-gray-600 dark:text-slate-400 mb-4">
+                        If \( E[X] = 10 \) and \( X \geq 0 \), what is the upper bound for \( P(X \geq 50) \)?
+                    </p>
+                    <div class="space-y-3">
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="true">
+                            \( 10/50 = 0.2 \)
+                        </button>
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="false">
+                            \( 50/10 = 5 \) (Impossible probability)
+                        </button>
+                    </div>
+                    <div class="quiz-feedback hidden mt-4 p-4 rounded-lg text-sm"></div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div
+                    class="quiz-item bg-white dark:bg-slate-800/30 p-6 rounded-xl border border-gray-200 dark:border-slate-700/30 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">2. Convexity</h3>
+                    <p class="text-gray-600 dark:text-slate-400 mb-4">
+                        Is \( E[X^2] \geq (E[X])^2 \)?
+                    </p>
+                    <div class="space-y-3">
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="true">
+                            Yes, because \( g(x)=x^2 \) is convex.
+                        </button>
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="false">
+                            No, it's the other way around.
+                        </button>
+                    </div>
+                    <div class="quiz-feedback hidden mt-4 p-4 rounded-lg text-sm"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Quiz Logic
+        document.querySelectorAll('.quiz-option').forEach(button => {
+            button.addEventListener('click', function () {
+                const parent = this.closest('.quiz-item');
+                const feedback = parent.querySelector('.quiz-feedback');
+                const isCorrect = this.dataset.correct === 'true';
+
+                // Reset styles
+                parent.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('bg-green-500/20', 'border-green-500', 'bg-red-500/20', 'border-red-500');
+                    opt.classList.add('bg-gray-50', 'dark:bg-slate-700/30');
+                });
+
+                if (isCorrect) {
+                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
+                    this.classList.add('bg-green-500/20', 'border-green-500');
+                    feedback.textContent = "Correct!";
+                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-green-500/10 text-green-400 block";
+                } else {
+                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
+                    this.classList.add('bg-red-500/20', 'border-red-500');
+                    feedback.textContent = "Incorrect. Try again!";
+                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-red-500/10 text-red-400 block";
+                }
+            });
+        });
+
+        // Bounds Chart
+        const ctx = document.getElementById('boundsChart').getContext('2d');
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+
+        let boundsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['True Probability', 'Markov Bound', 'Chebyshev Bound'],
+                datasets: [{
+                    label: 'Probability',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgba(34, 211, 238, 0.6)', // Cyan (True)
+                        'rgba(251, 191, 36, 0.6)', // Amber (Markov)
+                        'rgba(248, 113, 113, 0.6)' // Red (Chebyshev)
+                    ],
+                    borderColor: [
+                        'rgba(34, 211, 238, 1)',
+                        'rgba(251, 191, 36, 1)',
+                        'rgba(248, 113, 113, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 1.2, grid: { color: gridColor }, ticks: { color: textColor } },
+                    x: { grid: { display: false }, ticks: { color: textColor } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateBounds() {
+            const a = parseFloat(document.getElementById('a-slider').value);
+            document.getElementById('a-val').textContent = a.toFixed(1);
+
+            // Distribution: Exponential(1)
+            // E[X] = 1, Var(X) = 1
+            const mean = 1;
+            const variance = 1;
+
+            // True P(X >= a) = e^(-a)
+            const trueProb = Math.exp(-a);
+
+            // Markov: P(X >= a) <= E[X]/a = 1/a
+            const markovBound = Math.min(1, mean / a);
+
+            // Chebyshev: P(|X - mean| >= k) <= Var/k^2
+            // We want P(X >= a). Note X >= a implies X - 1 >= a - 1.
+            // Let k = a - 1. If a > 1, then X >= a is in the tail.
+            // Chebyshev gives P(|X-1| >= a-1) <= 1/(a-1)^2
+            // Since P(X >= a) <= P(|X-1| >= a-1), we can use this as a loose bound for a > 1.
+            let chebyshevBound = 1;
+            if (a > mean) {
+                const k = a - mean;
+                chebyshevBound = Math.min(1, variance / (k * k));
+            }
+
+            boundsChart.data.datasets[0].data = [trueProb, markovBound, chebyshevBound];
+            boundsChart.update();
+        }
+
+        document.getElementById('a-slider').addEventListener('input', updateBounds);
+        updateBounds();
+
+    </script>
+</body>
+
+</html>
