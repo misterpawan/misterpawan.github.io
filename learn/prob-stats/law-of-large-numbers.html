@@ -5,24 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Law of Large Numbers - Probability & Statistics</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #e2e8f0;
-        }
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
         .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             border-radius: 1rem;
+        }
+
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .interactive-card {
@@ -31,16 +52,21 @@
 
         .interactive-card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .interactive-card:hover {
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
             border-color: rgba(99, 102, 241, 0.4);
         }
     </style>
 </head>
 
-<body class="min-h-screen selection:bg-indigo-500 selection:text-white">
+<body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-white">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass-panel border-b border-white/10">
+    <nav class="fixed w-full z-50 glass-panel border-b border-gray-200 dark:border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center space-x-3">
@@ -48,17 +74,17 @@
                         class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
                         ProbStats
                     </a>
-                    <span class="text-slate-500">/</span>
-                    <span class="text-slate-300 font-medium">Unit 5: LLN</span>
+                    <span class="text-gray-400 dark:text-slate-500">/</span>
+                    <span class="text-gray-600 dark:text-slate-300 font-medium">Unit 6: LLN</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html"
-                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Home</a>
-                    <a href="inequalities.html"
-                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Prev:
-                        Inequalities</a>
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="bounds.html"
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Prev:
+                        Bounds</a>
                     <a href="central-limit-theorem.html"
-                        class="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Next:
+                        class="text-sm font-medium text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Next:
                         CLT</a>
                 </div>
             </div>
@@ -68,17 +94,16 @@
     <!-- Hero Section -->
     <section class="pt-32 pb-20 px-4 relative overflow-hidden">
         <div
-            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/0 to-slate-900/0 pointer-events-none">
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-gray-50/0 to-gray-50/0 dark:via-slate-900/0 dark:to-slate-900/0 pointer-events-none">
         </div>
 
         <div class="max-w-4xl mx-auto text-center relative z-10">
             <h1
-                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
                 Law of Large Numbers
             </h1>
-            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                Order emerges from chaos. As you collect more data, the sample average converges to the true
-                expectation.
+            <p class="text-xl text-gray-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                From random chaos to predictable order. Understanding how large samples reveal the truth.
             </p>
         </div>
     </section>
@@ -86,95 +111,134 @@
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
 
-        <!-- Definition Section -->
+        <!-- 1. Random Sampling -->
         <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-white mb-6 text-indigo-300">1. The Weak Law</h2>
-            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3 text-sm">1</span>
+                Random Sampling
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
                 <p>
-                    Let \( X_1, X_2, \dots, X_n \) be independent and identically distributed (i.i.d.) random variables
-                    with mean \( \mu \).
-                    The <strong>Sample Mean</strong> is:
-                    $$ \overline{X}_n = \frac{X_1 + \dots + X_n}{n} $$
+                    A <strong>Random Sample</strong> of size \( n \) is a collection of random variables \( X_1, X_2,
+                    \dots, X_n \) that are:
                 </p>
-                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
-                    $$ \lim_{n \to \infty} P(|\overline{X}_n - \mu| \ge \epsilon) = 0 $$
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Independent:</strong> The outcome of one does not affect the others.</li>
+                    <li><strong>Identically Distributed:</strong> They all follow the same probability distribution \(
+                        F_X(x) \).</li>
+                </ul>
+                <p>
+                    We call this <strong>i.i.d.</strong> (independent and identically distributed).
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm">
+                    <strong>Sample Mean:</strong> \( \bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i \)
                 </div>
                 <p>
-                    In simple terms: As \( n \) gets huge, the probability that the sample average is far from the true
-                    mean goes to zero.
+                    The sample mean \( \bar{X}_n \) is itself a random variable.
+                    <br>
+                    \( E[\bar{X}_n] = \mu \) (Unbiased)
+                    <br>
+                    \( \text{Var}(\bar{X}_n) = \frac{\sigma^2}{n} \) (Variance decreases with \( n \))
                 </p>
             </div>
         </section>
 
-        <!-- Interactive Simulation -->
+        <!-- 2. Weak Law of Large Numbers -->
         <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-white mb-6 text-cyan-300">2. Convergence Simulation</h2>
-            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mr-3 text-sm">2</span>
+                Weak Law of Large Numbers (WLLN)
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
                 <p>
-                    Let's simulate rolling a fair 6-sided die. The expected value is \( E[X] = 3.5 \).
-                    <br>
-                    Watch how the <strong>Running Average</strong> fluctuates wildly at first, but eventually settles
-                    down to the red line (3.5).
+                    The WLLN states that as the sample size \( n \) grows, the sample mean \( \bar{X}_n \) converges in
+                    probability to the true mean \( \mu \).
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm">
+                    $$ \lim_{n \to \infty} P(|\bar{X}_n - \mu| \geq \epsilon) = 0 $$
+                </div>
+                <p>
+                    Intuitively, this means that for any small error margin \( \epsilon \), the probability of the
+                    sample mean being "far" from the true mean goes to zero as we collect more data.
                 </p>
             </div>
 
-            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-semibold text-white">Die Roll Simulation</h3>
-                    <div class="flex gap-4">
-                        <button onclick="resetSim()"
-                            class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors">
-                            Reset
-                        </button>
-                        <button id="sim-btn" onclick="toggleSim()"
-                            class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-colors">
-                            Start Rolling
-                        </button>
-                    </div>
+            <!-- Interactive LLN Simulator -->
+            <div class="bg-gray-50 dark:bg-slate-900/50 rounded-xl p-6 border border-gray-200 dark:border-slate-700/50">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Interactive LLN Simulator</h3>
+                <p class="text-sm text-gray-600 dark:text-slate-400 mb-6">
+                    Simulate flipping a coin (Bernoulli(0.5)). The true mean is 0.5. Watch how the running average \(
+                    \bar{X}_n \) settles near 0.5 as \( n \) increases.
+                </p>
+
+                <div class="flex items-center space-x-4 mb-6">
+                    <button id="start-sim"
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-sm font-medium">
+                        Start Simulation
+                    </button>
+                    <button id="reset-sim"
+                        class="px-4 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors text-sm font-medium">
+                        Reset
+                    </button>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div class="p-3 bg-slate-800 rounded-lg">
-                        <div class="text-xs text-slate-400">Rolls (n)</div>
-                        <div id="roll-count" class="text-xl font-bold text-white">0</div>
-                    </div>
-                    <div class="p-3 bg-slate-800 rounded-lg">
-                        <div class="text-xs text-slate-400">Last Roll</div>
-                        <div id="last-roll" class="text-xl font-bold text-amber-400">-</div>
-                    </div>
-                    <div class="p-3 bg-slate-800 rounded-lg">
-                        <div class="text-xs text-slate-400">Sample Mean</div>
-                        <div id="sample-mean" class="text-xl font-bold text-cyan-400">-</div>
-                    </div>
-                    <div class="p-3 bg-slate-800 rounded-lg border border-red-500/30">
-                        <div class="text-xs text-slate-400">True Mean</div>
-                        <div class="text-xl font-bold text-red-400">3.50</div>
-                    </div>
-                </div>
-
-                <div class="h-80 w-full">
+                <div
+                    class="h-64 w-full relative border border-gray-200 dark:border-transparent rounded-lg bg-white dark:bg-slate-800/30 p-4">
                     <canvas id="llnChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- Why it matters -->
+        <!-- 3. Quiz Section -->
         <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-white mb-6 text-emerald-300">3. Why it matters</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
-                    <h3 class="text-lg font-semibold text-white mb-4">Casinos & Insurance</h3>
-                    <p class="text-slate-400 text-sm">
-                        Casinos don't gamble. They rely on the Law of Large Numbers. An individual player might win, but
-                        over millions of hands, the house average is guaranteed.
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Check Your Understanding</h2>
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div
+                    class="quiz-item bg-white dark:bg-slate-800/30 p-6 rounded-xl border border-gray-200 dark:border-slate-700/30 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">1. Variance of Sample Mean</h3>
+                    <p class="text-gray-600 dark:text-slate-400 mb-4">
+                        If \( \text{Var}(X) = 100 \) and \( n = 25 \), what is \( \text{Var}(\bar{X}) \)?
                     </p>
+                    <div class="space-y-3">
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="true">
+                            \( 100/25 = 4 \)
+                        </button>
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="false">
+                            \( 100 \) (Variance doesn't change)
+                        </button>
+                    </div>
+                    <div class="quiz-feedback hidden mt-4 p-4 rounded-lg text-sm"></div>
                 </div>
-                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
-                    <h3 class="text-lg font-semibold text-white mb-4">Scientific Experiments</h3>
-                    <p class="text-slate-400 text-sm">
-                        To measure a physical constant, we repeat the experiment many times and average the results to
-                        reduce random noise.
+
+                <!-- Quiz 2 -->
+                <div
+                    class="quiz-item bg-white dark:bg-slate-800/30 p-6 rounded-xl border border-gray-200 dark:border-slate-700/30 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">2. WLLN Implication</h3>
+                    <p class="text-gray-600 dark:text-slate-400 mb-4">
+                        Does WLLN guarantee that \( \bar{X}_n \) will eventually equal \( \mu \) exactly?
                     </p>
+                    <div class="space-y-3">
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="false">
+                            Yes, for large enough \( n \).
+                        </button>
+                        <button
+                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
+                            data-correct="true">
+                            No, it only says the probability of being close approaches 1.
+                        </button>
+                    </div>
+                    <div class="quiz-feedback hidden mt-4 p-4 rounded-lg text-sm"></div>
                 </div>
             </div>
         </section>
@@ -182,130 +246,109 @@
     </main>
 
     <script>
-        const ctx = document.getElementById('llnChart').getContext('2d');
+        // Quiz Logic
+        document.querySelectorAll('.quiz-option').forEach(button => {
+            button.addEventListener('click', function () {
+                const parent = this.closest('.quiz-item');
+                const feedback = parent.querySelector('.quiz-feedback');
+                const isCorrect = this.dataset.correct === 'true';
 
-        const llnChart = new Chart(ctx, {
+                // Reset styles
+                parent.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('bg-green-500/20', 'border-green-500', 'bg-red-500/20', 'border-red-500');
+                    opt.classList.add('bg-gray-50', 'dark:bg-slate-700/30');
+                });
+
+                if (isCorrect) {
+                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
+                    this.classList.add('bg-green-500/20', 'border-green-500');
+                    feedback.textContent = "Correct!";
+                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-green-500/10 text-green-400 block";
+                } else {
+                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
+                    this.classList.add('bg-red-500/20', 'border-red-500');
+                    feedback.textContent = "Incorrect. Try again!";
+                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-red-500/10 text-red-400 block";
+                }
+            });
+        });
+
+        // LLN Chart
+        const ctx = document.getElementById('llnChart').getContext('2d');
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+
+        let llnChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [],
-                datasets: [
-                    {
-                        label: 'Running Average',
-                        data: [],
-                        borderColor: 'rgba(34, 211, 238, 1)',
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        tension: 0.1
-                    },
-                    {
-                        label: 'True Mean (3.5)',
-                        data: [],
-                        borderColor: 'rgba(248, 113, 113, 0.8)',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0
-                    }
-                ]
+                datasets: [{
+                    label: 'Running Average',
+                    data: [],
+                    borderColor: 'rgba(34, 211, 238, 1)',
+                    backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.1
+                }, {
+                    label: 'True Mean (0.5)',
+                    data: [],
+                    borderColor: 'rgba(255, 99, 132, 0.8)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: { duration: 0 },
+                animation: false,
                 scales: {
-                    x: { title: { display: true, text: 'Number of Rolls (n)' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
-                    y: { min: 1, max: 6, title: { display: true, text: 'Average Value' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                    y: { min: 0, max: 1, grid: { color: gridColor }, ticks: { color: textColor } },
+                    x: { grid: { display: false }, ticks: { color: textColor } }
                 },
-                plugins: { legend: { display: true, labels: { color: '#94a3b8' } } }
+                plugins: { legend: { display: true, labels: { color: textColor } } }
             }
         });
 
-        let rolls = [];
-        let runningSum = 0;
-        let isRunning = false;
-        let timer;
-        const BATCH_SIZE = 5; // Update chart every 5 rolls for performance
+        let simulationInterval;
+        let n = 0;
+        let sum = 0;
+        const maxN = 500;
 
-        function addRoll() {
-            // Roll a die (1-6)
-            const roll = Math.floor(Math.random() * 6) + 1;
-            rolls.push(roll);
-            runningSum += roll;
-
-            const n = rolls.length;
-            const mean = runningSum / n;
-
-            // Update UI text
-            document.getElementById('roll-count').textContent = n;
-            document.getElementById('last-roll').textContent = roll;
-            document.getElementById('sample-mean').textContent = mean.toFixed(4);
-
-            // Update Chart Data
-            llnChart.data.labels.push(n);
-            llnChart.data.datasets[0].data.push(mean);
-            llnChart.data.datasets[1].data.push(3.5);
-
-            // Scroll chart if too many points
-            if (n > 100) {
-                llnChart.options.scales.x.min = n - 100;
-                llnChart.options.scales.x.max = n;
-            } else {
-                llnChart.options.scales.x.min = 0;
-                llnChart.options.scales.x.max = 100;
+        function runSimulation() {
+            if (n >= maxN) {
+                clearInterval(simulationInterval);
+                return;
             }
 
+            // Flip coin (0 or 1)
+            const outcome = Math.random() < 0.5 ? 0 : 1;
+            sum += outcome;
+            n++;
+            const avg = sum / n;
+
+            llnChart.data.labels.push(n);
+            llnChart.data.datasets[0].data.push(avg);
+            llnChart.data.datasets[1].data.push(0.5);
             llnChart.update();
         }
 
-        function runBatch() {
-            if (!isRunning) return;
+        document.getElementById('start-sim').addEventListener('click', () => {
+            clearInterval(simulationInterval);
+            simulationInterval = setInterval(runSimulation, 20);
+        });
 
-            addRoll();
-
-            // Speed up as n increases
-            let delay = 100;
-            if (rolls.length > 50) delay = 50;
-            if (rolls.length > 200) delay = 10;
-
-            timer = setTimeout(runBatch, delay);
-        }
-
-        function toggleSim() {
-            const btn = document.getElementById('sim-btn');
-            if (isRunning) {
-                isRunning = false;
-                clearTimeout(timer);
-                btn.textContent = "Resume";
-                btn.classList.remove('bg-red-500', 'hover:bg-red-600');
-                btn.classList.add('bg-indigo-500', 'hover:bg-indigo-600');
-            } else {
-                isRunning = true;
-                btn.textContent = "Pause";
-                btn.classList.remove('bg-indigo-500', 'hover:bg-indigo-600');
-                btn.classList.add('bg-red-500', 'hover:bg-red-600');
-                runBatch();
-            }
-        }
-
-        function resetSim() {
-            isRunning = false;
-            clearTimeout(timer);
-            rolls = [];
-            runningSum = 0;
-
+        document.getElementById('reset-sim').addEventListener('click', () => {
+            clearInterval(simulationInterval);
+            n = 0;
+            sum = 0;
             llnChart.data.labels = [];
             llnChart.data.datasets[0].data = [];
             llnChart.data.datasets[1].data = [];
             llnChart.update();
-
-            document.getElementById('roll-count').textContent = "0";
-            document.getElementById('last-roll').textContent = "-";
-            document.getElementById('sample-mean').textContent = "-";
-
-            const btn = document.getElementById('sim-btn');
-            btn.textContent = "Start Rolling";
-            btn.classList.remove('bg-red-500', 'hover:bg-red-600');
-            btn.classList.add('bg-indigo-500', 'hover:bg-indigo-600');
-        }
+        });
 
     </script>
 </body>
