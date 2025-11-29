@@ -237,7 +237,16 @@
 
             <!-- Interactive PMF Plotter -->
             <div class="bg-gray-50 dark:bg-slate-900/50 rounded-xl p-6 border border-gray-200 dark:border-slate-700/50">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Interactive PMF Builder</h3>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Interactive PMF Builder</h3>
+                    <div
+                        class="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-500/20 flex items-center">
+                        <span class="text-sm text-gray-600 dark:text-indigo-300 font-medium mr-2">Expectation \( E[X]
+                            \):</span>
+                        <span id="pmf-expectation"
+                            class="text-lg font-bold text-indigo-600 dark:text-indigo-400 font-mono">2.50</span>
+                    </div>
+                </div>
                 <p class="text-sm text-gray-600 dark:text-slate-400 mb-6">
                     Adjust the probabilities for values 1, 2, 3, and 4. The system will normalize them to ensure they
                     sum to 1.
@@ -319,6 +328,121 @@
             </div>
         </section>
 
+        <!-- Expectation Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 mr-3 text-sm">4</span>
+                Expectation (Expected Value)
+            </h2>
+
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    The <strong>Expectation</strong> (or mean) of a random variable \( X \), denoted as \( E[X] \), is
+                    the weighted average of all possible values that \( X \) can take. It represents the "center of
+                    mass" of the distribution.
+                </p>
+                <div
+                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm">
+                    $$ E[X] = \sum_{x} x \cdot p_X(x) $$
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-8 mb-4">Properties of Expectation</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-indigo-500 mb-2">Linearity</h4>
+                        <p class="text-sm">Expectation is a linear operation:</p>
+                        <p class="text-center my-2 font-mono text-sm">\( E[aX + b] = a E[X] + b \)</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-indigo-500 mb-2">Sum of RVs</h4>
+                        <p class="text-sm">The expectation of a sum is the sum of expectations:</p>
+                        <p class="text-center my-2 font-mono text-sm">\( E[X + Y] = E[X] + E[Y] \)</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 md:col-span-2">
+                        <h4 class="font-semibold text-indigo-500 mb-2">Function of an RV (LOTUS)</h4>
+                        <p class="text-sm">Law of the Unconscious Statistician:</p>
+                        <p class="text-center my-2 font-mono text-sm">\( E[g(X)] = \sum_{x} g(x) p_X(x) \)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- St. Petersburg Paradox Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400 mr-3 text-sm">5</span>
+                The St. Petersburg Paradox
+            </h2>
+
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    Consider a game where a fair coin is tossed until it comes up Heads. If it comes up Heads on the \(
+                    n \)-th toss, you win \( 2^n \) dollars.
+                </p>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li>Probability of Heads on 1st toss: \( 1/2 \), Prize: $2</li>
+                    <li>Probability of Heads on 2nd toss: \( 1/4 \), Prize: $4</li>
+                    <li>Probability of Heads on 3rd toss: \( 1/8 \), Prize: $8</li>
+                </ul>
+                <p>
+                    <strong>How much would you pay to play this game?</strong>
+                </p>
+
+                <div
+                    class="my-6 p-6 bg-rose-50 dark:bg-rose-900/10 rounded-xl border border-rose-100 dark:border-rose-900/30 text-center">
+                    <p class="font-semibold text-rose-600 dark:text-rose-400 mb-2">Expected Value Calculation</p>
+                    $$ E[X] = \sum_{n=1}^{\infty} 2^n \cdot \frac{1}{2^n} = \sum_{n=1}^{\infty} 1 = 1 + 1 + 1 + \dots =
+                    \infty $$
+                </div>
+
+                <p>
+                    The expected payout is <strong>infinite</strong>! Yet, most people wouldn't pay more than a few
+                    dollars to play. This discrepancy between the infinite expected value and the finite practical value
+                    is the paradox.
+                </p>
+            </div>
+
+            <!-- Paradox Simulation -->
+            <div class="bg-gray-50 dark:bg-slate-900/50 rounded-xl p-6 border border-gray-200 dark:border-slate-700/50">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Simulate the Game</h3>
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="w-full md:w-1/3 space-y-4">
+                        <button id="play-paradox-btn"
+                            class="w-full py-3 px-4 bg-rose-500 hover:bg-rose-600 text-white rounded-lg font-medium transition-colors shadow-lg shadow-rose-500/20">
+                            Play Once
+                        </button>
+                        <button id="play-paradox-100-btn"
+                            class="w-full py-3 px-4 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-lg font-medium transition-colors">
+                            Play 100 Times
+                        </button>
+                    </div>
+                    <div class="w-full md:w-2/3 grid grid-cols-2 gap-4">
+                        <div
+                            class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 text-center">
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Last Win</div>
+                            <div id="paradox-last-win" class="text-2xl font-bold text-rose-500">$0</div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 text-center">
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Max Win</div>
+                            <div id="paradox-max-win" class="text-2xl font-bold text-emerald-500">$0</div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 text-center col-span-2">
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Average Win (over <span
+                                    id="paradox-plays">0</span> plays)</div>
+                            <div id="paradox-avg-win" class="text-3xl font-bold text-indigo-500">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Quiz Section -->
         <section class="glass-panel p-8 md:p-10">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Check Your Understanding</h2>
@@ -393,6 +517,16 @@
             valuesDisplay.forEach((display, i) => {
                 display.textContent = probabilities[i].toFixed(2);
             });
+
+            // Calculate and display Expectation
+            let expectation = 0;
+            probabilities.forEach((p, i) => {
+                expectation += (i + 1) * p;
+            });
+            const expectationDisplay = document.getElementById('pmf-expectation');
+            if (expectationDisplay) {
+                expectationDisplay.textContent = expectation.toFixed(2);
+            }
 
             // Draw PMF
             pmfGraph.innerHTML = '';
@@ -531,6 +665,56 @@
                 }
             });
         });
+        // St. Petersburg Paradox Simulation
+        const playBtn = document.getElementById('play-paradox-btn');
+        const play100Btn = document.getElementById('play-paradox-100-btn');
+        const lastWinDisplay = document.getElementById('paradox-last-win');
+        const maxWinDisplay = document.getElementById('paradox-max-win');
+        const avgWinDisplay = document.getElementById('paradox-avg-win');
+        const playsDisplay = document.getElementById('paradox-plays');
+
+        let totalWinnings = 0;
+        let totalPlays = 0;
+        let maxWin = 0;
+
+        function playParadoxGame() {
+            let n = 1;
+            // Flip coin until Heads (0 = Tails, 1 = Heads)
+            while (Math.random() < 0.5) {
+                n++;
+            }
+            // Win 2^n
+            return Math.pow(2, n);
+        }
+
+        function updateParadoxUI(lastWin) {
+            lastWinDisplay.textContent = `$${lastWin.toLocaleString()}`;
+            maxWinDisplay.textContent = `$${maxWin.toLocaleString()}`;
+            avgWinDisplay.textContent = `$${(totalWinnings / totalPlays).toFixed(2)}`;
+            playsDisplay.textContent = totalPlays.toLocaleString();
+        }
+
+        if (playBtn && play100Btn) {
+            playBtn.addEventListener('click', () => {
+                const win = playParadoxGame();
+                totalPlays++;
+                totalWinnings += win;
+                if (win > maxWin) maxWin = win;
+                updateParadoxUI(win);
+            });
+
+            play100Btn.addEventListener('click', () => {
+                let lastWin = 0;
+                for (let i = 0; i < 100; i++) {
+                    const win = playParadoxGame();
+                    totalPlays++;
+                    totalWinnings += win;
+                    if (win > maxWin) maxWin = win;
+                    lastWin = win;
+                }
+                updateParadoxUI(lastWin);
+            });
+        }
     </script>
 </body>
 

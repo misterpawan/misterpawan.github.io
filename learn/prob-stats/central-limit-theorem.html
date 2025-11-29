@@ -45,20 +45,6 @@
             background: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .interactive-card {
-            transition: all 0.3s ease;
-        }
-
-        .interactive-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark .interactive-card:hover {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            border-color: rgba(99, 102, 241, 0.4);
-        }
     </style>
 </head>
 
@@ -75,7 +61,7 @@
                         ProbStats
                     </a>
                     <span class="text-gray-400 dark:text-slate-500">/</span>
-                    <span class="text-gray-600 dark:text-slate-300 font-medium">Unit 7: CLT</span>
+                    <span class="text-gray-600 dark:text-slate-300 font-medium">Unit 5: Limit Theorems</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html"
@@ -103,7 +89,7 @@
                 Central Limit Theorem
             </h1>
             <p class="text-xl text-gray-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                The most important theorem in statistics. Why everything tends to become Normal.
+                The most important theorem in statistics: why sums of random variables tend to look like a Bell curve.
             </p>
         </div>
     </section>
@@ -116,71 +102,64 @@
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                 <span
                     class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3 text-sm">1</span>
-                The Central Limit Theorem (CLT)
+                The Theorem
             </h2>
             <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
                 <p>
-                    Let \( X_1, X_2, \dots, X_n \) be i.i.d. random variables with mean \( \mu \) and variance \(
-                    \sigma^2 < \infty \). <br>
-                        Then, as \( n \to \infty \), the standardized sample mean converges in distribution to the
-                        <strong>Standard Normal Distribution</strong> \( N(0,1) \).
+                    Let \( X_1, X_2, \dots, X_n \) be <strong>i.i.d.</strong> random variables with mean \( \mu \) and
+                    finite variance \( \sigma^2 \).
+                    Consider the standardized sum (or standardized sample mean):
                 </p>
                 <div
-                    class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm">
-                    $$ Z_n = \frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} N(0,1) $$
+                    class="text-center my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm">
+                    $$ Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sigma\sqrt{n}} = \frac{\overline{X}_n -
+                    \mu}{\sigma/\sqrt{n}} $$
                 </div>
                 <p>
-                    <strong>Key Insight:</strong> It does NOT matter what the original distribution of \( X_i \) is (as
-                    long as variance is finite). The sum (or average) will eventually look like a Bell Curve.
+                    The Central Limit Theorem (CLT) states that as \( n \to \infty \), \( Z_n \) converges in
+                    distribution to the <strong>Standard Normal Distribution</strong> \( \mathcal{N}(0, 1) \).
+                </p>
+                <div class="text-center my-4">
+                    $$ \lim_{n \to \infty} P(Z_n \le z) = \Phi(z) $$
+                </div>
+                <p>
+                    <strong>Key Insight:</strong> It does not matter what the original distribution of \( X_i \) is (as
+                    long as variance is finite). The sum will eventually look Normal.
                 </p>
             </div>
         </section>
 
-        <!-- 2. Interactive CLT Simulator -->
+        <!-- 2. Interactive Simulation -->
         <section class="glass-panel p-8 md:p-10">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                 <span
-                    class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-3 text-sm">2</span>
-                CLT in Action
+                    class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mr-3 text-sm">2</span>
+                Interactive Simulation
             </h2>
-            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
-                <p>
-                    Choose a distribution (Uniform or Exponential). We will take samples of size \( n \), calculate
-                    their mean, and plot the histogram of these means.
-                    <br>
-                    Notice how the shape becomes "Bell-shaped" as \( n \) increases.
-                </p>
-            </div>
-
             <div class="bg-gray-50 dark:bg-slate-900/50 rounded-xl p-6 border border-gray-200 dark:border-slate-700/50">
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Sum of Uniform Random Variables
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-slate-400 mb-6">
+                    Let \( X_i \sim \text{Uniform}(0, 1) \). We calculate \( S_n = \sum_{i=1}^n X_i \).
+                    <br>Adjust \( n \) (sample size) and observe the shape of the histogram of \( S_n \).
+                </p>
+
+                <div class="mb-6 space-y-4">
                     <div>
-                        <label
-                            class="block text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Distribution</label>
-                        <select id="dist-select"
-                            class="w-full p-2 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white">
-                            <option value="uniform">Uniform (0,1)</option>
-                            <option value="exponential">Exponential (lambda=1)</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Sample Size \( n
+                            \): <span id="n-val" class="text-gray-900 dark:text-white font-bold">1</span></label>
+                        <input type="range" min="1" max="20" step="1" value="1" id="n-slider"
+                            class="w-full accent-cyan-500">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Sample Size (\(
-                            n \)): <span id="n-val" class="text-gray-900 dark:text-white">2</span></label>
-                        <input type="range" min="1" max="50" step="1" value="2" class="w-full accent-purple-500"
-                            id="n-slider">
-                    </div>
+                    <button id="run-sim-btn"
+                        class="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors text-sm font-medium w-full md:w-auto">
+                        Generate 10,000 Samples
+                    </button>
                 </div>
 
                 <div
                     class="h-64 w-full relative border border-gray-200 dark:border-transparent rounded-lg bg-white dark:bg-slate-800/30 p-4">
                     <canvas id="cltChart"></canvas>
-                </div>
-
-                <div class="mt-4 flex justify-center">
-                    <button id="run-clt"
-                        class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm font-medium">
-                        Generate 1000 Samples
-                    </button>
                 </div>
             </div>
         </section>
@@ -189,50 +168,30 @@
         <section class="glass-panel p-8 md:p-10">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                 <span
-                    class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 mr-3 text-sm">3</span>
-                Normal Approximation
+                    class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mr-3 text-sm">3</span>
+                Applications
             </h2>
-            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
-                <p>
-                    Because of CLT, we can approximate probabilities for sums of random variables using the Normal
-                    distribution.
-                </p>
+            <div class="grid md:grid-cols-2 gap-8">
                 <div
-                    class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Binomial Approximation</h3>
-                    <p class="text-sm text-gray-600 dark:text-slate-400">
-                        If \( X \sim \text{Binomial}(n,p) \), then \( X \) is a sum of \( n \) Bernoulli trials.
-                        <br>
-                        For large \( n \), \( X \approx N(np, np(1-p)) \).
+                    class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Approximating Probabilities
+                    </h3>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm mb-4">
+                        If \( Y = \sum X_i \), we can approximate \( P(a \le Y \le b) \) using the Normal distribution.
                     </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. Quiz Section -->
-        <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Check Your Understanding</h2>
-            <div class="space-y-6">
-                <!-- Quiz 1 -->
-                <div
-                    class="quiz-item bg-white dark:bg-slate-800/30 p-6 rounded-xl border border-gray-200 dark:border-slate-700/30 shadow-sm">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">1. Requirements for CLT</h3>
-                    <p class="text-gray-600 dark:text-slate-400 mb-4">
-                        What is required for the CLT to hold?
-                    </p>
-                    <div class="space-y-3">
-                        <button
-                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
-                            data-correct="false">
-                            The underlying distribution must be Normal.
-                        </button>
-                        <button
-                            class="quiz-option w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-slate-700/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 border border-gray-200 dark:border-transparent hover:border-indigo-500/50 transition-all text-sm text-gray-700 dark:text-slate-300"
-                            data-correct="true">
-                            The variables must be i.i.d. with finite variance.
-                        </button>
+                    <div
+                        class="text-center p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg font-mono text-xs text-emerald-600 dark:text-emerald-400">
+                        $$ Z = \frac{Y - n\mu}{\sigma\sqrt{n}} \sim \mathcal{N}(0,1) $$
                     </div>
-                    <div class="quiz-feedback hidden mt-4 p-4 rounded-lg text-sm"></div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Why Normal is Everywhere</h3>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">
+                        Measurement errors, heights, test scores, and many natural phenomena are sums of many small
+                        independent factors, leading to a Normal distribution via CLT.
+                    </p>
                 </div>
             </div>
         </section>
@@ -240,34 +199,7 @@
     </main>
 
     <script>
-        // Quiz Logic
-        document.querySelectorAll('.quiz-option').forEach(button => {
-            button.addEventListener('click', function () {
-                const parent = this.closest('.quiz-item');
-                const feedback = parent.querySelector('.quiz-feedback');
-                const isCorrect = this.dataset.correct === 'true';
-
-                // Reset styles
-                parent.querySelectorAll('.quiz-option').forEach(opt => {
-                    opt.classList.remove('bg-green-500/20', 'border-green-500', 'bg-red-500/20', 'border-red-500');
-                    opt.classList.add('bg-gray-50', 'dark:bg-slate-700/30');
-                });
-
-                if (isCorrect) {
-                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
-                    this.classList.add('bg-green-500/20', 'border-green-500');
-                    feedback.textContent = "Correct!";
-                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-green-500/10 text-green-400 block";
-                } else {
-                    this.classList.remove('bg-gray-50', 'dark:bg-slate-700/30');
-                    this.classList.add('bg-red-500/20', 'border-red-500');
-                    feedback.textContent = "Incorrect. Try again!";
-                    feedback.className = "quiz-feedback mt-4 p-4 rounded-lg text-sm bg-red-500/10 text-red-400 block";
-                }
-            });
-        });
-
-        // CLT Chart
+        // CLT Simulation Logic
         const ctx = document.getElementById('cltChart').getContext('2d');
         const isDarkMode = document.documentElement.classList.contains('dark');
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
@@ -278,10 +210,10 @@
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Distribution of Sample Means',
+                    label: 'Frequency',
                     data: [],
-                    backgroundColor: 'rgba(168, 85, 247, 0.6)',
-                    borderColor: 'rgba(168, 85, 247, 1)',
+                    backgroundColor: 'rgba(34, 211, 238, 0.6)',
+                    borderColor: 'rgba(34, 211, 238, 1)',
                     borderWidth: 1
                 }]
             },
@@ -290,57 +222,63 @@
                 maintainAspectRatio: false,
                 scales: {
                     y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } },
-                    x: { grid: { display: false }, ticks: { color: textColor } }
+                    x: { grid: { display: false }, ticks: { color: textColor, maxTicksLimit: 10 } }
                 },
                 plugins: { legend: { display: false } }
             }
         });
 
-        function generateSamples() {
-            const dist = document.getElementById('dist-select').value;
+        function runSimulation() {
             const n = parseInt(document.getElementById('n-slider').value);
-            const numSamples = 1000;
-            const means = [];
+            document.getElementById('n-val').textContent = n;
+
+            const numSamples = 10000;
+            const bins = 50;
+            const sums = [];
+
+            // Generate samples
+            let minSum = Infinity;
+            let maxSum = -Infinity;
 
             for (let i = 0; i < numSamples; i++) {
                 let sum = 0;
                 for (let j = 0; j < n; j++) {
-                    if (dist === 'uniform') {
-                        sum += Math.random();
-                    } else {
-                        // Exponential(1) using inverse transform sampling: -ln(U)
-                        sum += -Math.log(Math.random());
-                    }
+                    sum += Math.random(); // Uniform(0,1)
                 }
-                means.push(sum / n);
+                sums.push(sum);
+                if (sum < minSum) minSum = sum;
+                if (sum > maxSum) maxSum = sum;
             }
 
-            // Create histogram bins
-            const bins = 30;
-            const min = Math.min(...means);
-            const max = Math.max(...means);
-            const binWidth = (max - min) / bins;
-            const counts = new Array(bins).fill(0);
+            // Create histogram
+            const range = maxSum - minSum;
+            const binWidth = range / bins;
+            const histogram = new Array(bins).fill(0);
+            const labels = [];
 
-            means.forEach(mean => {
-                const binIndex = Math.min(Math.floor((mean - min) / binWidth), bins - 1);
-                counts[binIndex]++;
+            for (let i = 0; i < bins; i++) {
+                labels.push((minSum + (i + 0.5) * binWidth).toFixed(2));
+            }
+
+            sums.forEach(s => {
+                let binIndex = Math.floor((s - minSum) / binWidth);
+                if (binIndex >= bins) binIndex = bins - 1;
+                histogram[binIndex]++;
             });
 
-            const labels = counts.map((_, i) => (min + i * binWidth + binWidth / 2).toFixed(2));
-
             cltChart.data.labels = labels;
-            cltChart.data.datasets[0].data = counts;
+            cltChart.data.datasets[0].data = histogram;
             cltChart.update();
         }
 
-        document.getElementById('run-clt').addEventListener('click', generateSamples);
-        document.getElementById('n-slider').addEventListener('input', function () {
-            document.getElementById('n-val').textContent = this.value;
+        document.getElementById('n-slider').addEventListener('input', (e) => {
+            document.getElementById('n-val').textContent = e.target.value;
         });
 
+        document.getElementById('run-sim-btn').addEventListener('click', runSimulation);
+
         // Initial run
-        generateSamples();
+        runSimulation();
 
     </script>
 </body>

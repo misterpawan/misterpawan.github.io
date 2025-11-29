@@ -209,11 +209,61 @@
             </div>
         </section>
 
-        <!-- 4. Cauchy-Schwarz & Jensen -->
+        </section>
+
+        <!-- 4. Solved Example: Binomial Bounds -->
         <section class="glass-panel p-8 md:p-10">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                 <span
-                    class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600 dark:text-pink-400 mr-3 text-sm">4</span>
+                    class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-600 dark:text-orange-400 mr-3 text-sm">4</span>
+                Solved Example: Bounds on Binomial Distribution
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    Let \( X \sim \text{Binomial}(n, p) \). We want to bound the probability of deviating from the mean
+                    \( \mu = np \).
+                    Consider \( P(X \ge \alpha n) \) where \( \alpha > p \).
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-6 my-6">
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-orange-500 mb-2">Markov Bound</h4>
+                        <p class="text-sm mb-2">Using \( E[X] = np \):</p>
+                        <div class="text-center font-mono text-sm">
+                            $$ P(X \ge \alpha n) \le \frac{np}{\alpha n} = \frac{p}{\alpha} $$
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Weakest bound. Constant (doesn't decay with \( n \)).</p>
+                    </div>
+
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-orange-500 mb-2">Chebyshev Bound</h4>
+                        <p class="text-sm mb-2">Using \( \text{Var}(X) = np(1-p) \):</p>
+                        <div class="text-center font-mono text-sm">
+                            $$ P(X \ge \alpha n) \le \frac{p(1-p)}{n(\alpha-p)^2} $$
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Better. Decays as \( 1/n \).</p>
+                    </div>
+
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-6 rounded-xl border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-orange-500 mb-2">Chernoff Bound</h4>
+                        <p class="text-sm mb-2">Using MGF:</p>
+                        <div class="text-center font-mono text-sm">
+                            $$ P(X \ge \alpha n) \le e^{-n D(\alpha || p)} $$
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Strongest. Decays exponentially with \( n \).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Cauchy-Schwarz & Jensen -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600 dark:text-pink-400 mr-3 text-sm">5</span>
                 Other Important Inequalities
             </h2>
 

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solved Examples - Probability & Statistics</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 1rem;
+        }
+
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-gray-200 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-gray-400 dark:text-slate-500">/</span>
+                    <span class="text-gray-600 dark:text-slate-300 font-medium">Solved Examples</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="continuous-rv.html"
+                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Prev:
+                        Continuous RVs</a>
+                    <a href="continuous-distributions.html"
+                        class="text-sm font-medium text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Next:
+                        Continuous Distributions</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-gray-50/0 to-gray-50/0 dark:via-slate-900/0 dark:to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
+                Solved Examples
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Step-by-step solutions to problems involving continuous random variables, transformations, and
+                conditional probabilities.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- Problem 1 -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3 text-sm">1</span>
+                Finding Constants and Moments
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p><strong>Problem:</strong> Consider the PDF of the random variable \( X \):</p>
+                <div class="text-center my-4">
+                    $$ f_X(x) = \begin{cases} cx^2 & |x| \leq 1 \\ 0 & \text{otherwise} \end{cases} $$
+                </div>
+                <ol class="list-decimal pl-6 space-y-2">
+                    <li>Find the constant \( c \).</li>
+                    <li>Find \( E[X] \) and \( \text{Var}(X) \).</li>
+                    <li>Find \( P(X \geq 1/2) \).</li>
+                </ol>
+
+                <div
+                    class="bg-indigo-50 dark:bg-indigo-900/10 p-6 rounded-xl border border-indigo-100 dark:border-indigo-900/30 my-6">
+                    <h4 class="font-semibold text-indigo-600 dark:text-indigo-400 mb-4">Solution</h4>
+
+                    <p class="mb-2"><strong>1. Find \( c \):</strong> The total probability must be 1.</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$ 1 = \int_{-\infty}^{\infty} f_X(x) \, dx = \int_{-1}^1 cx^2 \, dx = c \left[ \frac{x^3}{3}
+                        \right]_{-1}^1 = c \left( \frac{1}{3} - \frac{-1}{3} \right) = \frac{2c}{3} $$
+                        $$ \implies c = \frac{3}{2} $$
+                    </div>
+
+                    <p class="mb-2"><strong>2. Find \( E[X] \) and \( \text{Var}(X) \):</strong></p>
+                    <div class="text-center mb-4 text-sm">
+                        $$ E[X] = \int_{-1}^1 x \cdot \frac{3}{2}x^2 \, dx = \frac{3}{2} \int_{-1}^1 x^3 \, dx = 0 \quad
+                        (\text{Odd function}) $$
+                        $$ E[X^2] = \int_{-1}^1 x^2 \cdot \frac{3}{2}x^2 \, dx = \frac{3}{2} \int_{-1}^1 x^4 \, dx =
+                        \frac{3}{2} \left[ \frac{x^5}{5} \right]_{-1}^1 = \frac{3}{2} \cdot \frac{2}{5} = \frac{3}{5} $$
+                        $$ \text{Var}(X) = E[X^2] - (E[X])^2 = \frac{3}{5} - 0 = 0.6 $$
+                    </div>
+
+                    <p class="mb-2"><strong>3. Find \( P(X \geq 1/2) \):</strong></p>
+                    <div class="text-center text-sm">
+                        $$ P(X \geq 1/2) = \int_{1/2}^1 \frac{3}{2}x^2 \, dx = \frac{3}{2} \left[ \frac{x^3}{3}
+                        \right]_{1/2}^1 = \frac{1}{2} \left( 1^3 - (1/2)^3 \right) = \frac{1}{2} \left( 1 - \frac{1}{8}
+                        \right) = \frac{7}{16} $$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem 2 -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mr-3 text-sm">2</span>
+                Transformation of Variables (Square)
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p><strong>Problem:</strong> Let \( X \) have PDF \( f_X(x) = \frac{1}{2} e^{-|x|} \) for all \( x \in
+                    \mathbb{R} \). If \( Y = X^2 \), find the CDF of \( Y \).</p>
+
+                <div
+                    class="bg-cyan-50 dark:bg-cyan-900/10 p-6 rounded-xl border border-cyan-100 dark:border-cyan-900/30 my-6">
+                    <h4 class="font-semibold text-cyan-600 dark:text-cyan-400 mb-4">Solution</h4>
+                    <p class="mb-2">The range of \( Y \) is \( [0, \infty) \). For \( y \ge 0 \):</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$ F_Y(y) = P(Y \le y) = P(X^2 \le y) = P(-\sqrt{y} \le X \le \sqrt{y}) $$
+                        $$ = \int_{-\sqrt{y}}^{\sqrt{y}} \frac{1}{2} e^{-|x|} \, dx $$
+                    </div>
+                    <p class="mb-2">Since the integrand is even:</p>
+                    <div class="text-center text-sm">
+                        $$ = 2 \int_{0}^{\sqrt{y}} \frac{1}{2} e^{-x} \, dx = \int_{0}^{\sqrt{y}} e^{-x} \, dx = \left[
+                        -e^{-x} \right]_0^{\sqrt{y}} = 1 - e^{-\sqrt{y}} $$
+                    </div>
+                    <p class="mt-4">Thus, the CDF is:</p>
+                    <div class="text-center text-sm">
+                        $$ F_Y(y) = \begin{cases} 1 - e^{-\sqrt{y}} & y \ge 0 \\ 0 & y < 0 \end{cases} $$ </div>
+                    </div>
+                </div>
+        </section>
+
+        <!-- Problem 3 -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mr-3 text-sm">3</span>
+                Conditional Probability
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p><strong>Problem:</strong> Consider \( f_X(x) = 4x^3 \) for \( 0 < x \le 1 \). Find \( P(X \le 2/3
+                        \mid X> 1/3) \).</p>
+
+                <div
+                    class="bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-xl border border-emerald-100 dark:border-emerald-900/30 my-6">
+                    <h4 class="font-semibold text-emerald-600 dark:text-emerald-400 mb-4">Solution</h4>
+                    <p class="mb-2">Using the definition of conditional probability:</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$ P(A \mid B) = \frac{P(A \cap B)}{P(B)} $$
+                        $$ P(X \le 2/3 \mid X > 1/3) = \frac{P(1/3 < X \le 2/3)}{P(X> 1/3)} $$
+                    </div>
+                    <p class="mb-2">Calculating the numerator:</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$ \int_{1/3}^{2/3} 4x^3 \, dx = \left[ x^4 \right]_{1/3}^{2/3} = (2/3)^4 - (1/3)^4 =
+                        \frac{16}{81} - \frac{1}{81} = \frac{15}{81} $$
+                    </div>
+                    <p class="mb-2">Calculating the denominator:</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$ \int_{1/3}^{1} 4x^3 \, dx = \left[ x^4 \right]_{1/3}^{1} = 1^4 - (1/3)^4 = 1 - \frac{1}{81} =
+                        \frac{80}{81} $$
+                    </div>
+                    <p class="mb-2">Final result:</p>
+                    <div class="text-center text-sm">
+                        $$ \frac{15/81}{80/81} = \frac{15}{80} = \frac{3}{16} $$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem 4 -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-3 text-sm">4</span>
+                Variance of a Function
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p><strong>Problem:</strong> Let \( f_X(x) = x^2(2x + 3/2) \) for \( 0 < x \le 1 \). If \( Y=\frac{2}{X}
+                        + 3 \), find \( \text{Var}(Y) \).</p>
+
+                        <div
+                            class="bg-purple-50 dark:bg-purple-900/10 p-6 rounded-xl border border-purple-100 dark:border-purple-900/30 my-6">
+                            <h4 class="font-semibold text-purple-600 dark:text-purple-400 mb-4">Solution</h4>
+                            <p class="mb-2">First, simplify the variance expression:</p>
+                            <div class="text-center mb-4 text-sm">
+                                $$ \text{Var}(Y) = \text{Var}\left(\frac{2}{X} + 3\right) = 2^2
+                                \text{Var}\left(\frac{1}{X}\right) = 4 \left( E\left[\frac{1}{X^2}\right] -
+                                (E\left[\frac{1}{X}\right])^2 \right) $$
+                            </div>
+                            <p class="mb-2">Calculate expectations:</p>
+                            <div class="text-center mb-4 text-sm">
+                                $$ E\left[\frac{1}{X}\right] = \int_0^1 \frac{1}{x} \cdot x^2(2x + 3/2) \, dx = \int_0^1
+                                (2x^2 + \frac{3}{2}x) \, dx = \left[ \frac{2x^3}{3} + \frac{3x^2}{4} \right]_0^1 =
+                                \frac{2}{3} + \frac{3}{4} = \frac{17}{12} $$
+                                $$ E\left[\frac{1}{X^2}\right] = \int_0^1 \frac{1}{x^2} \cdot x^2(2x + 3/2) \, dx =
+                                \int_0^1 (2x + \frac{3}{2}) \, dx = \left[ x^2 + \frac{3x}{2} \right]_0^1 = 1 +
+                                \frac{3}{2} = \frac{5}{2} $$
+                            </div>
+                            <p class="mb-2">Calculate variance:</p>
+                            <div class="text-center text-sm">
+                                $$ \text{Var}\left(\frac{1}{X}\right) = \frac{5}{2} - \left(\frac{17}{12}\right)^2 =
+                                \frac{5}{2} - \frac{289}{144} = \frac{360 - 289}{144} = \frac{71}{144} $$
+                                $$ \text{Var}(Y) = 4 \cdot \frac{71}{144} = \frac{71}{36} $$
+                            </div>
+                        </div>
+            </div>
+        </section>
+
+        <!-- Problem 5 -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600 dark:text-pink-400 mr-3 text-sm">5</span>
+                Transformation of Variables (Sine)
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p><strong>Problem:</strong> Let \( X \sim \text{Uniform}(-\pi/2, \pi) \) and \( Y = \sin(X) \). Find \(
+                    f_Y(y) \).</p>
+
+                <div
+                    class="bg-pink-50 dark:bg-pink-900/10 p-6 rounded-xl border border-pink-100 dark:border-pink-900/30 my-6">
+                    <h4 class="font-semibold text-pink-600 dark:text-pink-400 mb-4">Solution</h4>
+                    <p class="mb-2">The PDF of \( X \) is \( f_X(x) = \frac{1}{\pi - (-\pi/2)} = \frac{2}{3\pi} \) for
+                        \( x \in [-\pi/2, \pi] \).</p>
+                    <p class="mb-2">The range of \( Y \) is \( [-1, 1] \). The transformation \( y = \sin(x) \) is not
+                        monotonic on the entire domain.</p>
+                    <ul class="list-disc pl-6 mb-4 text-sm">
+                        <li>For \( y \in (-1, 0) \), there is one solution \( x \in [-\pi/2, 0] \).</li>
+                        <li>For \( y \in (0, 1) \), there are two solutions: \( x_1 \in [0, \pi/2] \) and \( x_2 \in
+                            [\pi/2, \pi] \).</li>
+                    </ul>
+                    <p class="mb-2">Using the transformation formula \( f_Y(y) = \sum \frac{f_X(x)}{|g'(x)|} \) where \(
+                        g'(x) = \cos(x) = \sqrt{1-y^2} \):</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$ f_Y(y) = \begin{cases} \frac{2}{3\pi \sqrt{1-y^2}} & -1 < y < 0 \\ \frac{2}{3\pi
+                            \sqrt{1-y^2}} + \frac{2}{3\pi \sqrt{1-y^2}}=\frac{4}{3\pi \sqrt{1-y^2}} & 0 < y < 1
+                            \end{cases} $$ </div>
+                    </div>
+                </div>
+        </section>
+
+    </main>
+
+</body>
+
+</html>

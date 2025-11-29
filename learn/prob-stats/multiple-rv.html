@@ -199,10 +199,30 @@
                     The MGF of a random variable \( X \) is defined as \( M_X(s) = E[e^{sX}] \). It uniquely determines
                     the distribution.
                 </p>
-                <ul class="list-disc pl-6 space-y-2">
+                <ul class="list-disc pl-6 space-y-2 mb-6">
                     <li><strong>Moments:</strong> \( E[X^k] = \frac{d^k}{ds^k} M_X(s) \big|_{s=0} \)</li>
                     <li><strong>Sum of Independent RVs:</strong> \( M_{X+Y}(s) = M_X(s) \cdot M_Y(s) \)</li>
                 </ul>
+
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Common MGFs</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-4 rounded-lg border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-emerald-500 mb-2">Exponential(\(\lambda\))</h4>
+                        <p class="text-sm text-center font-mono my-2">\( \frac{\lambda}{\lambda - s}, \quad s < \lambda
+                                \)</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-4 rounded-lg border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-emerald-500 mb-2">Poisson(\(\lambda\))</h4>
+                        <p class="text-sm text-center font-mono my-2">\( e^{\lambda(e^s - 1)} \)</p>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800/50 p-4 rounded-lg border border-gray-200 dark:border-slate-700/50">
+                        <h4 class="font-semibold text-emerald-500 mb-2">Binomial(n, p)</h4>
+                        <p class="text-sm text-center font-mono my-2">\( (pe^s + 1-p)^n \)</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -244,6 +264,45 @@
                     class="my-6 p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-gray-200 dark:border-slate-700/50 text-center shadow-sm overflow-x-auto">
                     $$ f_\mathbf{X}(\mathbf{x}) = \frac{1}{(2\pi)^{n/2} |\Sigma|^{1/2}} \exp\left( -\frac{1}{2}
                     (\mathbf{x} - \mathbf{\mu})^T \Sigma^{-1} (\mathbf{x} - \mathbf{\mu}) \right) $$
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Solved Example: The Circle Problem -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span
+                    class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400 mr-3 text-sm">6</span>
+                Solved Example: The Circle Problem
+            </h2>
+            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
+                <p>
+                    <strong>Problem:</strong> \( N \) people sit around a round table (\( N > 5 \)). Each person tosses
+                    a fair coin.
+                    Anyone whose outcome is different from <em>both</em> their neighbors receives a gift.
+                    Let \( X \) be the number of people who receive gifts. Find \( E[X] \).
+                </p>
+
+                <div
+                    class="bg-rose-50 dark:bg-rose-900/10 p-6 rounded-xl border border-rose-100 dark:border-rose-900/30 my-6">
+                    <h4 class="font-semibold text-rose-600 dark:text-rose-400 mb-2">Solution using Indicator Variables
+                    </h4>
+                    <p class="mb-4">
+                        Let \( I_i \) be an indicator variable for the \( i \)-th person receiving a gift.
+                        $$ X = I_1 + I_2 + \dots + I_N $$
+                    </p>
+                    <p class="mb-4">
+                        For person \( i \) to receive a gift, their coin must be different from neighbor \( i-1 \) AND
+                        neighbor \( i+1 \).
+                        <br>
+                        Possible winning patterns: (H, T, H) or (T, H, T).
+                        <br>
+                        Probability \( P(I_i = 1) = (1/2)^3 + (1/2)^3 = 1/8 + 1/8 = 1/4 \).
+                    </p>
+                    <p>
+                        By Linearity of Expectation:
+                        $$ E[X] = \sum_{i=1}^N E[I_i] = \sum_{i=1}^N \frac{1}{4} = \frac{N}{4} $$
+                    </p>
                 </div>
             </div>
         </section>
