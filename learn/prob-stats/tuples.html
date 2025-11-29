@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuples & Permutations | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+
+        .slot {
+            transition: all 0.3s ease;
+        }
+
+        .slot.filled {
+            background-color: #e0e7ff;
+            border-color: #6366f1;
+        }
+
+        .dark .slot.filled {
+            background-color: #312e81;
+            border-color: #818cf8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 1: Basic Background</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Tuples & Permutations
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Counting ordered sequences with and without repetition
+            </p>
+        </div>
+
+        <!-- Tuples (With Repetition) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🔁</span> Tuples (With Repetition)
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/40 dark:to-cyan-900/40 p-8 rounded-xl border-l-4 border-blue-500 mb-6">
+                    <h3 class="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">Definition</h3>
+                    <p class="text-lg">
+                        A <strong>tuple</strong> is an ordered sequence of length \(k\) where symbols are chosen from a
+                        set of \(n\) elements, allowing repetitions.
+                    </p>
+                    <p class="mt-4 text-xl font-bold">
+                        Formula: \(n^k\)
+                    </p>
+                </div>
+
+                <!-- Interactive Password Strength -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Interactive: Password Search Space</h4>
+                    <p class="text-center mb-6 text-gray-600 dark:text-gray-400">Type a password to see how many
+                        possibilities exist for that length!</p>
+
+                    <div class="max-w-md mx-auto">
+                        <input type="text" id="password-input" placeholder="Type password..."
+                            class="w-full p-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-transparent text-xl text-center focus:border-violet-500 focus:outline-none transition"
+                            oninput="updatePasswordStats()">
+
+                        <div class="mt-6 space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <span>Length (\(k\)):</span>
+                                <span id="pwd-length" class="font-bold text-violet-600 dark:text-violet-400">0</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <span>Alphabet Size (\(n\)):</span>
+                                <span class="font-bold">26 (Lower case letters)</span>
+                            </div>
+                            <div
+                                class="flex justify-between items-center p-3 bg-violet-100 dark:bg-violet-900/40 rounded-lg">
+                                <span>Total Possibilities (\(26^k\)):</span>
+                                <span id="pwd-possibilities"
+                                    class="font-bold text-violet-700 dark:text-violet-300">1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Number Plate Example -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Example: Vehicle Number Plates</h3>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="mb-4">Consider a simplified Indian number plate format:</p>
+                        <ul class="space-y-2 mb-4">
+                            <li>• <strong>State (2 letters):</strong> \(26 \times 26\) options</li>
+                            <li>• <strong>District (2 digits):</strong> \(10 \times 10\) options</li>
+                            <li>• <strong>Series (2 letters):</strong> \(26 \times 26\) options</li>
+                            <li>• <strong>Number (4 digits):</strong> \(10^4\) options</li>
+                        </ul>
+                    </div>
+                    <div
+                        class="bg-yellow-400 text-black p-4 rounded-lg border-4 border-black font-mono text-center shadow-lg transform rotate-1">
+                        <div class="text-xs absolute top-1 left-2">IND</div>
+                        <div class="text-4xl font-bold tracking-wider mt-2">KA 05 AB 1234</div>
+                    </div>
+                </div>
+                <div class="mt-6 bg-gray-100 dark:bg-gray-700 p-4 rounded-xl text-center">
+                    <p class="font-bold text-lg">Total Vehicles = \(26^2 \times 10^2 \times 26^2 \times 10^4 \approx 4.5
+                        \times 10^9\)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Permutations (No Repetition) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🔀</span> Permutations (No Repetition)
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 p-8 rounded-xl border-l-4 border-purple-500 mb-6">
+                    <h3 class="text-xl font-bold mb-4 text-purple-700 dark:text-purple-300">Definition</h3>
+                    <p class="text-lg">
+                        A <strong>\(k\)-permutation</strong> is an ordered sequence of length \(k\) from \(n\) symbols,
+                        where <strong>no symbol is repeated</strong>.
+                    </p>
+                    <p class="mt-4 text-xl font-bold">
+                        Formula: \(P(n, k) = \frac{n!}{(n-k)!}\)
+                    </p>
+                </div>
+
+                <!-- Interactive Permutation Visualizer -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Interactive: Filling Slots</h4>
+                    <p class="text-center mb-6 text-gray-600 dark:text-gray-400">
+                        We have 5 distinct items (A, B, C, D, E). How many ways to fill 3 slots?
+                    </p>
+
+                    <div class="flex justify-center gap-4 mb-8">
+                        <div class="text-center">
+                            <div
+                                class="slot w-20 h-24 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center text-2xl font-bold mb-2 relative">
+                                <span class="text-gray-400">1st</span>
+                                <div class="absolute -bottom-8 text-sm w-full text-center text-violet-600 font-bold">5
+                                    options</div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div
+                                class="slot w-20 h-24 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center text-2xl font-bold mb-2 relative">
+                                <span class="text-gray-400">2nd</span>
+                                <div class="absolute -bottom-8 text-sm w-full text-center text-violet-600 font-bold">4
+                                    options</div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div
+                                class="slot w-20 h-24 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center text-2xl font-bold mb-2 relative">
+                                <span class="text-gray-400">3rd</span>
+                                <div class="absolute -bottom-8 text-sm w-full text-center text-violet-600 font-bold">3
+                                    options</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-12">
+                        <p class="text-2xl font-bold text-gray-800 dark:text-white">
+                            Total = \(5 \times 4 \times 3 = 60\)
+                        </p>
+                        <p class="text-sm text-gray-500 mt-2">
+                            Notice how the number of options decreases by 1 for each slot!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📝</span> Test Your Understanding
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl mb-4">How many 3-digit PIN codes can be formed using digits 0-9 (repetition
+                        allowed)?</p>
+                    <div id="quiz1" class="space-y-3">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> \(10 \times 9 \times 8 = 720\)
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> \(10^3 = 1000\)
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> \(3^{10}\)
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">Question 2:</h3>
+                    <p class="text-xl mb-4">In a race with 8 runners, how many ways can the Gold, Silver, and Bronze
+                        medals be awarded?</p>
+                    <div id="quiz2" class="space-y-3">
+                        <button onclick="checkQuiz(2, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> \(8 \times 7 \times 6 = 336\)
+                        </button>
+                        <button onclick="checkQuiz(2, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> \(8^3 = 512\)
+                        </button>
+                        <button onclick="checkQuiz(2, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> \(3 \times 8 = 24\)
+                        </button>
+                    </div>
+                    <div id="quiz2-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="sum-product-rule.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Sum & Product Rules
+            </a>
+            <a href="combinations.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Combinations <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Password Stats Logic
+        function updatePasswordStats() {
+            const input = document.getElementById('password-input');
+            const lengthDisplay = document.getElementById('pwd-length');
+            const possibilitiesDisplay = document.getElementById('pwd-possibilities');
+
+            const length = input.value.length;
+            lengthDisplay.innerText = length;
+
+            if (length === 0) {
+                possibilitiesDisplay.innerText = "1";
+                return;
+            }
+
+            // Calculate 26^k
+            // Use BigInt for large numbers
+            const possibilities = BigInt(26) ** BigInt(length);
+
+            // Format number with commas
+            possibilitiesDisplay.innerText = possibilities.toLocaleString();
+        }
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'b', 2: 'a' }; // 1: 10^3 (repetition), 2: 8*7*6 (no repetition)
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! " + (qNum === 1 ? "With repetition allowed, it's \(10 \\times 10 \\times 10\)." : "Since a runner can't win two medals, repetition is NOT allowed.");
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+                // Re-render MathJax in the feedback
+                MathJax.typesetPromise([feedback]);
+            } else {
+                feedback.innerHTML = "Incorrect. Try again! Hint: Does order matter? Is repetition allowed?";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+    </script>
+</body>
+
+</html>

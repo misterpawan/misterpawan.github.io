@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Problems | Unit 1</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .step-content.open {
+            max-height: 500px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 1: Basic Background</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Unit 1 Practice Problems
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                Challenge yourself with these counting problems. Try to solve them before looking at the hints!
+            </p>
+        </div>
+
+        <!-- Problem 1: Assignments -->
+        <section class="mb-12">
+            <div class="glass p-8 rounded-2xl shadow-lg border-l-4 border-blue-500">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-2xl font-bold text-blue-700 dark:text-blue-300">Problem 1: Distributing Assignments
+                    </h2>
+                    <span
+                        class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">Permutations</span>
+                </div>
+
+                <p class="text-lg mb-6">
+                    Suppose there are <strong>4 people</strong> and <strong>9 different assignments</strong>. Each
+                    person should receive exactly one assignment. Assignments for different people must be different.
+                    How many ways are there to do it?
+                </p>
+
+                <div class="space-y-4">
+                    <!-- Step 1 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p1-s1')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 1: Analyze the Problem Type</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p1-s1" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <p>Ask yourself:</p>
+                                <ul class="list-disc ml-6 mt-2 space-y-1">
+                                    <li>Are the items (assignments) distinct? <strong>Yes.</strong></li>
+                                    <li>Does order matter (who gets what)? <strong>Yes.</strong></li>
+                                    <li>Is repetition allowed? <strong>No</strong> (assignments must be different).</li>
+                                </ul>
+                                <p class="mt-2 text-blue-600 font-semibold">Conclusion: This is a Permutation problem
+                                    (Ordered, No Repetition).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p1-s2')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 2: Apply the Formula</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p1-s2" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <p>We are choosing 4 assignments out of 9, and order matters.</p>
+                                <p class="mt-2">Formula: \(P(n, k) = \frac{n!}{(n-k)!}\)</p>
+                                <p class="mt-2">Calculation: \(9 \times 8 \times 7 \times 6\)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Answer -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p1-ans')"
+                            class="w-full p-4 text-left bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 font-bold text-blue-700 dark:text-blue-300 flex justify-between items-center">
+                            <span>Reveal Answer</span>
+                            <span class="text-xl">?</span>
+                        </button>
+                        <div id="p1-ans" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4 text-center">
+                                <p class="text-3xl font-bold text-blue-600">3,024 ways</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem 2: Candies (Stars and Bars) -->
+        <section class="mb-12">
+            <div class="glass p-8 rounded-2xl shadow-lg border-l-4 border-orange-500">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-2xl font-bold text-orange-700 dark:text-orange-300">Problem 2: Distributing Candies
+                    </h2>
+                    <span
+                        class="bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-orange-200 dark:text-orange-800">Stars
+                        & Bars</span>
+                </div>
+
+                <p class="text-lg mb-6">
+                    There are <strong>15 identical candies</strong>. How many ways are there to distribute them among
+                    <strong>7 kids</strong>?
+                </p>
+
+                <div class="space-y-4">
+                    <!-- Step 1 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p2-s1')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 1: Analyze the Problem Type</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p2-s1" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <ul class="list-disc ml-6 space-y-1">
+                                    <li>Candies are identical → Order doesn't matter.</li>
+                                    <li>Kids are distinct → We are assigning counts to kids.</li>
+                                    <li>Repetition allowed? Yes, a kid can get multiple candies.</li>
+                                </ul>
+                                <p class="mt-2 text-orange-600 font-semibold">Conclusion: Combinations with Repetition
+                                    (Stars and Bars).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p2-s2')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 2: Apply the Formula</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p2-s2" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <p>\(n = 7\) (kids/bins), \(k = 15\) (candies/stars)</p>
+                                <p class="mt-2">Formula: \(\binom{n+k-1}{k} = \binom{n+k-1}{n-1}\)</p>
+                                <p class="mt-2">Calculation: \(\binom{15+7-1}{7-1} = \binom{21}{6}\)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Answer -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p2-ans')"
+                            class="w-full p-4 text-left bg-orange-50 dark:bg-orange-900/30 hover:bg-orange-100 dark:hover:bg-orange-900/50 font-bold text-orange-700 dark:text-orange-300 flex justify-between items-center">
+                            <span>Reveal Answer</span>
+                            <span class="text-xl">?</span>
+                        </button>
+                        <div id="p2-ans" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4 text-center">
+                                <p class="text-3xl font-bold text-orange-600">54,264 ways</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem 3: Fair Distribution -->
+        <section class="mb-12">
+            <div class="glass p-8 rounded-2xl shadow-lg border-l-4 border-purple-500">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-2xl font-bold text-purple-700 dark:text-purple-300">Problem 3: Fair Candy
+                        Distribution</h2>
+                    <span
+                        class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-purple-200 dark:text-purple-800">Advanced
+                        Stars & Bars</span>
+                </div>
+
+                <p class="text-lg mb-6">
+                    Same as Problem 2 (15 candies, 7 kids), but now <strong>each kid must receive at least 1
+                        candy</strong>.
+                </p>
+
+                <div class="space-y-4">
+                    <!-- Step 1 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p3-s1')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 1: Reduce the Problem</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p3-s1" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <p>Give 1 candy to each kid first to satisfy the condition.</p>
+                                <p>Candies used: 7.</p>
+                                <p>Candies remaining: \(15 - 7 = 8\).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p3-s2')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 2: Solve Reduced Problem</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p3-s2" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <p>Now distribute the remaining 8 candies among 7 kids with no restrictions.</p>
+                                <p>\(n = 7, k = 8\)</p>
+                                <p>Formula: \(\binom{8+7-1}{7-1} = \binom{14}{6}\)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Answer -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p3-ans')"
+                            class="w-full p-4 text-left bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 font-bold text-purple-700 dark:text-purple-300 flex justify-between items-center">
+                            <span>Reveal Answer</span>
+                            <span class="text-xl">?</span>
+                        </button>
+                        <div id="p3-ans" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4 text-center">
+                                <p class="text-3xl font-bold text-purple-600">3,003 ways</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem 4: Group Splitting -->
+        <section class="mb-12">
+            <div class="glass p-8 rounded-2xl shadow-lg border-l-4 border-red-500">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-2xl font-bold text-red-700 dark:text-red-300">Problem 4: Working Groups</h2>
+                    <span
+                        class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-red-200 dark:text-red-800">Complex
+                        Counting</span>
+                </div>
+
+                <p class="text-lg mb-6">
+                    There are <strong>12 students</strong>. How many ways can you split them into <strong>6 working
+                        groups of size 2</strong>?
+                </p>
+
+                <div class="space-y-4">
+                    <!-- Step 1 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p4-s1')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 1: Choose Groups Sequentially</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p4-s1" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <p>Pick 2 for group 1: \(\binom{12}{2}\)</p>
+                                <p>Pick 2 for group 2: \(\binom{10}{2}\)</p>
+                                <p>...and so on until \(\binom{2}{2}\).</p>
+                                <p>Product: \(\binom{12}{2} \times \binom{10}{2} \times \dots \times \binom{2}{2}\)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p4-s2')"
+                            class="w-full p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold flex justify-between items-center">
+                            <span>Step 2: Correct for Overcounting</span>
+                            <span class="text-xl">+</span>
+                        </button>
+                        <div id="p4-s2" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4">
+                                <p class="text-red-600 font-bold">Wait! The order of groups doesn't matter.</p>
+                                <p>We counted the sequence of groups (Group A, then Group B...) but {A, B} is the same
+                                    set of groups as {B, A}.</p>
+                                <p>Since there are 6 groups, we must divide by \(6!\).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Answer -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleStep('p4-ans')"
+                            class="w-full p-4 text-left bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 font-bold text-red-700 dark:text-red-300 flex justify-between items-center">
+                            <span>Reveal Answer</span>
+                            <span class="text-xl">?</span>
+                        </button>
+                        <div id="p4-ans" class="step-content bg-white dark:bg-gray-900 px-4">
+                            <div class="py-4 text-center">
+                                <p class="text-lg mb-2">\(\frac{12!}{2^6 \times 6!} =\)</p>
+                                <p class="text-3xl font-bold text-red-600">10,395 ways</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="combinations.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Combinations
+            </a>
+            <a href="index.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Back to Syllabus <span>↑</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleStep(id) {
+            const content = document.getElementById(id);
+            const button = content.previousElementSibling;
+            const icon = button.querySelector('span:last-child');
+
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                content.style.maxHeight = '0';
+                if (icon.innerText === '-') icon.innerText = '+';
+            } else {
+                content.classList.add('open');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                if (icon.innerText === '+') icon.innerText = '-';
+            }
+        }
+    </script>
+</body>
+
+</html>

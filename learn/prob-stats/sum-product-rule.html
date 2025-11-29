@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum & Product Rules | Probability and Statistics</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+        }
+
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .dark .quiz-option.correct {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .dark .quiz-option.incorrect {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+        }
+
+        .interactive-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .interactive-item:hover {
+            transform: scale(1.1);
+        }
+
+        .interactive-item.selected {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-50 max-w-4xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold text-lg hover:text-violet-600 transition">
+                <span>←</span> Back to Syllabus
+            </a>
+            <span class="text-sm text-gray-600 dark:text-gray-400">Unit 1: Basic Background</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Sum & Product Rules
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">
+                The fundamental building blocks of combinatorial counting
+            </p>
+        </div>
+
+        <!-- The Sum Rule -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">➕</span> The Sum Rule
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/40 dark:to-teal-900/40 p-8 rounded-xl border-l-4 border-emerald-500 mb-6">
+                    <h3 class="text-xl font-bold mb-4 text-emerald-700 dark:text-emerald-300">Definition</h3>
+                    <p class="text-lg">
+                        If set \(A\) has \(k\) elements and set \(B\) has \(n\) elements, and these sets are
+                        <strong>disjoint</strong> (have no common elements), then the set \(A \cup B\) has \(n + k\)
+                        elements.
+                    </p>
+                </div>
+
+                <!-- Interactive Sum Rule Example -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Interactive Example: Choosing a Restaurant</h4>
+                    <p class="text-center mb-6 text-gray-600 dark:text-gray-400">Click on the places to count them!</p>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="text-center">
+                            <h5 class="font-bold text-red-500 mb-4">Pizza Places (Set A)</h5>
+                            <div class="flex flex-wrap justify-center gap-4" id="pizza-container">
+                                <div class="interactive-item text-4xl p-2 bg-red-50 dark:bg-red-900/20 rounded-lg"
+                                    onclick="toggleCount(this, 'pizza')">🍕</div>
+                                <div class="interactive-item text-4xl p-2 bg-red-50 dark:bg-red-900/20 rounded-lg"
+                                    onclick="toggleCount(this, 'pizza')">🍕</div>
+                                <div class="interactive-item text-4xl p-2 bg-red-50 dark:bg-red-900/20 rounded-lg"
+                                    onclick="toggleCount(this, 'pizza')">🍕</div>
+                            </div>
+                            <p class="mt-2 font-mono">Count: <span id="pizza-count">0</span></p>
+                        </div>
+
+                        <div class="text-center border-l-0 md:border-l border-gray-200 dark:border-gray-700">
+                            <h5 class="font-bold text-yellow-500 mb-4">Burger Joints (Set B)</h5>
+                            <div class="flex flex-wrap justify-center gap-4" id="burger-container">
+                                <div class="interactive-item text-4xl p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg"
+                                    onclick="toggleCount(this, 'burger')">🍔</div>
+                                <div class="interactive-item text-4xl p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg"
+                                    onclick="toggleCount(this, 'burger')">🍔</div>
+                            </div>
+                            <p class="mt-2 font-mono">Count: <span id="burger-count">0</span></p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center bg-gray-100 dark:bg-gray-700 p-4 rounded-xl">
+                        <p class="text-xl font-bold">Total Options = <span id="total-sum-count">0</span></p>
+                        <p class="text-sm text-gray-500 mt-1" id="sum-rule-feedback">Select all places to verify the
+                            rule!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spot the Flaw: Inclusion-Exclusion -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">🕵️</span> Spot the Flaw!
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg border-2 border-red-100 dark:border-red-900/30">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold mb-2">The Problem:</h3>
+                    <p class="text-lg">Count all integers from 1 to 10 that are divisible by 2 <strong>OR</strong> by 3.
+                    </p>
+                </div>
+
+                <div class="bg-red-50 dark:bg-red-900/10 p-6 rounded-xl mb-6">
+                    <h4 class="font-bold text-red-600 dark:text-red-400 mb-2">Proposed Solution (Incorrect):</h4>
+                    <p>
+                        "There are 5 numbers divisible by 2: {2, 4, 6, 8, 10}.<br>
+                        There are 3 numbers divisible by 3: {3, 6, 9}.<br>
+                        So, by the Sum Rule, the answer is \(5 + 3 = 8\)."
+                    </p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner text-center">
+                    <p class="font-bold text-lg mb-4">Click on the number that causes the error!</p>
+                    <div class="flex flex-wrap justify-center gap-3" id="number-line">
+                        <!-- Generated by JS -->
+                    </div>
+                    <div id="flaw-feedback" class="mt-4 font-semibold min-h-[1.5em]"></div>
+                </div>
+
+                <div id="inclusion-exclusion-explanation"
+                    class="hidden mt-6 bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border-l-4 border-green-500">
+                    <h4 class="font-bold text-green-700 dark:text-green-300 mb-2">Correct! It's the Inclusion-Exclusion
+                        Principle</h4>
+                    <p>The number <strong>6</strong> is divisible by BOTH 2 and 3. We counted it twice!</p>
+                    <p class="mt-2 font-mono bg-white dark:bg-gray-800 p-2 rounded inline-block">
+                        \(|A \cup B| = |A| + |B| - |A \cap B|\)
+                    </p>
+                    <p class="mt-2">
+                        Correct calculation: \(5 + 3 - 1 = 7\)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Product Rule -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">✖️</span> The Product Rule
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg mb-6">
+                <div
+                    class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/40 dark:to-indigo-900/40 p-8 rounded-xl border-l-4 border-blue-500 mb-6">
+                    <h3 class="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">Definition</h3>
+                    <p class="text-lg">
+                        If there are \(k\) objects of the first type and \(n\) objects of the second type, then there
+                        are
+                        <strong>\(k \times n\)</strong> pairs of objects (one of each type).
+                    </p>
+                </div>
+
+                <!-- Interactive Product Rule: Outfit Picker -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-inner">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Interactive Example: Outfit Picker</h4>
+
+                    <div class="grid grid-cols-2 gap-8 mb-6">
+                        <div class="text-center">
+                            <h5 class="font-bold text-blue-500 mb-2">Shirts (3 Options)</h5>
+                            <div class="flex justify-center gap-2">
+                                <button onclick="selectItem('shirt', 0)"
+                                    class="shirt-btn p-2 border-2 border-transparent rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-3xl">👕</button>
+                                <button onclick="selectItem('shirt', 1)"
+                                    class="shirt-btn p-2 border-2 border-transparent rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-3xl">👔</button>
+                                <button onclick="selectItem('shirt', 2)"
+                                    class="shirt-btn p-2 border-2 border-transparent rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-3xl">👚</button>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="font-bold text-indigo-500 mb-2">Pants (2 Options)</h5>
+                            <div class="flex justify-center gap-2">
+                                <button onclick="selectItem('pant', 0)"
+                                    class="pant-btn p-2 border-2 border-transparent rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-3xl">👖</button>
+                                <button onclick="selectItem('pant', 1)"
+                                    class="pant-btn p-2 border-2 border-transparent rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-3xl">🩳</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="text-gray-600 dark:text-gray-400 mb-2">Total Combinations: \(3 \times 2 = 6\)</p>
+                        <div id="outfit-display"
+                            class="text-6xl h-24 flex items-center justify-center gap-4 bg-gray-50 dark:bg-gray-900 rounded-xl transition-all">
+                            <span class="opacity-30">?</span>
+                        </div>
+                        <p class="text-sm mt-2 text-gray-500">Select a shirt and pants!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Path Counting Example -->
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Application: Counting Paths</h3>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="mb-4">
+                            Suppose we want to go from point \(A\) to \(C\), passing through \(B\).
+                        </p>
+                        <ul class="space-y-2 mb-4">
+                            <li>• Paths from \(A \to B\): <strong>3 routes</strong></li>
+                            <li>• Paths from \(B \to C\): <strong>2 routes</strong></li>
+                        </ul>
+                        <p class="font-bold text-lg text-violet-600 dark:text-violet-400">
+                            Total Paths = \(3 \times 2 = 6\)
+                        </p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl flex justify-center items-center h-48">
+                        <!-- Simple SVG for paths -->
+                        <svg width="300" height="100" viewBox="0 0 300 100">
+                            <!-- Nodes -->
+                            <circle cx="50" cy="50" r="10" fill="#8b5cf6" />
+                            <text x="50" y="80" text-anchor="middle" fill="currentColor" class="text-xs">A</text>
+
+                            <circle cx="150" cy="50" r="10" fill="#8b5cf6" />
+                            <text x="150" y="80" text-anchor="middle" fill="currentColor" class="text-xs">B</text>
+
+                            <circle cx="250" cy="50" r="10" fill="#8b5cf6" />
+                            <text x="250" y="80" text-anchor="middle" fill="currentColor" class="text-xs">C</text>
+
+                            <!-- Paths A->B -->
+                            <path d="M 60 50 Q 100 20 140 50" stroke="#cbd5e1" fill="none" stroke-width="2" />
+                            <path d="M 60 50 Q 100 50 140 50" stroke="#cbd5e1" fill="none" stroke-width="2" />
+                            <path d="M 60 50 Q 100 80 140 50" stroke="#cbd5e1" fill="none" stroke-width="2" />
+
+                            <!-- Paths B->C -->
+                            <path d="M 160 50 Q 200 30 240 50" stroke="#cbd5e1" fill="none" stroke-width="2" />
+                            <path d="M 160 50 Q 200 70 240 50" stroke="#cbd5e1" fill="none" stroke-width="2" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="text-3xl">📝</span> Test Your Understanding
+            </h2>
+
+            <div class="glass p-8 rounded-2xl shadow-lg">
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Question 1:</h3>
+                    <p class="text-xl mb-4">How many 2-letter passwords can be made using the letters {a, b, c}?</p>
+                    <div id="quiz1" class="space-y-3">
+                        <button onclick="checkQuiz(1, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> 6
+                        </button>
+                        <button onclick="checkQuiz(1, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> 9
+                        </button>
+                        <button onclick="checkQuiz(1, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> 3
+                        </button>
+                    </div>
+                    <div id="quiz1-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">Question 2:</h3>
+                    <p class="text-xl mb-4">A class has 10 boys and 8 girls. How many ways can we choose a class
+                        representative (either a boy OR a girl)?</p>
+                    <div id="quiz2" class="space-y-3">
+                        <button onclick="checkQuiz(2, 'a')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">A)</span> 80
+                        </button>
+                        <button onclick="checkQuiz(2, 'b')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">B)</span> 18
+                        </button>
+                        <button onclick="checkQuiz(2, 'c')"
+                            class="quiz-option w-full p-4 text-left border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:border-violet-500">
+                            <span class="font-semibold">C)</span> 2
+                        </button>
+                    </div>
+                    <div id="quiz2-feedback" class="hidden mt-4 p-4 rounded-lg"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <a href="sets.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                <span>←</span> Previous: Set Theory
+            </a>
+            <a href="tuples.html"
+                class="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                Next: Tuples <span>→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Sum Rule Interactive Logic
+        let counts = { pizza: 0, burger: 0 };
+        const maxCounts = { pizza: 3, burger: 2 };
+
+        function toggleCount(element, type) {
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                element.style.backgroundColor = '';
+                counts[type]--;
+            } else {
+                element.classList.add('selected');
+                element.style.backgroundColor = type === 'pizza' ? '#fecaca' : '#fef08a';
+                counts[type]++;
+            }
+
+            document.getElementById(`${type}-count`).innerText = counts[type];
+            const total = counts.pizza + counts.burger;
+            document.getElementById('total-sum-count').innerText = total;
+
+            if (counts.pizza === maxCounts.pizza && counts.burger === maxCounts.burger) {
+                document.getElementById('sum-rule-feedback').innerText = "Correct! 3 + 2 = 5 total options.";
+                document.getElementById('sum-rule-feedback').classList.add('text-green-600', 'font-bold');
+            }
+        }
+
+        // Spot the Flaw Logic
+        const numberLine = document.getElementById('number-line');
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        numbers.forEach(num => {
+            const div = document.createElement('div');
+            div.className = 'w-10 h-10 flex items-center justify-center rounded-full border-2 border-gray-300 cursor-pointer hover:border-violet-500 transition font-bold';
+            div.innerText = num;
+            div.onclick = () => checkFlaw(num, div);
+
+            // Visual hint: color code divisible numbers slightly
+            if (num % 2 === 0) div.classList.add('bg-blue-50', 'dark:bg-blue-900/20');
+            if (num % 3 === 0) div.classList.add('bg-red-50', 'dark:bg-red-900/20');
+            // 6 gets both colors mixed or just a special border? Let's keep it subtle.
+
+            numberLine.appendChild(div);
+        });
+
+        function checkFlaw(num, element) {
+            const feedback = document.getElementById('flaw-feedback');
+            const explanation = document.getElementById('inclusion-exclusion-explanation');
+
+            if (num === 6) {
+                element.classList.add('bg-green-500', 'text-white', 'border-green-500');
+                feedback.innerText = "That's it! 6 is divisible by BOTH 2 and 3.";
+                feedback.className = "mt-4 font-bold text-green-600";
+                explanation.classList.remove('hidden');
+            } else {
+                element.classList.add('bg-red-100', 'border-red-300');
+                feedback.innerText = "Not quite. Is this number counted twice in the wrong solution?";
+                feedback.className = "mt-4 font-semibold text-red-500";
+            }
+        }
+
+        // Product Rule Logic
+        let selectedShirt = null;
+        let selectedPant = null;
+        const shirts = ['👕', '👔', '👚'];
+        const pants = ['👖', '🩳'];
+
+        function selectItem(type, index) {
+            const btns = document.querySelectorAll(`.${type}-btn`);
+            btns.forEach(b => b.classList.remove('border-violet-500', 'bg-violet-50'));
+
+            btns[index].classList.add('border-violet-500', 'bg-violet-50');
+
+            if (type === 'shirt') selectedShirt = shirts[index];
+            if (type === 'pant') selectedPant = pants[index];
+
+            updateOutfitDisplay();
+        }
+
+        function updateOutfitDisplay() {
+            const display = document.getElementById('outfit-display');
+            if (selectedShirt && selectedPant) {
+                display.innerHTML = `<span>${selectedShirt}</span><span>+</span><span>${selectedPant}</span>`;
+            } else if (selectedShirt) {
+                display.innerHTML = `<span>${selectedShirt}</span><span>+</span><span class="opacity-30">?</span>`;
+            } else if (selectedPant) {
+                display.innerHTML = `<span class="opacity-30">?</span><span>+</span><span>${selectedPant}</span>`;
+            }
+        }
+
+        // Quiz Logic
+        function checkQuiz(qNum, answer) {
+            const feedback = document.getElementById(`quiz${qNum}-feedback`);
+            const correctAnswers = { 1: 'b', 2: 'b' }; // 1: 3*3=9, 2: 10+8=18
+
+            if (answer === correctAnswers[qNum]) {
+                feedback.innerHTML = "Correct! " + (qNum === 1 ? "Product Rule: 3 × 3 = 9" : "Sum Rule: 10 + 8 = 18");
+                feedback.className = "mt-4 p-4 rounded-lg bg-green-100 text-green-800 font-semibold block";
+            } else {
+                feedback.innerHTML = "Incorrect. Try again!";
+                feedback.className = "mt-4 p-4 rounded-lg bg-red-100 text-red-800 font-semibold block";
+            }
+        }
+    </script>
+</body>
+
+</html>
