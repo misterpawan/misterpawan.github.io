@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Continuous Random Variables - Probability & Statistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -45,74 +46,163 @@
     <header class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-gray-900">Continuous Random Variables</h1>
-            <p class="mt-2 text-lg text-gray-600">Variables that can take any value within a range.</p>
+            <p class="mt-2 text-lg text-gray-600">Probability distributions over continuous ranges with interactive
+                visualizations.</p>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
 
-        <!-- Definition -->
+        <!-- PDF/CDF Relationship -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Definition</h2>
-            <div class="prose max-w-none text-gray-700">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">PDF and CDF Relationship</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
                 <p>
-                    A random variable \(X\) is <strong>continuous</strong> if its CDF \(F_X(x)\) is a continuous
-                    function.
-                    Unlike discrete variables, the probability of taking any single exact value is 0: \(P(X=x) = 0\).
+                    For continuous random variables, the PDF is the derivative of the CDF, and the CDF is the integral
+                    of the PDF.
                 </p>
+                <div class="my-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+                    $$ f_X(x) = \frac{d}{dx} F_X(x) \quad \text{and} \quad F_X(x) = \int_{-\infty}^x f_X(t) \, dt $$
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: PDF ↔ CDF Visualization</h3>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Distribution</label>
+                    <div class="flex gap-2">
+                        <button onclick="showPdfCdf('uniform')" id="pdfBtn1"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
+                            Uniform
+                        </button>
+                        <button onclick="showPdfCdf('exponential')" id="pdfBtn2"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">
+                            Exponential
+                        </button>
+                        <button onclick="showPdfCdf('normal')" id="pdfBtn3"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">
+                            Normal
+                        </button>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">PDF: f(x)</h4>
+                        <canvas id="pdfChart" height="100"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">CDF: F(x)</h4>
+                        <canvas id="cdfContChart" height="100"></canvas>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- PDF -->
+        <!-- Area Calculator -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Probability Density Function (PDF)</h2>
-            <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
-                <p class="text-gray-700">
-                    The PDF \(f_X(x)\) is the derivative of the CDF:
-                    $$ f_X(x) = \frac{d}{dx} F_X(x) $$
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Area Under PDF = Probability</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>
+                    The probability that \(X\) falls in an interval \([a, b]\) is the area under the PDF curve:
+                    $$ P(a \leq X \leq b) = \int_a^b f_X(x) \, dx $$
                 </p>
             </div>
-            <div class="mt-6">
-                <h3 class="font-semibold text-gray-900 mb-2">Properties</h3>
-                <ul class="list-disc list-inside space-y-2 text-gray-700">
-                    <li>\( f_X(x) \geq 0 \) for all \(x\).</li>
-                    <li>\( \int_{-\infty}^{\infty} f_X(x) \, dx = 1 \).</li>
-                    <li>\( P(a < X \leq b)=\int_a^b f_X(x) \, dx \).</li>
-                </ul>
+
+            <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Area Calculator</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Lower bound (a): <span id="areaA" class="text-green-600 font-bold">0.25</span>
+                        </label>
+                        <input type="range" id="areaASlider" min="0" max="90" value="25"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Upper bound (b): <span id="areaB" class="text-green-600 font-bold">0.75</span>
+                        </label>
+                        <input type="range" id="areaBSlider" min="10" max="100" value="75"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+                <canvas id="areaChart" height="100"></canvas>
+                <div class="bg-white p-4 rounded-lg mt-4 text-center">
+                    <p class="text-gray-700">P(<span id="aDisp">0.25</span> ≤ X ≤ <span id="bDisp">0.75</span>) = <span
+                            class="text-2xl font-bold text-green-600" id="areaProb">0.500</span></p>
+                </div>
             </div>
         </section>
 
-        <!-- Expectation & Variance -->
+        <!-- Transformation Visualizer -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Method of Transformation</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>
+                    If \(Y = g(X)\) where \(g\) is monotonic and differentiable, the PDF of \(Y\) is:
+                </p>
+                <div class="my-4 p-4 bg-purple-50 border-l-4 border-purple-500 rounded">
+                    $$ f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right| \quad \text{where } x = g^{-1}(y) $$
+                </div>
+            </div>
+
+            <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Transformation Demo</h3>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Transformation</label>
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="showTransform('linear')" id="transBtn1"
+                            class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium">
+                            Y = 2X + 1
+                        </button>
+                        <button onclick="showTransform('square')" id="transBtn2"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">
+                            Y = X²
+                        </button>
+                        <button onclick="showTransform('exp')" id="transBtn3"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">
+                            Y = e^X
+                        </button>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Original: X ~ Uniform(0, 1)</h4>
+                        <canvas id="transOrigChart" height="100"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Transformed: Y = g(X)</h4>
+                        <canvas id="transNewChart" height="100"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 bg-white p-4 rounded-lg">
+                    <p class="text-sm text-gray-700" id="transFormula">$$ f_Y(y) = \frac{1}{2} \text{ for } y \in [1, 3]
+                        $$</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expectation and Variance -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Expectation and Variance</h2>
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Expected Value</h3>
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h3 class="font-semibold text-gray-900 mb-3">Expected Value</h3>
                     <p class="text-gray-700">
                         $$ E[X] = \int_{-\infty}^{\infty} x f_X(x) \, dx $$
                     </p>
+                    <p class="text-sm text-gray-600 mt-2">
+                        The "center of mass" of the distribution.
+                    </p>
                 </div>
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Variance</h3>
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h3 class="font-semibold text-gray-900 mb-3">Variance</h3>
                     <p class="text-gray-700">
                         $$ \text{Var}(X) = \int_{-\infty}^{\infty} (x - E[X])^2 f_X(x) \, dx $$
                     </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Method of Transformation -->
-        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Method of Transformation</h2>
-            <div class="prose max-w-none text-gray-700">
-                <p>
-                    If \(Y = g(X)\) where \(g\) is a strictly monotonic and differentiable function, then the PDF of
-                    \(Y\) is:
-                </p>
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
-                    $$ f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right| $$
-                    where \(x = g^{-1}(y)\).
+                    <p class="text-sm text-gray-600 mt-2">
+                        Or equivalently: \(\text{Var}(X) = E[X^2] - (E[X])^2\)
+                    </p>
                 </div>
             </div>
         </section>
@@ -124,6 +214,246 @@
             <p>&copy; 2025 Probability & Statistics Course</p>
         </div>
     </footer>
+
+    <script>
+        // PDF/CDF Visualization
+        const pdfCtx = document.getElementById('pdfChart').getContext('2d');
+        let pdfChart;
+        const cdfContCtx = document.getElementById('cdfContChart').getContext('2d');
+        let cdfContChart;
+
+        function generateData(dist, n = 200) {
+            const data = [];
+            for (let i = 0; i <= n; i++) {
+                const x = i / n;
+                let y;
+                if (dist === 'uniform') {
+                    y = 1;
+                } else if (dist === 'exponential') {
+                    const lambda = 2;
+                    y = lambda * Math.exp(-lambda * x * 5);
+                } else if (dist === 'normal') {
+                    const mu = 0.5, sigma = 0.15;
+                    y = (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+                }
+                data.push({ x, y });
+            }
+            return data;
+        }
+
+        function cumulativeData(pdfData) {
+            const cdf = [];
+            let sum = 0;
+            const dx = pdfData[1].x - pdfData[0].x;
+            for (let point of pdfData) {
+                sum += point.y * dx;
+                cdf.push({ x: point.x, y: Math.min(sum, 1) });
+            }
+            return cdf;
+        }
+
+        function showPdfCdf(dist) {
+            ['pdfBtn1', 'pdfBtn2', 'pdfBtn3'].forEach((id, idx) => {
+                const btn = document.getElementById(id);
+                const dists = ['uniform', 'exponential', 'normal'];
+                if (dists[idx] === dist) {
+                    btn.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium';
+                } else {
+                    btn.className = 'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium';
+                }
+            });
+
+            const pdfData = generateData(dist);
+            const cdfData = cumulativeData(pdfData);
+
+            if (pdfChart) pdfChart.destroy();
+            pdfChart = new Chart(pdfCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        data: pdfData,
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'f(x)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            if (cdfContChart) cdfContChart.destroy();
+            cdfContChart = new Chart(cdfContCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        data: cdfData,
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' } },
+                        y: { beginAtZero: true, max: 1.1, title: { display: true, text: 'F(x)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        showPdfCdf('uniform');
+
+        // Area Calculator (Uniform [0,1])
+        const areaCtx = document.getElementById('areaChart').getContext('2d');
+        let areaChart = new Chart(areaCtx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    { data: [{ x: 0, y: 1 }, { x: 1, y: 1 }], borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 2, fill: false, pointRadius: 0 },
+                    { data: [{ x: 0.25, y: 0 }, { x: 0.25, y: 1 }, { x: 0.75, y: 1 }, { x: 0.75, y: 0 }], backgroundColor: 'rgba(34, 197, 94, 0.3)', borderColor: 'rgba(34, 197, 94, 1)', borderWidth: 1, fill: true, pointRadius: 0 }
+                ]
+            },
+            options: {
+                responsive: true,
+                parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                scales: {
+                    x: { type: 'linear', min: -0.1, max: 1.1, title: { display: true, text: 'x' } },
+                    y: { beginAtZero: true, max: 1.5, title: { display: true, text: 'f(x)' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateArea() {
+            const a = parseInt(document.getElementById('areaASlider').value) / 100;
+            const b = parseInt(document.getElementById('areaBSlider').value) / 100;
+
+            if (b <= a) {
+                document.getElementById('areaBSlider').value = Math.min(100, (a + 0.1) * 100);
+                return updateArea();
+            }
+
+            document.getElementById('areaA').textContent = a.toFixed(2);
+            document.getElementById('areaB').textContent = b.toFixed(2);
+            document.getElementById('aDisp').textContent = a.toFixed(2);
+            document.getElementById('bDisp').textContent = b.toFixed(2);
+            document.getElementById('areaProb').textContent = (b - a).toFixed(3);
+
+            areaChart.data.datasets[1].data = [{ x: a, y: 0 }, { x: a, y: 1 }, { x: b, y: 1 }, { x: b, y: 0 }];
+            areaChart.update();
+        }
+
+        document.getElementById('areaASlider').addEventListener('input', updateArea);
+        document.getElementById('areaBSlider').addEventListener('input', updateArea);
+
+        // Transformation Visualizer
+        const transOrigCtx = document.getElementById('transOrigChart').getContext('2d');
+        const transNewCtx = document.getElementById('transNewChart').getContext('2d');
+        let transOrigChart, transNewChart;
+
+        function showTransform(type) {
+            ['transBtn1', 'transBtn2', 'transBtn3'].forEach((id, idx) => {
+                const btn = document.getElementById(id);
+                const types = ['linear', 'square', 'exp'];
+                if (types[idx] === type) {
+                    btn.className = 'px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium';
+                } else {
+                    btn.className = 'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium';
+                }
+            });
+
+            // Original: Uniform(0, 1)
+            const origData = [{ x: 0, y: 1 }, { x: 1, y: 1 }];
+
+            let newData, formula;
+            if (type === 'linear') {
+                // Y = 2X + 1, domain [1, 3]
+                newData = [{ x: 1, y: 0.5 }, { x: 3, y: 0.5 }];
+                formula = '$$ f_Y(y) = \\frac{1}{2} \\text{ for } y \\in [1, 3] $$';
+            } else if (type === 'square') {
+                // Y = X^2, domain [0, 1]
+                const pts = [];
+                for (let y = 0; y <= 1; y += 0.01) {
+                    pts.push({ x: y, y: 0.5 / Math.sqrt(Math.max(y, 0.001)) });
+                }
+                newData = pts;
+                formula = '$$ f_Y(y) = \\frac{1}{2\\sqrt{y}} \\text{ for } y \\in [0, 1] $$';
+            } else {
+                // Y = e^X, domain [1, e]
+                const pts = [];
+                for (let y = 1; y <= Math.E; y += 0.02) {
+                    pts.push({ x: y, y: 1 / y });
+                }
+                newData = pts;
+                formula = '$$ f_Y(y) = \\frac{1}{y} \\text{ for } y \\in [1, e] $$';
+            }
+
+            document.getElementById('transFormula').innerHTML = formula;
+            if (window.MathJax) MathJax.typesetPromise();
+
+            if (transOrigChart) transOrigChart.destroy();
+            transOrigChart = new Chart(transOrigCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        data: origData,
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', min: -0.1, max: 1.1, title: { display: true, text: 'x' } },
+                        y: { beginAtZero: true, max: 1.5, title: { display: true, text: 'f_X(x)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            if (transNewChart) transNewChart.destroy();
+            transNewChart = new Chart(transNewCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        data: newData,
+                        borderColor: 'rgba(168, 85, 247, 1)',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'y' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'f_Y(y)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        showTransform('linear');
+    </script>
 
 </body>
 
