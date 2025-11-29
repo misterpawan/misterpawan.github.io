@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inequalities - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-slate-500">/</span>
+                    <span class="text-slate-300 font-medium">Unit 5: Inequalities</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="random-vectors.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Prev: Random
+                        Vectors</a>
+                    <a href="law-of-large-numbers.html"
+                        class="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">Next:
+                        LLN</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/0 to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                Probabilistic Inequalities
+            </h1>
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Bounding the unknown. How to make guarantees about random variables even when we don't know their full
+                distribution.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- Markov Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-indigo-300">1. Markov's Inequality</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    If \( X \) is a <strong>non-negative</strong> random variable, then the probability that \( X \) is
+                    very large is bounded by its expected value.
+                </p>
+                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
+                    $$ P(X \ge a) \le \frac{E[X]}{a} $$
+                </div>
+                <p class="text-sm text-slate-400">
+                    Intuitively: If the average height of a group is 5 feet, it's impossible for more than 50% of people
+                    to be taller than 10 feet. (Because \( 0.5 \times 10 = 5 \), leaving 0 height for everyone else!)
+                </p>
+            </div>
+        </section>
+
+        <!-- Chebyshev Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-cyan-300">2. Chebyshev's Inequality</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    If we know the Variance, we can do better. Chebyshev tells us that random variables tend to stay
+                    close to their mean.
+                </p>
+                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
+                    $$ P(|X - \mu| \ge k) \le \frac{\text{Var}(X)}{k^2} $$
+                </div>
+            </div>
+
+            <!-- Interactive Bound Visualizer -->
+            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                <h3 class="text-lg font-semibold text-white mb-4">Bound Visualizer</h3>
+                <p class="text-sm text-slate-400 mb-6">
+                    Consider a Standard Normal distribution (\( \mu=0, \sigma=1 \)).
+                    Drag the slider to set the threshold \( k \). Compare the <strong>Actual Probability</strong> (blue
+                    area) with the <strong>Chebyshev Bound</strong> (red line).
+                </p>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Threshold k: <span id="k-val"
+                            class="text-white">2.0</span></label>
+                    <input type="range" min="1" max="5" step="0.1" value="2" class="w-full accent-cyan-500"
+                        id="k-slider">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-center mb-6">
+                    <div class="p-3 bg-slate-800 rounded-lg">
+                        <div class="text-xs text-slate-400">Actual P(|X| ≥ k)</div>
+                        <div id="actual-prob" class="text-xl font-bold text-cyan-400">0.0455</div>
+                    </div>
+                    <div class="p-3 bg-slate-800 rounded-lg border border-red-500/30">
+                        <div class="text-xs text-slate-400">Chebyshev Bound (1/k²)</div>
+                        <div id="chebyshev-bound" class="text-xl font-bold text-red-400">0.2500</div>
+                    </div>
+                </div>
+
+                <div class="h-64 w-full">
+                    <canvas id="boundChart"></canvas>
+                </div>
+                <p class="text-xs text-slate-500 mt-4 text-center">
+                    Note: Chebyshev is a loose bound because it must hold for ANY distribution, not just Normal.
+                </p>
+            </div>
+        </section>
+
+        <!-- Jensen's Inequality -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-emerald-300">3. Jensen's Inequality</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    If \( g(x) \) is a <strong>convex</strong> function (curves up, like a smile), then the expectation
+                    of the function is greater than or equal to the function of the expectation.
+                </p>
+                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
+                    $$ E[g(X)] \ge g(E[X]) $$
+                </div>
+            </div>
+
+            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                <h3 class="text-lg font-semibold text-white mb-4">Visualizing Jensen's</h3>
+                <p class="text-sm text-slate-400 mb-6">
+                    Let \( g(x) = x^2 \) (convex). Let \( X \) take two values \( a \) and \( b \) with equal
+                    probability.
+                    <br>
+                    The midpoint of the curve (function of expectation) is below the midpoint of the secant line
+                    (expectation of function).
+                </p>
+                <div class="h-64 w-full">
+                    <canvas id="jensenChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other Inequalities -->
+        <section class="grid md:grid-cols-2 gap-6">
+            <div class="glass-panel p-8 interactive-card">
+                <h3 class="text-xl font-bold text-white mb-4 text-amber-300">Chernoff Bound</h3>
+                <p class="text-slate-400 mb-4 text-sm">
+                    Uses the Moment Generating Function to give exponentially decaying bounds for sums of independent
+                    RVs. Much tighter than Chebyshev!
+                </p>
+                <div class="text-center p-3 bg-slate-900/50 rounded-lg font-mono text-xs text-amber-400 mb-4">
+                    P(X \ge a) \le \min_{t>0} e^{-ta} M_X(t)
+                </div>
+            </div>
+
+            <div class="glass-panel p-8 interactive-card">
+                <h3 class="text-xl font-bold text-white mb-4 text-purple-300">Cauchy-Schwarz</h3>
+                <p class="text-slate-400 mb-4 text-sm">
+                    Relates the expectation of a product to the product of expectations of squares.
+                </p>
+                <div class="text-center p-3 bg-slate-900/50 rounded-lg font-mono text-xs text-purple-400 mb-4">
+                    |E[XY]| \le \sqrt{E[X^2]E[Y^2]}
+                </div>
+                <p class="text-xs text-slate-500 text-center">Implies correlation is between -1 and 1.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- Bound Visualizer (Chebyshev) ---
+        const boundCtx = document.getElementById('boundChart').getContext('2d');
+
+        const boundChart = new Chart(boundCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Standard Normal PDF',
+                        data: [],
+                        borderColor: 'rgba(34, 211, 238, 1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const { ctx, chartArea } = chart;
+                            if (!chartArea) return;
+
+                            const k = parseFloat(document.getElementById('k-slider').value);
+                            // We want to highlight tails |x| >= k
+                            // This gradient logic is tricky in Chart.js, let's use segment styling
+                            return 'transparent';
+                        },
+                        segment: {
+                            backgroundColor: ctx => {
+                                const x = parseFloat(boundChart.data.labels[ctx.p0DataIndex]);
+                                const k = parseFloat(document.getElementById('k-slider').value);
+                                if (Math.abs(x) >= k) return 'rgba(34, 211, 238, 0.4)';
+                                return 'rgba(34, 211, 238, 0.1)';
+                            },
+                            borderColor: ctx => 'rgba(34, 211, 238, 1)'
+                        }
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { min: -5, max: 5, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                    y: { display: false, min: 0 }
+                },
+                plugins: { legend: { display: false } },
+                animation: { duration: 0 }
+            }
+        });
+
+        // Generate Normal PDF data
+        const labels = [];
+        const pdfData = [];
+        for (let x = -5; x <= 5; x += 0.1) {
+            labels.push(x.toFixed(1));
+            pdfData.push((1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x * x));
+        }
+        boundChart.data.labels = labels;
+        boundChart.data.datasets[0].data = pdfData;
+
+        // Error function for CDF
+        function erf(x) {
+            var m = 1.00;
+            var s = 1.00;
+            var sum = x * 1.0;
+            for (var i = 1; i < 50; i++) {
+                m *= i;
+                s *= -1;
+                sum += (s * Math.pow(x, 2 * i + 1)) / (m * (2 * i + 1));
+            }
+            return 2 * sum / Math.sqrt(Math.PI);
+        }
+        function stdNormalCDF(x) {
+            return 0.5 * (1 + erf(x / Math.sqrt(2)));
+        }
+
+        function updateBound() {
+            const k = parseFloat(document.getElementById('k-slider').value);
+            document.getElementById('k-val').textContent = k.toFixed(1);
+
+            // Actual Probability P(|X| >= k) = 2 * P(X <= -k)
+            const actual = 2 * stdNormalCDF(-k);
+            document.getElementById('actual-prob').textContent = actual.toFixed(4);
+
+            // Chebyshev Bound = Var(X) / k^2 = 1 / k^2
+            const bound = 1 / (k * k);
+            document.getElementById('chebyshev-bound').textContent = bound.toFixed(4);
+
+            boundChart.update();
+        }
+
+        document.getElementById('k-slider').addEventListener('input', updateBound);
+        updateBound();
+
+
+        // --- Jensen's Visualizer ---
+        const jensenCtx = document.getElementById('jensenChart').getContext('2d');
+
+        // g(x) = x^2
+        const xVals = [];
+        const yVals = [];
+        for (let x = -2; x <= 2; x += 0.1) {
+            xVals.push(x);
+            yVals.push(x * x);
+        }
+
+        const jensenChart = new Chart(jensenCtx, {
+            type: 'line',
+            data: {
+                labels: xVals.map(x => x.toFixed(1)),
+                datasets: [
+                    {
+                        label: 'g(x) = x²',
+                        data: yVals,
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Secant Line',
+                        data: [], // Will be filled dynamically
+                        borderColor: 'rgba(251, 191, 36, 0.8)',
+                        borderDash: [5, 5],
+                        pointRadius: 0
+                    },
+                    {
+                        label: 'Points',
+                        data: [],
+                        type: 'scatter',
+                        backgroundColor: 'white',
+                        pointRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { type: 'linear', min: -2, max: 2, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                    y: { min: 0, max: 4.5, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Fixed points for Jensen demo: a=-1, b=1.5
+        const a = -1;
+        const b = 1.5;
+        const ga = a * a;
+        const gb = b * b;
+
+        // Expectation E[X] = (a+b)/2
+        const ex = (a + b) / 2;
+        const gex = ex * ex; // g(E[X])
+
+        // Expectation of function E[g(X)] = (g(a)+g(b))/2
+        const egx = (ga + gb) / 2;
+
+        // Draw secant line
+        const secantData = xVals.map(x => {
+            if (x >= a && x <= b) {
+                // Linear interpolation
+                const t = (x - a) / (b - a);
+                return ga + t * (gb - ga);
+            }
+            return null;
+        });
+
+        jensenChart.data.datasets[1].data = xVals.map((x, i) => ({ x: x, y: secantData[i] }));
+
+        // Add key points
+        jensenChart.data.datasets[2].data = [
+            { x: a, y: ga }, // Point A
+            { x: b, y: gb }, // Point B
+            { x: ex, y: gex }, // g(E[X]) - On the curve
+            { x: ex, y: egx }  // E[g(X)] - On the line
+        ];
+
+        jensenChart.update();
+
+    </script>
+</body>
+
+</html>

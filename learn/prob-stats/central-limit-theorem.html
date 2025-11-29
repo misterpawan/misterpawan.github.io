@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Limit Theorem - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .interactive-card {
+            transition: all 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="index.html"
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                        ProbStats
+                    </a>
+                    <span class="text-slate-500">/</span>
+                    <span class="text-slate-300 font-medium">Unit 5: CLT</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Home</a>
+                    <a href="law-of-large-numbers.html"
+                        class="text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors">Prev: LLN</a>
+                    <span class="text-sm font-medium text-slate-600 cursor-not-allowed">Next: Done!</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/0 to-slate-900/0 pointer-events-none">
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h1
+                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                Central Limit Theorem
+            </h1>
+            <p class="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                The magic of statistics. Why the Bell Curve is everywhere.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+
+        <!-- Definition Section -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-indigo-300">1. The Theorem</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    The <strong>Central Limit Theorem (CLT)</strong> states that if you take the sum (or average) of a
+                    large number of independent random variables, the result will look like a <strong>Normal
+                        Distribution</strong>, regardless of the original distribution!
+                </p>
+                <div class="my-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 text-center">
+                    $$ Z_n = \frac{\overline{X}_n - \mu}{\sigma / \sqrt{n}} \to \mathcal{N}(0,1) $$
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Playground -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-cyan-300">2. CLT Playground</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    Choose a "Source Distribution" that looks nothing like a Bell Curve (e.g., Uniform or Exponential).
+                    Then, increase the "Sample Size" (\( n \)).
+                    <br>
+                    We will simulate summing \( n \) numbers from that source, repeat it 1000 times, and plot the
+                    histogram of the sums.
+                </p>
+            </div>
+
+            <div class="bg-slate-900/50 rounded-xl p-6 border border-slate-700/50">
+                <div class="grid md:grid-cols-2 gap-8 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Source Distribution</label>
+                        <select id="dist-select"
+                            class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                            onchange="updateCLT()">
+                            <option value="uniform">Uniform (Flat)</option>
+                            <option value="exponential">Exponential (Skewed)</option>
+                            <option value="bimodal">Bimodal (Two Peaks)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Sample Size (n): <span id="n-val"
+                                class="text-white">1</span></label>
+                        <input type="range" min="1" max="50" step="1" value="1" class="w-full accent-cyan-500"
+                            id="n-slider" oninput="updateCLT()">
+                    </div>
+                </div>
+
+                <div class="h-80 w-full">
+                    <canvas id="cltChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why it works -->
+        <section class="glass-panel p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white mb-6 text-emerald-300">3. Why it works</h2>
+            <div class="prose prose-invert max-w-none text-slate-300 mb-8">
+                <p>
+                    When you add random variables, their probability distributions <strong>convolve</strong>.
+                    Convolution acts like a smoothing filter. Repeated convolution smooths out any sharp edges or
+                    skewness, eventually converging to the smoothest possible shape: the Gaussian (Normal) curve.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const ctx = document.getElementById('cltChart').getContext('2d');
+
+        const cltChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Histogram of Sums',
+                    data: [],
+                    backgroundColor: 'rgba(34, 211, 238, 0.6)',
+                    borderColor: 'rgba(34, 211, 238, 1)',
+                    borderWidth: 1,
+                    barPercentage: 1,
+                    categoryPercentage: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false }, ticks: { display: false } },
+                    y: { display: false }
+                },
+                plugins: { legend: { display: false } },
+                animation: { duration: 0 }
+            }
+        });
+
+        function getRandom(type) {
+            if (type === 'uniform') {
+                return Math.random(); // 0 to 1
+            } else if (type === 'exponential') {
+                return -Math.log(Math.random()); // Exp(1)
+            } else if (type === 'bimodal') {
+                // Mix of two normals: N(2, 0.5) and N(8, 0.5)
+                if (Math.random() < 0.5) {
+                    return randn_bm() * 0.5 + 2;
+                } else {
+                    return randn_bm() * 0.5 + 8;
+                }
+            }
+            return 0;
+        }
+
+        function randn_bm() {
+            let u = 0, v = 0;
+            while (u === 0) u = Math.random();
+            while (v === 0) v = Math.random();
+            return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        }
+
+        function updateCLT() {
+            const type = document.getElementById('dist-select').value;
+            const n = parseInt(document.getElementById('n-slider').value);
+            document.getElementById('n-val').textContent = n;
+
+            const numTrials = 2000;
+            const sums = [];
+
+            // Run simulation
+            for (let i = 0; i < numTrials; i++) {
+                let sum = 0;
+                for (let j = 0; j < n; j++) {
+                    sum += getRandom(type);
+                }
+                sums.push(sum);
+            }
+
+            // Create Histogram
+            const bins = 50;
+            const min = Math.min(...sums);
+            const max = Math.max(...sums);
+            const range = max - min;
+            const binSize = range / bins;
+
+            const histogram = new Array(bins).fill(0);
+
+            sums.forEach(val => {
+                let binIndex = Math.floor((val - min) / binSize);
+                if (binIndex >= bins) binIndex = bins - 1;
+                histogram[binIndex]++;
+            });
+
+            cltChart.data.labels = new Array(bins).fill('');
+            cltChart.data.datasets[0].data = histogram;
+            cltChart.update();
+        }
+
+        updateCLT();
+
+    </script>
+</body>
+
+</html>
