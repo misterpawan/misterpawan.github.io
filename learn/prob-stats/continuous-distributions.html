@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Distributions - Probability & Statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="../index.html" class="flex-shrink-0 flex items-center font-bold text-xl text-blue-600">
+                        ProbStats
+                    </a>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html"
+                            class="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Unit
+                            3 Home</a>
+                        <a href="#"
+                            class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Continuous
+                            Distributions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-gray-900">Continuous Probability Distributions</h1>
+            <p class="mt-2 text-lg text-gray-600">Uniform, Exponential, and Normal distributions with interactive
+                explorers.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+
+        <!-- Uniform Distribution -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">1</span> Uniform Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>The continuous uniform distribution has constant probability density over an interval.</p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>\(X \sim \text{Uniform}(a, b)\) with PDF:
+                        $$ f_X(x) = \begin{cases} \frac{1}{b-a} & a < x < b \\ 0 & \text{otherwise} \end{cases} $$ Mean:
+                            \(\frac{a+b}{2}\), Variance: \(\frac{(b-a)^2}{12}\) </p>
+                </div>
+            </div>
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Uniform Explorer</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Lower bound (a): <span id="unifA"
+                                class="text-blue-600 font-bold">0</span></label>
+                        <input type="range" id="unifASlider" min="0" max="5" step="0.5" value="0"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Upper bound (b): <span id="unifB"
+                                class="text-blue-600 font-bold">5</span></label>
+                        <input type="range" id="unifBSlider" min="1" max="10" step="0.5" value="5"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+                <canvas id="unifChart" height="80"></canvas>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Mean</div>
+                        <div class="text-xl font-bold text-blue-600" id="unifMean">2.5</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Variance</div>
+                        <div class="text-xl font-bold text-blue-600" id="unifVar">2.08</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exponential Distribution -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-green-100 text-green-600 p-2 rounded-lg text-sm">2</span> Exponential Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>Models waiting times and has the memoryless property.</p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>\(X \sim \text{Exponential}(\lambda)\) with PDF:
+                        $$ f_X(x) = \lambda e^{-\lambda x}, \quad x > 0 $$
+                        Mean: \(\frac{1}{\lambda}\), Variance: \(\frac{1}{\lambda^2}\)
+                    </p>
+                </div>
+            </div>
+            <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Exponential Explorer</h3>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Rate (λ): <span id="expLambda"
+                            class="text-green-600 font-bold">1.0</span></label>
+                    <input type="range" id="expLambdaSlider" min="0.1" max="5" step="0.1" value="1"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <canvas id="expChart" height="80"></canvas>
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Mean</div>
+                        <div class="text-xl font-bold text-green-600" id="expMean">1.00</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Variance</div>
+                        <div class="text-xl font-bold text-green-600" id="expVar">1.00</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">P(X > mean)</div>
+                        <div class="text-xl font-bold text-green-600" id="expProb">0.368</div>
+                    </div>
+                </div>
+                <div class="mt-4 p-4 bg-white rounded-lg border-l-4 border-green-500">
+                    <p class="text-sm text-gray-700"><strong>Memoryless Property:</strong> P(X > a+b | X > a) = P(X > b)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Normal Distribution -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="bg-purple-100 text-purple-600 p-2 rounded-lg text-sm">3</span> Normal (Gaussian)
+                Distribution
+            </h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>The most important continuous distribution, central to the Central Limit Theorem.</p>
+                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                    <p>\(X \sim N(\mu, \sigma^2)\) with PDF:
+                        $$ f_X(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $$
+                    </p>
+                </div>
+            </div>
+            <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Normal Explorer</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mean (μ): <span id="normMu"
+                                class="text-purple-600 font-bold">0</span></label>
+                        <input type="range" id="normMuSlider" min="-5" max="5" step="0.5" value="0"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Std Dev (σ): <span id="normSigma"
+                                class="text-purple-600 font-bold">1.0</span></label>
+                        <input type="range" id="normSigmaSlider" min="0.5" max="3" step="0.1" value="1"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+                <canvas id="normChart" height="80"></canvas>
+                <div class="mt-4 p-4 bg-white rounded-lg">
+                    <p class="text-sm text-gray-700 mb-2"><strong>68-95-99.7 Rule:</strong></p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• 68% within μ ± σ</li>
+                        <li>• 95% within μ ± 2σ</li>
+                        <li>• 99.7% within μ ± 3σ</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500">
+            <p>&copy; 2025 Probability & Statistics Course</p>
+        </div>
+    </footer>
+
+    <script>
+        // Uniform Distribution
+        const unifCtx = document.getElementById('unifChart').getContext('2d');
+        let unifChart;
+
+        function updateUniform() {
+            const a = parseFloat(document.getElementById('unifASlider').value);
+            const b = parseFloat(document.getElementById('unifBSlider').value);
+            if (b <= a) {
+                document.getElementById('unifBSlider').value = a + 1;
+                return updateUniform();
+            }
+            document.getElementById('unifA').textContent = a.toFixed(1);
+            document.getElementById('unifB').textContent = b.toFixed(1);
+
+            const mean = (a + b) / 2;
+            const variance = Math.pow(b - a, 2) / 12;
+            document.getElementById('unifMean').textContent = mean.toFixed(2);
+            document.getElementById('unifVar').textContent = variance.toFixed(2);
+
+            const height = 1 / (b - a);
+            const data = [{ x: a, y: height }, { x: b, y: height }];
+
+            if (unifChart) unifChart.destroy();
+            unifChart = new Chart(unifCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        data: data,
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', min: -1, max: 11, title: { display: true, text: 'x' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'f(x)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        document.getElementById('unifASlider').addEventListener('input', updateUniform);
+        document.getElementById('unifBSlider').addEventListener('input', updateUniform);
+        updateUniform();
+
+        // Exponential Distribution
+        const expCtx = document.getElementById('expChart').getContext('2d');
+        let expChart;
+
+        function updateExponential() {
+            const lambda = parseFloat(document.getElementById('expLambdaSlider').value);
+            document.getElementById('expLambda').textContent = lambda.toFixed(1);
+
+            const mean = 1 / lambda;
+            const variance = 1 / (lambda * lambda);
+            document.getElementById('expMean').textContent = mean.toFixed(2);
+            document.getElementById('expVar').textContent = variance.toFixed(2);
+            document.getElementById('expProb').textContent = Math.exp(-1).toFixed(3);
+
+            const data = [];
+            for (let x = 0; x <= 10; x += 0.1) {
+                data.push({ x: x, y: lambda * Math.exp(-lambda * x) });
+            }
+
+            if (expChart) expChart.destroy();
+            expChart = new Chart(expCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        data: data,
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'f(x)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        document.getElementById('expLambdaSlider').addEventListener('input', updateExponential);
+        updateExponential();
+
+        // Normal Distribution
+        const normCtx = document.getElementById('normChart').getContext('2d');
+        let normChart;
+
+        function normalPDF(x, mu, sigma) {
+            return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2));
+        }
+
+        function updateNormal() {
+            const mu = parseFloat(document.getElementById('normMuSlider').value);
+            const sigma = parseFloat(document.getElementById('normSigmaSlider').value);
+            document.getElementById('normMu').textContent = mu.toFixed(1);
+            document.getElementById('normSigma').textContent = sigma.toFixed(1);
+
+            const data = [];
+            for (let x = mu - 4 * sigma; x <= mu + 4 * sigma; x += 0.1) {
+                data.push({ x: x, y: normalPDF(x, mu, sigma) });
+            }
+
+            if (normChart) normChart.destroy();
+            normChart = new Chart(normCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        data: data,
+                        borderColor: 'rgba(168, 85, 247, 1)',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'f(x)' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        document.getElementById('normMuSlider').addEventListener('input', updateNormal);
+        document.getElementById('normSigmaSlider').addEventListener('input', updateNormal);
+        updateNormal();
+    </script>
+
+</body>
+
+</html>

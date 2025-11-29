@@ -5,285 +5,308 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solved Examples - Probability & Statistics</title>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        };
-    </script>
-
-    <!-- MathJax for LaTeX rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 1rem;
+        body {
+            font-family: 'Inter', sans-serif;
         }
 
-        .dark .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .solution-step {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .solution-step.visible {
+            opacity: 1;
+            max-height: 1000px;
         }
     </style>
 </head>
 
-<body
-    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased min-h-screen selection:bg-indigo-500 selection:text-white">
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-blue-100 selection:text-blue-900">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass-panel border-b border-gray-200 dark:border-white/10">
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-3">
-                    <a href="index.html"
-                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="../index.html" class="flex-shrink-0 flex items-center font-bold text-xl text-blue-600">
                         ProbStats
                     </a>
-                    <span class="text-gray-400 dark:text-slate-500">/</span>
-                    <span class="text-gray-600 dark:text-slate-300 font-medium">Solved Examples</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html"
-                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Home</a>
-                    <a href="continuous-rv.html"
-                        class="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Prev:
-                        Continuous RVs</a>
-                    <a href="continuous-distributions.html"
-                        class="text-sm font-medium text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors">Next:
-                        Continuous Distributions</a>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html"
+                            class="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Unit
+                            3 Home</a>
+                        <a href="#"
+                            class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Solved
+                            Examples</a>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
-        <div
-            class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-gray-50/0 to-gray-50/0 dark:via-slate-900/0 dark:to-slate-900/0 pointer-events-none">
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-gray-900">Solved Examples</h1>
+            <p class="mt-2 text-lg text-gray-600">Step-by-step solutions to key problems in probability and random
+                variables.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8">
+
+        <!-- Example 1: PMF and Expected Value -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Example 1: Computing Expected Value</h3>
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">Expectation</span>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <p class="text-gray-700"><strong>Problem:</strong> Let \(X\) have the following PMF:</p>
+                <p class="text-gray-700 mt-2">
+                    $$P(X=1) = 0.3, \quad P(X=2) = 0.4, \quad P(X=3) = 0.3$$
+                    Find \(E[X]\) and \(E[X^2]\).
+                </p>
+            </div>
+
+            <button onclick="showNextStep('ex1', 3)" id="ex1-btn"
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 mb-4">
+                Show Step 1
+            </button>
+
+            <div id="ex1-steps">
+                <div class="solution-step p-4 bg-blue-50 rounded-lg mb-3 border-l-4 border-blue-500" data-step="0">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 1: Apply the expectation formula</h4>
+                    <p class="text-gray-700">
+                        $$E[X] = \sum x \cdot P(X=x) = 1(0.3) + 2(0.4) + 3(0.3)$$
+                    </p>
+                </div>
+                <div class="solution-step p-4 bg-blue-50 rounded-lg mb-3 border-l-4 border-blue-500" data-step="1">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 2: Calculate</h4>
+                    <p class="text-gray-700">
+                        $$E[X] = 0.3 + 0.8 + 0.9 = 2.0$$
+                    </p>
+                </div>
+                <div class="solution-step p-4 bg-blue-50 rounded-lg mb-3 border-l-4 border-blue-500" data-step="2">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 3: Compute \(E[X^2]\)</h4>
+                    <p class="text-gray-700">
+                        $$E[X^2] = \sum x^2 \cdot P(X=x) = 1^2(0.3) + 2^2(0.4) + 3^2(0.3)$$
+                        $$E[X^2] = 0.3 + 1.6 + 2.7 = 4.6$$
+                    </p>
+                </div>
+            </div>
+            <canvas id="ex1Chart" height="60" class="mt-4"></canvas>
         </div>
 
-        <div class="max-w-4xl mx-auto text-center relative z-10">
-            <h1
-                class="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-slate-400">
-                Solved Examples
-            </h1>
-            <p class="text-xl text-gray-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                Step-by-step solutions to problems involving continuous random variables, transformations, and
-                conditional probabilities.
-            </p>
+        <!-- Example 2: Variance Computation -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Example 2: Variance from PMF</h3>
+                <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">Variance</span>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <p class="text-gray-700"><strong>Problem:</strong> For the distribution in Example 1, find
+                    \(\text{Var}(X)\).</p>
+            </div>
+
+            <button onclick="showNextStep('ex2', 2)" id="ex2-btn"
+                class="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 mb-4">
+                Show Step 1
+            </button>
+
+            <div id="ex2-steps">
+                <div class="solution-step p-4 bg-green-50 rounded-lg mb-3 border-l-4 border-green-500" data-step="0">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 1: Use the variance formula</h4>
+                    <p class="text-gray-700">
+                        $$\text{Var}(X) = E[X^2] - (E[X])^2$$
+                    </p>
+                </div>
+                <div class="solution-step p-4 bg-green-50 rounded-lg mb-3 border-l-4 border-green-500" data-step="1">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 2: Substitute values from Example 1</h4>
+                    <p class="text-gray-700">
+                        $$\text{Var}(X) = 4.6 - (2.0)^2 = 4.6 - 4.0 = 0.6$$
+                    </p>
+                    <p class="text-gray-700 mt-2">
+                        Standard deviation: \(\sigma = \sqrt{0.6} \approx 0.775\)
+                    </p>
+                </div>
+            </div>
         </div>
-    </section>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-16">
+        <!-- Example 3: Continuous RV -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Example 3: Finding CDF from PDF</h3>
+                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-full">Continuous</span>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <p class="text-gray-700"><strong>Problem:</strong> Given PDF \(f_X(x) = 2x\) for \(0 \leq x \leq 1\),
+                    find the CDF.</p>
+            </div>
 
-        <!-- Problem 1 -->
-        <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span
-                    class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3 text-sm">1</span>
-                Finding Constants and Moments
-            </h2>
-            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
-                <p><strong>Problem:</strong> Consider the PDF of the random variable \( X \):</p>
-                <div class="text-center my-4">
-                    $$ f_X(x) = \begin{cases} cx^2 & |x| \leq 1 \\ 0 & \text{otherwise} \end{cases} $$
+            <button onclick="showNextStep('ex3', 3)" id="ex3-btn"
+                class="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 mb-4">
+                Show Step 1
+            </button>
+
+            <div id="ex3-steps">
+                <div class="solution-step p-4 bg-purple-50 rounded-lg mb-3 border-l-4 border-purple-500" data-step="0">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 1: Setup the integral</h4>
+                    <p class="text-gray-700">
+                        $$F_X(x) = \int_{-\infty}^x f_X(t) \, dt = \int_0^x 2t \, dt$$
+                    </p>
                 </div>
-                <ol class="list-decimal pl-6 space-y-2">
-                    <li>Find the constant \( c \).</li>
-                    <li>Find \( E[X] \) and \( \text{Var}(X) \).</li>
-                    <li>Find \( P(X \geq 1/2) \).</li>
-                </ol>
-
-                <div
-                    class="bg-indigo-50 dark:bg-indigo-900/10 p-6 rounded-xl border border-indigo-100 dark:border-indigo-900/30 my-6">
-                    <h4 class="font-semibold text-indigo-600 dark:text-indigo-400 mb-4">Solution</h4>
-
-                    <p class="mb-2"><strong>1. Find \( c \):</strong> The total probability must be 1.</p>
-                    <div class="text-center mb-4 text-sm">
-                        $$ 1 = \int_{-\infty}^{\infty} f_X(x) \, dx = \int_{-1}^1 cx^2 \, dx = c \left[ \frac{x^3}{3}
-                        \right]_{-1}^1 = c \left( \frac{1}{3} - \frac{-1}{3} \right) = \frac{2c}{3} $$
-                        $$ \implies c = \frac{3}{2} $$
-                    </div>
-
-                    <p class="mb-2"><strong>2. Find \( E[X] \) and \( \text{Var}(X) \):</strong></p>
-                    <div class="text-center mb-4 text-sm">
-                        $$ E[X] = \int_{-1}^1 x \cdot \frac{3}{2}x^2 \, dx = \frac{3}{2} \int_{-1}^1 x^3 \, dx = 0 \quad
-                        (\text{Odd function}) $$
-                        $$ E[X^2] = \int_{-1}^1 x^2 \cdot \frac{3}{2}x^2 \, dx = \frac{3}{2} \int_{-1}^1 x^4 \, dx =
-                        \frac{3}{2} \left[ \frac{x^5}{5} \right]_{-1}^1 = \frac{3}{2} \cdot \frac{2}{5} = \frac{3}{5} $$
-                        $$ \text{Var}(X) = E[X^2] - (E[X])^2 = \frac{3}{5} - 0 = 0.6 $$
-                    </div>
-
-                    <p class="mb-2"><strong>3. Find \( P(X \geq 1/2) \):</strong></p>
-                    <div class="text-center text-sm">
-                        $$ P(X \geq 1/2) = \int_{1/2}^1 \frac{3}{2}x^2 \, dx = \frac{3}{2} \left[ \frac{x^3}{3}
-                        \right]_{1/2}^1 = \frac{1}{2} \left( 1^3 - (1/2)^3 \right) = \frac{1}{2} \left( 1 - \frac{1}{8}
-                        \right) = \frac{7}{16} $$
-                    </div>
+                <div class="solution-step p-4 bg-purple-50 rounded-lg mb-3 border-l-4 border-purple-500" data-step="1">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 2: Integrate</h4>
+                    <p class="text-gray-700">
+                        $$F_X(x) = [t^2]_0^x = x^2$$
+                    </p>
+                </div>
+                <div class="solution-step p-4 bg-purple-50 rounded-lg mb-3 border-l-4 border-purple-500" data-step="2">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 3: Write the complete CDF</h4>
+                    <p class="text-gray-700">
+                        $$F_X(x) = \begin{cases} 0 & x < 0 \\ x^2 & 0 \leq x \leq 1 \\ 1 & x> 1 \end{cases}$$
+                    </p>
                 </div>
             </div>
-        </section>
+            <canvas id="ex3Chart" height="60" class="mt-4"></canvas>
+        </div>
 
-        <!-- Problem 2 -->
-        <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span
-                    class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mr-3 text-sm">2</span>
-                Transformation of Variables (Square)
-            </h2>
-            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
-                <p><strong>Problem:</strong> Let \( X \) have PDF \( f_X(x) = \frac{1}{2} e^{-|x|} \) for all \( x \in
-                    \mathbb{R} \). If \( Y = X^2 \), find the CDF of \( Y \).</p>
+        <!-- Example 4: Normal Distribution -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Example 4: Normal Distribution Probability</h3>
+                <span class="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full">Normal</span>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <p class="text-gray-700"><strong>Problem:</strong> Let \(X \sim N(5, 4)\). Find \(P(3 < X < 7)\).</p>
+            </div>
 
-                <div
-                    class="bg-cyan-50 dark:bg-cyan-900/10 p-6 rounded-xl border border-cyan-100 dark:border-cyan-900/30 my-6">
-                    <h4 class="font-semibold text-cyan-600 dark:text-cyan-400 mb-4">Solution</h4>
-                    <p class="mb-2">The range of \( Y \) is \( [0, \infty) \). For \( y \ge 0 \):</p>
-                    <div class="text-center mb-4 text-sm">
-                        $$ F_Y(y) = P(Y \le y) = P(X^2 \le y) = P(-\sqrt{y} \le X \le \sqrt{y}) $$
-                        $$ = \int_{-\sqrt{y}}^{\sqrt{y}} \frac{1}{2} e^{-|x|} \, dx $$
-                    </div>
-                    <p class="mb-2">Since the integrand is even:</p>
-                    <div class="text-center text-sm">
-                        $$ = 2 \int_{0}^{\sqrt{y}} \frac{1}{2} e^{-x} \, dx = \int_{0}^{\sqrt{y}} e^{-x} \, dx = \left[
-                        -e^{-x} \right]_0^{\sqrt{y}} = 1 - e^{-\sqrt{y}} $$
-                    </div>
-                    <p class="mt-4">Thus, the CDF is:</p>
-                    <div class="text-center text-sm">
-                        $$ F_Y(y) = \begin{cases} 1 - e^{-\sqrt{y}} & y \ge 0 \\ 0 & y < 0 \end{cases} $$ </div>
-                    </div>
+            <button onclick="showNextStep('ex4', 2)" id="ex4-btn"
+                class="px-6 py-2 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 mb-4">
+                Show Step 1
+            </button>
+
+            <div id="ex4-steps">
+                <div class="solution-step p-4 bg-orange-50 rounded-lg mb-3 border-l-4 border-orange-500" data-step="0">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 1: Standardize the values</h4>
+                    <p class="text-gray-700">
+                        Given: \(\mu = 5, \sigma^2 = 4\), so \(\sigma = 2\)
+                        $$Z = \frac{X - \mu}{\sigma}$$
+                        For \(x = 3\): \(z_1 = \frac{3-5}{2} = -1\)<br>
+                        For \(x = 7\): \(z_2 = \frac{7-5}{2} = 1\)
+                    </p>
                 </div>
-        </section>
-
-        <!-- Problem 3 -->
-        <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span
-                    class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mr-3 text-sm">3</span>
-                Conditional Probability
-            </h2>
-            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
-                <p><strong>Problem:</strong> Consider \( f_X(x) = 4x^3 \) for \( 0 < x \le 1 \). Find \( P(X \le 2/3
-                        \mid X> 1/3) \).</p>
-
-                <div
-                    class="bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-xl border border-emerald-100 dark:border-emerald-900/30 my-6">
-                    <h4 class="font-semibold text-emerald-600 dark:text-emerald-400 mb-4">Solution</h4>
-                    <p class="mb-2">Using the definition of conditional probability:</p>
-                    <div class="text-center mb-4 text-sm">
-                        $$ P(A \mid B) = \frac{P(A \cap B)}{P(B)} $$
-                        $$ P(X \le 2/3 \mid X > 1/3) = \frac{P(1/3 < X \le 2/3)}{P(X> 1/3)} $$
-                    </div>
-                    <p class="mb-2">Calculating the numerator:</p>
-                    <div class="text-center mb-4 text-sm">
-                        $$ \int_{1/3}^{2/3} 4x^3 \, dx = \left[ x^4 \right]_{1/3}^{2/3} = (2/3)^4 - (1/3)^4 =
-                        \frac{16}{81} - \frac{1}{81} = \frac{15}{81} $$
-                    </div>
-                    <p class="mb-2">Calculating the denominator:</p>
-                    <div class="text-center mb-4 text-sm">
-                        $$ \int_{1/3}^{1} 4x^3 \, dx = \left[ x^4 \right]_{1/3}^{1} = 1^4 - (1/3)^4 = 1 - \frac{1}{81} =
-                        \frac{80}{81} $$
-                    </div>
-                    <p class="mb-2">Final result:</p>
-                    <div class="text-center text-sm">
-                        $$ \frac{15/81}{80/81} = \frac{15}{80} = \frac{3}{16} $$
-                    </div>
+                <div class="solution-step p-4 bg-orange-50 rounded-lg mb-3 border-l-4 border-orange-500" data-step="1">
+                    <h4 class="font-semibold text-gray-900 mb-2">Step 2: Use the standard normal table</h4>
+                    <p class="text-gray-700">
+                        $$P(3 < X < 7)=P(-1 < Z < 1)=\Phi(1) - \Phi(-1)$$ $$=0.8413 - 0.1587=0.6826 \approx 68.3\%$$
+                            <br><em class="text-sm text-gray-600">This is the 68% in the 68-95-99.7 rule!</em>
+                    </p>
                 </div>
             </div>
-        </section>
-
-        <!-- Problem 4 -->
-        <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span
-                    class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-3 text-sm">4</span>
-                Variance of a Function
-            </h2>
-            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
-                <p><strong>Problem:</strong> Let \( f_X(x) = x^2(2x + 3/2) \) for \( 0 < x \le 1 \). If \( Y=\frac{2}{X}
-                        + 3 \), find \( \text{Var}(Y) \).</p>
-
-                        <div
-                            class="bg-purple-50 dark:bg-purple-900/10 p-6 rounded-xl border border-purple-100 dark:border-purple-900/30 my-6">
-                            <h4 class="font-semibold text-purple-600 dark:text-purple-400 mb-4">Solution</h4>
-                            <p class="mb-2">First, simplify the variance expression:</p>
-                            <div class="text-center mb-4 text-sm">
-                                $$ \text{Var}(Y) = \text{Var}\left(\frac{2}{X} + 3\right) = 2^2
-                                \text{Var}\left(\frac{1}{X}\right) = 4 \left( E\left[\frac{1}{X^2}\right] -
-                                (E\left[\frac{1}{X}\right])^2 \right) $$
-                            </div>
-                            <p class="mb-2">Calculate expectations:</p>
-                            <div class="text-center mb-4 text-sm">
-                                $$ E\left[\frac{1}{X}\right] = \int_0^1 \frac{1}{x} \cdot x^2(2x + 3/2) \, dx = \int_0^1
-                                (2x^2 + \frac{3}{2}x) \, dx = \left[ \frac{2x^3}{3} + \frac{3x^2}{4} \right]_0^1 =
-                                \frac{2}{3} + \frac{3}{4} = \frac{17}{12} $$
-                                $$ E\left[\frac{1}{X^2}\right] = \int_0^1 \frac{1}{x^2} \cdot x^2(2x + 3/2) \, dx =
-                                \int_0^1 (2x + \frac{3}{2}) \, dx = \left[ x^2 + \frac{3x}{2} \right]_0^1 = 1 +
-                                \frac{3}{2} = \frac{5}{2} $$
-                            </div>
-                            <p class="mb-2">Calculate variance:</p>
-                            <div class="text-center text-sm">
-                                $$ \text{Var}\left(\frac{1}{X}\right) = \frac{5}{2} - \left(\frac{17}{12}\right)^2 =
-                                \frac{5}{2} - \frac{289}{144} = \frac{360 - 289}{144} = \frac{71}{144} $$
-                                $$ \text{Var}(Y) = 4 \cdot \frac{71}{144} = \frac{71}{36} $$
-                            </div>
-                        </div>
-            </div>
-        </section>
-
-        <!-- Problem 5 -->
-        <section class="glass-panel p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span
-                    class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600 dark:text-pink-400 mr-3 text-sm">5</span>
-                Transformation of Variables (Sine)
-            </h2>
-            <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-slate-300 mb-8">
-                <p><strong>Problem:</strong> Let \( X \sim \text{Uniform}(-\pi/2, \pi) \) and \( Y = \sin(X) \). Find \(
-                    f_Y(y) \).</p>
-
-                <div
-                    class="bg-pink-50 dark:bg-pink-900/10 p-6 rounded-xl border border-pink-100 dark:border-pink-900/30 my-6">
-                    <h4 class="font-semibold text-pink-600 dark:text-pink-400 mb-4">Solution</h4>
-                    <p class="mb-2">The PDF of \( X \) is \( f_X(x) = \frac{1}{\pi - (-\pi/2)} = \frac{2}{3\pi} \) for
-                        \( x \in [-\pi/2, \pi] \).</p>
-                    <p class="mb-2">The range of \( Y \) is \( [-1, 1] \). The transformation \( y = \sin(x) \) is not
-                        monotonic on the entire domain.</p>
-                    <ul class="list-disc pl-6 mb-4 text-sm">
-                        <li>For \( y \in (-1, 0) \), there is one solution \( x \in [-\pi/2, 0] \).</li>
-                        <li>For \( y \in (0, 1) \), there are two solutions: \( x_1 \in [0, \pi/2] \) and \( x_2 \in
-                            [\pi/2, \pi] \).</li>
-                    </ul>
-                    <p class="mb-2">Using the transformation formula \( f_Y(y) = \sum \frac{f_X(x)}{|g'(x)|} \) where \(
-                        g'(x) = \cos(x) = \sqrt{1-y^2} \):</p>
-                    <div class="text-center mb-4 text-sm">
-                        $$ f_Y(y) = \begin{cases} \frac{2}{3\pi \sqrt{1-y^2}} & -1 < y < 0 \\ \frac{2}{3\pi
-                            \sqrt{1-y^2}} + \frac{2}{3\pi \sqrt{1-y^2}}=\frac{4}{3\pi \sqrt{1-y^2}} & 0 < y < 1
-                            \end{cases} $$ </div>
-                    </div>
-                </div>
-        </section>
+        </div>
 
     </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500">
+            <p>&copy; 2025 Probability & Statistics Course</p>
+        </div>
+    </footer>
+
+    <script>
+        const stepCounters = { ex1: 0, ex2: 0, ex3: 0, ex4: 0 };
+
+        function showNextStep(exId, totalSteps) {
+            const steps = document.querySelectorAll(`#${exId}-steps .solution-step`);
+            const btn = document.getElementById(`${exId}-btn`);
+
+            if (stepCounters[exId] < totalSteps) {
+                steps[stepCounters[exId]].classList.add('visible');
+                stepCounters[exId]++;
+
+                if (stepCounters[exId] < totalSteps) {
+                    btn.textContent = `Show Step ${stepCounters[exId] + 1}`;
+                } else {
+                    btn.textContent = 'All Steps Shown ✓';
+                    btn.disabled = true;
+                    btn.className = 'px-6 py-2 bg-gray-400 text-white rounded-lg font-medium cursor-not-allowed mb-4';
+                }
+
+                // Retypeset MathJax
+                if (window.MathJax) {
+                    MathJax.typesetPromise();
+                }
+
+                // Draw charts when all steps are shown
+                if (stepCounters[exId] === totalSteps) {
+                    if (exId === 'ex1') drawEx1Chart();
+                    if (exId === 'ex3') drawEx3Chart();
+                }
+            }
+        }
+
+        // Example 1 Chart
+        function drawEx1Chart() {
+            const ctx = document.getElementById('ex1Chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1', '2', '3'],
+                    datasets: [{
+                        label: 'PMF',
+                        data: [0.3, 0.4, 0.3],
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, max: 0.5, title: { display: true, text: 'Probability' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Example 3 Chart
+        function drawEx3Chart() {
+            const ctx = document.getElementById('ex3Chart').getContext('2d');
+            const pdfData = [];
+            const cdfData = [];
+            for (let x = 0; x <= 1; x += 0.01) {
+                pdfData.push({ x: x, y: 2 * x });
+                cdfData.push({ x: x, y: x * x });
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [
+                        { label: 'PDF', data: pdfData, borderColor: 'rgba(168, 85, 247, 1)', borderWidth: 2, pointRadius: 0 },
+                        { label: 'CDF', data: cdfData, borderColor: 'rgba(34, 197, 94, 1)', borderWidth: 2, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+                    scales: {
+                        x: { type: 'linear', min: 0, max: 1, title: { display: true, text: 'x' } },
+                        y: { beginAtZero: true, max: 2.2 }
+                    }
+                }
+            });
+        }
+    </script>
 
 </body>
 
