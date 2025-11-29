@@ -6,12 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Variance & Standard Deviation - Probability & Statistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+        }
+
+        .proof-step {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .proof-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .balance-point {
+            width: 20px;
+            height: 20px;
+            background: #ef4444;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -10px;
+            transform: translateX(-50%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.2);
+            }
         }
     </style>
 </head>
@@ -45,30 +80,77 @@
     <header class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-gray-900">Variance and Standard Deviation</h1>
-            <p class="mt-2 text-lg text-gray-600">Understanding variability and spread in data.</p>
+            <p class="mt-2 text-lg text-gray-600">Understanding variability and spread in data through interactive
+                visualizations.</p>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
 
-        <!-- Motivation -->
+        <!-- Motivation: Same Mean, Different Spread -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Motivation</h2>
-            <div class="prose max-w-none text-gray-700">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Motivation: Same Mean, Different Risk</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
                 <p>
-                    The expected value \(E[X]\) (or mean) gives us the "center" of a distribution, but it doesn't tell
-                    us how spread out the data is.
-                    Consider three scenarios where you win money:
+                    Consider three scenarios where you win money, all with expected value of <strong>$1000</strong>:
                 </p>
-                <ul class="list-disc list-inside space-y-2 mt-4">
-                    <li><strong>Case A:</strong> You get $1000 guaranteed.</li>
-                    <li><strong>Case B:</strong> Coin toss: Heads you get $2000, Tails you get $0.</li>
-                    <li><strong>Case C:</strong> Lottery: 1/1000 chance to win $1,000,000, otherwise $0.</li>
-                </ul>
-                <p class="mt-4">
-                    In all three cases, the expected winning is <strong>$1000</strong>. However, the <em>risk</em> or
-                    <em>variability</em> is vastly different. Variance measures this spread.
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Spread Visualizer</h3>
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <button onclick="showScenario(1)" id="btn1"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700">
+                        Scenario A: Guaranteed
+                    </button>
+                    <button onclick="showScenario(2)" id="btn2"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300">
+                        Scenario B: Coin Toss
+                    </button>
+                    <button onclick="showScenario(3)" id="btn3"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300">
+                        Scenario C: Lottery
+                    </button>
+                </div>
+                <div id="scenarioDesc" class="bg-white p-4 rounded-lg mb-4">
+                    <p class="text-gray-700"><strong>Scenario A:</strong> You get $1000 guaranteed.</p>
+                </div>
+                <canvas id="spreadChart" height="80"></canvas>
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Expected Value</div>
+                        <div class="text-xl font-bold text-blue-600" id="spreadMean">$1000</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Variance</div>
+                        <div class="text-xl font-bold text-blue-600" id="spreadVar">0</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Std. Deviation</div>
+                        <div class="text-xl font-bold text-blue-600" id="spreadStd">$0</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Balancing Point Animation -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Mean as a Balance Point</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>
+                    The expected value (mean) acts as the "balance point" of a distribution. Variance measures how far
+                    values deviate from this point.
                 </p>
+            </div>
+
+            <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Balance Point Visualizer</h3>
+                <canvas id="balanceChart" height="100"></canvas>
+                <div class="text-center mt-4">
+                    <span class="inline-block w-4 h-4 bg-red-500 rounded-full"></span>
+                    <span class="ml-2 text-sm text-gray-600">Mean: <span id="balanceMean"
+                            class="font-bold text-gray-900">3.5</span></span>
+                </div>
             </div>
         </section>
 
@@ -78,76 +160,83 @@
             <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Variance</h3>
                 <p class="text-gray-700">
-                    Let \(\mu = E[X]\). The <strong>variance</strong> of \(X\), denoted as \(\text{Var}(X)\) or
-                    \(\sigma^2\), is:
                     $$ \text{Var}(X) = E[(X - \mu)^2] = \sum_x (x - \mu)^2 p(x) $$
+                    where \(\mu = E[X]\).
                 </p>
             </div>
             <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Standard Deviation</h3>
                 <p class="text-gray-700">
-                    The <strong>standard deviation</strong> is the square root of the variance:
-                    $$ \sigma_X = \sqrt{\text{Var}(X)} $$
+                    $$ \sigma = \sqrt{\text{Var}(X)} $$
                 </p>
             </div>
         </section>
 
-        <!-- Alternative Formula -->
+        <!-- Interactive Proof -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Computational Formula</h2>
-            <div class="prose max-w-none text-gray-700">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Interactive Proof: Computational Formula</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
                 <p>
-                    There is often a more convenient way to calculate variance:
-                </p>
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
-                    $$ \text{Var}(X) = E[X^2] - (E[X])^2 $$
-                </div>
-                <p>
-                    <strong>Proof:</strong><br>
-                    \begin{align*}
-                    \text{Var}(X) &= E[(X - \mu)^2] \\
-                    &= E[X^2 - 2\mu X + \mu^2] \\
-                    &= E[X^2] - 2\mu E[X] + \mu^2 \\
-                    &= E[X^2] - 2\mu^2 + \mu^2 \\
-                    &= E[X^2] - \mu^2
-                    \end{align*}
+                    We will prove that: \(\text{Var}(X) = E[X^2] - (E[X])^2\)
                 </p>
             </div>
-        </section>
 
-        <!-- Properties -->
-        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Properties</h2>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Scaling</h3>
-                    <p class="text-gray-700">
-                        $$ \text{Var}(aX) = a^2 \text{Var}(X) $$
-                        <span class="text-sm text-gray-500">Variance scales by the square of the constant.</span>
-                    </p>
-                </div>
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Shifting</h3>
-                    <p class="text-gray-700">
-                        $$ \text{Var}(X + b) = \text{Var}(X) $$
-                        <span class="text-sm text-gray-500">Adding a constant shifts the distribution but does not
-                            change its spread.</span>
-                    </p>
+            <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                <button onclick="nextProofStep()" id="proofBtn"
+                    class="mb-4 px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700">
+                    Start Proof
+                </button>
+                <div id="proofSteps">
+                    <div class="proof-step p-4 bg-white rounded-lg mb-3" data-step="1">
+                        <strong>Step 1:</strong> Start with the definition of variance:
+                        $$ \text{Var}(X) = E[(X - \mu)^2] $$
+                    </div>
+                    <div class="proof-step p-4 bg-white rounded-lg mb-3" data-step="2">
+                        <strong>Step 2:</strong> Expand the square:
+                        $$ \text{Var}(X) = E[X^2 - 2\mu X + \mu^2] $$
+                    </div>
+                    <div class="proof-step p-4 bg-white rounded-lg mb-3" data-step="3">
+                        <strong>Step 3:</strong> Use linearity of expectation:
+                        $$ \text{Var}(X) = E[X^2] - 2\mu E[X] + \mu^2 $$
+                    </div>
+                    <div class="proof-step p-4 bg-white rounded-lg mb-3" data-step="4">
+                        <strong>Step 4:</strong> Since \(\mu = E[X]\):
+                        $$ \text{Var}(X) = E[X^2] - 2\mu^2 + \mu^2 $$
+                    </div>
+                    <div class="proof-step p-4 bg-white rounded-lg mb-3" data-step="5">
+                        <strong>Step 5:</strong> Simplify:
+                        $$ \text{Var}(X) = E[X^2] - \mu^2 = E[X^2] - (E[X])^2 \quad \blacksquare $$
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Example: Binomial -->
+        <!-- Variance Calculator -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Example: Variance of Binomial</h2>
-            <div class="prose max-w-none text-gray-700">
-                <p>
-                    For a Binomial random variable \(X \sim \text{Binomial}(n, p)\):
-                </p>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>Mean: \( E[X] = np \)</li>
-                    <li>Variance: \( \text{Var}(X) = np(1-p) \)</li>
-                </ul>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Variance Calculator</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>Enter a custom probability distribution and see its variance computed step-by-step.</p>
+            </div>
+
+            <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Values (comma separated)</label>
+                        <input type="text" id="calcValues" value="1, 2, 3, 4, 5, 6"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Probabilities (comma
+                            separated)</label>
+                        <input type="text" id="calcProbs" value="0.167, 0.167, 0.167, 0.167, 0.167, 0.165"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+                <button onclick="calculateVariance()"
+                    class="px-6 py-2 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700">
+                    Calculate
+                </button>
+                <div id="calcResult" class="mt-4"></div>
             </div>
         </section>
 
@@ -158,6 +247,171 @@
             <p>&copy; 2025 Probability & Statistics Course</p>
         </div>
     </footer>
+
+    <script>
+        // Spread Visualizer
+        const spreadCtx = document.getElementById('spreadChart').getContext('2d');
+        const spreadChart = new Chart(spreadCtx, {
+            type: 'bar',
+            data: {
+                labels: ['$1000'],
+                datasets: [{
+                    label: 'Probability',
+                    data: [1.0],
+                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 1, title: { display: true, text: 'Probability' } },
+                    x: { title: { display: true, text: 'Winnings' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        const scenarios = {
+            1: {
+                desc: '<strong>Scenario A:</strong> You get $1000 guaranteed.',
+                labels: ['$1000'],
+                data: [1.0],
+                mean: 1000,
+                variance: 0
+            },
+            2: {
+                desc: '<strong>Scenario B:</strong> Coin toss: Heads = $2000, Tails = $0',
+                labels: ['$0', '$2000'],
+                data: [0.5, 0.5],
+                mean: 1000,
+                variance: 1000000
+            },
+            3: {
+                desc: '<strong>Scenario C:</strong> Lottery: 1/1000 chance to win $1,000,000',
+                labels: ['$0', '$1,000,000'],
+                data: [0.999, 0.001],
+                mean: 1000,
+                variance: 999000000
+            }
+        };
+
+        function showScenario(num) {
+            const scenario = scenarios[num];
+
+            // Update button styles
+            ['btn1', 'btn2', 'btn3'].forEach((id, idx) => {
+                const btn = document.getElementById(id);
+                if (idx + 1 === num) {
+                    btn.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700';
+                } else {
+                    btn.className = 'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300';
+                }
+            });
+
+            document.getElementById('scenarioDesc').innerHTML = `<p class="text-gray-700">${scenario.desc}</p>`;
+            document.getElementById('spreadMean').textContent = `$${scenario.mean}`;
+            document.getElementById('spreadVar').textContent = scenario.variance.toLocaleString();
+            document.getElementById('spreadStd').textContent = `$${Math.sqrt(scenario.variance).toFixed(0)}`;
+
+            spreadChart.data.labels = scenario.labels;
+            spreadChart.data.datasets[0].data = scenario.data;
+            spreadChart.update();
+        }
+
+        // Balance Point Visualizer (Die Roll)
+        const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+        const balanceChart = new Chart(balanceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6'],
+                datasets: [{
+                    label: 'Probability',
+                    data: [1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6],
+                    backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 0.2, title: { display: true, text: 'P(X = k)' } },
+                    x: { title: { display: true, text: 'Die Value' } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                xMin: 2.5,
+                                xMax: 2.5,
+                                borderColor: 'rgb(239, 68, 68)',
+                                borderWidth: 3,
+                                label: {
+                                    content: 'Mean = 3.5',
+                                    enabled: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Interactive Proof
+        let currentStep = 0;
+        function nextProofStep() {
+            const steps = document.querySelectorAll('.proof-step');
+            if (currentStep < steps.length) {
+                steps[currentStep].classList.add('visible');
+                currentStep++;
+                if (currentStep >= steps.length) {
+                    document.getElementById('proofBtn').textContent = 'Proof Complete ✓';
+                    document.getElementById('proofBtn').disabled = true;
+                    document.getElementById('proofBtn').className = 'mb-4 px-6 py-2 bg-gray-400 text-white rounded-lg font-medium cursor-not-allowed';
+                } else {
+                    document.getElementById('proofBtn').textContent = `Next Step (${currentStep + 1}/${steps.length})`;
+                }
+            }
+        }
+
+        // Variance Calculator
+        function calculateVariance() {
+            const valuesStr = document.getElementById('calcValues').value;
+            const probsStr = document.getElementById('calcProbs').value;
+
+            const values = valuesStr.split(',').map(v => parseFloat(v.trim()));
+            const probs = probsStr.split(',').map(p => parseFloat(p.trim()));
+
+            if (values.length !== probs.length) {
+                document.getElementById('calcResult').innerHTML = '<p class="text-red-600">Error: Number of values and probabilities must match!</p>';
+                return;
+            }
+
+            const probSum = probs.reduce((a, b) => a + b, 0);
+            if (Math.abs(probSum - 1) > 0.01) {
+                document.getElementById('calcResult').innerHTML = `<p class="text-red-600">Error: Probabilities must sum to 1 (current sum: ${probSum.toFixed(3)})</p>`;
+                return;
+            }
+
+            const mean = values.reduce((sum, val, i) => sum + val * probs[i], 0);
+            const ex2 = values.reduce((sum, val, i) => sum + val * val * probs[i], 0);
+            const variance = ex2 - mean * mean;
+            const std = Math.sqrt(variance);
+
+            document.getElementById('calcResult').innerHTML = `
+                <div class="bg-white p-4 rounded-lg">
+                    <p class="text-gray-700 mb-2"><strong>E[X]</strong> = ${mean.toFixed(4)}</p>
+                    <p class="text-gray-700 mb-2"><strong>E[X²]</strong> = ${ex2.toFixed(4)}</p>
+                    <p class="text-gray-700 mb-2"><strong>Var(X)</strong> = E[X²] - (E[X])² = ${ex2.toFixed(4)} - ${(mean * mean).toFixed(4)} = <span class="text-blue-600 font-bold">${variance.toFixed(4)}</span></p>
+                    <p class="text-gray-700"><strong>σ</strong> = √Var(X) = <span class="text-blue-600 font-bold">${std.toFixed(4)}</span></p>
+                </div>
+            `;
+        }
+    </script>
 
 </body>
 

@@ -6,12 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Special Distributions - Probability & Statistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+        }
+
+        .slider-container {
+            position: relative;
+        }
+
+        .slider-value {
+            position: absolute;
+            top: -25px;
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            transform: translateX(-50%);
         }
     </style>
 </head>
@@ -45,7 +61,7 @@
     <header class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-gray-900">Special Discrete Distributions</h1>
-            <p class="mt-2 text-lg text-gray-600">Common probability distributions that model real-world phenomena.</p>
+            <p class="mt-2 text-lg text-gray-600">Interactive exploration of common probability distributions.</p>
         </div>
     </header>
 
@@ -56,131 +72,141 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">1</span> Uniform Distribution
             </h2>
-            <div class="prose max-w-none text-gray-700">
+            <div class="prose max-w-none text-gray-700 mb-6">
                 <p>
-                    The simplest discrete distribution is the <strong>Uniform Distribution</strong>, where every outcome
-                    has the same probability.
-                    Consider rolling a fair die. The possible outcomes are \(\{1, 2, 3, 4, 5, 6\}\).
+                    The simplest discrete distribution where every outcome has the same probability.
                 </p>
                 <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
                     <p>
-                        A random variable \(X\) has a discrete uniform distribution on \(\{1, 2, \dots, n\}\) if its PMF
-                        is:
                         $$ p(x) = \begin{cases} \frac{1}{n} & x \in \{1, 2, \dots, n\} \\ 0 & \text{otherwise}
                         \end{cases} $$
                     </p>
                 </div>
             </div>
-        </section>
 
-        <!-- Bernoulli Distribution -->
-        <section id="bernoulli" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">2</span> Bernoulli Distribution
-            </h2>
-            <div class="prose max-w-none text-gray-700">
-                <p>
-                    A <strong>Bernoulli random variable</strong> models a single experiment with two possible outcomes:
-                    "Success" (1) and "Failure" (0).
-                </p>
-                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
-                    <p>
-                        \(X \sim \text{Bernoulli}(p)\) if its PMF is:
-                        $$ P_X(x) = \begin{cases} p & x=1 \\ 1-p & x=0 \\ 0 & \text{otherwise} \end{cases} $$
-                        where \(0 < p < 1\). </p>
-                </div>
-                <ul class="list-disc list-inside space-y-2 text-gray-600">
-                    <li><strong>Example:</strong> A coin toss (Heads/Tails).</li>
-                    <li><strong>Example:</strong> Pass/Fail exam.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Geometric Distribution -->
-        <section id="geometric" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">3</span> Geometric Distribution
-            </h2>
-            <div class="prose max-w-none text-gray-700">
-                <p>
-                    The <strong>Geometric Distribution</strong> models the number of trials needed to get the <em>first
-                        success</em> in a sequence of independent Bernoulli trials.
-                </p>
-                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
-                    <p>
-                        \(X \sim \text{Geometric}(p)\) if its PMF is:
-                        $$ P_X(k) = p(1-p)^{k-1}, \quad k=1, 2, 3, \dots $$
-                    </p>
-                </div>
-                <p class="text-sm text-gray-500">
-                    <em>Note:</em> Some definitions count the number of <em>failures</em> before the first success. In
-                    that case, the domain starts at 0.
-                </p>
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Fair Die Roll (n=6)</h3>
+                <canvas id="uniformChart" height="80"></canvas>
             </div>
         </section>
 
         <!-- Binomial Distribution -->
         <section id="binomial" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">4</span> Binomial Distribution
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">2</span> Binomial Distribution
             </h2>
-            <div class="prose max-w-none text-gray-700">
+            <div class="prose max-w-none text-gray-700 mb-6">
                 <p>
-                    The <strong>Binomial Distribution</strong> models the number of successes in \(n\) independent
-                    Bernoulli trials.
+                    Models the number of successes in \(n\) independent Bernoulli trials.
                 </p>
                 <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
                     <p>
-                        \(X \sim \text{Binomial}(n, p)\) if its PMF is:
+                        \(X \sim \text{Binomial}(n, p)\) with PMF:
                         $$ P_X(k) = \binom{n}{k} p^k (1-p)^{n-k}, \quad k=0, 1, \dots, n $$
                     </p>
                 </div>
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
-                    <p class="text-blue-700">
-                        <strong>Key Property:</strong> A Binomial(\(n, p\)) variable is the sum of \(n\) independent
-                        Bernoulli(\(p\)) variables.
-                    </p>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Binomial Simulator</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Number of Trials (n): <span id="nValue" class="text-blue-600 font-bold">10</span>
+                        </label>
+                        <input type="range" id="nSlider" min="1" max="50" value="10"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Success Probability (p): <span id="pValue" class="text-blue-600 font-bold">0.5</span>
+                        </label>
+                        <input type="range" id="pSlider" min="0" max="100" value="50"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
                 </div>
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="text-sm text-gray-600">Expected Value</div>
+                        <div class="text-2xl font-bold text-blue-600" id="binomialMean">5.0</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="text-sm text-gray-600">Variance</div>
+                        <div class="text-2xl font-bold text-blue-600" id="binomialVar">2.5</div>
+                    </div>
+                </div>
+                <canvas id="binomialChart" height="80"></canvas>
             </div>
         </section>
 
         <!-- Poisson Distribution -->
         <section id="poisson" class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">5</span> Poisson Distribution
+                <span class="bg-blue-100 text-blue-600 p-2 rounded-lg text-sm">3</span> Poisson Distribution
             </h2>
-            <div class="prose max-w-none text-gray-700">
+            <div class="prose max-w-none text-gray-700 mb-6">
                 <p>
-                    The <strong>Poisson Distribution</strong> models the number of events occurring in a fixed interval
-                    of time or space, given a constant average rate \(\lambda\).
+                    Models the number of events occurring in a fixed interval with constant average rate \(\lambda\).
                 </p>
                 <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
                     <p>
-                        \(X \sim \text{Poisson}(\lambda)\) if its PMF is:
+                        \(X \sim \text{Poisson}(\lambda)\) with PMF:
                         $$ P_X(k) = \frac{e^{-\lambda} \lambda^k}{k!}, \quad k=0, 1, 2, \dots $$
                     </p>
                 </div>
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                        <h4 class="font-semibold text-gray-900 mb-2">Example: Call Center</h4>
-                        <p class="text-sm text-gray-600">
-                            If a call center receives 5 calls per minute on average, the probability of receiving
-                            exactly \(k\) calls in a minute follows a Poisson(5) distribution.
-                        </p>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Poisson Rate Adjuster</h3>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Average Rate (λ): <span id="lambdaValue" class="text-blue-600 font-bold">3.0</span>
+                    </label>
+                    <input type="range" id="lambdaSlider" min="0.5" max="15" step="0.5" value="3"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="text-sm text-gray-600">Mean = Variance</div>
+                        <div class="text-2xl font-bold text-blue-600" id="poissonMean">3.0</div>
                     </div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                        <h4 class="font-semibold text-gray-900 mb-2">Limit of Binomial</h4>
-                        <p class="text-sm text-gray-600">
-                            The Poisson distribution is the limit of the Binomial distribution as \(n \to \infty\) and
-                            \(p \to 0\) such that \(np = \lambda\) remains constant.
-                        </p>
+                    <div class="bg-white p-3 rounded-lg">
+                        <div class="text-sm text-gray-600">P(X = 0)</div>
+                        <div class="text-2xl font-bold text-blue-600" id="poissonP0">0.050</div>
                     </div>
                 </div>
+                <canvas id="poissonChart" height="80"></canvas>
+            </div>
+        </section>
+
+        <!-- Binomial → Poisson Limit -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Binomial → Poisson Limit</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>
+                    As \(n \to \infty\) and \(p \to 0\) such that \(np = \lambda\) remains constant,
+                    the Binomial distribution converges to a Poisson distribution.
+                </p>
+            </div>
+
+            <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Watch the Convergence</h3>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        n (trials): <span id="limitNValue" class="text-purple-600 font-bold">10</span>
+                        <span class="text-sm text-gray-500 ml-2">(p will adjust to keep λ = 5)</span>
+                    </label>
+                    <input type="range" id="limitNSlider" min="10" max="200" step="10" value="10"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="bg-white p-3 rounded-lg mb-4">
+                    <span class="text-sm text-gray-600">Current p = </span>
+                    <span class="text-lg font-bold text-purple-600" id="limitPValue">0.5000</span>
+                </div>
+                <canvas id="limitChart" height="80"></canvas>
             </div>
         </section>
 
@@ -191,6 +217,180 @@
             <p>&copy; 2025 Probability & Statistics Course</p>
         </div>
     </footer>
+
+    <script>
+        // Utility functions
+        function factorial(n) {
+            if (n <= 1) return 1;
+            return n * factorial(n - 1);
+        }
+
+        function binomialCoeff(n, k) {
+            return factorial(n) / (factorial(k) * factorial(n - k));
+        }
+
+        function binomialPMF(k, n, p) {
+            return binomialCoeff(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+        }
+
+        function poissonPMF(k, lambda) {
+            return Math.pow(lambda, k) * Math.exp(-lambda) / factorial(k);
+        }
+
+        // Uniform Distribution Chart
+        const uniformCtx = document.getElementById('uniformChart').getContext('2d');
+        const uniformChart = new Chart(uniformCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6'],
+                datasets: [{
+                    label: 'Probability',
+                    data: [1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6],
+                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 0.2, title: { display: true, text: 'P(X = k)' } },
+                    x: { title: { display: true, text: 'Outcome' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Binomial Distribution
+        const binomialCtx = document.getElementById('binomialChart').getContext('2d');
+        let binomialChart = new Chart(binomialCtx, {
+            type: 'bar',
+            data: { labels: [], datasets: [{ label: 'PMF', data: [], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 2 }] },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'P(X = k)' } },
+                    x: { title: { display: true, text: 'Number of Successes' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateBinomial() {
+            const n = parseInt(document.getElementById('nSlider').value);
+            const p = parseInt(document.getElementById('pSlider').value) / 100;
+
+            document.getElementById('nValue').textContent = n;
+            document.getElementById('pValue').textContent = p.toFixed(2);
+
+            const mean = n * p;
+            const variance = n * p * (1 - p);
+            document.getElementById('binomialMean').textContent = mean.toFixed(2);
+            document.getElementById('binomialVar').textContent = variance.toFixed(2);
+
+            const labels = [];
+            const data = [];
+            for (let k = 0; k <= n; k++) {
+                labels.push(k.toString());
+                data.push(binomialPMF(k, n, p));
+            }
+
+            binomialChart.data.labels = labels;
+            binomialChart.data.datasets[0].data = data;
+            binomialChart.update();
+        }
+
+        document.getElementById('nSlider').addEventListener('input', updateBinomial);
+        document.getElementById('pSlider').addEventListener('input', updateBinomial);
+        updateBinomial();
+
+        // Poisson Distribution
+        const poissonCtx = document.getElementById('poissonChart').getContext('2d');
+        let poissonChart = new Chart(poissonCtx, {
+            type: 'bar',
+            data: { labels: [], datasets: [{ label: 'PMF', data: [], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 2 }] },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'P(X = k)' } },
+                    x: { title: { display: true, text: 'Number of Events' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updatePoisson() {
+            const lambda = parseFloat(document.getElementById('lambdaSlider').value);
+            document.getElementById('lambdaValue').textContent = lambda.toFixed(1);
+            document.getElementById('poissonMean').textContent = lambda.toFixed(1);
+
+            const p0 = Math.exp(-lambda);
+            document.getElementById('poissonP0').textContent = p0.toFixed(3);
+
+            const maxK = Math.min(30, Math.ceil(lambda + 4 * Math.sqrt(lambda)));
+            const labels = [];
+            const data = [];
+            for (let k = 0; k <= maxK; k++) {
+                labels.push(k.toString());
+                data.push(poissonPMF(k, lambda));
+            }
+
+            poissonChart.data.labels = labels;
+            poissonChart.data.datasets[0].data = data;
+            poissonChart.update();
+        }
+
+        document.getElementById('lambdaSlider').addEventListener('input', updatePoisson);
+        updatePoisson();
+
+        // Binomial → Poisson Limit
+        const limitCtx = document.getElementById('limitChart').getContext('2d');
+        let limitChart = new Chart(limitCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'Binomial', data: [], backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 2 },
+                    { label: 'Poisson (λ=5)', data: [], backgroundColor: 'rgba(168, 85, 247, 0.5)', borderColor: 'rgba(168, 85, 247, 1)', borderWidth: 2 }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Probability' } },
+                    x: { title: { display: true, text: 'k' } }
+                }
+            }
+        });
+
+        function updateLimit() {
+            const n = parseInt(document.getElementById('limitNSlider').value);
+            const lambda = 5;
+            const p = lambda / n;
+
+            document.getElementById('limitNValue').textContent = n;
+            document.getElementById('limitPValue').textContent = p.toFixed(4);
+
+            const maxK = 15;
+            const labels = [];
+            const binomData = [];
+            const poissonData = [];
+
+            for (let k = 0; k <= maxK; k++) {
+                labels.push(k.toString());
+                binomData.push(binomialPMF(k, n, p));
+                poissonData.push(poissonPMF(k, lambda));
+            }
+
+            limitChart.data.labels = labels;
+            limitChart.data.datasets[0].data = binomData;
+            limitChart.data.datasets[1].data = poissonData;
+            limitChart.update();
+        }
+
+        document.getElementById('limitNSlider').addEventListener('input', updateLimit);
+        updateLimit();
+    </script>
 
 </body>
 

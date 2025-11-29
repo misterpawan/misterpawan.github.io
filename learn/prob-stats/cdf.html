@@ -6,12 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cumulative Distribution Function (CDF) - Probability & Statistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+        }
+
+        .step-function {
+            stroke: #3b82f6;
+            stroke-width: 2;
+            fill: none;
         }
     </style>
 </head>
@@ -57,45 +64,146 @@
             <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">CDF</h3>
                 <p class="text-gray-700">
-                    The Cumulative Distribution Function \(F_X(x)\) of a random variable \(X\) is defined as the
-                    probability that \(X\) will take a value less than or equal to \(x\):
+                    The Cumulative Distribution Function \(F_X(x)\) gives the probability that \(X\) is at most \(x\):
                     $$ F_X(x) = P(X \leq x) $$
                 </p>
             </div>
         </section>
 
-        <!-- Properties -->
+        <!-- PMF to CDF Converter -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Properties</h2>
-            <ul class="list-disc list-inside space-y-4 text-gray-700">
-                <li><strong>Non-decreasing:</strong> If \(a < b\), then \(F_X(a) \leq F_X(b)\).</li>
-                <li><strong>Limits:</strong>
-                    $$ \lim_{x \to -\infty} F_X(x) = 0 \quad \text{and} \quad \lim_{x \to \infty} F_X(x) = 1 $$
-                </li>
-                <li><strong>Right-Continuous:</strong> \( \lim_{\epsilon \to 0^+} F_X(x + \epsilon) = F_X(x) \).</li>
-                <li><strong>Interval Probability:</strong>
-                    $$ P(a < X \leq b)=F_X(b) - F_X(a) $$ </li>
-            </ul>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Interactive: PMF to CDF Converter</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>
+                    Watch how the CDF accumulates the PMF values. The CDF at any point is the sum of all PMF values up
+                    to and including that point.
+                </p>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Example: Die Roll</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">PMF: P(X = k)</h4>
+                        <canvas id="pmfChart" height="100"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">CDF: P(X ≤ k)</h4>
+                        <canvas id="cdfChart" height="100"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Hover over a value: <span id="hoverValue" class="text-blue-600 font-bold">-</span>
+                    </label>
+                    <p class="text-sm text-gray-600" id="hoverInfo">Click on the charts to see PMF and CDF values.</p>
+                </div>
+            </div>
         </section>
 
-        <!-- Discrete vs Continuous -->
+        <!-- Interactive Step Function -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Discrete vs. Continuous</h2>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Discrete Random Variables</h3>
-                    <p class="text-gray-700">
-                        The CDF is a <strong>step function</strong>. It jumps at each value \(x\) where \(P(X=x) > 0\).
-                        The size of the jump is equal to the probability \(P(X=x)\).
-                    </p>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Interactive: CDF Step Function</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>
+                    For discrete random variables, the CDF is a step function. It jumps at each value where the PMF is
+                    non-zero.
+                </p>
+            </div>
+
+            <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Select Distribution
+                    </label>
+                    <div class="flex gap-2">
+                        <button onclick="showCDFDist('fair')" id="cdfBtn1"
+                            class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium">
+                            Fair Die
+                        </button>
+                        <button onclick="showCDFDist('biased')" id="cdfBtn2"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">
+                            Biased Coin
+                        </button>
+                        <button onclick="showCDFDist('custom')" id="cdfBtn3"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">
+                            Custom
+                        </button>
+                    </div>
                 </div>
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Continuous Random Variables</h3>
-                    <p class="text-gray-700">
-                        The CDF is a <strong>continuous function</strong>. It is the integral of the Probability Density
-                        Function (PDF):
-                        $$ F_X(x) = \int_{-\infty}^x f_X(t) \, dt $$
-                    </p>
+                <canvas id="stepChart" height="100"></canvas>
+                <div class="mt-4 bg-white p-4 rounded-lg">
+                    <p class="text-sm text-gray-700"><strong>Click on a point</strong> to see F(x) at that location.</p>
+                    <p class="text-gray-700 mt-2" id="stepInfo">F(3) = P(X ≤ 3) = 0.5</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Area Under Curve -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Interval Probability: P(a < X ≤ b)</h2>
+                    <div class="prose max-w-none text-gray-700 mb-6">
+                        <p>
+                            The probability that \(X\) falls in an interval can be computed using the CDF:
+                            $$ P(a < X \leq b)=F_X(b) - F_X(a) $$ </p>
+                    </div>
+
+                    <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                        <h3 class="font-semibold text-gray-900 mb-4">Interactive: Interval Calculator</h3>
+                        <div class="grid md:grid-cols-2 gap-6 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Lower bound (a): <span id="aValue" class="text-purple-600 font-bold">2</span>
+                                </label>
+                                <input type="range" id="aSlider" min="0" max="5" value="2"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Upper bound (b): <span id="bValue" class="text-purple-600 font-bold">4</span>
+                                </label>
+                                <input type="range" id="bSlider" min="1" max="6" value="4"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                        <canvas id="intervalChart" height="80"></canvas>
+                        <div class="grid grid-cols-3 gap-4 mt-4">
+                            <div class="bg-white p-3 rounded-lg text-center">
+                                <div class="text-sm text-gray-600">F(a)</div>
+                                <div class="text-xl font-bold text-purple-600" id="faValue">0.333</div>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg text-center">
+                                <div class="text-sm text-gray-600">F(b)</div>
+                                <div class="text-xl font-bold text-purple-600" id="fbValue">0.667</div>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg text-center">
+                                <div class="text-sm text-gray-600">P(a < X ≤ b)</div>
+                                        <div class="text-xl font-bold text-purple-600" id="probValue">0.333</div>
+                                </div>
+                            </div>
+                        </div>
+        </section>
+
+        <!-- Properties -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Properties of CDF</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h3 class="font-semibold text-gray-900 mb-3">Key Properties</h3>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li>✓ <strong>Non-decreasing:</strong> If \(a < b\), then \(F(a) \leq F(b)\)</li>
+                        <li>✓ <strong>Right-continuous:</strong> \(\lim_{x \to a^+} F(x) = F(a)\)</li>
+                        <li>✓ <strong>Limits:</strong> \(\lim_{x \to -\infty} F(x) = 0\), \(\lim_{x \to \infty} F(x) =
+                            1\)</li>
+                    </ul>
+                </div>
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h3 class="font-semibold text-gray-900 mb-3">Discrete vs Continuous</h3>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li><strong>Discrete:</strong> Step function with jumps</li>
+                        <li><strong>Continuous:</strong> Smooth, continuous curve</li>
+                        <li><strong>Mixed:</strong> Combination of both</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -107,6 +215,164 @@
             <p>&copy; 2025 Probability & Statistics Course</p>
         </div>
     </footer>
+
+    <script>
+        // PMF to CDF for fair die
+        const pmfCtx = document.getElementById('pmfChart').getContext('2d');
+        const pmfChart = new Chart(pmfCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6'],
+                datasets: [{
+                    label: 'PMF',
+                    data: [1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6],
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 0.25, title: { display: true, text: 'Probability' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        const cdfCtx = document.getElementById('cdfChart').getContext('2d');
+        const cdfChart = new Chart(cdfCtx, {
+            type: 'line',
+            data: {
+                labels: ['0', '1', '2', '3', '4', '5', '6'],
+                datasets: [{
+                    label: 'CDF',
+                    data: [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6, 6 / 6],
+                    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 3,
+                    stepped: 'after',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 1.1, title: { display: true, text: 'Cumulative Probability' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Step function
+        const stepCtx = document.getElementById('stepChart').getContext('2d');
+        let stepChart;
+
+        function showCDFDist(type) {
+            ['cdfBtn1', 'cdfBtn2', 'cdfBtn3'].forEach((id, idx) => {
+                const btn = document.getElementById(id);
+                const types = ['fair', 'biased', 'custom'];
+                if (types[idx] === type) {
+                    btn.className = 'px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium';
+                } else {
+                    btn.className = 'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium';
+                }
+            });
+
+            let labels, data;
+            if (type === 'fair') {
+                labels = ['0', '1', '2', '3', '4', '5', '6'];
+                data = [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6, 1];
+            } else if (type === 'biased') {
+                labels = ['0', '1'];
+                data = [0, 0.3, 1];
+            } else {
+                labels = ['0', '1', '2', '3'];
+                data = [0, 0.2, 0.5, 1];
+            }
+
+            if (stepChart) stepChart.destroy();
+            stepChart = new Chart(stepCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        borderWidth: 3,
+                        stepped: 'after',
+                        pointRadius: 5,
+                        pointBackgroundColor: 'rgba(34, 197, 94, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, max: 1.1, title: { display: true, text: 'F(x)' } },
+                        x: { title: { display: true, text: 'x' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        showCDFDist('fair');
+
+        // Interval probability
+        const intervalCtx = document.getElementById('intervalChart').getContext('2d');
+        let intervalChart = new Chart(intervalCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6'],
+                datasets: [{
+                    data: [1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6, 1 / 6],
+                    backgroundColor: ['rgba(156, 163, 175, 0.3)', 'rgba(156, 163, 175, 0.3)', 'rgba(168, 85, 247, 0.6)', 'rgba(168, 85, 247, 0.6)', 'rgba(156, 163, 175, 0.3)', 'rgba(156, 163, 175, 0.3)'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true, max: 0.25 } },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateInterval() {
+            const a = parseInt(document.getElementById('aSlider').value);
+            const b = parseInt(document.getElementById('bSlider').value);
+
+            if (b <= a) {
+                document.getElementById('bSlider').value = a + 1;
+                return updateInterval();
+            }
+
+            document.getElementById('aValue').textContent = a;
+            document.getElementById('bValue').textContent = b;
+
+            const fa = a / 6;
+            const fb = b / 6;
+            const prob = fb - fa;
+
+            document.getElementById('faValue').textContent = fa.toFixed(3);
+            document.getElementById('fbValue').textContent = fb.toFixed(3);
+            document.getElementById('probValue').textContent = prob.toFixed(3);
+
+            const colors = [];
+            for (let i = 1; i <= 6; i++) {
+                if (i > a && i <= b) {
+                    colors.push('rgba(168, 85, 247, 0.6)');
+                } else {
+                    colors.push('rgba(156, 163, 175, 0.3)');
+                }
+            }
+
+            intervalChart.data.datasets[0].backgroundColor = colors;
+            intervalChart.update();
+        }
+
+        document.getElementById('aSlider').addEventListener('input', updateInterval);
+        document.getElementById('bSlider').addEventListener('input', updateInterval);
+        updateInterval();
+    </script>
 
 </body>
 

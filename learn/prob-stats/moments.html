@@ -6,12 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moments & MGF - Probability & Statistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+        }
+
+        .taylor-term {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease;
+        }
+
+        .taylor-term.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
     </style>
 </head>
@@ -45,7 +57,8 @@
     <header class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-gray-900">Moments and Moment Generating Functions</h1>
-            <p class="mt-2 text-lg text-gray-600">Advanced tools for characterizing probability distributions.</p>
+            <p class="mt-2 text-lg text-gray-600">Advanced tools for characterizing and analyzing probability
+                distributions.</p>
         </div>
     </header>
 
@@ -54,77 +67,163 @@
         <!-- Higher Order Moments -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Higher Order Moments</h2>
-            <div class="prose max-w-none text-gray-700">
+            <div class="prose max-w-none text-gray-700 mb-6">
                 <p>
-                    Moments describe the shape of a distribution.
+                    Moments describe different aspects of a distribution's shape. The \(n\)th central moment is:
+                    $$ \mu_n = E[(X - E[X])^n] $$
                 </p>
-                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">nth Central Moment</h3>
-                    <p>
-                        The \(n\)th central moment of a random variable \(X\) is defined as:
-                        $$ \mu_n = E[(X - E[X])^n] $$
-                    </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                    <h3 class="font-semibold text-gray-900 mb-3">Central Moments</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li><strong>μ₀:</strong> Always 1</li>
+                        <li><strong>μ₁:</strong> Always 0</li>
+                        <li><strong>μ₂:</strong> Variance (spread)</li>
+                        <li><strong>μ₃:</strong> Skewness (asymmetry)</li>
+                        <li><strong>μ₄:</strong> Kurtosis (tailedness)</li>
+                    </ul>
                 </div>
-                <ul class="list-disc list-inside space-y-2 mt-4">
-                    <li><strong>0th Moment:</strong> Always 1.</li>
-                    <li><strong>1st Central Moment:</strong> Always 0.</li>
-                    <li><strong>2nd Central Moment:</strong> Variance (\(\sigma^2\)).</li>
-                    <li><strong>3rd Central Moment:</strong> Related to Skewness (asymmetry).</li>
-                    <li><strong>4th Central Moment:</strong> Related to Kurtosis (tailedness).</li>
-                </ul>
+                <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-semibold text-gray-900 mb-3">Raw Moments</h3>
+                    <p class="text-gray-700 mb-2">About the origin:</p>
+                    <p class="text-gray-700">$$ m_n = E[X^n] $$</p>
+                    <ul class="space-y-2 text-gray-700 mt-3">
+                        <li><strong>m₁:</strong> Mean</li>
+                        <li><strong>m₂:</strong> E[X²]</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
-        <!-- Moment Generating Function -->
+        <!-- Shape Visualizer -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">How Moments Affect Shape</h2>
+
+            <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Interactive: Distribution Shape Explorer</h3>
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <button onclick="showDistShape('symmetric')" id="shapeBtn1"
+                        class="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium">
+                        Symmetric (Skew = 0)
+                    </button>
+                    <button onclick="showDistShape('rightskew')" id="shapeBtn2"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium">
+                        Right Skewed (Skew > 0)
+                    </button>
+                </div>
+                <canvas id="shapeChart" height="80"></canvas>
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Mean</div>
+                        <div class="text-xl font-bold text-purple-600" id="shapeMean">5.0</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Variance</div>
+                        <div class="text-xl font-bold text-purple-600" id="shapeVar">2.5</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg text-center">
+                        <div class="text-sm text-gray-600">Skewness</div>
+                        <div class="text-xl font-bold text-purple-600" id="shapeSkew">0.0</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MGF Definition -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Moment Generating Function (MGF)</h2>
-            <div class="prose max-w-none text-gray-700">
-                <p>
-                    The MGF is a powerful tool that, if it exists, uniquely determines the distribution. It can be used
-                    to find moments easily.
+            <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
+                <p class="text-gray-700">
+                    $$ M_X(t) = E[e^{tX}] = \sum_x e^{tx} p(x) $$
                 </p>
-                <div class="my-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Definition</h3>
-                    <p>
-                        $$ M_X(t) = E[e^{tX}] = \sum_x e^{tx} p(x) $$
-                    </p>
-                </div>
-
-                <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">Generating Moments</h3>
-                <p>
-                    We can find the \(n\)th moment (about the origin) by taking the \(n\)th derivative of the MGF and
-                    evaluating at \(t=0\).
-                </p>
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
+            </div>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                <p class="text-blue-700">
+                    <strong>Key Property:</strong> The \(n\)th derivative of the MGF at \(t=0\) gives the \(n\)th raw
+                    moment:
                     $$ E[X^n] = M_X^{(n)}(0) $$
-                </div>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>\( E[X] = M_X'(0) \)</li>
-                    <li>\( E[X^2] = M_X''(0) \)</li>
-                    <li>\( \text{Var}(X) = M_X''(0) - [M_X'(0)]^2 \)</li>
-                </ul>
+                </p>
             </div>
         </section>
 
-        <!-- Examples -->
+        <!-- Taylor Series Animation -->
         <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Examples</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Understanding MGF: Taylor Series</h2>
+            <div class="prose max-w-none text-gray-700 mb-6">
+                <p>
+                    The MGF works because \(e^{tX}\) can be expanded as a Taylor series:
+                </p>
+            </div>
 
-            <div class="space-y-6">
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Binomial Distribution</h3>
-                    <p class="text-gray-700">
-                        For \(X \sim \text{Binomial}(n, p)\):
-                        $$ M_X(t) = (pe^t + 1 - p)^n $$
-                    </p>
+            <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                <button onclick="showTaylorTerm()" id="taylorBtn"
+                    class="mb-4 px-6 py-2 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700">
+                    Show Next Term
+                </button>
+                <div id="taylorExpansion" class="bg-white p-6 rounded-lg">
+                    <p class="text-gray-700 mb-4">$$ e^{tX} = $$</p>
+                    <div class="taylor-term" data-term="0">
+                        $$ 1 $$
+                    </div>
+                    <div class="taylor-term" data-term="1">
+                        $$ + tX $$
+                    </div>
+                    <div class="taylor-term" data-term="2">
+                        $$ + \frac{(tX)^2}{2!} $$
+                    </div>
+                    <div class="taylor-term" data-term="3">
+                        $$ + \frac{(tX)^3}{3!} $$
+                    </div>
+                    <div class="taylor-term" data-term="4">
+                        $$ + \cdots $$
+                    </div>
                 </div>
+                <div id="taylorExplanation" class="mt-4"></div>
+            </div>
+        </section>
 
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <h3 class="font-semibold text-gray-900 mb-2">Poisson Distribution</h3>
-                    <p class="text-gray-700">
-                        For \(X \sim \text{Poisson}(\lambda)\):
-                        $$ M_X(t) = e^{\lambda(e^t - 1)} $$
-                    </p>
+        <!-- MGF Explorer -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">MGF Explorer</h2>
+
+            <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Select a Distribution</h3>
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <button onclick="exploreMGF('binomial')" id="mgfBtn1"
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium">
+                        Binomial(10, 0.5)
+                    </button>
+                    <button onclick="exploreMGF('poisson')" id="mgfBtn2"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium">
+                        Poisson(3)
+                    </button>
+                    <button onclick="exploreMGF('geometric')" id="mgfBtn3"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium">
+                        Geometric(0.3)
+                    </button>
+                </div>
+                <div id="mgfResult" class="bg-white p-6 rounded-lg">
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">MGF:</h4>
+                        <p class="text-gray-700" id="mgfFormula">$$ M_X(t) = (0.5e^t + 0.5)^{10} $$</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <div class="text-sm text-gray-600">E[X] = M'(0)</div>
+                            <div class="text-xl font-bold text-green-600" id="mgfMean">5.0</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-600">E[X²] = M''(0)</div>
+                            <div class="text-xl font-bold text-green-600" id="mgfEx2">27.5</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-600">Var(X)</div>
+                            <div class="text-xl font-bold text-green-600" id="mgfVar">2.5</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -136,6 +235,154 @@
             <p>&copy; 2025 Probability & Statistics Course</p>
         </div>
     </footer>
+
+    <script>
+        // Shape Explorer
+        const shapeCtx = document.getElementById('shapeChart').getContext('2d');
+        let shapeChart = new Chart(shapeCtx, {
+            type: 'bar',
+            data: { labels: [], datasets: [{ label: 'PMF', data: [], backgroundColor: 'rgba(168, 85, 247, 0.5)', borderColor: 'rgba(168, 85, 247, 1)', borderWidth: 2 }] },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'P(X = k)' } },
+                    x: { title: { display: true, text: 'k' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function binomialPMF(k, n, p) {
+            const choose = (n, k) => {
+                if (k > n) return 0;
+                let result = 1;
+                for (let i = 0; i < k; i++) {
+                    result *= (n - i) / (i + 1);
+                }
+                return result;
+            };
+            return choose(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+        }
+
+        function showDistShape(type) {
+            ['shapeBtn1', 'shapeBtn2'].forEach((id, idx) => {
+                const btn = document.getElementById(id);
+                if ((idx === 0 && type === 'symmetric') || (idx === 1 && type === 'rightskew')) {
+                    btn.className = 'px-4 py-2 bg-purple-600 text-white rounded-lg font-medium';
+                } else {
+                    btn.className = 'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium';
+                }
+            });
+
+            let labels = [];
+            let data = [];
+            let mean, variance, skew;
+
+            if (type === 'symmetric') {
+                // Binomial(10, 0.5) - symmetric
+                for (let k = 0; k <= 10; k++) {
+                    labels.push(k.toString());
+                    data.push(binomialPMF(k, 10, 0.5));
+                }
+                mean = 5.0;
+                variance = 2.5;
+                skew = 0.0;
+            } else {
+                // Right skewed: Binomial(10, 0.2)
+                for (let k = 0; k <= 10; k++) {
+                    labels.push(k.toString());
+                    data.push(binomialPMF(k, 10, 0.2));
+                }
+                mean = 2.0;
+                variance = 1.6;
+                skew = 0.4;
+            }
+
+            document.getElementById('shapeMean').textContent = mean.toFixed(1);
+            document.getElementById('shapeVar').textContent = variance.toFixed(2);
+            document.getElementById('shapeSkew').textContent = skew.toFixed(2);
+
+            shapeChart.data.labels = labels;
+            shapeChart.data.datasets[0].data = data;
+            shapeChart.update();
+        }
+        showDistShape('symmetric');
+
+        // Taylor Series Animation
+        let currentTerm = -1;
+        const explanations = [
+            "The constant term: 1",
+            "First order: coefficient of t gives E[X]",
+            "Second order: coefficient of t²/2! gives E[X²]",
+            "Third order: coefficient of t³/3! gives E[X³]",
+            "And so on... Taking expectation of both sides and differentiating gives us moments!"
+        ];
+
+        function showTaylorTerm() {
+            const terms = document.querySelectorAll('.taylor-term');
+            currentTerm++;
+            if (currentTerm < terms.length) {
+                terms[currentTerm].classList.add('visible');
+                document.getElementById('taylorExplanation').innerHTML =
+                    `<p class="text-gray-700 bg-white p-3 rounded-lg">${explanations[currentTerm]}</p>`;
+
+                if (currentTerm >= terms.length - 1) {
+                    document.getElementById('taylorBtn').textContent = 'Complete ✓';
+                    document.getElementById('taylorBtn').disabled = true;
+                    document.getElementById('taylorBtn').className = 'mb-4 px-6 py-2 bg-gray-400 text-white rounded-lg font-medium cursor-not-allowed';
+                }
+                // Retypeset MathJax
+                if (window.MathJax) {
+                    MathJax.typesetPromise();
+                }
+            }
+        }
+
+        // MGF Explorer
+        const mgfData = {
+            binomial: {
+                formula: '$$ M_X(t) = (pe^t + 1 - p)^n = (0.5e^t + 0.5)^{10} $$',
+                mean: 5.0,
+                ex2: 27.5,
+                variance: 2.5
+            },
+            poisson: {
+                formula: '$$ M_X(t) = e^{\\lambda(e^t - 1)} = e^{3(e^t - 1)} $$',
+                mean: 3.0,
+                ex2: 12.0,
+                variance: 3.0
+            },
+            geometric: {
+                formula: '$$ M_X(t) = \\frac{pe^t}{1 - (1-p)e^t} = \\frac{0.3e^t}{1 - 0.7e^t} $$',
+                mean: 3.33,
+                ex2: 17.78,
+                variance: 7.78
+            }
+        };
+
+        function exploreMGF(dist) {
+            ['mgfBtn1', 'mgfBtn2', 'mgfBtn3'].forEach((id, idx) => {
+                const btn = document.getElementById(id);
+                const dists = ['binomial', 'poisson', 'geometric'];
+                if (dists[idx] === dist) {
+                    btn.className = 'px-4 py-2 bg-green-600 text-white rounded-lg font-medium';
+                } else {
+                    btn.className = 'px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium';
+                }
+            });
+
+            const data = mgfData[dist];
+            document.getElementById('mgfFormula').innerHTML = data.formula;
+            document.getElementById('mgfMean').textContent = data.mean.toFixed(2);
+            document.getElementById('mgfEx2').textContent = data.ex2.toFixed(2);
+            document.getElementById('mgfVar').textContent = data.variance.toFixed(2);
+
+            // Retypeset MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+    </script>
 
 </body>
 

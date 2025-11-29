@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice Problems - Unit 3 - Probability & Statistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -21,6 +22,11 @@
         .solution-visible {
             display: block;
             animation: fadeIn 0.5s ease-out;
+        }
+
+        .hint-box {
+            background: linear-gradient(to right, #fef3c7, #fde68a);
+            border-left: 4px solid #f59e0b;
         }
 
         @keyframes fadeIn {
@@ -66,80 +72,178 @@
     <header class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-gray-900">Practice Problems: Discrete Random Variables</h1>
-            <p class="mt-2 text-lg text-gray-600">Test your understanding of distributions, expectation, and variance.
-            </p>
+            <p class="mt-2 text-lg text-gray-600">Interactive problems with visualizations, hints, and step-by-step
+                solutions.</p>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8">
 
-        <!-- Problem 1 -->
+        <!-- Problem 1: Binomial -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <div class="flex justify-between items-start mb-4">
                 <h3 class="text-xl font-bold text-gray-900">Problem 1: Defective Widgets</h3>
                 <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">Binomial</span>
             </div>
             <p class="text-gray-700 mb-6">
-                A factory produces widgets where 5% are defective. If you randomly select 10 widgets, what is the
-                probability that exactly 2 are defective?
+                A factory produces widgets where 5% are defective. If you randomly select 10 widgets,
+                what is the probability that exactly 2 are defective?
             </p>
-            <button onclick="toggleSolution('sol-1')"
-                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors border border-gray-300">
-                Show Solution
-            </button>
-            <div id="sol-1" class="solution-hidden mt-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                <h4 class="font-semibold text-gray-900 mb-2">Solution</h4>
-                <p class="text-gray-700">
-                    Let \(X\) be the number of defective widgets. \(X \sim \text{Binomial}(n=10, p=0.05)\).
+
+            <div class="flex gap-2 mb-4">
+                <button onclick="showHint('hint-1')"
+                    class="px-4 py-2 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-200">
+                    💡 Show Hint
+                </button>
+                <button onclick="toggleSolution('sol-1')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium border border-gray-300">
+                    Show Solution
+                </button>
+            </div>
+
+            <div id="hint-1" class="solution-hidden mb-4 p-4 hint-box rounded-lg">
+                <p class="text-gray-800"><strong>Hint:</strong> This is a Binomial distribution problem. What are n and
+                    p?</p>
+            </div>
+
+            <div id="sol-1" class="solution-hidden p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h4 class="font-semibold text-gray-900 mb-3">Solution</h4>
+                <p class="text-gray-700 mb-3">
+                    Let \(X\) be the number of defective widgets. This follows a Binomial distribution:
+                    \(X \sim \text{Binomial}(n=10, p=0.05)\).
+                </p>
+                <p class="text-gray-700 mb-3">
+                    Using the PMF:
                     $$ P(X=2) = \binom{10}{2} (0.05)^2 (0.95)^8 $$
                     $$ P(X=2) = 45 \times 0.0025 \times 0.6634 \approx 0.0746 $$
                 </p>
+                <canvas id="prob1Chart" height="60" class="mt-4"></canvas>
             </div>
         </div>
 
-        <!-- Problem 2 -->
+        <!-- Problem 2: Expected Value -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <div class="flex justify-between items-start mb-4">
-                <h3 class="text-xl font-bold text-gray-900">Problem 2: Expected Value</h3>
+                <h3 class="text-xl font-bold text-gray-900">Problem 2: Lottery Game</h3>
                 <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">Expectation</span>
             </div>
             <p class="text-gray-700 mb-6">
-                A game costs $2 to play. You flip a coin. If Heads, you win $5. If Tails, you win nothing. What is your
-                expected net profit?
+                A game costs $2 to play. You flip a coin. If Heads, you win $5. If Tails, you win nothing.
+                What is your expected net profit?
             </p>
-            <button onclick="toggleSolution('sol-2')"
-                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors border border-gray-300">
-                Show Solution
-            </button>
-            <div id="sol-2" class="solution-hidden mt-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                <h4 class="font-semibold text-gray-900 mb-2">Solution</h4>
-                <p class="text-gray-700">
-                    Let \(X\) be the winnings. \(P(X=5) = 0.5\), \(P(X=0) = 0.5\).
-                    $$ E[\text{Winnings}] = 5(0.5) + 0(0.5) = 2.5 $$
-                    $$ \text{Net Profit} = E[\text{Winnings}] - \text{Cost} = 2.5 - 2 = \$0.50 $$
+
+            <div class="flex gap-2 mb-4">
+                <button onclick="showHint('hint-2')"
+                    class="px-4 py-2 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-200">
+                    💡 Show Hint
+                </button>
+                <button onclick="toggleSolution('sol-2')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium border border-gray-300">
+                    Show Solution
+                </button>
+            </div>
+
+            <div id="hint-2" class="solution-hidden mb-4 p-4 hint-box rounded-lg">
+                <p class="text-gray-800"><strong>Hint:</strong> Net profit = Expected winnings - Cost to play</p>
+            </div>
+
+            <div id="sol-2" class="solution-hidden p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h4 class="font-semibold text-gray-900 mb-3">Solution</h4>
+                <p class="text-gray-700 mb-3">
+                    Let \(X\) be the winnings. The PMF is:
+                    $$ P(X=5) = 0.5, \quad P(X=0) = 0.5 $$
                 </p>
+                <p class="text-gray-700 mb-3">
+                    Expected winnings:
+                    $$ E[X] = 5(0.5) + 0(0.5) = 2.5 $$
+                </p>
+                <p class="text-gray-700">
+                    Net profit = $2.50 - $2.00 = <strong>$0.50</strong>
+                </p>
+                <canvas id="prob2Chart" height="60" class="mt-4"></canvas>
             </div>
         </div>
 
-        <!-- Problem 3 -->
+        <!-- Problem 3: Poisson -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <div class="flex justify-between items-start mb-4">
-                <h3 class="text-xl font-bold text-gray-900">Problem 3: Poisson Arrivals</h3>
+                <h3 class="text-xl font-bold text-gray-900">Problem 3: Email Arrivals</h3>
                 <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-full">Poisson</span>
             </div>
             <p class="text-gray-700 mb-6">
                 Emails arrive at a rate of 3 per hour. What is the probability of receiving no emails in a given hour?
             </p>
-            <button onclick="toggleSolution('sol-3')"
-                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors border border-gray-300">
-                Show Solution
-            </button>
-            <div id="sol-3" class="solution-hidden mt-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                <h4 class="font-semibold text-gray-900 mb-2">Solution</h4>
-                <p class="text-gray-700">
-                    Let \(X \sim \text{Poisson}(\lambda=3)\).
+
+            <div class="flex gap-2 mb-4">
+                <button onclick="showHint('hint-3')"
+                    class="px-4 py-2 bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-200">
+                    💡 Show Hint
+                </button>
+                <button onclick="toggleSolution('sol-3')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium border border-gray-300">
+                    Show Solution
+                </button>
+            </div>
+
+            <div id="hint-3" class="solution-hidden mb-4 p-4 hint-box rounded-lg">
+                <p class="text-gray-800"><strong>Hint:</strong> Use the Poisson distribution with λ = 3. What is k?</p>
+            </div>
+
+            <div id="sol-3" class="solution-hidden p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h4 class="font-semibold text-gray-900 mb-3">Solution</h4>
+                <p class="text-gray-700 mb-3">
+                    Let \(X \sim \text{Poisson}(\lambda=3)\) be the number of emails.
+                </p>
+                <p class="text-gray-700 mb-3">
+                    Using the PMF:
                     $$ P(X=0) = \frac{e^{-3} 3^0}{0!} = e^{-3} \approx 0.0498 $$
                 </p>
+                <canvas id="prob3Chart" height="60" class="mt-4"></canvas>
+            </div>
+        </div>
+
+        <!-- Interactive Problem Builder -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">🎯 Create Your Own Problem</h3>
+            <p class="text-gray-700 mb-6">
+                Build a custom Binomial problem and see the solution!
+            </p>
+
+            <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-200">
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Number of trials (n): <span id="customN" class="text-indigo-600 font-bold">10</span>
+                        </label>
+                        <input type="range" id="customNSlider" min="1" max="50" value="10"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Success probability (p): <span id="customP" class="text-indigo-600 font-bold">0.5</span>
+                        </label>
+                        <input type="range" id="customPSlider" min="0" max="100" value="50"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Find P(X = k): <span id="customK" class="text-indigo-600 font-bold">5</span>
+                    </label>
+                    <input type="range" id="customKSlider" min="0" max="10" value="5"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="bg-white p-4 rounded-lg mb-4">
+                    <p class="text-gray-700 mb-2"><strong>Problem:</strong></p>
+                    <p class="text-gray-700" id="customProblem">
+                        If you perform 10 trials with success probability 0.5, what is P(X = 5)?
+                    </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg">
+                    <p class="text-gray-700"><strong>Answer:</strong> <span id="customAnswer"
+                            class="text-2xl font-bold text-indigo-600">0.2461</span></p>
+                </div>
+                <canvas id="customChart" height="60" class="mt-4"></canvas>
             </div>
         </div>
 
@@ -154,17 +258,169 @@
     <script>
         function toggleSolution(id) {
             const el = document.getElementById(id);
-            const btn = el.previousElementSibling;
+            const btn = el.previousElementSibling.querySelector('button:last-child') || el.previousElementSibling;
             if (el.classList.contains('solution-hidden')) {
                 el.classList.remove('solution-hidden');
                 el.classList.add('solution-visible');
-                btn.textContent = "Hide Solution";
+                if (btn.textContent.includes('Show Solution')) {
+                    btn.textContent = "Hide Solution";
+                }
+                // Draw charts when solution is shown
+                if (id === 'sol-1') drawProb1Chart();
+                if (id === 'sol-2') drawProb2Chart();
+                if (id === 'sol-3') drawProb3Chart();
+                // Retypeset MathJax
+                if (window.MathJax) MathJax.typesetPromise();
             } else {
                 el.classList.add('solution-hidden');
                 el.classList.remove('solution-visible');
-                btn.textContent = "Show Solution";
+                if (btn.textContent.includes('Hide')) {
+                    btn.textContent = "Show Solution";
+                }
             }
         }
+
+        function showHint(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('solution-hidden')) {
+                el.classList.remove('solution-hidden');
+                el.classList.add('solution-visible');
+            }
+        }
+
+        // Utility functions
+        function binomialCoeff(n, k) {
+            if (k > n) return 0;
+            let result = 1;
+            for (let i = 0; i < k; i++) {
+                result *= (n - i) / (i + 1);
+            }
+            return result;
+        }
+
+        function binomialPMF(k, n, p) {
+            return binomialCoeff(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+        }
+
+        function poissonPMF(k, lambda) {
+            let fact = 1;
+            for (let i = 2; i <= k; i++) fact *= i;
+            return Math.pow(lambda, k) * Math.exp(-lambda) / fact;
+        }
+
+        // Problem 1 Chart
+        function drawProb1Chart() {
+            const ctx = document.getElementById('prob1Chart').getContext('2d');
+            const labels = [];
+            const data = [];
+            const colors = [];
+            for (let k = 0; k <= 10; k++) {
+                labels.push(k.toString());
+                data.push(binomialPMF(k, 10, 0.05));
+                colors.push(k === 2 ? 'rgba(59, 130, 246, 0.8)' : 'rgba(156, 163, 175, 0.5)');
+            }
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: data, backgroundColor: colors, borderWidth: 0 }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true }, x: { title: { display: true, text: 'Number of Defects' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Problem 2 Chart
+        function drawProb2Chart() {
+            const ctx = document.getElementById('prob2Chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['$0', '$5'],
+                    datasets: [{ label: 'Probability', data: [0.5, 0.5], backgroundColor: ['rgba(156, 163, 175, 0.5)', 'rgba(34, 197, 94, 0.8)'], borderWidth: 0 }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, max: 0.6 } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Problem 3 Chart
+        function drawProb3Chart() {
+            const ctx = document.getElementById('prob3Chart').getContext('2d');
+            const labels = [];
+            const data = [];
+            const colors = [];
+            for (let k = 0; k <= 10; k++) {
+                labels.push(k.toString());
+                data.push(poissonPMF(k, 3));
+                colors.push(k === 0 ? 'rgba(168, 85, 247, 0.8)' : 'rgba(156, 163, 175, 0.5)');
+            }
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: data, backgroundColor: colors, borderWidth: 0 }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true }, x: { title: { display: true, text: 'Number of Emails' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Custom Problem Builder
+        const customCtx = document.getElementById('customChart').getContext('2d');
+        let customChart = new Chart(customCtx, {
+            type: 'bar',
+            data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderWidth: 0 }] },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        function updateCustomProblem() {
+            const n = parseInt(document.getElementById('customNSlider').value);
+            const p = parseInt(document.getElementById('customPSlider').value) / 100;
+            const k = parseInt(document.getElementById('customKSlider').value);
+
+            document.getElementById('customN').textContent = n;
+            document.getElementById('customP').textContent = p.toFixed(2);
+            document.getElementById('customK').textContent = k;
+            document.getElementById('customKSlider').max = n;
+
+            const prob = binomialPMF(k, n, p);
+            document.getElementById('customAnswer').textContent = prob.toFixed(4);
+            document.getElementById('customProblem').textContent =
+                `If you perform ${n} trials with success probability ${p.toFixed(2)}, what is P(X = ${k})?`;
+
+            const labels = [];
+            const data = [];
+            const colors = [];
+            for (let i = 0; i <= n; i++) {
+                labels.push(i.toString());
+                data.push(binomialPMF(i, n, p));
+                colors.push(i === k ? 'rgba(99, 102, 241, 0.8)' : 'rgba(156, 163, 175, 0.5)');
+            }
+
+            customChart.data.labels = labels;
+            customChart.data.datasets[0].data = data;
+            customChart.data.datasets[0].backgroundColor = colors;
+            customChart.update();
+        }
+
+        document.getElementById('customNSlider').addEventListener('input', updateCustomProblem);
+        document.getElementById('customPSlider').addEventListener('input', updateCustomProblem);
+        document.getElementById('customKSlider').addEventListener('input', updateCustomProblem);
+        updateCustomProblem();
     </script>
 
 </body>
