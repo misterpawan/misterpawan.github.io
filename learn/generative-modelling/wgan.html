@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasserstein GAN | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover,
+        .tf-option:hover,
+        .mistake-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover,
+        .dark .tf-option:hover,
+        .dark .mistake-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(60px);
+            opacity: 0.7;
+            animation: float 14s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0px);
+            }
+
+            to {
+                transform: translateY(-30px);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-sky-50 via-white to-rose-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="chip bg-pink-100 text-pink-700 border-pink-200">High-end visuals</span>
+                <span class="chip bg-indigo-100 text-indigo-700 border-indigo-200">Animations</span>
+                <span class="chip bg-emerald-100 text-emerald-700 border-emerald-200">Quizzes</span>
+                <span class="chip bg-orange-100 text-orange-700 border-orange-200">Spot-the-mistake</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-5xl mx-auto px-4 pb-24 space-y-12 relative overflow-hidden">
+        <div class="orb w-64 h-64 bg-pink-200 top-40 -left-10"></div>
+        <div class="orb w-72 h-72 bg-cyan-200 bottom-10 right-0"></div>
+
+        <!-- Hero -->
+        <header class="glass p-8 md:p-10 rounded-3xl shadow-xl relative overflow-hidden" data-aos="fade-down">
+            <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-pink-500/10 to-orange-500/10"></div>
+            <div class="relative space-y-4">
+                <p class="text-xs uppercase tracking-[0.2em] text-primary font-semibold">Chapter 6</p>
+                <h1
+                    class="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-sky-600 via-fuchsia-600 to-amber-600">
+                    Wasserstein GAN
+                </h1>
+                <p class="text-lg text-gray-700 dark:text-gray-300 max-w-3xl">Earth Mover distance meets adversarial
+                    learning. We swap JS for transport geometry, enforce 1-Lipschitz critics, and steady the duel with
+                    gradient penalties.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="chip bg-white/80 dark:bg-gray-800/70 border-primary/30 text-primary">KR duality</span>
+                    <span class="chip bg-white/80 dark:bg-gray-800/70 border-emerald-200 text-emerald-700">Weight
+                        clipping vs gradient penalty</span>
+                    <span class="chip bg-white/80 dark:bg-gray-800/70 border-indigo-200 text-indigo-700">Proof
+                        walkthroughs</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Why WGAN -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-700 p-2 rounded-xl">🌊</span>
+                <h2 class="text-2xl font-bold">Why Wasserstein GAN?</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">Traditional GANs lean on Jensen-Shannon
+                divergence and can stall, oscillate, or collapse. The Earth Mover (Wasserstein) distance offers a
+                smoother, more meaningful gradient landscape that tracks how mass must move to align two distributions.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div
+                    class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-cyan-100 dark:border-gray-700">
+                    <p class="font-semibold">Distance with geometry</p>
+                    <p>Accounts for how far probability mass travels, not just overlap.</p>
+                </div>
+                <div
+                    class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-pink-100 dark:border-gray-700">
+                    <p class="font-semibold">Stable objectives</p>
+                    <p>Smoother critic signals reduce mode collapse and training jitter.</p>
+                </div>
+                <div
+                    class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-emerald-100 dark:border-gray-700">
+                    <p class="font-semibold">Lipschitz control</p>
+                    <p>Weight clipping or gradient penalties enforce 1-Lipschitz critics.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- KR Dual Form -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-indigo-100 text-indigo-700 p-2 rounded-xl">🧭</span>
+                <h2 class="text-2xl font-bold">Kantorovich-Rubinstein Dual Form of Wasserstein Distance</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The Wasserstein distance, also known as the
+                Earth Mover's distance, compares distributions by the cost of optimal transport. Given two probability
+                distributions $P$ and $Q$ on metric space $(\\mathcal{X}, d)$:</p>
+            <div class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-indigo-100 dark:border-gray-700">
+                <p class="text-sm">$$ W_p(P, Q) = \\left(\\inf_{\\pi \\in \\Gamma(P, Q)} \\int_{\\mathcal{X} \\times \\mathcal{X}} d(x, y)^p \\, d\\pi(x, y)\\right)^{\\tfrac{1}{p}} $$</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Here $\\Gamma(P,Q)$ are couplings with marginals
+                    $P$ and $Q$.</p>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">For $p=1$, the dual (KR) form is</p>
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-indigo-50 via-white to-pink-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-pink-100 dark:border-gray-700">
+                <p class="text-sm">$$ W_1(P, Q) = \\sup_{\\|f\\|_{\\text{Lip}} \\leq 1} \\left\\{\\int f(x) \\, dP(x) - \\int f(x) \\, dQ(x)\\right\\} $$</p>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">Supremum over all 1-Lipschitz $f:
+                    \\mathcal{X}\\to\\mathbb{R}$; $\\|f\\|_{\\text{Lip}}$ is the Lipschitz constant.</p>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The KR dual form highlights the connection
+                between optimal transport and Lipschitz functions and gives a tractable way to optimize Wasserstein
+                distance in practice.</p>
+        </section>
+
+        <!-- Significance -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-amber-100 text-amber-700 p-2 rounded-xl">🔍</span>
+                <h2 class="text-2xl font-bold">Why KR duality matters for WGANs</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div
+                    class="p-5 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-amber-100 dark:border-gray-700">
+                    <p>The Kantorovich-Rubinstein theorem is significant in the Wasserstein GAN optimization problem
+                        because it provides a way to estimate the Wasserstein distance between two probability
+                        distributions $p$ and $q$ by optimizing over the class of 1-Lipschitz functions. This is
+                        important because the Wasserstein distance is a more meaningful measure of distance between
+                        probability distributions than other metrics like the total variation distance or
+                        Kullback-Leibler divergence.</p>
+                </div>
+                <div
+                    class="p-5 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-amber-100 dark:border-gray-700">
+                    <p>In particular, the Wasserstein GAN uses this result to reformulate its objective function as a
+                        saddle-point problem, which can be solved using techniques from convex optimization. This
+                        allows for more stable and efficient training of generative models compared to traditional
+                        GANs, which suffer from issues like mode collapse and instability.</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div
+                    class="p-5 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-amber-100 dark:border-gray-700">
+                    <p>Specifically, Arjovsky et al. [2017] show that enforcing the Lipschitz constraint using weight
+                        clipping or gradient penalty leads to a smoother and more convex objective function, which is
+                        easier to optimize using standard techniques from convex optimization. They also demonstrate
+                        that this approach helps to mitigate issues like mode collapse and instability that are common
+                        in traditional GANs, leading to better quality generated samples and more reliable training.</p>
+                </div>
+                <div
+                    class="p-5 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-amber-100 dark:border-gray-700">
+                    <p>Furthermore, Arjovsky et al. [2017] compare the performance of WGANs with traditional GANs on
+                        several benchmark datasets, showing that WGANs achieve state-of-the-art results in terms of
+                        sample quality and diversity, while also being more stable and easier to train. These results
+                        provide strong empirical evidence for the benefits of using the Wasserstein distance and
+                        1-Lipschitz functions in generative modeling.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Remark -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-emerald-100 text-emerald-700 p-2 rounded-xl">💡</span>
+                <h2 class="text-2xl font-bold">Remarks on using KR duality</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">The reformulation of the Wasserstein distance as a maximization
+                over 1-Lipschitz functions simplifies the optimization problem in several ways:</p>
+            <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <li><strong>The optimization problem becomes convex:</strong> The class of 1-Lipschitz functions is a
+                    convex set, and the supremum over this set is a convex function. Therefore, the optimization
+                    problem becomes convex, which makes it easier to solve using standard techniques from convex
+                    optimization.</li>
+                <li><strong>The Lipschitz constraint is easy to enforce:</strong> The Lipschitz constraint on the
+                    optimizing function can be enforced using techniques like weight clipping or gradient penalty, which
+                    are simple to implement and have been shown to work well in practice.</li>
+                <li><strong>The objective function is more stable:</strong> Unlike traditional GANs, which suffer from
+                    issues like mode collapse and instability due to the non-convexity of their objective function,
+                    Wasserstein GANs have a more stable objective function that encourages convergence to a global
+                    optimum.</li>
+                <li><strong>The Wasserstein distance is a more meaningful measure of distance between probability
+                        distributions:</strong> Unlike other metrics like total variation distance or Kullback-Leibler
+                    divergence, the Wasserstein distance takes into account the geometry of the underlying space and
+                    provides a more meaningful measure of distance between probability distributions.</li>
+            </ol>
+        </section>
+
+        <!-- Theorem -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">📜</span>
+                <h2 class="text-2xl font-bold">Kantorovich-Rubinstein Theorem</h2>
+            </div>
+            <div
+                class="p-5 rounded-2xl bg-white/85 dark:bg-gray-800/80 border border-purple-100 dark:border-gray-700 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <p class="font-semibold">Statement</p>
+                <p>$$ W(p,q)=\\inf_{\\pi \\in \\Pi(p,q)} \\mathbb{E}_{(x,y) \\sim \\pi}[ \\| x-y \\|_2]= \\sup_{\\|h\\|_2 \\leq 1} [\\mathbb{E}_{x \\sim p} [h(x)] -\\mathbb{E}_{y \\sim q}[h(x)]] $$</p>
+            </div>
+            <details class="p-5 rounded-2xl bg-gray-50/80 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 space-y-3">
+                <summary class="cursor-pointer font-semibold text-primary">Full proof walkthrough (tap to expand)</summary>
+                <div class="space-y-3">
+                    <p>We note that $p$ and $q$ are marginals for joint $\\pi$. Hence,</p>
+                    <p class="text-xs md:text-sm">$$ p(x)= \\int \\pi(x,y) \\, dy, \\qquad q(y) =\\int \\pi(x,y) \\, dx, $$</p>
+                    <p>which gives equality constraints $h_1(x)$ and $h_2(x)$</p>
+                    <p class="text-xs md:text-sm">\\( h_1(x) : p(x)- \\int \\pi(x,y) \\, dy =0, \\quad h_2(x) : q(y)- \\int \\pi(x,y) \\, dy =0. \\)</p>
+                    <p>Construct the Lagrangian with multipliers $f,g$:</p>
+                    <p class="text-xs md:text-sm">$$ L(\\pi,f,g) =\\int \\|x-y\\| \\, \\pi(x,y) \\, dx +\\int \\left( p(x)-\\int \\pi(x,y) \\, dy \\right) f(x) \\, dx +\\int \\left( q(y)-\\int \\pi(x,y) \\, dx \\right) g(y) \\, dy. $$</p>
+                    <p>Collecting terms:</p>
+                    <p class="text-xs md:text-sm">$$ L(\\pi,f,g) = \\mathbb{E}_{x \\sim p}[ f(x) ]+\\mathbb{E}_{y \\sim q}[ g(y) ] + \\int \\left( \\| x-y \\|_2 -f(x)-g(y) \\right) \\, \\pi(x,y) \\, dy \\, dx. $$</p>
+                    <p>Slater's condition holds (convex objective, no inequalities), so strong duality gives</p>
+                    <p class="text-xs md:text-sm">$$ W(p_1,p_g) = \\inf_{\\pi} \\sup_{f,g} L(\\pi, f,g) = \\sup_{f,g} \\inf_{\\pi} L(\\pi,f,g). $$</p>
+                    <p>To avoid $L \\to -\\infty$, enforce $\\|x-y\\|_2 \\geq f(x)+g(y)$ for all $x,y$, making the infimum
+                        occur at $\\pi(x,y)=0$.</p>
+                    <p class="text-xs md:text-sm">$$ \\sup_{f,g} \\inf_{\\pi} L(\\pi,f,g) = \\sup_{f,g} [\\mathbb{E}_{x \\sim p}[f(x)]+\\mathbb{E}_{y \\sim q} [g(y)] ] = W(p,q) $$</p>
+                    <p>To obtain the lower bound of $W,$ optimize over 1-Lipschitz $h$:</p>
+                    <p class="text-xs md:text-sm">$$ \\mathbb{E}_{x \\sim p}[h(x)]-\\mathbb{E}_{y \\sim q}[h(y)] = \\int (h(x)-h(y)) \\, \\pi(x,y) \\, dx \\, dy = \\inf_{\\pi} \\int (h(x)-h(y)) \\, \\pi(x,y) \\, dx \\, dy \\leq \\inf_{\\pi} \\int \\|x-y\\|_2 \\, \\pi(x,y) \\, dx \\, dy \\leq W(p,q). $$</p>
+                    <p class="text-xs md:text-sm">The $\\inf_{\\pi}$ is justified because $\\int (h(x)-h(y))\\,\\pi(x,y)\\,dx\\,dy$ remains the same for any coupling with marginals $p$ and $q$—the expression is independent of which $\\pi$ is chosen.</p>
+                    <p>Since it holds for all $h$ with $\\|h\\|_L\\leq 1$:</p>
+                    <p class="text-xs md:text-sm">$$ \\sup_{\\|h\\|_L \\leq 1} [\\mathbb{E}_{x \\sim p}[h(x)]-\\mathbb{E}_{y \\sim q}[h(y)]] \\leq W(p,q) $$</p>
+                    <p>Upper bound: define infimal convolution $k(x)= \\inf_u [ \\|x-u\\|_2-g(u) ]$. One shows $k$ is
+                        $1$-Lipschitz and if $f(x)+g(y) \\leq \\|x-y\\|_2$ then</p>
+                    <p class="text-xs md:text-sm">$$ \\mathbb{E}_{x \\sim p}[f(x)]+\\mathbb{E}_{y \\sim q} [g(y)] \\leq \\mathbb{E}[k(x)] -\\mathbb{E}[k(y)]. $$</p>
+                    <p class="text-xs md:text-sm">Therefore $W(p,q)=\\sup_{f(x)+g(y) \\leq \\|x-y\\|_2}[\\mathbb{E}_p f+\\mathbb{E}_q g] \\leq \\sup_{\\|h\\|_L\\leq1}[\\mathbb{E}_p h-\\mathbb{E}_q h]$.</p>
+                    <p>Combining bounds yields the KR duality:</p>
+                    <p class="text-xs md:text-sm">$$ W(p,q) = \\sup_{\\|h\\|_l \\leq 1} [ \\mathbb{E}_{x \\sim p}[h(x)]-\\mathbb{E}_{y \\sim q}[h(y)] ]. $$</p>
+                </div>
+            </details>
+        </section>
+
+        <!-- Spot the mistake -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-red-100 text-red-700 p-2 rounded-xl">🚨</span>
+                <h2 class="text-2xl font-bold">Spot the mistake</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Which statement would break the KR-dual-based WGAN story?</p>
+            <div class="grid md:grid-cols-2 gap-3 text-sm">
+                <button class="mistake-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markMistake(this, false)">We enforce the 1-Lipschitz constraint by weight clipping or gradient
+                    penalty.</button>
+                <button class="mistake-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markMistake(this, false)">The critic maximizes the expectation gap between real and generated
+                    samples.</button>
+                <button class="mistake-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markMistake(this, true)">The Wasserstein distance ignores the geometry of the underlying
+                    space.</button>
+                <button class="mistake-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markMistake(this, false)">The saddle-point view yields a convex maximization over
+                    Lipschitz critics.</button>
+            </div>
+            <p id="mistake-feedback" class="text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Gradient penalty and Improved WGAN -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-emerald-100 text-emerald-700 p-2 rounded-xl">🧪</span>
+                <h2 class="text-2xl font-bold">Improved WGAN (WGAN-GP)</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The paper \\cite{gulrajani2017improved}
+                begins by discussing the limitations of traditional GAN training methodologies, particularly in terms of
+                mode collapse and training instability. It highlights how the Wasserstein distance, also known as the
+                Earth-Mover (EM) distance, provides a more meaningful and smooth gradient flow for training GANs.</p>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">A key innovation described is the use of a
+                gradient penalty term added to the Wasserstein loss function, which enforces a Lipschitz constraint for
+                the critic (discriminator). This approach, unlike previous methods that clip weights (see Alg.
+                \\ref{alg:wgan}), allows for more effective training dynamics and avoids common pitfalls such as gradient
+                vanishing or exploding.</p>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The authors present extensive experiments
+                comparing their method against traditional GAN training frameworks. The results demonstrate significant
+                improvements in the stability of GAN training, reduction of mode collapse, and enhancement in the
+                quality of generated images. Metrics used for evaluation include the Inception Score and qualitative
+                assessments by human evaluators.</p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div
+                    class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-emerald-100 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Weight clipping</p>
+                    <p>Simple to implement but can constrain capacity and bias the critic.</p>
+                </div>
+                <div
+                    class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-emerald-100 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Gradient penalty</p>
+                    <p>Penalizes $\\|\\nabla f\\|_2$ away from 1 along sampled interpolants, giving smoother training.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proposition -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">🧠</span>
+                <h2 class="text-2xl font-bold">Optimal critic geometry</h2>
+            </div>
+            <div
+                class="p-5 rounded-2xl bg-white/85 dark:bg-gray-800/80 border border-blue-100 dark:border-gray-700 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <p class="font-semibold">Proposition</p>
+                <p>Let $\\mathbb{P}_r$ and $\\mathbb{P}_g$ be two distributions in $\\mathcal{X}$, a compact metric
+                    space. Then, there is a $1-$Lipschitz function $f^*$ which is the optimal solution of
+                </p>
+                <p class="text-xs md:text-sm">$$ \\max_{\\|f \\|_L \\leq 1} \\mathbb{E}_{y \\sim \\mathbb{P}_r} [f(y)] -\\mathbb{E}_{x \\sim \\mathbb{P}_g} [f(x)]. $$</p>
+                <p>Let $\\pi$ be the optimal coupling between $ \\mathbb{P}_r$ and $\\mathbb{P}_g$, defined as minimizer
+                    of</p>
+                <p class="text-xs md:text-sm">$$ W(\\mathbb{P}_r,\\mathbb{P}_g) = \\inf_{\\pi \\in \\Pi(\\mathbb{P}_r,\\mathbb{P}_g) } \\mathbb{E}_{y \\sim \\mathbb{P}_r}[f(y)]-\\mathbb{E}_{x \\sim \\mathbb{P}_g} [f(x)], $$</p>
+                <p>where $\\Pi(\\mathbb{P}_r,\\mathbb{P}_g)$ is the set of joint distributions $\\pi(x,y)$ whose
+                    marginals are $\\mathbb{P}_r,\\mathbb{P}_g$ respectively. Then if $f^*$ is differentiable and
+                    $x_t= (1-t)x+ty$ with $0 \\leq t \\leq 1$, it holds that</p>
+                <p class="text-xs md:text-sm">$$ \\mathbb{P}_{(x,y) \\sim \\pi} \\left[ \\nabla f^*(x_t)]=\\frac{y-x_t}{\\| y-x_t \\| } \\right] = 1. $$</p>
+            </div>
+            <details class="p-5 rounded-2xl bg-gray-50/80 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 space-y-3">
+                <summary class="cursor-pointer font-semibold text-primary">Proof</summary>
+                <div class="space-y-3">
+                    <p>Since $\\mathcal{X}$ is a compact space, we know that there is an optimal $f^*$ and we know that
+                        if $\\pi$ is an optimal coupling,</p>
+                    <p class="text-xs md:text-sm">$$ \\mathbb{P}_{(x,y) \\sim \\pi} [ \\, f^*(y)-f^*(x)= \\|y-x \\| \\, ] = 1. $$</p>
+                    <p>Let $(x,y)$ be such that $f^*(y)-f^*(x) = \\|y-x \\|.$ We can safely assume that $x \\neq y$ as
+                        well, since this happens under $\\pi$ with probability 1. Let $\\psi(t)=f^*(x_t)-f^*(x)$. We
+                        claim that $$\\psi(t)=\\| x_t-x \\| = t \\| y-x \\|.$$</p>
+                    <p>Let $t,t' \\in [0,1]$, the</p>
+                    <p class="text-xs md:text-sm">$$ |\\psi(t)-\\psi(t')| = \\| f^*(x_t)-f^*(x_{t'}) \\| \\leq \\|x_t-x_{t'} \\| = |t-t'| \\|x-y \\|. $$</p>
+                    <p>Therefore, $\\psi$ is $\\| x-y \\|-$ Lipschitz.</p>
+                    <p class="text-xs md:text-sm">$$ \\psi(1)-\\psi(0) \\leq (1-t) \\| x-y \\|+ \\psi(t)-\\psi(0) \\leq (1-t) \\|x-y \\| + t \\|x-y \\| = \\| x-y \\|. $$</p>
+                    <p>However, $ \\psi(1)-\\psi(0)=|f^*(y)-f^*(x)|=\\| y-x \\|$ so the inequalities have to actually be
+                        equalities. In particular, $\\psi(t)-\\psi(0)=t \\|x-y \\|$ and $\\psi(0)=0$. Therefore,
+                        $\\psi(t)=t \\|x-y \\|$.</p>
+                    <p>Let</p>
+                    <p class="text-xs md:text-sm">$$ v= \\frac{y-x_t}{\\|y-x_t \\|}= \\frac{(1-t)(y-x)}{|1-t| \\|y-x \\|}= \\frac{y-x}{\\|y-x \\|}. $$</p>
+                    <p>Now we know that $f^*(x_t)-f^*(x)=\\psi(t)=t \\|x-y \\|$, hence,
+                        $$f^*(x_t)=f^*(x)+t \\|x-y \\|.$$ Then</p>
+                    <p class="text-xs md:text-sm">$$ \\frac{\\partial }{\\partial v} f^*(x_t)= \\lim_{h \\rightarrow 0} \\frac{f^*(x_t+hv)-f^*(x_t)}{h}=1. $$</p>
+                    <p>If $f^*$ is differentiable at $x_t$, then we know that $\\| \\nabla f^*(x_t) \\| \\leq 1, $ since
+                        it is a 1-Lipschitz continuous function. Using Pythagoras theorem with $v$ unit:</p>
+                    <p class="text-xs md:text-sm">$$ 1 \\leq  \\| \\nabla f^*(x) \\|^2= \\langle v, \\nabla f^*(x_t)\\rangle^2+ \\| \\nabla f^*(x_t)-\\langle v, \\nabla f^*(x_t)\\rangle v \\|^2 = 1+ \\| \\nabla f^*(x_t)-v \\|^2 \\leq  1. $$</p>
+                    <p>The equality chain forces $\\nabla f^*(x_t)=v=\\dfrac{y-x_t}{\\| y-x_t \\|}.$</p>
+                    <p>This shows that $ \\mathbb{P}_{(x,y)\\sim \\pi} \\left[ \\nabla f^*(x_t)=\\frac{y-x_t}{\\| y-x_t \\|} \\right] = 1.$</p>
+                </div>
+            </details>
+        </section>
+
+        <!-- Exercises -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-yellow-100 text-yellow-700 p-2 rounded-xl">📓</span>
+                <h2 class="text-2xl font-bold">Exercises</h2>
+            </div>
+            <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <li>If $v$ is a unit vector, then show that $v$ and $(I - vv^T)v$ are orthogonal.</li>
+                <li>If $v$ is a unit </li>
+                <li>If $v$ is a unit vector, then for any vector $x,$ show that the following holds:
+                    $$ \\| x \\|^2 = (x^T v)^2 - \\| (x - x^T v)v \\|^2. $$</li>
+            </ul>
+        </section>
+
+        <!-- Algorithm -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-rose-100 text-rose-700 p-2 rounded-xl">⚙️</span>
+                <h2 class="text-2xl font-bold">WGAN Algorithm</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The Wasserstein GAN algorithm Alg.
+                \\ref{alg:wgan} proceeds as follows:</p>
+            <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <li>The algorithm initializes with default values for the learning rate $(\\alpha)$, clipping parameter
+                    $(c)$, batch size $(m)$, and the number of critic iterations per generator iteration
+                    $(n_{\\text{critic}})$. Initial parameters for the critic $(w_0)$ and the generator $(\\theta_0)$
+                    are also set.</li>
+                <li>The training loop continues until the generator's parameters converge.</li>
+                <li>Within the training loop, the following steps occur for a specified number of critic iterations
+                    $(n_{\\text{critic}})$:
+                    <ul class="list-disc list-inside ml-5 space-y-2">
+                        <li>A batch of real data $\\{x^{(i)}\\}_{i=1}^m$ is sampled from the real data distribution.</li>
+                        <li>A batch of prior samples $\\{z^{(i)}\\}_{i=1}^m$ is drawn from the latent space's prior
+                            distribution.</li>
+                        <li>The critic's stochastic gradient is computed based on the difference in evaluations between
+                            the real data and the generated data from the generator.</li>
+                        <li>The critic's parameters are updated using the RMSProp optimizer with the computed gradient
+                            and the learning rate.</li>
+                        <li>The critic's weights are then clipped to fall within the range defined by the clipping
+                            parameter to maintain the Lipschitz constraint.</li>
+                    </ul>
+                </li>
+                <li>After completing the critic updates, a new batch of prior samples is drawn.</li>
+                <li>The generator's stochastic gradient is then computed based on the critic's evaluations of the
+                    generated data.</li>
+                <li>The generator's parameters are updated using the RMSProp optimizer with the negative of the computed
+                    gradient, effectively performing gradient ascent.</li>
+                <li>These steps are repeated until the generator's parameters have sufficiently converged, indicating
+                    the end of training.</li>
+            </ul>
+            <div
+                class="p-5 rounded-2xl bg-gradient-to-r from-rose-50 via-white to-orange-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-rose-100 dark:border-gray-700">
+                <p class="font-semibold">Algorithm (original defaults)</p>
+                <pre class="text-xs md:text-sm whitespace-pre-wrap leading-relaxed mt-3 text-gray-800 dark:text-gray-200">Require: α learning rate, c clipping parameter, m batch size, n_critic critic iterations per generator iteration
+Require: w₀ critic params, θ₀ generator params
+while θ not converged:
+    for t = 0 … n_critic:
+        sample {x^(i)}₁ᵐ ~ P_r
+        sample {z^(i)}₁ᵐ ~ p(z)
+        g_w ← ∇_w [ 1/m Σ f_w(x^(i)) - 1/m Σ f_w(g_θ(z^(i))) ]
+        w ← w + α · RMSProp(w, g_w)
+        w ← clip(w, -c, c)
+    sample {z^(i)}₁ᵐ ~ p(z)
+    g_θ ← -∇_θ 1/m Σ f_w(g_θ(z^(i)))
+    θ ← θ - α · RMSProp(θ, g_θ)
+                </pre>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700 space-y-4"
+            data-aos="zoom-in">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz</h3>
+                <button onclick="resetQuiz()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="font-semibold">What enforces the 1-Lipschitz constraint most smoothly in WGAN-GP?</p>
+            <div class="grid sm:grid-cols-3 gap-3">
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">Removing the critic entirely</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, true)">Adding a gradient penalty term along interpolated samples</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">Only increasing batch size</button>
+            </div>
+            <p id="quiz-feedback" class="text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- True/False -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-gray-100 text-gray-700 p-2 rounded-xl">✅</span>
+                <h2 class="text-2xl font-bold">True / False speed round</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">Wasserstein distance takes into account how far mass moves, not just
+                    overlap.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">Gradient penalty makes the critic non-Lipschitz on purpose.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">Weight clipping is one way to enforce 1-Lipschitzness.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">Replacing JS with Wasserstein instantly guarantees perfect samples.</button>
+            </div>
+            <p id="tf-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Mini lab -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-amber-100 text-amber-700 p-2 rounded-xl">🧪</span>
+                <h2 class="text-2xl font-bold">Mini Lab: Lipschitz toolkit</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Click a chip for a stabilization lever.</p>
+            <div class="flex flex-wrap gap-2">
+                <button class="chip hover:scale-105 transition border-pink-200 bg-pink-50"
+                    onclick="showUse('clip')">Weight clipping</button>
+                <button class="chip hover:scale-105 transition border-blue-200 bg-blue-50"
+                    onclick="showUse('gp')">Gradient penalty</button>
+                <button class="chip hover:scale-105 transition border-purple-200 bg-purple-50"
+                    onclick="showUse('ncritic')">n<sub>critic</sub> sweeps</button>
+                <button class="chip hover:scale-105 transition border-indigo-200 bg-indigo-50"
+                    onclick="showUse('opt')">Optimizer</button>
+                <button class="chip hover:scale-105 transition border-emerald-200 bg-emerald-50"
+                    onclick="showUse('metric')">Eval metric</button>
+            </div>
+            <div id="lab-output"
+                class="mt-3 p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                Choose a lever to see the effect.
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="text-center space-y-4" data-aos="fade-up">
+            <h3 class="text-3xl font-bold">Wrap-up</h3>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="gans.html"
+                    class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 font-semibold shadow-lg hover:scale-105 transition">
+                    ← Back to GANs
+                </a>
+                <a href="index.html"
+                    class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-white font-semibold shadow-lg hover:scale-105 transition">
+                    Course Home →
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Quiz logic
+        function markQuiz(button, isCorrect) {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz-feedback').textContent = 'Correct! Gradient penalty softly enforces 1-Lipschitzness along interpolants.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz-feedback').textContent = 'Nope—remember we still need a Lipschitz critic.';
+            }
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz-feedback').textContent = '';
+        }
+
+        // True/False logic
+        function markTF(button, isCorrect) {
+            document.querySelectorAll('.tf-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('tf-feedback').textContent = 'Yep! That statement is true.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('tf-feedback').textContent = 'Nope—try again.';
+            }
+        }
+
+        // Spot the mistake
+        function markMistake(button, isMistake) {
+            document.querySelectorAll('.mistake-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isMistake) {
+                button.classList.add('correct');
+                document.getElementById('mistake-feedback').textContent = 'Exactly. Ignoring geometry would kill the whole Wasserstein motivation.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('mistake-feedback').textContent = 'That one is fine—look for the statement that contradicts the distance definition.';
+            }
+        }
+
+        // Mini lab
+        const useCases = {
+            clip: 'Weight clipping: hard-bounds critic weights to enforce 1-Lipschitz, but may limit capacity.',
+            gp: 'Gradient penalty: adds λ(∥∇f(x̂)∥₂−1)² on random interpolations to softly enforce Lipschitzness.',
+            ncritic: 'n_critic sweeps: train the critic multiple steps per generator update to keep distance estimates sharp.',
+            opt: 'Optimizer: RMSProp or Adam (with lower β₁) keep critic steps steady; tune learning rates separately.',
+            metric: 'Evaluation: monitor Wasserstein estimate, FID/IS, and visual grids to watch for mode collapse.'
+        };
+
+        function showUse(key) {
+            document.getElementById('lab-output').textContent = useCases[key];
+        }
+    </script>
+</body>
+
+</html>
