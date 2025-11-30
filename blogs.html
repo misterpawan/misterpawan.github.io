@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,19 +12,31 @@
     };
   </script>
   <style>
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
+
     .fade-in {
       animation: fadeIn 1.2s ease-out both;
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
-  
-<!--   <header class="text-center py-10 bg-white dark:bg-gray-800 shadow">
+
+  <!--   <header class="text-center py-10 bg-white dark:bg-gray-800 shadow">
     <h1 class="text-4xl font-bold">My Blog</h1>
     <p class="mt-2 text-lg">Thoughts on Coding, Productivity, Research, and More</p>
   </header> -->
@@ -31,8 +44,8 @@
   <main class="max-w-6xl mx-auto px-4 py-8" id="app">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
       <div v-for="category in mainCategories" :key="category.name"
-           class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-xl cursor-pointer transition transform hover:scale-105 fade-in"
-           @click="selectCategory(category.name)">
+        class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-xl cursor-pointer transition transform hover:scale-105 fade-in"
+        @click="selectCategory(category.name)">
         <h2 class="text-xl font-semibold">{{ category.name }}</h2>
         <p class="text-sm mt-2">{{ category.desc }}</p>
       </div>
@@ -43,13 +56,13 @@
 
       <div v-if="subCategories[selectedCategory]" class="flex flex-wrap gap-3 mb-6">
         <span v-for="sub in subCategories[selectedCategory]" :key="sub"
-              class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
-              @click="selectSubCategory(sub)">{{ sub }}</span>
+          class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+          @click="selectSubCategory(sub)">{{ sub }}</span>
       </div>
 
       <div>
         <div v-for="blog in filteredBlogs" :key="blog.title"
-             class="mb-6 p-4 bg-white dark:bg-gray-800 rounded shadow fade-in">
+          class="mb-6 p-4 bg-white dark:bg-gray-800 rounded shadow fade-in">
           <div class="flex justify-between">
             <h3 class="text-xl font-semibold cursor-pointer" @click="blog.open = !blog.open">{{ blog.title }}</h3>
             <span class="text-sm bg-yellow-300 text-black px-2 py-1 rounded self-start">{{ blog.category }}</span>
@@ -76,15 +89,19 @@
             { name: 'Review', desc: 'Papers on RL, Diffusion, LLMs' },
             { name: 'Travel', desc: 'Conferences and Explorations' },
             { name: 'Career', desc: 'Academia, Industry, Advice' },
+            { name: 'AI Future', desc: 'Predictions, Safety, Impact' },
           ],
           subCategories: {
             Coding: ['Python', 'C/C++', 'MPI', 'Matlab'],
             Productivity: ['VS Code', 'LaTeX', 'Time Management'],
             Review: ['Optimization', 'Diffusion', 'RL', 'Federated', 'LLM', 'Safety'],
             Travel: ['Conferences', 'Trekking'],
-            Career: ['Academia', 'Industry']
+            Career: ['Academia', 'Industry'],
+            'AI Future': ['Predictions', 'Safety', 'Impact']
           },
           blogs: [
+            { title: 'The Rise of the AI Wrangler: Taming the Digital Wild West', content: 'A deep dive into the new profession of AI Wrangling. <br><br> <a href="ai-wrangler.html" target="_blank" class="text-orange-500 hover:underline font-bold">Read Full Interactive Article →</a>', category: 'Predictions', open: false },
+            { title: 'The Scent of an Algorithm: Why Your Roomba Will Never Truly Enjoy an Espresso', content: 'An exploration of consciousness, organic rewards vs programmed objectives, and why AI may never truly "feel" like humans do. <br><br> <a href="scent-of-algorithm.html" target="_blank" class="text-orange-500 hover:underline font-bold">Read Full Interactive Article →</a>', category: 'Predictions', open: false },
             { title: 'My First Python CLI Tool', content: 'I built a CLI app using argparse. Great fun!', category: 'Python', open: false },
             { title: 'Matrix Tricks in Matlab', content: 'A few useful matrix manipulations every Matlab user should know.', category: 'Matlab', open: false },
             { title: 'Using MPI for Distributed Training', content: 'Learned how to train models using MPI and Python.', category: 'MPI', open: false },
@@ -111,4 +128,5 @@
     }).mount('#app');
   </script>
 </body>
+
 </html>
