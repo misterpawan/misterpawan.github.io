@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Adversarial Networks | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover,
+        .tf-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover,
+        .dark .tf-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-cyan-50 via-white to-pink-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="chip bg-pink-100 text-pink-700 border-pink-200">Quizzes</span>
+                <span class="chip bg-indigo-100 text-indigo-700 border-indigo-200">Animations</span>
+                <span class="chip bg-emerald-100 text-emerald-700 border-emerald-200">Poem</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-12">
+
+        <!-- Hero -->
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-pink-600">
+                Generative Adversarial Networks
+            </h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">A generator learns to fool; a
+                discriminator learns to spot. Together they shape a distribution.</p>
+            <p class="mt-4 text-lg italic text-gray-600 dark:text-gray-400">"Two nets walk into a bar—one makes art, one
+                judges hard."</p>
+        </header>
+
+        <!-- Generative modelling basics -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">🎲</span>
+                <h2 class="text-2xl font-bold">Generative modelling</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Given samples $x_1,\dots,x_n \sim p$, build a generator
+                $g: Z \to X$ with $z \sim$ simple noise so that $\hat{x}=g(z) \sim \hat{p} \approx p$.</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Goal: learn $\hat{p}$ close enough that new draws feel
+                like $p$—no explicit density needed.</p>
+        </section>
+
+        <!-- Timeline (textual) -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-orange-100 text-orange-700 p-2 rounded-xl">🗺️</span>
+                <h2 class="text-2xl font-bold">GAN timeline (highlights)</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold">2014 · GAN</p>
+                    <p>Goodfellow et al. introduce the minimax duel.</p>
+                    <p class="font-semibold mt-2">2015 · DCGAN</p>
+                    <p>Radford et al. add conv nets for stable images.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold">2017 · WGAN</p>
+                    <p>Arjovsky et al. swap JS for Wasserstein distance.</p>
+                    <p class="font-semibold mt-2">2019 · StyleGAN</p>
+                    <p>Karras et al. push controllable style mixing.</p>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Imagine the nodes along a timeline: 2014 GAN → 2015 DCGAN → 2017 WGAN → 2019 StyleGAN.</p>
+        </section>
+
+        <!-- GAN components -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">🤼‍♂️</span>
+                <h2 class="text-2xl font-bold">Two-player game</h2>
+            </div>
+            <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                <li><strong>Generator:</strong> maps noise $z$ to data-like $\hat{x}$; tries to fool discriminator.</li>
+                <li><strong>Discriminator:</strong> scores real vs fake; penalizes implausible $\hat{x}$.</li>
+            </ul>
+        </section>
+
+        <!-- f-divergence variational -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-teal-100 text-teal-700 p-2 rounded-xl">🧮</span>
+                <h2 class="text-2xl font-bold">Variational $f$-divergence view</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">For convex $f$, $f(x) = \sup_t \{tx - f^*(t)\}$. Plugging into
+                $D_f(p||q)$ yields</p>
+            <p class="text-sm">$$D_f(p\|q)=\sup_T \left[\mathbb{E}_{x\sim p}[T(x)] - \mathbb{E}_{x\sim q}[f^*(T(x))]\right]$$</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Parameterize $T_\phi$; minimize over generator
+                parameters $\theta$ while maximizing over $\phi$:</p>
+            <p class="text-sm">$$\min_{\theta}\max_{\phi} \mathbb{E}_{x\sim p}[T_\phi(x)] - \mathbb{E}_{z\sim q}[f^*(T_\phi(g_\theta(z)))]$$</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">GAN (2014) uses $T_\phi(x)=\log d_\phi(x)$ leading to JS
+                divergence objective.</p>
+        </section>
+
+        <!-- Classic GAN objective -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-rose-100 text-rose-700 p-2 rounded-xl">🎯</span>
+                <h2 class="text-2xl font-bold">Classic GAN objective</h2>
+            </div>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Minimax:
+                $$\min_G \max_D \; \mathbb{E}_{x\sim p_{\text{data}}}[\log D(x)] + \mathbb{E}_{z\sim p_z}[\log(1 - D(G(z)))]$$</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">JS connection:
+                $$\text{GAN}(p,q)=2\,\text{JSD}(p,q) - \log 4 = D_{\text{KL}}\!\left(p\middle\|\tfrac{p+q}{2}\right)+D_{\text{KL}}\!\left(p_g\middle\|\tfrac{p+q}{2}\right)-\log 4$$</p>
+        </section>
+
+        <!-- SGD training algo -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-yellow-100 text-yellow-700 p-2 rounded-xl">⚙️</span>
+                <h2 class="text-2xl font-bold">Minibatch SGD loop</h2>
+            </div>
+            <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <p>Repeat for iterations; with $k$ discriminator steps (often $k=1$):</p>
+                <ol class="list-decimal list-inside space-y-1">
+                    <li>Sample $m$ noise $\{z^{(i)}\}$, $m$ real $\{x^{(i)}\}$.</li>
+                    <li>Update $D$ by ascending
+                        $$\nabla_\phi \frac{1}{m}\sum_{i=1}^m \left[\log d_\phi(x^{(i)}) + \log(1-d_\phi(g_\theta(z^{(i)})))\right]$$
+                    </li>
+                </ol>
+                <p>Then sample noise and update $G$ by descending
+                    $$\nabla_\theta \frac{1}{m} \sum_{i=1}^m \log\big(1 - d_\phi(g_\theta(z^{(i)}))\big)$$</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Variants flip the generator loss to $-\log d_\phi(G(z))$ for stronger gradients.</p>
+            </div>
+        </section>
+
+        <!-- Proposition + theorem -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-indigo-100 text-indigo-700 p-2 rounded-xl">📜</span>
+                <h2 class="text-2xl font-bold">Optimal discriminator & equilibrium</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Proposition (fixed $G$)</p>
+                    <p>Optimal $$D^*_G(x)=\frac{p_{\text{data}}(x)}{p_{\text{data}}(x)+p_g(x)}$$ maximizing the value
+                        function.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Theorem (global min)</p>
+                    <p>Global minimum at $p_g = p_{\text{data}}$ with $$C(G) = -\log 4$$ since $D^*_G(x)=1/2$ and JSD is
+                        zero only when the distributions match.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700 space-y-4"
+            data-aos="zoom-in">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz</h3>
+                <button onclick="resetQuiz()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="font-semibold">What does the E-step analogue compute in GAN training?</p>
+            <div class="grid sm:grid-cols-3 gap-3">
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">Posterior over labels</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, true)">A discriminator that estimates $D(x)$</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">Generator means only</button>
+            </div>
+            <p id="quiz-feedback" class="text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- True/False -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-gray-100 text-gray-700 p-2 rounded-xl">✅</span>
+                <h2 class="text-2xl font-bold">True / False speed round</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">In the original GAN, generator and discriminator play a minimax game.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">GAN training always converges to the global optimum.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">At equilibrium with matching distributions, $D^*(x)=1/2$.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">JS divergence is negative when $p_g=p_{\text{data}}$.</button>
+            </div>
+            <p id="tf-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Mini lab -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-amber-100 text-amber-700 p-2 rounded-xl">🧪</span>
+                <h2 class="text-2xl font-bold">Mini Lab: GAN tweaks</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Click a chip for a stabilization idea.</p>
+            <div class="flex flex-wrap gap-2">
+                <button class="chip hover:scale-105 transition border-pink-200 bg-pink-50"
+                    onclick="showUse('label')">Label smoothing</button>
+                <button class="chip hover:scale-105 transition border-blue-200 bg-blue-50"
+                    onclick="showUse('grad')">Gradient penalty</button>
+                <button class="chip hover:scale-105 transition border-purple-200 bg-purple-50"
+                    onclick="showUse('alt')">Alt generator loss</button>
+                <button class="chip hover:scale-105 transition border-indigo-200 bg-indigo-50"
+                    onclick="showUse('arch')">Architectures</button>
+                <button class="chip hover:scale-105 transition border-emerald-200 bg-emerald-50"
+                    onclick="showUse('eval')">Evaluation</button>
+            </div>
+            <div id="lab-output"
+                class="mt-3 p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                Choose a tweak to see an idea.
+            </div>
+        </section>
+
+        <!-- Poem -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700 space-y-3"
+            data-aos="zoom-in">
+            <h3 class="text-xl font-bold flex items-center gap-2">🎵 Memory jingle</h3>
+            <p class="italic text-sm text-gray-700 dark:text-gray-300">"G draws dreams from random haze,<br>
+                D critiques with steady gaze.<br>
+                JS whispers when to stop,<br>
+                Mix and train till losses drop."</p>
+        </section>
+
+        <!-- Closing -->
+        <section class="text-center space-y-4" data-aos="fade-up">
+            <h3 class="text-3xl font-bold">Wrap-up</h3>
+            <a href="gaussian-mixture-models.html"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-white font-semibold shadow-lg hover:scale-105 transition">
+                ← Back to GMMs
+            </a>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Quiz logic
+        function markQuiz(button, isCorrect) {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz-feedback').textContent = 'Correct! The discriminator plays the critic role estimating D(x).';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz-feedback').textContent = 'Not quite—think about what D learns each step.';
+            }
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz-feedback').textContent = '';
+        }
+
+        // True/False logic
+        function markTF(button, isCorrect) {
+            document.querySelectorAll('.tf-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('tf-feedback').textContent = 'Yep! That statement is true.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('tf-feedback').textContent = 'Nope—try again.';
+            }
+        }
+
+        // Mini lab
+        const useCases = {
+            label: 'Label smoothing: use 0.9 for real labels to reduce discriminator overconfidence.',
+            grad: 'Gradient penalty: enforce 1-Lipschitz (e.g., WGAN-GP) to stabilize training.',
+            alt: 'Alternate generator loss: use -log D(G(z)) for stronger gradients early on.',
+            arch: 'Architectures: DCGAN for images, StyleGAN for style control, conditional GANs for guided outputs.',
+            eval: 'Evaluation: monitor FID/IS and visual samples; keep an eye on mode collapse.'
+        };
+
+        function showUse(key) {
+            document.getElementById('lab-output').textContent = useCases[key];
+        }
+    </script>
+</body>
+
+</html>
