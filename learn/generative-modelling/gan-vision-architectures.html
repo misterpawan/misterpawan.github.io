@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAN Architectures for Vision | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        @keyframes grow-resolution {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .progressive-block {
+            animation: grow-resolution 1s ease-out;
+        }
+
+        .gan-layer {
+            transition: all 0.3s ease;
+        }
+
+        .gan-layer:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(236, 72, 153, 0.3);
+        }
+
+        .architecture-card {
+            transition: all 0.3s ease;
+        }
+
+        .architecture-card:hover {
+            transform: translateY(-8px);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-purple-50 via-white to-pink-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-700">Architectures</span>
+                <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700">Vision</span>
+                <span class="px-3 py-1 rounded-full bg-green-100 text-green-700">Advanced</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-5xl mx-auto px-4 pb-24 space-y-12">
+
+        <!-- Hero -->
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                GAN Architectures for Vision Tasks
+            </h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">From conditional generation to
+                high-resolution synthesis: exploring the evolution of GANs for computer vision.</p>
+            <p class="mt-4 text-lg italic text-gray-600 dark:text-gray-400">"One architecture to rule them all? Not
+                quite—but each brings its own magic!"</p>
+        </header>
+
+        <!-- Introduction -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">🎯</span>
+                <h2 class="text-2xl font-bold">Introduction</h2>
+            </div>
+            <p class="mb-4 leading-relaxed text-gray-700 dark:text-gray-300">
+                Since the introduction of GANs, researchers have developed numerous specialized architectures to tackle
+                specific vision tasks. These innovations address challenges like generating high-resolution images,
+                conditioning on labels or semantic maps, and achieving photorealistic results.
+            </p>
+            <p class="leading-relaxed text-gray-700 dark:text-gray-300">
+                In this chapter, we'll explore prominent GAN architectures designed for vision applications—from
+                conditional GANs that give you control, to progressive training that scales to high resolutions, and
+                specialized models for image-to-image translation.
+            </p>
+        </section>
+
+        <!-- Conditional GAN -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">🎛️</span>
+                <h2 class="text-2xl font-bold">Conditional GAN (cGAN)</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <div
+                    class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 p-4 rounded-xl mb-4">
+                    <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <strong>Key Idea:</strong> Guide the data generation process by conditioning both the generator
+                        and discriminator on additional information (labels, text, images, etc.).
+                    </p>
+                </div>
+
+                <h3 class="text-xl font-bold mb-4">How cGANs Work</h3>
+
+                <!-- Architecture Diagram -->
+                <div
+                    class="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <svg width="100%" height="300" viewBox="0 0 800 300" class="mx-auto">
+                        <!-- Inputs -->
+                        <g id="inputs">
+                            <!-- Noise -->
+                            <rect x="20" y="180" width="100" height="60" rx="10" fill="#a78bfa" stroke="#8b5cf6"
+                                stroke-width="2" />
+                            <text x="70" y="215" text-anchor="middle" fill="white" font-weight="bold"
+                                font-size="14">Noise z</text>
+
+                            <!-- Label for Generator -->
+                            <rect x="20" y="100" width="100" height="60" rx="10" fill="#ec4899" stroke="#db2777"
+                                stroke-width="2" />
+                            <text x="70" y="135" text-anchor="middle" fill="white" font-weight="bold"
+                                font-size="14">Label y</text>
+
+                            <!-- Real Images -->
+                            <rect x="20" y="20" width="100" height="60" rx="10" fill="#10b981" stroke="#059669"
+                                stroke-width="2" />
+                            <text x="70" y="50" text-anchor="middle" fill="white" font-weight="bold" font-size="12">Real
+                                Images</text>
+                        </g>
+
+                        <!-- Generator -->
+                        <g id="generator">
+                            <rect x="200" y="120" width="140" height="100" rx="15" fill="#6366f1" stroke="#4f46e5"
+                                stroke-width="3" />
+                            <text x="270" y="165" text-anchor="middle" fill="white" font-weight="bold"
+                                font-size="16">Generator</text>
+                            <text x="270" y="185" text-anchor="middle" fill="white" font-size="12">G(z, y)</text>
+                        </g>
+
+                        <!-- Discriminator -->
+                        <g id="discriminator">
+                            <rect x="440" y="80" width="140" height="140" rx="15" fill="#f59e0b" stroke="#d97706"
+                                stroke-width="3" />
+                            <text x="510" y="145" text-anchor="middle" fill="white" font-weight="bold"
+                                font-size="16">Discriminator</text>
+                            <text x="510" y="165" text-anchor="middle" fill="white" font-size="12">D(x, y)</text>
+                        </g>
+
+                        <!-- Generated Images -->
+                        <g id="fake-output">
+                            <rect x="660" y="140" width="120" height="60" rx="10" fill="#8b5cf6" stroke="#7c3aed"
+                                stroke-width="2" />
+                            <text x="720" y="165" text-anchor="middle" fill="white" font-weight="bold"
+                                font-size="12">Fake/Real?</text>
+                            <text x="720" y="183" text-anchor="middle" fill="white" font-size="10">Classification</text>
+                        </g>
+
+                        <!-- Arrows -->
+                        <!-- Noise to Generator -->
+                        <path d="M 120 210 L 200 180" stroke="#a78bfa" stroke-width="3" fill="none"
+                            marker-end="url(#arrowPurple)" />
+
+                        <!-- Label to Generator -->
+                        <path d="M 120 130 L 200 150" stroke="#ec4899" stroke-width="3" fill="none"
+                            marker-end="url(#arrowPink)" />
+
+                        <!-- Real Images to Discriminator (curved) -->
+                        <path d="M 120 50 Q 280 30 440 110" stroke="#10b981" stroke-width="3" fill="none"
+                            marker-end="url(#arrowGreen)" />
+
+                        <!-- Label to Discriminator (curved) -->
+                        <path d="M 70 100 Q 200 60 440 130" stroke="#ec4899" stroke-width="3" fill="none"
+                            marker-end="url(#arrowPink)" stroke-dasharray="5,5" />
+
+                        <!-- Generator to Discriminator -->
+                        <path d="M 340 170 L 440 150" stroke="#6366f1" stroke-width="3" fill="none"
+                            marker-end="url(#arrowBlue)" />
+
+                        <!-- Discriminator to Output -->
+                        <path d="M 580 150 L 660 170" stroke="#f59e0b" stroke-width="3" fill="none"
+                            marker-end="url(#arrowOrange)" />
+
+                        <!-- Arrow markers -->
+                        <defs>
+                            <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#a78bfa" />
+                            </marker>
+                            <marker id="arrowPink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#ec4899" />
+                            </marker>
+                            <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#10b981" />
+                            </marker>
+                            <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#6366f1" />
+                            </marker>
+                            <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#f59e0b" />
+                            </marker>
+                        </defs>
+                    </svg>
+                    <p class="text-xs text-center text-gray-600 dark:text-gray-400 mt-4">
+                        <strong>cGAN Architecture:</strong> Both generator and discriminator receive the conditioning
+                        label y,
+                        enabling controlled generation.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div class="p-4 rounded-xl bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-900">
+                        <h4 class="font-bold mb-2 flex items-center gap-2">
+                            <span class="text-2xl">⚙️</span>
+                            Generator G(z, y)
+                        </h4>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Takes both noise vector <em>z</em> and condition <em>y</em> (e.g., class label "cat") to
+                            produce samples that match the condition.
+                        </p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-orange-50 dark:bg-gray-800 border border-orange-200 dark:border-orange-900">
+                        <h4 class="font-bold mb-2 flex items-center gap-2">
+                            <span class="text-2xl">🔍</span>
+                            Discriminator D(x, y)
+                        </h4>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Judges both authenticity AND relevance to condition <em>y</em>, ensuring generated samples
+                            match the specified condition.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 dark:bg-gray-800 p-4 rounded-xl border-l-4 border-yellow-400">
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        <strong>Example:</strong> Training on MNIST with labels: passing noise + label "7" generates
+                        handwritten digit 7. Without cGAN, the generator produces random digits with no control!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Applications -->
+            <div class="glass p-6 rounded-2xl">
+                <h3 class="text-xl font-bold mb-4">🌟 Applications of cGANs</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 border border-pink-200 dark:border-pink-900">
+                        <h4 class="font-semibold mb-1">📸 Image-to-Image Translation</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Sketches → Photos, Day → Night scenes</p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 border border-blue-200 dark:border-blue-900">
+                        <h4 class="font-semibold mb-1">✨ Photo Enhancement</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Super-resolution, denoising, restoration</p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 border border-green-200 dark:border-green-900">
+                        <h4 class="font-semibold mb-1">📊 Data Augmentation</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Generate samples for rare classes</p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 dark:from-gray-800 dark:to-gray-900 border border-orange-200 dark:border-orange-900">
+                        <h4 class="font-semibold mb-1">🎨 Style Transfer</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Apply artistic styles to images</p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-purple-200 dark:border-purple-900">
+                        <h4 class="font-semibold mb-1">💬 Text-to-Image</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Generate images from descriptions</p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 dark:from-gray-800 dark:to-gray-900 border border-red-200 dark:border-red-900">
+                        <h4 class="font-semibold mb-1">🏥 Medical Imaging</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Synthetic data for privacy-sensitive domains
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pros and Cons -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-3 text-green-700 dark:text-green-300">✅ Advantages</h3>
+                    <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <li>✓ <strong>Controlled Generation:</strong> Specify what you want to generate</li>
+                        <li>✓ <strong>Higher Quality:</strong> Conditioning guides meaningful outputs</li>
+                        <li>✓ <strong>Versatile:</strong> Works with labels, images, text, etc.</li>
+                        <li>✓ <strong>Cross-Domain:</strong> Art, science, medical, entertainment</li>
+                    </ul>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-3 text-red-700 dark:text-red-300">⚠️ Challenges</h3>
+                    <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <li>⚠ <strong>Training Stability:</strong> Still inherits GAN training difficulties</li>
+                        <li>⚠ <strong>Mode Collapse:</strong> Can collapse despite conditioning</li>
+                        <li>⚠ <strong>Condition Quality:</strong> Effectiveness depends on condition relevance</li>
+                        <li>⚠ <strong>Architecture Tuning:</strong> Requires careful design</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz 1 <span
+                        class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full">Test your understanding</span>
+                </h3>
+                <button onclick="resetQuiz1()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="mb-3 font-semibold">What is the main difference between GAN and cGAN?</p>
+            <div class="grid sm:grid-cols-1 gap-3">
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz1(this, false)">
+                    cGAN uses a different loss function than regular GAN
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz1(this, true)">
+                    cGAN conditions both generator and discriminator on additional inputs (like labels) for controlled
+                    generation
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz1(this, false)">
+                    cGAN only works with image data, not other modalities
+                </button>
+            </div>
+            <p id="quiz1-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Progressive GAN -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-indigo-100 text-indigo-700 p-2 rounded-xl">📈</span>
+                <h2 class="text-2xl font-bold">Progressive Growing of GANs</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <p class="mb-6 text-gray-700 dark:text-gray-300">
+                    <strong>Key Innovation:</strong> Instead of training on high-resolution images from the start,
+                    progressively add layers to both generator and discriminator, beginning with low resolutions and
+                    gradually increasing detail.
+                </p>
+
+                <!-- Progressive Training Visualization -->
+                <div
+                    class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <h3 class="text-lg font-bold mb-4 text-center">Progressive Training Stages</h3>
+
+                    <div class="grid md:grid-cols-3 gap-6 mb-4">
+                        <!-- Stage 1: 4x4 -->
+                        <div class="space-y-3">
+                            <div
+                                class="bg-white dark:bg-gray-800 p-4 rounded-xl border-2 border-purple-300 dark:border-purple-700">
+                                <p class="text-xs font-bold text-center mb-3 text-purple-700 dark:text-purple-300">Stage
+                                    1: 4×4</p>
+                                <div class="flex flex-col gap-2">
+                                    <div
+                                        class="gan-layer bg-blue-400 text-white p-2 rounded text-center text-xs font-bold">
+                                        G: 4×4</div>
+                                    <div class="text-center">↓</div>
+                                    <div
+                                        class="gan-layer bg-orange-400 text-white p-2 rounded text-center text-xs font-bold">
+                                        D: 4×4</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-gray-600 dark:text-gray-400">Train on low-res</p>
+                        </div>
+
+                        <!-- Stage 2: 4x4 → 64x64 -->
+                        <div class="space-y-3">
+                            <div
+                                class="bg-white dark:bg-gray-800 p-4 rounded-xl border-2 border-indigo-300 dark:border-indigo-700">
+                                <p class="text-xs font-bold text-center mb-3 text-indigo-700 dark:text-indigo-300">Stage
+                                    2: 4×4 → 64×64</p>
+                                <div class="flex flex-col gap-2">
+                                    <div class="gan-layer bg-blue-300 text-white p-2 rounded text-center text-xs">G: 4×4
+                                    </div>
+                                    <div class="text-center">↓</div>
+                                    <div
+                                        class="gan-layer bg-blue-500 text-white p-2 rounded text-center text-xs font-bold">
+                                        G: 64×64</div>
+                                    <div class="text-center">↓</div>
+                                    <div
+                                        class="gan-layer bg-orange-500 text-white p-2 rounded text-center text-xs font-bold">
+                                        D: 64×64</div>
+                                    <div class="text-center">↓</div>
+                                    <div class="gan-layer bg-orange-300 text-white p-2 rounded text-center text-xs">D:
+                                        4×4</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-gray-600 dark:text-gray-400">Add layers, refine details
+                            </p>
+                        </div>
+
+                        <!-- Stage 3: 4x4 → 1024x1024 -->
+                        <div class="space-y-3">
+                            <div
+                                class="bg-white dark:bg-gray-800 p-4 rounded-xl border-2 border-pink-300 dark:border-pink-700">
+                                <p class="text-xs font-bold text-center mb-3 text-pink-700 dark:text-pink-300">Stage 3:
+                                    4×4 → 1024×1024</p>
+                                <div class="flex flex-col gap-2">
+                                    <div
+                                        class="gan-layer bg-blue-200 text-gray-700 p-1 rounded text-center text-[10px]">
+                                        G: 4×4</div>
+                                    <div class="text-center text-xs">↓</div>
+                                    <div class="gan-layer bg-blue-400 text-white p-1 rounded text-center text-[10px]">G:
+                                        64×64</div>
+                                    <div class="text-center text-xs">↓</div>
+                                    <div
+                                        class="gan-layer bg-blue-600 text-white p-2 rounded text-center text-xs font-bold">
+                                        G: 1024×1024</div>
+                                    <div class="text-center text-xs">↓</div>
+                                    <div
+                                        class="gan-layer bg-orange-600 text-white p-2 rounded text-center text-xs font-bold">
+                                        D: 1024×1024</div>
+                                    <div class="text-center text-xs">↓</div>
+                                    <div class="gan-layer bg-orange-400 text-white p-1 rounded text-center text-[10px]">
+                                        D: 64×64</div>
+                                    <div class="text-center text-xs">↓</div>
+                                    <div
+                                        class="gan-layer bg-orange-200 text-gray-700 p-1 rounded text-center text-[10px]">
+                                        D: 4×4</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-gray-600 dark:text-gray-400">High-res synthesis!</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                        <div class="text-2xl">→</div>
+                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">Training Progresses</p>
+                        <div class="text-2xl">→</div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">✓</span>
+                        <div>
+                            <h4 class="font-bold">Faster Training</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Start with coarse structures, gradually
+                                add fine details</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">✓</span>
+                        <div>
+                            <h4 class="font-bold">Better Stability</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Gradual complexity increase prevents
+                                training collapse</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">✓</span>
+                        <div>
+                            <h4 class="font-bold">Higher Quality</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Produces unprecedented quality images at
+                                high resolutions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specialized Architectures -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-700 p-2 rounded-xl">🏗️</span>
+                <h2 class="text-2xl font-bold">Specialized GAN Architectures</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Pix2Pix -->
+                <div class="glass p-6 rounded-2xl architecture-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-blue-700 dark:text-blue-300">Pix2Pix</h3>
+                        <span class="text-3xl">🖼️</span>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-gray-800 p-3 rounded-lg mb-3">
+                        <p class="text-xs font-semibold text-blue-900 dark:text-blue-200">
+                            Image-to-Image Translation with Conditional Adversarial Networks
+                        </p>
+                    </div>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        Learns mapping from input images to output images using cGAN with combined adversarial + L1 loss
+                        for pixel-wise accuracy.
+                    </p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Loss</span>
+                            <span class="text-gray-600 dark:text-gray-400">Adversarial + L1</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Use Case</span>
+                            <span class="text-gray-600 dark:text-gray-400">Photo enhancement, label→scene</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- StyleGAN -->
+                <div class="glass p-6 rounded-2xl architecture-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-purple-700 dark:text-purple-300">StyleGAN</h3>
+                        <span class="text-3xl">🎨</span>
+                    </div>
+                    <div class="bg-purple-50 dark:bg-gray-800 p-3 rounded-lg mb-3">
+                        <p class="text-xs font-semibold text-purple-900 dark:text-purple-200">
+                            Style-Based Generator Architecture for High-Quality Images
+                        </p>
+                    </div>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        Uses Adaptive Instance Normalization (AdaIN) to control styles at each layer, enabling
+                        fine-grained control over texture, color, and structure.
+                    </p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded">Innovation</span>
+                            <span class="text-gray-600 dark:text-gray-400">AdaIN layers</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded">Benefit</span>
+                            <span class="text-gray-600 dark:text-gray-400">Disentangled latent space</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GigaGAN -->
+                <div class="glass p-6 rounded-2xl architecture-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-green-700 dark:text-green-300">GigaGAN</h3>
+                        <span class="text-3xl">🚀</span>
+                    </div>
+                    <div class="bg-green-50 dark:bg-gray-800 p-3 rounded-lg mb-3">
+                        <p class="text-xs font-semibold text-green-900 dark:text-green-200">
+                            Scaling Up GANs for Text-to-Image Synthesis
+                        </p>
+                    </div>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        Multi-stage architecture handling complex text-to-image synthesis at high resolutions, with
+                        stages focusing from coarse shapes to fine details.
+                    </p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Input</span>
+                            <span class="text-gray-600 dark:text-gray-400">Text descriptions</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Output</span>
+                            <span class="text-gray-600 dark:text-gray-400">High-res aligned images</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GauGAN -->
+                <div class="glass p-6 rounded-2xl architecture-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-orange-700 dark:text-orange-300">GauGAN (SPADE)</h3>
+                        <span class="text-3xl">🌄</span>
+                    </div>
+                    <div class="bg-orange-50 dark:bg-gray-800 p-3 rounded-lg mb-3">
+                        <p class="text-xs font-semibold text-orange-900 dark:text-orange-200">
+                            Semantic Image Synthesis with Spatially-Adaptive Normalization
+                        </p>
+                    </div>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        SPADE (Spatially-Adaptive Normalization) modulates features based on semantic layout, producing
+                        photorealistic images from semantic maps.
+                    </p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded">Innovation</span>
+                            <span class="text-gray-600 dark:text-gray-400">SPADE layers</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded">Use Case</span>
+                            <span class="text-gray-600 dark:text-gray-400">Semantic map → photo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 2 -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz 2 <span
+                        class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full">Challenge</span></h3>
+                <button onclick="resetQuiz2()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="mb-3 font-semibold">What is the main advantage of Progressive GAN?</p>
+            <div class="grid sm:grid-cols-1 gap-3">
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz2(this, false)">
+                    It generates images faster than other GANs by using fewer layers
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz2(this, true)">
+                    It progressively adds layers starting from low resolution, improving training stability and enabling
+                    high-resolution synthesis
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz2(this, false)">
+                    It can only work with facial image datasets like CelebA
+                </button>
+            </div>
+            <p id="quiz2-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Comparison Table -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-center">Architecture Comparison</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b-2 border-gray-300 dark:border-gray-700">
+                            <th class="text-left p-3 font-bold">Architecture</th>
+                            <th class="text-left p-3 font-bold">Key Innovation</th>
+                            <th class="text-left p-3 font-bold">Best For</th>
+                            <th class="text-left p-3 font-bold">Conditioning</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700 dark:text-gray-300">
+                        <tr class="border-b border-gray-200 dark:border-gray-800">
+                            <td class="p-3 font-semibold">cGAN</td>
+                            <td class="p-3">Conditional inputs</td>
+                            <td class="p-3">Controlled generation</td>
+                            <td class="p-3">✓ Yes (labels, text, images)</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-800">
+                            <td class="p-3 font-semibold">Progressive GAN</td>
+                            <td class="p-3">Growing architecture</td>
+                            <td class="p-3">High-res synthesis</td>
+                            <td class="p-3">✗ No</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-800">
+                            <td class="p-3 font-semibold">Pix2Pix</td>
+                            <td class="p-3">Paired image translation</td>
+                            <td class="p-3">Image-to-image tasks</td>
+                            <td class="p-3">✓ Input image</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-800">
+                            <td class="p-3 font-semibold">StyleGAN</td>
+                            <td class="p-3">AdaIN style control</td>
+                            <td class="p-3">Disentangled generation</td>
+                            <td class="p-3">✓ Style vectors</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-800">
+                            <td class="p-3 font-semibold">GigaGAN</td>
+                            <td class="p-3">Text-to-image scaling</td>
+                            <td class="p-3">Text descriptions</td>
+                            <td class="p-3">✓ Text</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold">GauGAN</td>
+                            <td class="p-3">SPADE normalization</td>
+                            <td class="p-3">Semantic synthesis</td>
+                            <td class="p-3">✓ Semantic maps</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">📝</span>
+                <h2 class="text-2xl font-bold">Key Takeaways</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-purple-200 dark:border-purple-900">
+                    <h3 class="font-bold mb-2">🎯 Control</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Conditional GANs enable precise control over generation through labels, text, or images
+                    </p>
+                </div>
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 border border-blue-200 dark:border-blue-900">
+                    <h3 class="font-bold mb-2">📈 Scaling</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Progressive training enables stable, high-quality synthesis at unprecedented resolutions
+                    </p>
+                </div>
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 border border-green-200 dark:border-green-900">
+                    <h3 class="font-bold mb-2">🎨 Specialization</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Task-specific architectures (Pix2Pix, StyleGAN, etc.) excel at their designed applications
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="text-center" data-aos="fade-up">
+            <p class="text-lg font-semibold mb-2">From Control to Quality...</p>
+            <p class="text-xl text-pink-700 dark:text-pink-300 italic">
+                "Each GAN architecture is a tool in the creative toolkit—<br>
+                choose wisely based on your task!"
+            </p>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Scroll progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Quiz 1
+        function markQuiz1(button, isCorrect) {
+            document.querySelectorAll('#quiz1-feedback').forEach(el => el.parentElement.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong')));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz1-feedback').textContent = '✓ Excellent! cGAN conditions both G and D on additional inputs for controlled, targeted generation.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz1-feedback').textContent = '✗ Not quite. The key difference is in the conditioning mechanism that gives you control over what is generated.';
+            }
+        }
+
+        function resetQuiz1() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz1-feedback').textContent = '';
+        }
+
+        // Quiz 2
+        function markQuiz2(button, isCorrect) {
+            document.querySelectorAll('#quiz2-feedback').forEach(el => el.parentElement.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong')));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz2-feedback').textContent = '✓ Perfect! Progressive GAN starts from low-res and gradually adds detail, improving stability and quality.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz2-feedback').textContent = '✗ Try again. Think about the progressive growth strategy and its benefits.';
+            }
+        }
+
+        function resetQuiz2() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz2-feedback').textContent = '';
+        }
+    </script>
+</body>
+
+</html>

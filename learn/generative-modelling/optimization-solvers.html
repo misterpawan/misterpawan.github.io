@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimization Solvers for Min-Max Problems | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        @keyframes oscillate {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(20px, 20px);
+            }
+
+            50% {
+                transform: translate(0, 40px);
+            }
+
+            75% {
+                transform: translate(-20px, 20px);
+            }
+        }
+
+        .oscillating {
+            animation: oscillate 3s infinite;
+        }
+
+        @keyframes descend {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .descending {
+            animation: descend 1s ease-out;
+        }
+
+        .algorithm-step {
+            transition: all 0.3s ease;
+        }
+
+        .algorithm-step:hover {
+            background-color: rgba(236, 72, 153, 0.1);
+            transform: translateX(5px);
+        }
+
+        #canvas-gd {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .dark #canvas-gd {
+            border-color: #374151;
+        }
+
+        .payoff-cell {
+            transition: all 0.2s ease;
+        }
+
+        .payoff-cell:hover {
+            transform: scale(1.05);
+            background-color: rgba(236, 72, 153, 0.1);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-purple-50 via-white to-pink-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-700">Optimization</span>
+                <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700">Game Theory</span>
+                <span class="px-3 py-1 rounded-full bg-green-100 text-green-700">Interactive</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-5xl mx-auto px-4 pb-24 space-y-12">
+
+        <!-- Hero -->
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                Optimization Solvers for Min-Max Problems
+            </h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">From gradient descent to
+                game-theoretic equilibria: understanding the optimization landscape of GANs.</p>
+            <p class="mt-4 text-lg italic text-gray-600 dark:text-gray-400">"Two players, one game—finding balance in
+                the chaos of adversarial optimization."</p>
+        </header>
+
+        <!-- Introduction -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">🎯</span>
+                <h2 class="text-2xl font-bold">Why Min-Max Optimization?</h2>
+            </div>
+            <p class="mb-4 leading-relaxed text-gray-700 dark:text-gray-300">
+                GANs involve a generator and discriminator playing a two-player game, each trying to optimize their own
+                objective. Unlike standard minimization problems, we need to solve:
+            </p>
+            <div
+                class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-4">
+                <p class="text-center text-lg font-mono">
+                    $\min_{\theta} \max_{\phi} \mathcal{L}(\theta, \phi)$
+                </p>
+                <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    Generator minimizes, Discriminator maximizes
+                </p>
+            </div>
+            <p class="leading-relaxed text-gray-700 dark:text-gray-300">
+                This creates unique challenges: oscillations, cycling, and convergence failures. We'll explore the
+                algorithms designed to handle these adversarial dynamics.
+            </p>
+        </section>
+
+        <!-- Gradient Descent -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">⬇️</span>
+                <h2 class="text-2xl font-bold">Gradient Descent: The Foundation</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <p class="mb-4 text-gray-700 dark:text-gray-300">
+                    Gradient descent is the workhorse of optimization—iteratively moving parameters in the direction
+                    opposite to the gradient to minimize a loss function.
+                </p>
+
+                <!-- Algorithm -->
+                <div
+                    class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <h3 class="font-bold mb-4 text-center text-blue-700 dark:text-blue-300">Algorithm: Gradient Descent
+                    </h3>
+                    <div class="space-y-2 font-mono text-sm">
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800">
+                            <span class="text-pink-600 font-bold">1:</span> <span
+                                class="text-gray-700 dark:text-gray-300">Initialize parameters $\theta$ randomly</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800">
+                            <span class="text-pink-600 font-bold">2:</span> <span
+                                class="text-gray-700 dark:text-gray-300">Set learning rate $\alpha$</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800">
+                            <span class="text-pink-600 font-bold">3:</span> <span
+                                class="text-purple-600 font-bold">while</span> <span
+                                class="text-gray-700 dark:text-gray-300">not converged:</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800 ml-8">
+                            <span class="text-pink-600 font-bold">4:</span> <span
+                                class="text-gray-700 dark:text-gray-300">Compute gradient $\nabla_\theta
+                                J(\theta)$</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800 ml-8">
+                            <span class="text-pink-600 font-bold">5:</span> <span
+                                class="text-gray-700 dark:text-gray-300">Update: $\theta \leftarrow \theta - \alpha
+                                \nabla_\theta J(\theta)$</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Visualization -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl">
+                    <h4 class="font-bold mb-4 text-center">Interactive: Gradient Descent in 2D</h4>
+                    <div class="flex flex-col items-center gap-4">
+                        <canvas id="canvas-gd" width="400" height="400" class="bg-gray-50 dark:bg-gray-900"></canvas>
+                        <div class="flex gap-4">
+                            <button onclick="startGD()"
+                                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                                Run Gradient Descent
+                            </button>
+                            <button onclick="resetGD()"
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                                Reset
+                            </button>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 text-center">
+                            Watch the ball roll down to the minimum of the function!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gradient Descent Ascent -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">↕️</span>
+                <h2 class="text-2xl font-bold">Gradient Descent Ascent (GDA)</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <p class="mb-4 text-gray-700 dark:text-gray-300">
+                    For min-max problems, we need one player to minimize (descent) and another to maximize (ascent).
+                    This is GDA!
+                </p>
+
+                <!-- Algorithm -->
+                <div
+                    class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <h3 class="font-bold mb-4 text-center text-purple-700 dark:text-purple-300">Algorithm: GDA for
+                        Min-Max</h3>
+                    <div class="space-y-2 font-mono text-sm">
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800">
+                            <span class="text-pink-600 font-bold">Input:</span> <span
+                                class="text-gray-700 dark:text-gray-300">Learning rate $\eta$, iterations $T$</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800">
+                            <span class="text-pink-600 font-bold">1:</span> <span
+                                class="text-gray-700 dark:text-gray-300">Initialize $\theta$ and $\phi$ randomly</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800">
+                            <span class="text-pink-600 font-bold">2:</span> <span
+                                class="text-purple-600 font-bold">for</span> <span
+                                class="text-gray-700 dark:text-gray-300">$t = 1$ to $T$:</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800 ml-8">
+                            <span class="text-pink-600 font-bold">3:</span> <span
+                                class="text-gray-700 dark:text-gray-300">Sample minibatch $\{x_i\}_{i=1}^m$</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800 ml-8">
+                            <span class="text-pink-600 font-bold">4:</span> <span class="text-blue-600">⬇
+                                Descent:</span> <span class="text-gray-700 dark:text-gray-300">$\theta \leftarrow \theta
+                                - \eta \nabla_\theta \mathcal{L}$</span>
+                        </div>
+                        <div class="algorithm-step p-3 rounded-lg bg-white dark:bg-gray-800 ml-8">
+                            <span class="text-pink-600 font-bold">5:</span> <span class="text-orange-600">⬆
+                                Ascent:</span> <span class="text-gray-700 dark:text-gray-300">$\phi \leftarrow \phi +
+                                \eta \nabla_\phi \mathcal{L}$</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-900">
+                        <h4 class="font-bold mb-2 text-blue-700 dark:text-blue-300">Generator (θ)</h4>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Performs <strong>gradient descent</strong> to minimize loss
+                        </p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-orange-50 dark:bg-gray-800 border border-orange-200 dark:border-orange-900">
+                        <h4 class="font-bold mb-2 text-orange-700 dark:text-orange-300">Discriminator (φ)</h4>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Performs <strong>gradient ascent</strong> to maximize loss
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Failure of GDA -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-red-100 text-red-700 p-2 rounded-xl">⚠️</span>
+                <h2 class="text-2xl font-bold">When GDA Fails: Oscillation</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <div class="bg-red-50 dark:bg-gray-800 p-4 rounded-xl mb-6 border-l-4 border-red-400">
+                    <p class="font-semibold text-red-900 dark:text-red-200 mb-2">⚠️ Problem:</p>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        GDA can fail to converge on simple games due to cyclic dynamics. Consider the zero-sum game:
+                        $f(x, y) = xy$ where player 1 minimizes and player 2 maximizes.
+                    </p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-red-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <h3 class="font-bold mb-4 text-center">Example: $f(x,y) = xy$</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <p><strong>Gradients:</strong> $\nabla_x f = y$, $\nabla_y f = x$</p>
+                        </div>
+                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <p><strong>Updates:</strong></p>
+                            <p class="ml-4">$x^{(t)} = x^{(t-1)} - \alpha y^{(t-1)}$</p>
+                            <p class="ml-4">$y^{(t)} = y^{(t-1)} + \alpha x^{(t-1)}$</p>
+                        </div>
+                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
+                            <p><strong>Starting at $(1, 1)$ with $\alpha = 0.1$:</strong></p>
+                            <p class="ml-4">$(x^1, y^1) = (0.9, 1.1)$</p>
+                            <p class="ml-4">$(x^2, y^2) = (0.79, 1.19)$</p>
+                            <p class="ml-4">$(x^3, y^3) = (0.671, 1.269)$</p>
+                            <p class="ml-4 text-red-600 font-semibold">...oscillates without converging!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oscillation Visualization -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl text-center">
+                    <h4 class="font-bold mb-4">Oscillation Animation</h4>
+                    <svg width="300" height="300" viewBox="-150 -150 300 300" class="mx-auto">
+                        <!-- Grid -->
+                        <line x1="-150" y1="0" x2="150" y2="0" stroke="#94a3b8" stroke-width="1" />
+                        <line x1="0" y1="-150" x2="0" y2="150" stroke="#94a3b8" stroke-width="1" />
+
+                        <!-- Circular path -->
+                        <circle cx="0" cy="0" r="80" fill="none" stroke="#e879f9" stroke-width="2"
+                            stroke-dasharray="5,5" />
+
+                        <!-- Oscillating point -->
+                        <circle class="oscillating" cx="0" cy="-80" r="8" fill="#ec4899" />
+
+                        <!-- Labels -->
+                        <text x="155" y="5" fill="#64748b" font-size="14">x</text>
+                        <text x="-5" y="-155" fill="#64748b" font-size="14">y</text>
+                        <text x="0" y="120" fill="#ec4899" font-size="12" text-anchor="middle">GDA cycles!</text>
+                    </svg>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                        Instead of converging to (0,0), GDA oscillates in circles
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz 1 <span
+                        class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full">Test yourself</span></h3>
+                <button onclick="resetQuiz1()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="mb-3 font-semibold">What causes GDA to fail in the example $f(x,y) = xy$?</p>
+            <div class="grid sm:grid-cols-1 gap-3">
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz1(this, false)">
+                    The learning rate is too large
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz1(this, true)">
+                    Cyclic dynamics where gradients push parameters in circles rather than toward equilibrium
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz1(this, false)">
+                    The function has no minimum
+                </button>
+            </div>
+            <p id="quiz1-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Nash Equilibrium -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-green-100 text-green-700 p-2 rounded-xl">⚖️</span>
+                <h2 class="text-2xl font-bold">Nash Equilibrium</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <div
+                    class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <h3 class="font-bold mb-3 text-green-700 dark:text-green-300">Definition</h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-3">
+                        A <strong>Nash equilibrium</strong> is a strategy profile where no player can unilaterally
+                        improve their payoff by changing their strategy, given the strategies of other players.
+                    </p>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
+                        <p class="text-center font-mono text-sm">
+                            $u_i(s^*_i, s^*_{-i}) \geq u_i(s_i, s^*_{-i})$ for all players $i$ and strategies $s_i$
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-xl bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-900">
+                        <h4 class="font-bold mb-2">🎯 Stability</h4>
+                        <p class="text-xs text-gray-700 dark:text-gray-300">
+                            No incentive to deviate
+                        </p>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-900">
+                        <h4 class="font-bold mb-2">🤝 Mutual Best Response</h4>
+                        <p class="text-xs text-gray-700 dark:text-gray-300">
+                            Each player's strategy is optimal given others'
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-pink-50 dark:bg-gray-800 border border-pink-200 dark:border-pink-900">
+                        <h4 class="font-bold mb-2">⚡ Self-Enforcing</h4>
+                        <p class="text-xs text-gray-700 dark:text-gray-300">
+                            Stable without external enforcement
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Theory -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-indigo-100 text-indigo-700 p-2 rounded-xl">🎮</span>
+                <h2 class="text-2xl font-bold">Game Theory: Simultaneous vs Sequential</h2>
+            </div>
+
+            <!-- Simultaneous Games -->
+            <div class="glass p-8 rounded-2xl">
+                <h3 class="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-300">Simultaneous Games</h3>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">
+                    Players make decisions <strong>simultaneously</strong> without knowing others' choices. Represented
+                    by payoff matrices.
+                </p>
+
+                <div
+                    class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl">
+                    <h4 class="font-bold mb-4 text-center">Classic Example: Prisoner's Dilemma</h4>
+
+                    <!-- Payoff Matrix -->
+                    <div class="max-w-md mx-auto">
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div></div>
+                            <div class="text-center font-bold text-sm">Player 2: Cooperate</div>
+                            <div class="text-center font-bold text-sm">Player 2: Betray</div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="flex items-center font-bold text-sm">Player 1: Cooperate</div>
+                            <div
+                                class="payoff-cell bg-green-100 dark:bg-green-900 p-4 rounded-lg text-center border-2 border-green-300 dark:border-green-700">
+                                <div class="font-bold text-lg">R, R</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400">Reward</div>
+                            </div>
+                            <div
+                                class="payoff-cell bg-red-100 dark:bg-red-900 p-4 rounded-lg text-center border-2 border-red-300 dark:border-red-700">
+                                <div class="font-bold text-lg">S, T</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400">Sucker/Tempt</div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mt-2">
+                            <div class="flex items-center font-bold text-sm">Player 1: Betray</div>
+                            <div
+                                class="payoff-cell bg-red-100 dark:bg-red-900 p-4 rounded-lg text-center border-2 border-red-300 dark:border-red-700">
+                                <div class="font-bold text-lg">T, S</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400">Tempt/Sucker</div>
+                            </div>
+                            <div
+                                class="payoff-cell bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center border-2 border-yellow-300 dark:border-yellow-700">
+                                <div class="font-bold text-lg">P, P</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400">Punishment</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg">
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Typical ordering:</strong> T > R > P > S
+                        </p>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Nash Equilibrium:</strong> (Betray, Betray) — even though mutual cooperation is
+                            better!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sequential Games -->
+            <div class="glass p-8 rounded-2xl">
+                <h3 class="text-xl font-bold mb-4 text-purple-700 dark:text-purple-300">Sequential Games</h3>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">
+                    Players make decisions <strong>one after another</strong>, with later players knowing earlier
+                    choices. Represented by game trees.
+                </p>
+
+                <div
+                    class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl">
+                    <h4 class="font-bold mb-4 text-center">Classic Example: Ultimatum Game</h4>
+
+                    <!-- Game Tree -->
+                    <svg width="100%" height="250" viewBox="0 0 600 250" class="mx-auto">
+                        <!-- Tree structure -->
+                        <!-- Proposer node -->
+                        <circle cx="300" cy="30" r="20" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2" />
+                        <text x="300" y="35" text-anchor="middle" fill="white" font-weight="bold"
+                            font-size="12">P</text>
+                        <text x="300" y="60" text-anchor="middle" fill="#64748b" font-size="12">Proposer</text>
+
+                        <!-- Offers -->
+                        <line x1="300" y1="50" x2="150" y2="120" stroke="#94a3b8" stroke-width="2" />
+                        <line x1="300" y1="50" x2="450" y2="120" stroke="#94a3b8" stroke-width="2" />
+
+                        <text x="220" y="90" fill="#ec4899" font-size="11">Offer $x</text>
+                        <text x="380" y="90" fill="#ec4899" font-size="11">Offer $10-x</text>
+
+                        <!-- Responder nodes -->
+                        <circle cx="150" cy="130" r="18" fill="#ec4899" stroke="#db2777" stroke-width="2" />
+                        <text x="150" y="135" text-anchor="middle" fill="white" font-weight="bold"
+                            font-size="11">R</text>
+
+                        <circle cx="450" cy="130" r="18" fill="#ec4899" stroke="#db2777" stroke-width="2" />
+                        <text x="450" y="135" text-anchor="middle" fill="white" font-weight="bold"
+                            font-size="11">R</text>
+
+                        <!-- Accept/Reject branches -->
+                        <!-- Left side -->
+                        <line x1="150" y1="148" x2="80" y2="200" stroke="#10b981" stroke-width="2" />
+                        <text x="100" y="175" fill="#10b981" font-size="10">Accept</text>
+                        <rect x="40" y="200" width="80" height="35" rx="5" fill="#d1fae5" stroke="#10b981" />
+                        <text x="80" y="215" text-anchor="middle" font-size="10">(10-x, x)</text>
+
+                        <line x1="150" y1="148" x2="220" y2="200" stroke="#ef4444" stroke-width="2" />
+                        <text x="195" y="175" fill="#ef4444" font-size="10">Reject</text>
+                        <rect x="180" y="200" width="80" height="35" rx="5" fill="#fee2e2" stroke="#ef4444" />
+                        <text x="220" y="215" text-anchor="middle" font-size="10">(0, 0)</text>
+
+                        <!-- Right side -->
+                        <line x1="450" y1="148" x2="380" y2="200" stroke="#10b981" stroke-width="2" />
+                        <text x="400" y="175" fill="#10b981" font-size="10">Accept</text>
+                        <rect x="340" y="200" width="80" height="35" rx="5" fill="#d1fae5" stroke="#10b981" />
+                        <text x="380" y="215" text-anchor="middle" font-size="10">(x, 10-x)</text>
+
+                        <line x1="450" y1="148" x2="520" y2="200" stroke="#ef4444" stroke-width="2" />
+                        <text x="495" y="175" fill="#ef4444" font-size="10">Reject</text>
+                        <rect x="480" y="200" width="80" height="35" rx="5" fill="#fee2e2" stroke="#ef4444" />
+                        <text x="520" y="215" text-anchor="middle" font-size="10">(0, 0)</text>
+                    </svg>
+
+                    <div class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg">
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            <strong>Backward Induction:</strong> Responder accepts any positive offer → Proposer offers
+                            minimum!
+                        </p>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                            <strong>Reality:</strong> Humans reject unfair offers due to fairness preferences 🤝
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 2 -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz 2 <span
+                        class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full">Game theory</span></h3>
+                <button onclick="resetQuiz2()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="mb-3 font-semibold">What is a Nash Equilibrium?</p>
+            <div class="grid sm:grid-cols-1 gap-3">
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz2(this, false)">
+                    The strategy that maximizes total payoff for all players
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz2(this, true)">
+                    A strategy profile where no player can improve their payoff by unilaterally changing strategy
+                </button>
+                <button
+                    class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left"
+                    onclick="markQuiz2(this, false)">
+                    The strategy that guarantees the highest minimum payoff
+                </button>
+            </div>
+            <p id="quiz2-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Advanced Solvers -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-cyan-100 text-cyan-700 p-2 rounded-xl">🚀</span>
+                <h2 class="text-2xl font-bold">Advanced Optimization Methods</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Competitive Gradient Descent -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-3 text-cyan-700 dark:text-cyan-300">Competitive Gradient Descent
+                    </h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        Accounts for the competitive nature of min-max games by considering the opponent's gradient when
+                        updating.
+                    </p>
+                    <div class="bg-cyan-50 dark:bg-gray-800 p-3 rounded-lg text-xs">
+                        <p class="font-semibold mb-1">Key Idea:</p>
+                        <p>Anticipate opponent's response to your update</p>
+                    </div>
+                </div>
+
+                <!-- ConOpt -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-3 text-blue-700 dark:text-blue-300">Consensus Optimization (ConOpt)
+                    </h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        Seeks consensus between players' objectives by combining gradient information from both players.
+                    </p>
+                    <div class="bg-blue-50 dark:bg-gray-800 p-3 rounded-lg text-xs">
+                        <p class="font-semibold mb-1">Key Idea:</p>
+                        <p>Find direction that improves both objectives simultaneously when possible</p>
+                    </div>
+                </div>
+
+                <!-- LEAD -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-3 text-purple-700 dark:text-purple-300">LEAD (Leader-Follower)</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        Assumes one player (leader) updates first, and the other (follower) responds optimally.
+                    </p>
+                    <div class="bg-purple-50 dark:bg-gray-800 p-3 rounded-lg text-xs">
+                        <p class="font-semibold mb-1">Key Idea:</p>
+                        <p>Stackelberg game formulation with asymmetric roles</p>
+                    </div>
+                </div>
+
+                <!-- SGA -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-3 text-pink-700 dark:text-pink-300">Symplectic Gradient Adjustment
+                        (SGA)</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        Uses symplectic geometry to adjust gradients, preventing cyclic behavior and improving
+                        convergence.
+                    </p>
+                    <div class="bg-pink-50 dark:bg-gray-800 p-3 rounded-lg text-xs">
+                        <p class="font-semibold mb-1">Key Idea:</p>
+                        <p>Add correction term perpendicular to gradient to break cycles</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">📝</span>
+                <h2 class="text-2xl font-bold">Key Takeaways</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 border border-blue-200 dark:border-blue-900">
+                    <h3 class="font-bold mb-2">⚠️ Challenge</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Min-max optimization is fundamentally harder than minimization due to adversarial dynamics
+                    </p>
+                </div>
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-purple-200 dark:border-purple-900">
+                    <h3 class="font-bold mb-2">⚖️ Equilibria</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Nash equilibrium is the goal, but GDA doesn't always find it due to cycling
+                    </p>
+                </div>
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 border border-green-200 dark:border-green-900">
+                    <h3 class="font-bold mb-2">🚀 Solutions</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                        Advanced methods like SGA, ConOpt, and competitive GD help stabilize adversarial training
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="text-center" data-aos="fade-up">
+            <p class="text-lg font-semibold mb-2">From Games to GANs...</p>
+            <p class="text-xl text-pink-700 dark:text-pink-300 italic">
+                "Finding equilibrium in a two-player game is like teaching cats to dance—<br>
+                beautiful when it works, chaotic when it doesn't!"
+            </p>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Scroll progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Gradient Descent Visualization
+        const canvas = document.getElementById('canvas-gd');
+        const ctx = canvas.getContext('2d');
+        let isRunning = false;
+        let x = 350, y = 50; // Starting position
+        const targetX = 200, targetY = 200; // Minimum position
+
+        function drawGD() {
+            ctx.clearRect(0, 0, 400, 400);
+
+            // Draw contour lines (simple quadratic bowl)
+            ctx.strokeStyle = '#e5e7eb';
+            for (let i = 1; i <= 5; i++) {
+                ctx.beginPath();
+                ctx.arc(targetX, targetY, i * 30, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+
+            // Draw minimum point
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(targetX, targetY, 5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#059669';
+            ctx.font = '12px Inter';
+            ctx.fillText('Minimum', targetX + 10, targetY);
+
+            // Draw current position
+            ctx.fillStyle = '#ec4899';
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        function stepGD() {
+            if (!isRunning) return;
+
+            // Simple gradient descent step toward minimum
+            const dx = targetX - x;
+            const dy = targetY - y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 5) {
+                isRunning = false;
+                return;
+            }
+
+            // Move toward minimum
+            x += dx * 0.05;
+            y += dy * 0.05;
+
+            drawGD();
+            requestAnimationFrame(stepGD);
+        }
+
+        function startGD() {
+            if (!isRunning) {
+                isRunning = true;
+                stepGD();
+            }
+        }
+
+        function resetGD() {
+            isRunning = false;
+            x = 350;
+            y = 50;
+            drawGD();
+        }
+
+        // Initial draw
+        drawGD();
+
+        // Quiz 1
+        function markQuiz1(button, isCorrect) {
+            document.querySelectorAll('#quiz1-feedback').forEach(el => el.parentElement.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong')));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz1-feedback').textContent = '✓ Correct! The cyclic dynamics cause GDA to orbit without converging to equilibrium.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz1-feedback').textContent = '✗ Not quite. Think about the pattern of updates and how they create a cycle.';
+            }
+        }
+
+        function resetQuiz1() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz1-feedback').textContent = '';
+        }
+
+        // Quiz 2
+        function markQuiz2(button, isCorrect) {
+            document.querySelectorAll('#quiz2-feedback').forEach(el => el.parentElement.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong')));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz2-feedback').textContent = '✓ Perfect! Nash equilibrium is about stability—no player wants to deviate given others\' strategies.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz2-feedback').textContent = '✗ Try again. Focus on the concept of mutual best response and stability.';
+            }
+        }
+
+        function resetQuiz2() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz2-feedback').textContent = '';
+        }
+    </script>
+</body>
+
+</html>
