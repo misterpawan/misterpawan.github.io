@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .mindmap::before {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border-radius: 24px;
+            background: radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.15), transparent 45%),
+                radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.15), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(52, 211, 153, 0.15), transparent 45%);
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-purple-50 via-white to-pink-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-700">Animated</span>
+                <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700">Quizzes</span>
+                <span class="px-3 py-1 rounded-full bg-green-100 text-green-700">Fun</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-12">
+
+        <!-- Hero -->
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                Introduction to Generative Modelling
+            </h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">Learn how machines dream up new data,
+                why we care about $p(\mathbf{x})$, and how to do it responsibly.</p>
+            <p class="mt-4 text-lg italic text-gray-600 dark:text-gray-400">"A generator walked into a bar. The barman
+                said, 'We don't serve your type.' The generator replied, 'Let me sample a different persona.'"</p>
+        </header>
+
+        <!-- Definition -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">🎨</span>
+                <h2 class="text-2xl font-bold">What is Generative Modelling?</h2>
+            </div>
+            <p class="mb-4 leading-relaxed text-gray-700 dark:text-gray-300">Generative modeling focuses on creating
+                models that learn the underlying probability distribution of data, \(p(\mathbf{x})\). Once trained, they
+                can sample new data that feels like the real thing—images, audio, text, even strategies. Two big tribes:
+                <strong>explicit</strong> models that write down densities, and <strong>implicit</strong> models that
+                learn transformations from simple noise to rich structure.</p>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-indigo-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-pink-100 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-pink-700 dark:text-pink-300">Explicit Density Models</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <li>Write down \(p(\mathbf{x})\) and learn its parameters by maximizing likelihood.</li>
+                        <li>Examples: Gaussian Mixture Models, Hidden Markov Models.</li>
+                        <li>Variational Autoencoders encode → sample → decode using variational tricks.</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 border border-orange-100 dark:border-gray-700">
+                    <h3 class="font-bold mb-2 text-orange-700 dark:text-orange-300">Implicit Density Models</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <li>Skip the explicit density; learn a transformation from simple noise to data space.</li>
+                        <li>Examples: GANs (generator vs discriminator), Normalizing Flows (invertible steps), Autoregressive models (PixelCNN, WaveNet).</li>
+                        <li>Sampling feels like a party trick: draw noise, press go, watch structure appear.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Quiz -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz <span
+                        class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full">Earn +10 vibes</span></h3>
+                <button onclick="resetQuiz()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="mb-3 font-semibold">Which option best describes an implicit density model?</p>
+            <div class="grid sm:grid-cols-3 gap-3">
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">
+                    Specifies \(p(\mathbf{x})\) explicitly and trains via likelihood.
+                </button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, true)">
+                    Learns a transformation from simple noise to data without writing the density.
+                </button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">
+                    Only models labels and ignores the input distribution entirely.
+                </button>
+            </div>
+            <p id="quiz-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Applications -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-indigo-100 text-indigo-700 p-2 rounded-xl">🌍</span>
+                <h2 class="text-2xl font-bold">Where do we use these models?</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="text-lg font-bold mb-2">Medicine (GANs in scrubs)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Image synthesis for data scarcity; MRI → CT translation for easier diagnosis.</li>
+                        <li>De novo molecular design and drug-target interaction prediction.</li>
+                        <li>Personalized treatment effects and prognosis prediction via patient-specific generators.</li>
+                    </ul>
+                    <p class="mt-3 text-xs text-gray-500">Refs: han2018synthesis, yi2019generative, dar2019image,
+                        olivecrona2017molecular, esteban2017real.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="text-lg font-bold mb-2">Sports (simulators that trash-talk)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Player trajectory synthesis to explore offensive/defensive strategies.</li>
+                        <li>Simulated game situations for practice without injuries.</li>
+                        <li>Performance prediction and virtual coaching with synthetic scenarios.</li>
+                    </ul>
+                    <p class="mt-3 text-xs text-gray-500">Refs: lowe2018multi, le2017coordinated, seoane2019human,
+                        andrychowicz2017hindsight.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="text-lg font-bold mb-2">Entertainment (pixels that perform)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Image, music, and text generation to co-create with artists.</li>
+                        <li>Style transfer for visuals and video; procedural worlds for games.</li>
+                        <li>NPC behavior generation for more immersive play.</li>
+                    </ul>
+                    <p class="mt-3 text-xs text-gray-500">Refs: goodfellow2014generative, karras2019style,
+                        briot2019deep, justesen2019deep.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="text-lg font-bold mb-2">Education (teachers with turbo mode)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Automatic question generation and practice sets.</li>
+                        <li>Essay scoring assistants (with human oversight).</li>
+                        <li>Personalized learning materials and knowledge tracing.</li>
+                    </ul>
+                    <p class="mt-3 text-xs text-gray-500">Refs: du2017learning, taghipour2016neural, piech2015deep.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Datasets -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-orange-100 text-orange-700 p-2 rounded-xl">🧺</span>
+                <h2 class="text-2xl font-bold">Datasets that fuel the magic</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Text</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>Wikipedia (bojanowski2017enriching)</li>
+                        <li>Common Crawl (najafabadi2015deep)</li>
+                        <li>Gutenberg (lahiri2014text)</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Video</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>Kinetics (kay2017kinetics)</li>
+                        <li>Sports-1M (karpathy2014large)</li>
+                        <li>HMDB-51 (kuehne2011hmdb)</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Audio</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>Free Music Archive (de2016fma)</li>
+                        <li>Speech Commands (warden2018speech)</li>
+                        <li>UrbanSound8K (salamon2014dataset)</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Images</h3>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>ImageNet (deng2009imagenet)</li>
+                        <li>COCO (lin2014microsoft)</li>
+                        <li>Places365 (zhou2017places)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metrics -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-green-100 text-green-700 p-2 rounded-xl">🧮</span>
+                <h2 class="text-2xl font-bold">How do we judge a generator?</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold mb-2">Text</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Perplexity for likelihood vibes; BLEU for
+                        machine translation faithfulness; humans for fluency and coherence.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold mb-2">Video</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">PSNR/SSIM for fidelity; human checks for realism
+                        and story flow.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold mb-2">Audio</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">MOS for human delight; MSE/STOI for signal
+                        quality and intelligibility.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold mb-2">Images</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">FID and Inception Score for distribution match;
+                        humans for "does this feel right?".</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety -->
+        <section class="glass p-8 rounded-3xl shadow-sm" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-red-100 text-red-700 p-2 rounded-xl">⚠️</span>
+                <h2 class="text-2xl font-bold">Dangers & Responsible Use</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-300">
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Misinformation: generators can hallucinate with confidence.</li>
+                    <li>Ethics: biases in data become biases in outputs.</li>
+                    <li>Manipulation: deepfakes and disinformation campaigns.</li>
+                </ul>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Creativity drain: over-reliance can flatten human originality.</li>
+                    <li>Privacy: sensitive data might leak through generations.</li>
+                    <li>Mitigate: content verification, transparency, and human review.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Mind map -->
+        <section class="relative glass mindmap p-8 rounded-3xl shadow-sm overflow-hidden" data-aos="zoom-in">
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">🧭</span>
+                    <h2 class="text-2xl font-bold">Tiny Mind Map</h2>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                    <div class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700">
+                        <p class="text-xs uppercase text-gray-500 mb-1">Foundation</p>
+                        <p>Data distribution \(p(\mathbf{x})\) + sampling</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700">
+                        <p class="text-xs uppercase text-gray-500 mb-1">Toolkits</p>
+                        <p>VAEs · GANs · Flows · Autoregressive</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700">
+                        <p class="text-xs uppercase text-gray-500 mb-1">Guardrails</p>
+                        <p>Metrics · Human eval · Safety checks</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Poem -->
+        <section class="text-center" data-aos="fade-up">
+            <p class="text-lg font-semibold">A 3-line pep talk for your generator:</p>
+            <p class="mt-2 text-xl text-pink-700 dark:text-pink-300 italic">"Start from noise, embrace the sway,<br>
+                Bend the likelihood your way,<br>
+                Check with humans—ship then play."</p>
+        </section>
+
+        <!-- Interactive lab -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">🧪</span>
+                <h2 class="text-2xl font-bold">Mini Lab: Sample a story</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Click to sample a playful scenario showing how noise can morph
+                into meaning. It's a toy version of "implicit generation".</p>
+            <div class="flex flex-wrap gap-3">
+                <button onclick="sampleScenario()"
+                    class="px-4 py-2 rounded-full bg-primary text-white font-semibold shadow-lg hover:scale-105 transition">Sample
+                    again</button>
+                <span id="sampled-text"
+                    class="px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/70 border border-pink-100 dark:border-gray-700 text-sm font-semibold text-gray-800 dark:text-gray-200">Starting
+                    from noise...</span>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Scroll progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Quiz logic
+        function markQuiz(button, isCorrect) {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz-feedback').textContent = 'Correct! Implicit models transform noise without writing down the full density.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz-feedback').textContent = 'Not quite. Try the option about transforming noise into data.';
+            }
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz-feedback').textContent = '';
+        }
+
+        // Scenario sampler
+        const scenarios = [
+            'Noise → latent doodle → a jazz riff for a sports highlight reel.',
+            'Noise → CT-style image to help a radiologist pretrain safely.',
+            'Noise → classroom questions tuned to yesterday’s lesson.',
+            'Noise → pixel art of a robot coaching penalty kicks.',
+            'Noise → sentence starters for a story, then human edits the twist.'
+        ];
+
+        function sampleScenario() {
+            const pick = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const el = document.getElementById('sampled-text');
+            el.textContent = pick;
+        }
+
+        // Start with a sample
+        sampleScenario();
+    </script>
+</body>
+
+</html>
