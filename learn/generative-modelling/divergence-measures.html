@@ -168,24 +168,24 @@
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h3 class="font-semibold mb-2">Discrete</h3>
-                    <p class="text-sm">$D_{\\text{KL}}(P \\Vert Q) = \\sum_x P(x) \\log \\frac{P(x)}{Q(x)}$</p>
-                    <p class="text-xs text-gray-500 mt-2">Non-negative, $D_{\\text{KL}}(P||Q) \\neq D_{\\text{KL}}(Q||P)$</p>
+                    <p class="text-sm">$D_{\text{KL}}(P \Vert Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}$</p>
+                    <p class="text-xs text-gray-500 mt-2">Non-negative, $D_{\text{KL}}(P||Q) \neq D_{\text{KL}}(Q||P)$</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h3 class="font-semibold mb-2">Continuous</h3>
-                    <p class="text-sm">$D_{\\text{KL}}(P \\Vert Q) = \\int_x P(x) \\log \\frac{P(x)}{Q(x)} \\; dx$</p>
+                    <p class="text-sm">$D_{\text{KL}}(P \Vert Q) = \int_x P(x) \log \frac{P(x)}{Q(x)} \; dx$</p>
                     <p class="text-xs text-gray-500 mt-2">Same vibe, integrals instead of sums.</p>
                 </div>
             </div>
             <div class="grid md:grid-cols-2 gap-4">
                 <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-green-100 dark:from-gray-800 dark:to-gray-800">
                     <h4 class="font-semibold mb-2">KL is an $f$-divergence</h4>
-                    <p class="text-sm text-gray-700 dark:text-gray-300">Choose $f(u) = u \\log u$ in $D_f(P, Q) = \\sum_x P(x) f\\big(\\tfrac{Q(x)}{P(x)}\\big)$ to recover KL. Change of base turns it into $\\sum_x P(x) \\log \\tfrac{P(x)}{Q(x)}$.</p>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Choose $f(u) = u \log u$ in $D_f(P, Q) = \sum_x P(x) f\big(\tfrac{Q(x)}{P(x)}\big)$ to recover KL. Change of base turns it into $\sum_x P(x) \log \tfrac{P(x)}{Q(x)}$.</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-gradient-to-r from-red-50 to-orange-100 dark:from-gray-800 dark:to-gray-800">
                     <h4 class="font-semibold mb-2">Not a metric</h4>
-                    <p class="text-sm text-gray-700 dark:text-gray-300">Symmetry fails: $D_{\\text{KL}}(P||Q)=\\log 2$
-                        while $D_{\\text{KL}}(Q||P)=\\infty$ for $P(a)=1,Q(a)=0.5$. Triangle inequality also fails. Keep
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Symmetry fails: $D_{\text{KL}}(P||Q)=\log 2$
+                        while $D_{\text{KL}}(Q||P)=\infty$ for $P(a)=1,Q(a)=0.5$. Triangle inequality also fails. Keep
                         this in mind when calling it a “distance.”</p>
                 </div>
             </div>
@@ -197,8 +197,8 @@
                 <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">🪩</span>
                 <h2 class="text-2xl font-bold">Jensen-Shannon Divergence</h2>
             </div>
-            <p class="text-gray-700 dark:text-gray-300">A smoothed, symmetric cousin of KL: $D_{\\text{JS}}(P||Q) =
-                \\tfrac{1}{2} D_{\\text{KL}}(P||M) + \\tfrac{1}{2} D_{\\text{KL}}(Q||M)$ where $M=\\tfrac{1}{2}(P+Q)$.
+            <p class="text-gray-700 dark:text-gray-300">A smoothed, symmetric cousin of KL: $D_{\text{JS}}(P||Q) =
+                \tfrac{1}{2} D_{\text{KL}}(P||M) + \tfrac{1}{2} D_{\text{KL}}(Q||M)$ where $M=\tfrac{1}{2}(P+Q)$.
                 Bounded between 0 and 1.</p>
         </section>
 
@@ -209,7 +209,7 @@
                 <h2 class="text-2xl font-bold">Wasserstein Distance (Earth Mover)</h2>
             </div>
             <p class="text-gray-700 dark:text-gray-300">Minimum “work” to morph $P$ into $Q$. For order $p$,
-                $W_p(P,Q)=\\big( \\int_0^1 |F_P^{-1}(u)-F_Q^{-1}(u)|^p du \\big)^{1/p}$. Feels geometric and stabilizes
+                $W_p(P,Q)=\big( \int_0^1 |F_P^{-1}(u)-F_Q^{-1}(u)|^p du \big)^{1/p}$. Feels geometric and stabilizes
                 GAN training (hello WGANs).</p>
             <div class="grid md:grid-cols-2 gap-4">
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
@@ -219,8 +219,8 @@
                 </div>
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h4 class="font-semibold mb-2">Weak convergence</h4>
-                    <p class="text-sm text-gray-700 dark:text-gray-300">If $W_p(\\mu_n,\\mu) \\to 0$ then $\\mu_n$
-                        converges weakly to $\\mu$ (expectations of bounded continuous $f$ converge). Kantorovich–Rubinstein
+                    <p class="text-sm text-gray-700 dark:text-gray-300">If $W_p(\mu_n,\mu) \to 0$ then $\mu_n$
+                        converges weakly to $\mu$ (expectations of bounded continuous $f$ converge). Kantorovich–Rubinstein
                         duality ties $W_1$ to Lipschitz test functions.</p>
                 </div>
             </div>
@@ -233,17 +233,17 @@
                 <h2 class="text-2xl font-bold">Total Variation (TV) Divergence</h2>
             </div>
             <p class="text-gray-700 dark:text-gray-300">Maximum difference in probability mass across events:
-                $D_{\\text{TV}}(P,Q)=\\tfrac{1}{2}\\sum_x |P(x)-Q(x)|$. Symmetric, bounded in $[0,1]$.</p>
+                $D_{\text{TV}}(P,Q)=\tfrac{1}{2}\sum_x |P(x)-Q(x)|$. Symmetric, bounded in $[0,1]$.</p>
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h4 class="font-semibold mb-2">Compute it (discrete demo)</h4>
                     <p class="text-sm text-gray-700 dark:text-gray-300">For $P=[0.1,0.3,0.4,0.2], Q=[0.2,0.2,0.4,0.2]$:
-                        $\\tfrac{1}{2}(0.1+0.1+0+0)=0.1$.</p>
+                        $\tfrac{1}{2}(0.1+0.1+0+0)=0.1$.</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h4 class="font-semibold mb-2">Image-processing vibe</h4>
-                    <p class="text-sm text-gray-700 dark:text-gray-300">Used as regularizer: minimize $\\alpha\\,TV(I) +
-                        \\frac{1}{2}\\lVert I-I_{\\text{noisy}}\\rVert^2$ to denoise. TV sums gradient magnitudes, so
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Used as regularizer: minimize $\alpha\,TV(I) +
+                        \frac{1}{2}\lVert I-I_{\text{noisy}}\rVert^2$ to denoise. TV sums gradient magnitudes, so
                         it preserves edges while removing salt-and-pepper noise.</p>
                 </div>
             </div>
@@ -256,13 +256,13 @@
                 <h2 class="text-2xl font-bold">$f$-Divergence family</h2>
             </div>
             <p class="text-gray-700 dark:text-gray-300">For convex $f$ with $f(1)=0$,
-                $D_f(P,Q)=\\sum_x P(x)\\,f\\big(\\tfrac{Q(x)}{P(x)}\\big)$. KL and JS live here.</p>
+                $D_f(P,Q)=\sum_x P(x)\,f\big(\tfrac{Q(x)}{P(x)}\big)$. KL and JS live here.</p>
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h4 class="font-semibold mb-2">Not a metric</h4>
                     <p class="text-sm text-gray-700 dark:text-gray-300">Symmetry counterexample: $P(a)=1$, $Q(a)=0.5$,
-                        $f(u)=u^2-1$ gives $f(0.5)\\neq f(2)+f(0)$. Triangle inequality fails for $f(u)=(u-1)^2$ with
-                        $P,Q,R$ on $\\{a,b\\}$ ($f(0.5)+f(1.5)+f(0.5) > f(0.75)$).</p>
+                        $f(u)=u^2-1$ gives $f(0.5)\neq f(2)+f(0)$. Triangle inequality fails for $f(u)=(u-1)^2$ with
+                        $P,Q,R$ on $\{a,b\}$ ($f(0.5)+f(1.5)+f(0.5) > f(0.75)$).</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h4 class="font-semibold mb-2">Metric comparison</h4>
@@ -315,8 +315,8 @@
             <div class="grid md:grid-cols-2 gap-4">
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h4 class="font-semibold mb-2">Objective</h4>
-                    <p class="text-sm text-gray-700 dark:text-gray-300">$\\min_G \\max_D \\; \\mathbb{E}_{x\\sim P_r}[D(x)]
-                        - \\mathbb{E}_{z\\sim P_z}[D(G(z))]$ (WGAN flavor).</p>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">$\min_G \max_D \; \mathbb{E}_{x\sim P_r}[D(x)]
+                        - \mathbb{E}_{z\sim P_z}[D(G(z))]$ (WGAN flavor).</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
                     <h4 class="font-semibold mb-2">Why care</h4>
