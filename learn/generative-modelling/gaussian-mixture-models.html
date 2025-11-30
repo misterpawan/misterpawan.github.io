@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Mixture Models | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover,
+        .tf-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover,
+        .dark .tf-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-lime-50 via-white to-pink-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="chip bg-pink-100 text-pink-700 border-pink-200">Quizzes</span>
+                <span class="chip bg-indigo-100 text-indigo-700 border-indigo-200">Code</span>
+                <span class="chip bg-emerald-100 text-emerald-700 border-emerald-200">Poem</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-12">
+
+        <!-- Hero -->
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-pink-600">
+                Gaussian Mixture Models
+            </h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">Blend multiple Gaussians to model
+                complex data; fit with EM or variational tricks.</p>
+            <p class="mt-4 text-lg italic text-gray-600 dark:text-gray-400">"Each point whispers, 'I belong,' mixtures
+                hum a Gaussian song."</p>
+        </header>
+
+        <!-- Mixture basics -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-green-100 text-green-700 p-2 rounded-xl">🥣</span>
+                <h2 class="text-2xl font-bold">Mixture model basics</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Assume each observation comes from one of $K$ components. For
+                GMMs: $$p(\mathbf{x}) = \sum_{i=1}^{K} \pi_i \,\mathcal{N}(\mathbf{x} \mid \boldsymbol{\mu}_i,
+                \boldsymbol{\Sigma}_i)$$ with weights $\pi_i$, means $\boldsymbol{\mu}_i$, covariances
+                $\boldsymbol{\Sigma}_i$.</p>
+            <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                <li>Latent component assignment per point.</li>
+                <li>Useful for clustering, density estimation, anomaly detection.</li>
+                <li>Estimate parameters via EM, MLE, or variational inference.</li>
+            </ul>
+        </section>
+
+        <!-- MLE and log-likelihood -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">📈</span>
+                <h2 class="text-2xl font-bold">Maximum likelihood for GMMs</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Dataset $\{\mathbf{x}_1,\dots,\mathbf{x}_n\}$,
+                parameters $\boldsymbol{\theta}=\{\pi_k,\boldsymbol{\mu}_k,\boldsymbol{\Sigma}_k\}_{k=1}^K$.</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Log-likelihood:
+                $$\ell(\boldsymbol{\theta})=\sum_{i=1}^n \log \sum_{k=1}^K \pi_k \mathcal{N}(\mathbf{x}_i \mid \boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)$$</p>
+            <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                <p class="font-semibold mb-2">EM steps</p>
+                <p class="text-sm">E-step responsibilities:
+                    $$\gamma_{ik} = \frac{\pi_k \mathcal{N}(\mathbf{x}_i \mid \boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)}{\sum_{j=1}^K \pi_j \mathcal{N}(\mathbf{x}_i \mid \boldsymbol{\mu}_j, \boldsymbol{\Sigma}_j)}$$
+                    M-step updates:
+                    $$\pi_k = \frac{1}{n}\sum_{i=1}^n \gamma_{ik},\quad
+                    \boldsymbol{\mu}_k = \frac{\sum_{i=1}^n \gamma_{ik}\mathbf{x}_i}{\sum_{i=1}^n \gamma_{ik}},$$
+                    $$\boldsymbol{\Sigma}_k = \frac{\sum_{i=1}^n \gamma_{ik}(\mathbf{x}_i - \boldsymbol{\mu}_k)(\mathbf{x}_i - \boldsymbol{\mu}_k)^\top}{\sum_{i=1}^n \gamma_{ik}}$$</p>
+                <p class="text-xs text-gray-500 mt-2">EM climbs the log-likelihood and converges to a local maximum.</p>
+            </div>
+        </section>
+
+        <!-- Variational inference -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">🌀</span>
+                <h2 class="text-2xl font-bold">Variational inference</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Approximate the posterior over latent assignments with a
+                tractable family; optimize KL divergence (ELBO) via variational EM.</p>
+            <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                <li>E-step: update variational distribution to tighten ELBO.</li>
+                <li>M-step: update $\pi_k, \boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k$ using variational stats.</li>
+                <li>Faster than exact posteriors; may introduce bias but scales well.</li>
+                <li>Extensions: black-box VI, amortized VI for flexible inference networks.</li>
+            </ul>
+        </section>
+
+        <!-- Python example -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-orange-100 text-orange-700 p-2 rounded-xl">💻</span>
+                <h2 class="text-2xl font-bold">Example: fit a 3-component GMM</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Generate 2D clusters and fit a 3-component full-covariance GMM
+                with scikit-learn.</p>
+            <pre class="p-4 rounded-2xl bg-gray-900 text-gray-100 text-sm overflow-auto"><code># Python example
+import numpy as np
+from sklearn.mixture import GaussianMixture
+import matplotlib.pyplot as plt
+
+np.random.seed(0)
+n_samples = 500
+X = np.concatenate((
+    np.random.randn(n_samples, 2) * 0.5 + np.array([1, 1]),
+    np.random.randn(n_samples, 2) * 0.5 + np.array([-2, 1]),
+    np.random.randn(n_samples, 2) * 0.5 + np.array([0, -2])
+))
+
+gmm = GaussianMixture(n_components=3, covariance_type='full')
+gmm.fit(X)
+
+labels = gmm.predict(X)
+plt.scatter(X[:, 0], X[:, 1], c=labels, s=40, cmap='viridis')
+plt.show()</code></pre>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Try switching covariance_type to 'diag' or 'tied' and
+                watch cluster shapes change.</p>
+        </section>
+
+        <!-- Poem -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700 space-y-3"
+            data-aos="zoom-in">
+            <h3 class="text-xl font-bold flex items-center gap-2">🎵 Memory jingle</h3>
+            <p class="italic text-sm text-gray-700 dark:text-gray-300">"Pick a $k$, stir Gaussians round,<br>
+                Weights that sum, covariances sound.<br>
+                E then M, responsibilities sway,<br>
+                Mixtures hum their latent way."</p>
+        </section>
+
+        <!-- Quick quiz -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700 space-y-4"
+            data-aos="zoom-in">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz</h3>
+                <button onclick="resetQuiz()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="font-semibold">In the E-step of EM for a GMM, what is computed?</p>
+            <div class="grid sm:grid-cols-3 gap-3">
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, true)">Responsibilities $\gamma_{ik}$</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">New means only</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">Covariance determinants</button>
+            </div>
+            <p id="quiz-feedback" class="text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- True/False -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-gray-100 text-gray-700 p-2 rounded-xl">✅</span>
+                <h2 class="text-2xl font-bold">True / False speed round</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">GMM parameters can be learned with EM.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">Variational inference always matches the exact posterior.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">EM guarantees non-decreasing log-likelihood each iteration.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">Mixture weights $\pi_i$ must sum to more than 1.</button>
+            </div>
+            <p id="tf-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Mini lab -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-amber-100 text-amber-700 p-2 rounded-xl">🧪</span>
+                <h2 class="text-2xl font-bold">Mini Lab: tweak a GMM</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Click to see practical tweaks.</p>
+            <div class="flex flex-wrap gap-2">
+                <button class="chip hover:scale-105 transition border-pink-200 bg-pink-50"
+                    onclick="showUse('init')">Initialization</button>
+                <button class="chip hover:scale-105 transition border-blue-200 bg-blue-50"
+                    onclick="showUse('cov')">Covariance type</button>
+                <button class="chip hover:scale-105 transition border-purple-200 bg-purple-50"
+                    onclick="showUse('k')">Choosing K</button>
+                <button class="chip hover:scale-105 transition border-indigo-200 bg-indigo-50"
+                    onclick="showUse('vi')">Variational</button>
+                <button class="chip hover:scale-105 transition border-emerald-200 bg-emerald-50"
+                    onclick="showUse('anom')">Anomaly use</button>
+            </div>
+            <div id="lab-output"
+                class="mt-3 p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                Choose a tweak to see an idea.
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="text-center space-y-4" data-aos="fade-up">
+            <h3 class="text-3xl font-bold">Wrap-up</h3>
+            <p class="text-xl text-pink-700 dark:text-pink-300 italic">"Mix the bells, fit the song,<br>
+                E then M till peaks are strong.<br>
+                Variational if you must,<br>
+                Gaussians blend with gentle trust."</p>
+            <a href="probabilistic-graphical-models.html"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-white font-semibold shadow-lg hover:scale-105 transition">
+                ← Back to PGMs
+            </a>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Quiz logic
+        function markQuiz(button, isCorrect) {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz-feedback').textContent = 'Correct! E-step computes responsibilities over components.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz-feedback').textContent = 'Not quite—think posterior component weights per point.';
+            }
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz-feedback').textContent = '';
+        }
+
+        // True/False logic
+        function markTF(button, isCorrect) {
+            document.querySelectorAll('.tf-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('tf-feedback').textContent = 'Yep! That statement is true.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('tf-feedback').textContent = 'Nope—flip it and check again.';
+            }
+        }
+
+        // Mini lab
+        const useCases = {
+            init: 'Initialization: run k-means++ or multiple random inits; pick best log-likelihood.',
+            cov: 'Covariance type: full for flexible shapes, diag for speed, tied/spherical for simplicity.',
+            k: 'Choosing K: use BIC/AIC/held-out likelihood; avoid overfitting tiny clusters.',
+            vi: 'Variational: use variational Bayes GMM to get posteriors over parameters and automatic complexity control.',
+            anom: 'Anomaly: low mixture density flags outliers; threshold on log-likelihood.'
+        };
+
+        function showUse(key) {
+            document.getElementById('lab-output').textContent = useCases[key];
+        }
+    </script>
+</body>
+
+</html>
