@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAE Theory & Mathematics | Generative Modelling</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter'] }, colors: { primary: '#ec4899' } } } };</script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .proof-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #fae8ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .dark .proof-box {
+            background: linear-gradient(to right, #1e1b4b, #3b0764);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #dbeafe, #eff6ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .dark .theorem-box {
+            background: linear-gradient(to right, #1e3a8a, #1e40af);
+        }
+
+        .quiz-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .mistake-highlight {
+            background-color: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .dark .mistake-highlight {
+            background-color: #78350f;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100">
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 font-bold hover:text-primary transition"><span>←</span>
+                Course</a>
+            <div class="flex gap-3 text-xs">
+                <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-700">Theory</span>
+                <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-700">Proofs</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 pb-24 space-y-12">
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                VAE: Mathematical Foundations</h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300">Divergence minimization, variational inference, and the
+                reparameterization trick</p>
+        </header>
+
+        <!-- Divergence Minimization -->
+        <section class="glass p-8 rounded-3xl" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">📐</span>
+                <h2 class="text-3xl font-bold">Divergence Minimization</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h3 class="font-bold mb-3 text-blue-900 dark:text-blue-200">Definition: Divergence Function</h3>
+                <p class="mb-3">A divergence function $D[\cdot \| \cdot]: \mathcal{P} \times \mathcal{P} \to \mathbb{R}$
+                    quantifies dissimilarity between distributions with properties:</p>
+                <div class="bg-white dark:bg-gray-900 p-4 rounded-lg space-y-2">
+                    <p>1. Non-negativity: $D[P \| Q] \geq 0$ for all $P, Q \in \mathcal{P}$</p>
+                    <p>2. Identity: $D[P \| Q] = 0 \iff P = Q$</p>
+                </div>
+                <p class="mt-3 text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Note:</strong> Unlike metrics, divergence doesn't require symmetry or triangle inequality
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 mt-6">
+                <div class="p-4 rounded-xl bg-blue-50 dark:bg-gray-800 border border-blue-200">
+                    <h4 class="font-semibold mb-2">KL Divergence</h4>
+                    <p class="text-xs">$D_{KL}[P\|Q] = \mathbb{E}_P[\log P/Q]$</p>
+                </div>
+                <div class="p-4 rounded-xl bg-green-50 dark:bg-gray-800 border border-green-200">
+                    <h4 class="font-semibold mb-2">JS Divergence</h4>
+                    <p class="text-xs">Symmetric version of KL</p>
+                </div>
+                <div class="p-4 rounded-xl bg-purple-50 dark:bg-gray-800 border border-purple-200">
+                    <h4 class="font-semibold mb-2">Wasserstein</h4>
+                    <p class="text-xs">Earth mover's distance</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PGM -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-indigo-100 text-indigo-700 p-2 rounded-xl">🕸️</span>
+                <h2 class="text-3xl font-bold">Probabilistic Graphical Models</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <p class="mb-6">PGMs use DAGs to represent conditional dependencies between variables:</p>
+
+                <div
+                    class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <h3 class="font-bold mb-4 text-center">Joint Distribution Factorization</h3>
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg">
+                        <p class="text-center font-mono text-lg">
+                            $p(x_1, \ldots, x_D) = \prod_{i=1}^{D} p(x_i \mid \text{pa}(x_i))$
+                        </p>
+                        <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+                            where $\text{pa}(x_i)$ denotes parents of node $x_i$
+                        </p>
+                    </div>
+                </div>
+
+                <!-- VAE/GAN Model -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-xl bg-purple-50 dark:bg-gray-800 border-2 border-purple-200">
+                        <h4 class="font-bold mb-3 text-center">VAE/GAN Model</h4>
+                        <svg width="100%" height="150" viewBox="0 0 200 150">
+                            <circle cx="100" cy="40" r="25" fill="#a78bfa" stroke="#7c3aed" stroke-width="2" />
+                            <text x="100" y="47" text-anchor="middle" fill="white" font-weight="bold">z</text>
+                            <circle cx="100" cy="110" r="25" fill="#60a5fa" stroke="#3b82f6" stroke-width="2" />
+                            <text x="100" y="117" text-anchor="middle" fill="white" font-weight="bold">x</text>
+                            <path d="M 100 65 L 100 85" stroke="#6366f1" stroke-width="3" marker-end="url(#arrow)" />
+                            <defs>
+                                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#6366f1" />
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p class="text-center text-sm mt-2">$p(x,z) = p(x|z)p(z)$</p>
+                    </div>
+
+                    <div class="p-6 rounded-xl bg-pink-50 dark:bg-gray-800 border-2 border-pink-200">
+                        <h4 class="font-bold mb-3 text-center">Conditional Model</h4>
+                        <svg width="100%" height="150" viewBox="0 0 200 150">
+                            <circle cx="70" cy="40" r="25" fill="#a78bfa" stroke="#7c3aed" stroke-width="2" />
+                            <text x="70" y="47" text-anchor="middle" fill="white" font-weight="bold">z</text>
+                            <circle cx="130" cy="40" r="25" fill="#34d399" stroke="#10b981" stroke-width="2" />
+                            <text x="130" y="47" text-anchor="middle" fill="white" font-weight="bold">y</text>
+                            <circle cx="100" cy="110" r="25" fill="#60a5fa" stroke="#3b82f6" stroke-width="2" />
+                            <text x="100" y="117" text-anchor="middle" fill="white" font-weight="bold">x</text>
+                            <path d="M 70 65 L 90 85" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)" />
+                            <path d="M 130 65 L 110 85" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)" />
+                            <path d="M 120 50 L 100 90" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)" />
+                        </svg>
+                        <p class="text-center text-sm mt-2">$p(x,y,z) = p(x|z,y)p(y|z)p(z)$</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Theorems -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">🎓</span>
+                <h2 class="text-3xl font-bold">Key Theorems</h2>
+            </div>
+
+            <!-- Jensen's Inequality -->
+            <div class="glass p-8 rounded-2xl">
+                <div class="theorem-box">
+                    <h3 class="font-bold mb-3 text-blue-900 dark:text-blue-200">Theorem: Jensen's Inequality</h3>
+                    <p class="mb-3">Let $f: \mathbb{R} \to \mathbb{R}$ be convex. For any distribution $p(x)$:</p>
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg mb-3">
+                        <p class="text-center font-mono text-lg">
+                            $\mathbb{E}_{p(x)}[f(x)] \geq f(\mathbb{E}_{p(x)}[x])$
+                        </p>
+                    </div>
+                    <p class="text-sm">Equality holds iff $f$ is linear or $p(x)$ is a delta measure.</p>
+                </div>
+
+                <details class="mt-4">
+                    <summary
+                        class="cursor-pointer font-semibold text-purple-700 dark:text-purple-300 hover:text-purple-900">
+                        Click to see proof
+                    </summary>
+                    <div class="proof-box mt-3">
+                        <p class="font-semibold mb-2">Proof sketch for discrete case:</p>
+                        <p class="text-sm mb-2">Let $X$ take values $x_1, \ldots, x_n$ with probabilities $p_1, \ldots,
+                            p_n$.</p>
+                        <p class="text-sm mb-2">Since $f$ is convex: $f(\sum_i p_i x_i) \leq \sum_i p_i f(x_i)$ by
+                            definition of convexity.</p>
+                        <p class="text-sm">This directly gives $f(\mathbb{E}[X]) \leq \mathbb{E}[f(X)]$. ∎</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- LOTUS -->
+            <div class="glass p-8 rounded-2xl">
+                <div class="theorem-box">
+                    <h3 class="font-bold mb-3 text-blue-900 dark:text-blue-200">Theorem: LOTUS (Law of Unconscious
+                        Statistician)</h3>
+                    <p class="mb-3">For $Y = g(X)$ where $\mathbb{E}[|g(X)|] < \infty$:</p>
+                            <div class="bg-white dark:bg-gray-900 p-4 rounded-lg">
+                                <p class="text-center font-mono">
+                                    $\mathbb{E}_{p_Y(y)}[y] = \mathbb{E}_{p_X(x)}[g(x)]$
+                                </p>
+                            </div>
+                            <p class="text-sm mt-3 text-gray-700 dark:text-gray-300">
+                                Allows computing expectations without knowing $p_Y$ explicitly!
+                            </p>
+                </div>
+            </div>
+
+            <!-- KL Divergence -->
+            <div class="glass p-8 rounded-2xl">
+                <div class="theorem-box">
+                    <h3 class="font-bold mb-3 text-blue-900 dark:text-blue-200">Definition: KL Divergence</h3>
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg mb-3">
+                        <p class="text-center font-mono text-lg">
+                            $D_{KL}[p \| q] = \int p(x) \log \frac{p(x)}{q(x)} dx$
+                        </p>
+                    </div>
+                </div>
+
+                <div class="proof-box">
+                    <h4 class="font-semibold mb-2">Proof: $D_{KL}[p \| q] \geq 0$</h4>
+                    <div class="space-y-2 text-sm">
+                        <p>Let $f(x) = -\log x$ (convex), $g(x) = q(x)/p(x)$. By Jensen's inequality:</p>
+                        <p class="ml-4">$D_{KL}[p\|q] = \mathbb{E}_p[-\log g(x)] \geq -\log \mathbb{E}_p[g(x)]$</p>
+                        <p class="ml-4">$= -\log \int p(x)\frac{q(x)}{p(x)}dx = -\log \int q(x)dx = -\log 1 = 0$</p>
+                        <p>Equality iff $p(x) = q(x)$ almost everywhere. ∎</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1 -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">🧠 Quiz 1: Divergence Properties</h3>
+                <button onclick="resetQuiz1()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="mb-3 font-semibold">Which property does KL divergence NOT satisfy?</p>
+            <div class="grid gap-3">
+                <button class="quiz-option p-4 rounded-xl border transition text-left" onclick="markQuiz1(this, false)">
+                    Non-negativity: $D_{KL}[p\|q] \geq 0$
+                </button>
+                <button class="quiz-option p-4 rounded-xl border transition text-left" onclick="markQuiz1(this, true)">
+                    Symmetry: $D_{KL}[p\|q] = D_{KL}[q\|p]$
+                </button>
+                <button class="quiz-option p-4 rounded-xl border transition text-left" onclick="markQuiz1(this, false)">
+                    Identity of indiscernibles: $D_{KL}[p\|q] = 0 \iff p = q$
+                </button>
+            </div>
+            <p id="quiz1-feedback" class="mt-3 text-sm font-semibold"></p>
+        </section>
+
+        <!-- MLE and KL Connection -->
+        <section class="glass p-8 rounded-3xl" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-6">Maximum Likelihood ≡ KL Minimization</h2>
+
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl">
+                <h3 class="font-bold mb-4 text-center">Key Result</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg">
+                        <p class="mb-2">Given data distribution $p_{\text{data}}(x)$ and model $p_\theta(x)$:</p>
+                        <p class="font-mono text-center">$\theta^* = \arg\min_\theta D_{KL}[p_{\text{data}} \|
+                            p_\theta]$</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg">
+                        <p class="mb-1">Expanding the KL divergence:</p>
+                        <p class="font-mono text-xs">$D_{KL}[p_{\text{data}} \| p_\theta] =
+                            \mathbb{E}_{p_{\text{data}}}[\log p_{\text{data}}] - \mathbb{E}_{p_{\text{data}}}[\log
+                            p_\theta]$</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg">
+                        <p class="mb-1">First term constant w.r.t. $\theta$, so:</p>
+                        <p class="font-mono text-center text-lg">$\theta^* = \arg\max_\theta
+                            \mathbb{E}_{p_{\text{data}}}[\log p_\theta(x)]$</p>
+                        <p class="text-center mt-2 font-semibold text-green-700 dark:text-green-300">This is Maximum
+                            Likelihood Estimation!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Variational Inference -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">🔬</span>
+                <h2 class="text-3xl font-bold">Variational Inference</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <p class="mb-4">For latent variable model $p_\theta(x) = \int p_\theta(x|z)p(z)dz$, direct maximization
+                    is intractable!</p>
+
+                <div class="bg-yellow-50 dark:bg-gray-800 p-4 rounded-xl border-l-4 border-yellow-400 mb-6">
+                    <p class="font-semibold mb-2">⚠️ Challenge:</p>
+                    <p class="text-sm">Computing $p_\theta(x) = \int p_\theta(x|z)p(z)dz$ requires integrating over
+                        entire latent space!</p>
+                </div>
+
+                <div class="proof-box">
+                    <h3 class="font-bold mb-3">Derivation: Variational Lower Bound (ELBO)</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-white dark:bg-gray-900 p-3 rounded">
+                            <p class="mb-1">Start with log-likelihood:</p>
+                            <p class="font-mono text-xs">$\log p_\theta(x) = \log \int p_\theta(x|z)p(z)dz$</p>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-900 p-3 rounded">
+                            <p class="mb-1">Introduce variational distribution $q(z)$:</p>
+                            <p class="font-mono text-xs">$= \log \int \frac{p_\theta(x|z)p(z)}{q(z)} q(z)dz = \log
+                                \mathbb{E}_q\left[\frac{p_\theta(x|z)p(z)}{q(z)}\right]$</p>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-900 p-3 rounded">
+                            <p class="mb-1">Apply Jensen's inequality ($\log$ is concave):</p>
+                            <p class="font-mono text-xs">$\geq
+                                \mathbb{E}_q\left[\log\frac{p_\theta(x|z)p(z)}{q(z)}\right]$</p>
+                        </div>
+
+                        <div class="bg-green-50 dark:bg-green-900 p-3 rounded border-2 border-green-400">
+                            <p class="mb-1 font-semibold">Rearrange to ELBO:</p>
+                            <p class="font-mono text-xs">$= \mathbb{E}_q[\log p_\theta(x|z)] - D_{KL}[q(z) \| p(z)] =
+                                \mathcal{L}(x, q, \theta)$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spot the Mistake -->
+        <section class="glass p-6 rounded-3xl border-2 border-yellow-100" data-aos="zoom-in">
+            <h3 class="text-xl font-bold mb-4">🔍 Spot the Mistake!</h3>
+            <p class="mb-4">Find the error in this "proof" that KL divergence is symmetric:</p>
+            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl font-mono text-sm space-y-2">
+                <p>$D_{KL}[p \| q] = \int p(x) \log \frac{p(x)}{q(x)} dx$</p>
+                <p class="mistake-highlight" onclick="checkMistake(this, false)">$= \int p(x) (\log p(x) - \log q(x))
+                    dx$</p>
+                <p class="mistake-highlight" onclick="checkMistake(this, false)">$= \int p(x) \log p(x) dx - \int p(x)
+                    \log q(x) dx$</p>
+                <p class="mistake-highlight" onclick="checkMistake(this, true)">$= \int p(x) \log p(x) dx - \int q(x)
+                    \log q(x) dx$</p>
+                <p class="mistake-highlight" onclick="checkMistake(this, false)">$= D_{KL}[q \| p]$</p>
+            </div>
+            <p id="mistake-feedback" class="mt-3 text-sm font-semibold"></p>
+        </section>
+
+        <!-- KL for Gaussians -->
+        <section class="glass p-8 rounded-3xl" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-6">KL Divergence Between Gaussians</h2>
+
+            <div class="theorem-box">
+                <h3 class="font-bold mb-3">Theorem: KL for Factorized Gaussians</h3>
+                <p class="mb-3">For $q(z|x) = \mathcal{N}(\mu_\phi(x), \text{diag}(\sigma^2_\phi(x)))$ and $p(z) =
+                    \mathcal{N}(0,I)$:</p>
+                <div class="bg-white dark:bg-gray-900 p-4 rounded-lg">
+                    <p class="text-center font-mono">
+                        $D_{KL}[q \| p] = \frac{1}{2}\left(\|\mu_\phi(x)\|^2 + \|\sigma_\phi(x)\|^2 -
+                        2\log\sigma_\phi(x) - d\right)$
+                    </p>
+                </div>
+            </div>
+
+            <details class="mt-4">
+                <summary class="cursor-pointer font-semibold text-purple-700 dark:text-purple-300">
+                    Click for complete proof
+                </summary>
+                <div class="proof-box mt-3 space-y-3 text-sm">
+                    <p>For dimension $i$: $q(z_i) = \mathcal{N}(\mu_i, \sigma_i^2)$, $p(z_i) = \mathcal{N}(0,1)$</p>
+
+                    <div class="bg-white dark:bg-gray-900 p-3 rounded">
+                        <p class="mb-1">$D_{KL}[q(z_i) \| p(z_i)] = \mathbb{E}_q[\log q(z_i) - \log p(z_i)]$</p>
+                        <p>$= \mathbb{E}_q\left[-\frac{1}{2}\log(2\pi\sigma_i^2) - \frac{(z_i-\mu_i)^2}{2\sigma_i^2} +
+                            \frac{1}{2}\log(2\pi) + \frac{z_i^2}{2}\right]$</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-900 p-3 rounded">
+                        <p class="mb-1">Using $\mathbb{E}[(z_i-\mu_i)^2] = \sigma_i^2$ and $\mathbb{E}[z_i^2] = \mu_i^2
+                            + \sigma_i^2$:</p>
+                        <p>$= -\log\sigma_i - \frac{1}{2} + \frac{1}{2}(\mu_i^2 + \sigma_i^2)$</p>
+                    </div>
+
+                    <div class="bg-green-50 dark:bg-green-900 p-3 rounded">
+                        <p>Sum over all dimensions $i=1,\ldots,d$ to get result. ∎</p>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- Reparameterization Trick -->
+        <section class="space-y-6" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-green-100 text-green-700 p-2 rounded-xl">🎯</span>
+                <h2 class="text-3xl font-bold">The Reparameterization Trick</h2>
+            </div>
+
+            <div class="glass p-8 rounded-2xl">
+                <div class="bg-red-50 dark:bg-gray-800 p-4 rounded-xl border-l-4 border-red-400 mb-6">
+                    <p class="font-semibold mb-2">⚠️ Problem:</p>
+                    <p class="text-sm">Cannot backpropagate through sampling: $z \sim q_\phi(z|x)$</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl mb-6">
+                    <h3 class="font-bold mb-4 text-center text-green-700 dark:text-green-300">Solution:
+                        Reparameterization</h3>
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg space-y-3">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-semibold mb-2 text-red-700">❌ Non-differentiable:</p>
+                                <p class="font-mono text-sm">$z \sim \mathcal{N}(\mu_\phi(x), \sigma^2_\phi(x))$</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold mb-2 text-green-700">✓ Differentiable:</p>
+                                <p class="font-mono text-sm">$z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon$</p>
+                                <p class="text-xs mt-1">where $\epsilon \sim \mathcal{N}(0,I)$</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual diagram -->
+                <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl">
+                    <h4 class="font-bold mb-4 text-center">Gradient Flow with Reparameterization</h4>
+                    <svg width="100%" height="200" viewBox="0 0 600 200">
+                        <rect x="50" y="80" width="100" height="40" rx="5" fill="#3b82f6" />
+                        <text x="100" y="105" text-anchor="middle" fill="white" font-weight="bold">φ</text>
+
+                        <rect x="200" y="30" width="100" height="40" rx="5" fill="#f59e0b" />
+                        <text x="250" y="55" text-anchor="middle" fill="white">μ_φ(x)</text>
+                        <rect x="200" y="130" width="100" height="40" rx="5" fill="#f59e0b" />
+                        <text x="250" y="155" text-anchor="middle" fill="white">σ_φ(x)</text>
+
+                        <circle cx="420" cy="100" r="30" fill="#10b981" />
+                        <text x="420" y="105" text-anchor="middle" fill="white" font-weight="bold">z</text>
+
+                        <circle cx="350" cy="160" r="20" fill="#ef4444" />
+                        <text x="350" y="165" text-anchor="middle" fill="white" font-size="12">ε</text>
+
+                        <path d="M 150 90 L 200 50" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)" />
+                        <path d="M 150 110 L 200 150" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)" />
+                        <path d="M 300 50 L 390 90" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)" />
+                        <path d="M 300 150 L 395 110" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)" />
+                        <path d="M 350 140 L 405 110" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,5" />
+
+                        <text x="175" y="70" fill="#059669" font-size="11">∂/∂φ</text>
+                        <text x="430" y="70" fill="#059669" font-size="11">∂/∂z</text>
+                    </svg>
+                    <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                        Noise $\epsilon$ is independent of $\phi$, allowing gradients to flow!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 2 -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">🧠 Quiz 2: Reparameterization</h3>
+                <button onclick="resetQuiz2()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="mb-3 font-semibold">What makes the reparameterization trick work?</p>
+            <div class="grid gap-3">
+                <button class="quiz-option p-4 rounded-xl border transition text-left text-sm"
+                    onclick="markQuiz2(this, false)">
+                    It makes sampling faster
+                </button>
+                <button class="quiz-option p-4 rounded-xl border transition text-left text-sm"
+                    onclick="markQuiz2(this, true)">
+                    It separates randomness (ε) from parameters (φ), enabling gradient computation
+                </button>
+                <button class="quiz-option p-4 rounded-xl border transition text-left text-sm"
+                    onclick="markQuiz2(this, false)">
+                    It reduces the KL divergence
+                </button>
+            </div>
+            <p id="quiz2-feedback" class="mt-3 text-sm font-semibold"></p>
+        </section>
+
+        <!-- VAE Objective -->
+        <section class="glass p-8 rounded-3xl" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-6">Complete VAE Objective</h2>
+
+            <div
+                class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl">
+                <h3 class="font-bold mb-4 text-center text-2xl">VAE Optimization</h3>
+                <div class="space-y-4">
+                    <div class="bg-white dark:bg-gray-900 p-4 rounded-lg">
+                        <p class="text-center font-mono text-lg mb-2">
+                            $\max_{\phi,\theta} \mathcal{L}(\phi,\theta)$
+                        </p>
+                        <p class="text-center font-mono">
+                            $= \mathbb{E}_{p_{\text{data}}(x)}\left[\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] -
+                            D_{KL}[q_\phi(z|x) \| p(z)]\right]$
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg border-2 border-blue-300">
+                            <p class="font-semibold mb-2">Reconstruction Term</p>
+                            <p class="text-sm">$\mathbb{E}_{q_\phi}[\log p_\theta(x|z)]$</p>
+                            <p class="text-xs mt-1">How well decoder reconstructs</p>
+                        </div>
+                        <div class="bg-purple-50 dark:bg-purple-900 p-4 rounded-lg border-2 border-purple-300">
+                            <p class="font-semibold mb-2">KL Regularization</p>
+                            <p class="text-sm">$D_{KL}[q_\phi(z|x) \| p(z)]$</p>
+                            <p class="text-xs mt-1">Keep posterior close to prior</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Posterior Collapse -->
+        <section class="glass p-8 rounded-3xl" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-6">Posterior Collapse</h2>
+
+            <div class="bg-red-50 dark:bg-gray-800 p-6 rounded-xl border-l-4 border-red-500 mb-6">
+                <h3 class="font-bold mb-3">Problem: Encoder Ignored</h3>
+                <p class="mb-3">Posterior collapse occurs when $q_\phi(z_i|x) \approx p(z_i)$ for some dimension $i$.
+                </p>
+                <p class="text-sm">This means the encoder is not using that latent dimension—it carries no information
+                    about $x$!</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="p-6 rounded-xl bg-yellow-50 dark:bg-gray-800 border-2 border-yellow-300">
+                    <h4 class="font-bold mb-3">Causes</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>• Powerful decoder ignores latents</li>
+                        <li>• KL penalty too strong</li>
+                        <li>• Bad local minima</li>
+                        <li>• High-dimensional latent space</li>
+                    </ul>
+                </div>
+
+                <div class="p-6 rounded-xl bg-green-50 dark:bg-gray-800 border-2 border-green-300">
+                    <h4 class="font-bold mb-3">Remedies</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>• KL annealing (warm-up)</li>
+                        <li>• β-VAE: $\beta D_{KL}$ with $\beta < 1$</li>
+                        <li>• Weaker decoder</li>
+                        <li>• Free bits constraint</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="glass p-8 rounded-3xl" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">📝</span>
+                <h2 class="text-2xl font-bold">Key Takeaways</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-purple-200">
+                    <h3 class="font-bold mb-2">🎯 MLE = KL Min</h3>
+                    <p class="text-sm">Maximum likelihood is equivalent to minimizing KL divergence</p>
+                </div>
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 border border-blue-200">
+                    <h3 class="font-bold mb-2">📊 ELBO</h3>
+                    <p class="text-sm">Variational lower bound makes intractable inference tractable</p>
+                </div>
+                <div
+                    class="p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 border border-green-200">
+                    <h3 class="font-bold mb-2">🎲 Reparameterization</h3>
+                    <p class="text-sm">Enables backpropagation through stochastic sampling</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center" data-aos="fade-up">
+            <p class="text-xl text-purple-700 dark:text-purple-300 italic">
+                "From divergence to generation—the mathematical beauty of VAEs"
+            </p>
+        </section>
+    </main>
+
+    <script>
+        AOS.init();
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement.scrollHeight - window.innerHeight;
+            document.getElementById('progress-bar').style.width = `${(window.scrollY / h) * 100}%`;
+        });
+
+        function markQuiz1(btn, correct) {
+            document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('correct', 'wrong'));
+            btn.classList.add(correct ? 'correct' : 'wrong');
+            document.getElementById('quiz1-feedback').textContent = correct ?
+                '✓ Correct! KL divergence is asymmetric: D[p||q] ≠ D[q||p] in general.' :
+                '✗ Try again. KL divergence does satisfy non-negativity and identity properties.';
+        }
+
+        function resetQuiz1() {
+            document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz1-feedback').textContent = '';
+        }
+
+        function markQuiz2(btn, correct) {
+            document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('correct', 'wrong'));
+            btn.classList.add(correct ? 'correct' : 'wrong');
+            document.getElementById('quiz2-feedback').textContent = correct ?
+                '✓ Excellent! By moving randomness to ε ~ N(0,I), parameters φ become differentiable.' :
+                '✗ Not quite. Think about the gradient flow and differentiability.';
+        }
+
+        function resetQuiz2() {
+            document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz2-feedback').textContent = '';
+        }
+
+        function checkMistake(elem, isMistake) {
+            const feedback = document.getElementById('mistake-feedback');
+            if (isMistake) {
+                elem.style.backgroundColor = '#fee2e2';
+                elem.style.borderColor = '#ef4444';
+                feedback.textContent = '✓ Correct! Line 3 is wrong: ∫p(x)log q(x)dx ≠ ∫q(x)log q(x)dx. Cannot swap the distributions!';
+                feedback.className = 'mt-3 text-sm font-semibold text-green-700';
+            } else {
+                elem.style.backgroundColor = '#d1fae5';
+                feedback.textContent = '✗ This line is actually correct. Keep looking!';
+                feedback.className = 'mt-3 text-sm font-semibold text-red-700';
+            }
+        }
+    </script>
+</body>
+
+</html>
