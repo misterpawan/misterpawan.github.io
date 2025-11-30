@@ -16,8 +16,8 @@
     <script>
         window.MathJax = {
             tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                inlineMath: [['$', '$'], ['\(', '\)']],
+                displayMath: [['$$', '$$'], ['\[', '\]']]
             }
         };
     </script>
@@ -202,17 +202,17 @@
             </div>
             <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The Wasserstein distance, also known as the
                 Earth Mover's distance, compares distributions by the cost of optimal transport. Given two probability
-                distributions $P$ and $Q$ on metric space $(\\mathcal{X}, d)$:</p>
+                distributions $P$ and $Q$ on metric space $(\mathcal{X}, d)$:</p>
             <div class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-indigo-100 dark:border-gray-700">
-                <p class="text-sm">$$ W_p(P, Q) = \\left(\\inf_{\\pi \\in \\Gamma(P, Q)} \\int_{\\mathcal{X} \\times \\mathcal{X}} d(x, y)^p \\, d\\pi(x, y)\\right)^{\\tfrac{1}{p}} $$</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Here $\\Gamma(P,Q)$ are couplings with marginals
+                <p class="text-sm">$$ W_p(P, Q) = \left(\inf_{\pi \in \Gamma(P, Q)} \int_{\mathcal{X} \times \mathcal{X}} d(x, y)^p \, d\pi(x, y)\right)^{\tfrac{1}{p}} $$</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Here $\Gamma(P,Q)$ are couplings with marginals
                     $P$ and $Q$.</p>
             </div>
             <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">For $p=1$, the dual (KR) form is</p>
             <div class="p-4 rounded-2xl bg-gradient-to-r from-indigo-50 via-white to-pink-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-pink-100 dark:border-gray-700">
-                <p class="text-sm">$$ W_1(P, Q) = \\sup_{\\|f\\|_{\\text{Lip}} \\leq 1} \\left\\{\\int f(x) \\, dP(x) - \\int f(x) \\, dQ(x)\\right\\} $$</p>
+                <p class="text-sm">$$ W_1(P, Q) = \sup_{\|f\|_{\text{Lip}} \leq 1} \left\{\int f(x) \, dP(x) - \int f(x) \, dQ(x)\right\} $$</p>
                 <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">Supremum over all 1-Lipschitz $f:
-                    \\mathcal{X}\\to\\mathbb{R}$; $\\|f\\|_{\\text{Lip}}$ is the Lipschitz constant.</p>
+                    \mathcal{X}\to\mathbb{R}$; $\|f\|_{\text{Lip}}$ is the Lipschitz constant.</p>
             </div>
             <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The KR dual form highlights the connection
                 between optimal transport and Lipschitz functions and gives a tractable way to optimize Wasserstein
@@ -299,35 +299,35 @@
             <div
                 class="p-5 rounded-2xl bg-white/85 dark:bg-gray-800/80 border border-purple-100 dark:border-gray-700 space-y-2 text-sm text-gray-700 dark:text-gray-300">
                 <p class="font-semibold">Statement</p>
-                <p>$$ W(p,q)=\\inf_{\\pi \\in \\Pi(p,q)} \\mathbb{E}_{(x,y) \\sim \\pi}[ \\| x-y \\|_2]= \\sup_{\\|h\\|_2 \\leq 1} [\\mathbb{E}_{x \\sim p} [h(x)] -\\mathbb{E}_{y \\sim q}[h(x)]] $$</p>
+                <p>$$ W(p,q)=\inf_{\pi \in \Pi(p,q)} \mathbb{E}_{(x,y) \sim \pi}[ \| x-y \|_2]= \sup_{\|h\|_L \leq 1} \big[\mathbb{E}_{x \sim p} [h(x)] -\mathbb{E}_{y \sim q}[h(y)]\big] $$</p>
             </div>
             <details class="p-5 rounded-2xl bg-gray-50/80 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 space-y-3">
                 <summary class="cursor-pointer font-semibold text-primary">Full proof walkthrough (tap to expand)</summary>
                 <div class="space-y-3">
-                    <p>We note that $p$ and $q$ are marginals for joint $\\pi$. Hence,</p>
-                    <p class="text-xs md:text-sm">$$ p(x)= \\int \\pi(x,y) \\, dy, \\qquad q(y) =\\int \\pi(x,y) \\, dx, $$</p>
+                    <p>We note that $p$ and $q$ are marginals for joint $\pi$. Hence,</p>
+                    <p class="text-xs md:text-sm">$$ p(x)= \int \pi(x,y) \, dy, \qquad q(y) =\int \pi(x,y) \, dx, $$</p>
                     <p>which gives equality constraints $h_1(x)$ and $h_2(x)$</p>
-                    <p class="text-xs md:text-sm">\\( h_1(x) : p(x)- \\int \\pi(x,y) \\, dy =0, \\quad h_2(x) : q(y)- \\int \\pi(x,y) \\, dy =0. \\)</p>
+                    <p class="text-xs md:text-sm">\( h_1(x) : p(x)- \int \pi(x,y) \, dy =0, \quad h_2(x) : q(y)- \int \pi(x,y) \, dy =0. \)</p>
                     <p>Construct the Lagrangian with multipliers $f,g$:</p>
-                    <p class="text-xs md:text-sm">$$ L(\\pi,f,g) =\\int \\|x-y\\| \\, \\pi(x,y) \\, dx +\\int \\left( p(x)-\\int \\pi(x,y) \\, dy \\right) f(x) \\, dx +\\int \\left( q(y)-\\int \\pi(x,y) \\, dx \\right) g(y) \\, dy. $$</p>
+                    <p class="text-xs md:text-sm">$$ L(\pi,f,g) =\int \|x-y\| \, \pi(x,y) \, dx +\int \left( p(x)-\int \pi(x,y) \, dy \right) f(x) \, dx +\int \left( q(y)-\int \pi(x,y) \, dx \right) g(y) \, dy. $$</p>
                     <p>Collecting terms:</p>
-                    <p class="text-xs md:text-sm">$$ L(\\pi,f,g) = \\mathbb{E}_{x \\sim p}[ f(x) ]+\\mathbb{E}_{y \\sim q}[ g(y) ] + \\int \\left( \\| x-y \\|_2 -f(x)-g(y) \\right) \\, \\pi(x,y) \\, dy \\, dx. $$</p>
+                    <p class="text-xs md:text-sm">$$ L(\pi,f,g) = \mathbb{E}_{x \sim p}[ f(x) ]+\mathbb{E}_{y \sim q}[ g(y) ] + \int \left( \| x-y \|_2 -f(x)-g(y) \right) \, \pi(x,y) \, dy \, dx. $$</p>
                     <p>Slater's condition holds (convex objective, no inequalities), so strong duality gives</p>
-                    <p class="text-xs md:text-sm">$$ W(p_1,p_g) = \\inf_{\\pi} \\sup_{f,g} L(\\pi, f,g) = \\sup_{f,g} \\inf_{\\pi} L(\\pi,f,g). $$</p>
-                    <p>To avoid $L \\to -\\infty$, enforce $\\|x-y\\|_2 \\geq f(x)+g(y)$ for all $x,y$, making the infimum
-                        occur at $\\pi(x,y)=0$.</p>
-                    <p class="text-xs md:text-sm">$$ \\sup_{f,g} \\inf_{\\pi} L(\\pi,f,g) = \\sup_{f,g} [\\mathbb{E}_{x \\sim p}[f(x)]+\\mathbb{E}_{y \\sim q} [g(y)] ] = W(p,q) $$</p>
+                    <p class="text-xs md:text-sm">$$ W(p_1,p_g) = \inf_{\pi} \sup_{f,g} L(\pi, f,g) = \sup_{f,g} \inf_{\pi} L(\pi,f,g). $$</p>
+                    <p>To avoid $L \to -\infty$, enforce $\|x-y\|_2 \geq f(x)+g(y)$ for all $x,y$, making the infimum
+                        occur at $\pi(x,y)=0$.</p>
+                    <p class="text-xs md:text-sm">$$ \sup_{f,g} \inf_{\pi} L(\pi,f,g) = \sup_{f,g} [\mathbb{E}_{x \sim p}[f(x)]+\mathbb{E}_{y \sim q} [g(y)] ] = W(p,q) $$</p>
                     <p>To obtain the lower bound of $W,$ optimize over 1-Lipschitz $h$:</p>
-                    <p class="text-xs md:text-sm">$$ \\mathbb{E}_{x \\sim p}[h(x)]-\\mathbb{E}_{y \\sim q}[h(y)] = \\int (h(x)-h(y)) \\, \\pi(x,y) \\, dx \\, dy = \\inf_{\\pi} \\int (h(x)-h(y)) \\, \\pi(x,y) \\, dx \\, dy \\leq \\inf_{\\pi} \\int \\|x-y\\|_2 \\, \\pi(x,y) \\, dx \\, dy \\leq W(p,q). $$</p>
-                    <p class="text-xs md:text-sm">The $\\inf_{\\pi}$ is justified because $\\int (h(x)-h(y))\\,\\pi(x,y)\\,dx\\,dy$ remains the same for any coupling with marginals $p$ and $q$—the expression is independent of which $\\pi$ is chosen.</p>
-                    <p>Since it holds for all $h$ with $\\|h\\|_L\\leq 1$:</p>
-                    <p class="text-xs md:text-sm">$$ \\sup_{\\|h\\|_L \\leq 1} [\\mathbb{E}_{x \\sim p}[h(x)]-\\mathbb{E}_{y \\sim q}[h(y)]] \\leq W(p,q) $$</p>
-                    <p>Upper bound: define infimal convolution $k(x)= \\inf_u [ \\|x-u\\|_2-g(u) ]$. One shows $k$ is
-                        $1$-Lipschitz and if $f(x)+g(y) \\leq \\|x-y\\|_2$ then</p>
-                    <p class="text-xs md:text-sm">$$ \\mathbb{E}_{x \\sim p}[f(x)]+\\mathbb{E}_{y \\sim q} [g(y)] \\leq \\mathbb{E}[k(x)] -\\mathbb{E}[k(y)]. $$</p>
-                    <p class="text-xs md:text-sm">Therefore $W(p,q)=\\sup_{f(x)+g(y) \\leq \\|x-y\\|_2}[\\mathbb{E}_p f+\\mathbb{E}_q g] \\leq \\sup_{\\|h\\|_L\\leq1}[\\mathbb{E}_p h-\\mathbb{E}_q h]$.</p>
+                    <p class="text-xs md:text-sm">$$ \mathbb{E}_{x \sim p}[h(x)]-\mathbb{E}_{y \sim q}[h(y)] = \int (h(x)-h(y)) \, \pi(x,y) \, dx \, dy = \inf_{\pi} \int (h(x)-h(y)) \, \pi(x,y) \, dx \, dy \leq \inf_{\pi} \int \|x-y\|_2 \, \pi(x,y) \, dx \, dy \leq W(p,q). $$</p>
+                    <p class="text-xs md:text-sm">The $\inf_{\pi}$ is justified because $\int (h(x)-h(y))\,\pi(x,y)\,dx\,dy$ remains the same for any coupling with marginals $p$ and $q$—the expression is independent of which $\pi$ is chosen.</p>
+                    <p>Since it holds for all $h$ with $\|h\|_L\leq 1$:</p>
+                    <p class="text-xs md:text-sm">$$ \sup_{\|h\|_L \leq 1} [\mathbb{E}_{x \sim p}[h(x)]-\mathbb{E}_{y \sim q}[h(y)]] \leq W(p,q) $$</p>
+                    <p>Upper bound: define infimal convolution $k(x)= \inf_u [ \|x-u\|_2-g(u) ]$. One shows $k$ is
+                        $1$-Lipschitz and if $f(x)+g(y) \leq \|x-y\|_2$ then</p>
+                    <p class="text-xs md:text-sm">$$ \mathbb{E}_{x \sim p}[f(x)]+\mathbb{E}_{y \sim q} [g(y)] \leq \mathbb{E}[k(x)] -\mathbb{E}[k(y)]. $$</p>
+                    <p class="text-xs md:text-sm">Therefore $W(p,q)=\sup_{f(x)+g(y) \leq \|x-y\|_2}[\mathbb{E}_p f+\mathbb{E}_q g] \leq \sup_{\|h\|_L\leq1}[\mathbb{E}_p h-\mathbb{E}_q h]$.</p>
                     <p>Combining bounds yields the KR duality:</p>
-                    <p class="text-xs md:text-sm">$$ W(p,q) = \\sup_{\\|h\\|_l \\leq 1} [ \\mathbb{E}_{x \\sim p}[h(x)]-\\mathbb{E}_{y \\sim q}[h(y)] ]. $$</p>
+                    <p class="text-xs md:text-sm">$$ W(p,q) = \sup_{\|h\|_L \leq 1} [ \mathbb{E}_{x \sim p}[h(x)]-\mathbb{E}_{y \sim q}[h(y)] ]. $$</p>
                 </div>
             </details>
         </section>
@@ -362,14 +362,14 @@
                 <span class="bg-emerald-100 text-emerald-700 p-2 rounded-xl">🧪</span>
                 <h2 class="text-2xl font-bold">Improved WGAN (WGAN-GP)</h2>
             </div>
-            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The paper \\cite{gulrajani2017improved}
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The paper by Gulrajani et al. (2017)
                 begins by discussing the limitations of traditional GAN training methodologies, particularly in terms of
                 mode collapse and training instability. It highlights how the Wasserstein distance, also known as the
                 Earth-Mover (EM) distance, provides a more meaningful and smooth gradient flow for training GANs.</p>
             <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">A key innovation described is the use of a
                 gradient penalty term added to the Wasserstein loss function, which enforces a Lipschitz constraint for
-                the critic (discriminator). This approach, unlike previous methods that clip weights (see Alg.
-                \\ref{alg:wgan}), allows for more effective training dynamics and avoids common pitfalls such as gradient
+                the critic (discriminator). This approach, unlike previous methods that clip weights (see the original
+                WGAN algorithm below), allows for more effective training dynamics and avoids common pitfalls such as gradient
                 vanishing or exploding.</p>
             <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The authors present extensive experiments
                 comparing their method against traditional GAN training frameworks. The results demonstrate significant
@@ -385,7 +385,7 @@
                 <div
                     class="p-4 rounded-2xl bg-white/80 dark:bg-gray-800/70 border border-emerald-100 dark:border-gray-700">
                     <p class="font-semibold mb-2">Gradient penalty</p>
-                    <p>Penalizes $\\|\\nabla f\\|_2$ away from 1 along sampled interpolants, giving smoother training.</p>
+                    <p>Penalizes $\|\nabla f\|_2$ away from 1 along sampled interpolants, giving smoother training.</p>
                 </div>
             </div>
         </section>
@@ -399,44 +399,44 @@
             <div
                 class="p-5 rounded-2xl bg-white/85 dark:bg-gray-800/80 border border-blue-100 dark:border-gray-700 space-y-2 text-sm text-gray-700 dark:text-gray-300">
                 <p class="font-semibold">Proposition</p>
-                <p>Let $\\mathbb{P}_r$ and $\\mathbb{P}_g$ be two distributions in $\\mathcal{X}$, a compact metric
+                <p>Let $\mathbb{P}_r$ and $\mathbb{P}_g$ be two distributions in $\mathcal{X}$, a compact metric
                     space. Then, there is a $1-$Lipschitz function $f^*$ which is the optimal solution of
                 </p>
-                <p class="text-xs md:text-sm">$$ \\max_{\\|f \\|_L \\leq 1} \\mathbb{E}_{y \\sim \\mathbb{P}_r} [f(y)] -\\mathbb{E}_{x \\sim \\mathbb{P}_g} [f(x)]. $$</p>
-                <p>Let $\\pi$ be the optimal coupling between $ \\mathbb{P}_r$ and $\\mathbb{P}_g$, defined as minimizer
+                <p class="text-xs md:text-sm">$$ \max_{\|f \|_L \leq 1} \mathbb{E}_{y \sim \mathbb{P}_r} [f(y)] -\mathbb{E}_{x \sim \mathbb{P}_g} [f(x)]. $$</p>
+                <p>Let $\pi$ be the optimal coupling between $ \mathbb{P}_r$ and $\mathbb{P}_g$, defined as minimizer
                     of</p>
-                <p class="text-xs md:text-sm">$$ W(\\mathbb{P}_r,\\mathbb{P}_g) = \\inf_{\\pi \\in \\Pi(\\mathbb{P}_r,\\mathbb{P}_g) } \\mathbb{E}_{y \\sim \\mathbb{P}_r}[f(y)]-\\mathbb{E}_{x \\sim \\mathbb{P}_g} [f(x)], $$</p>
-                <p>where $\\Pi(\\mathbb{P}_r,\\mathbb{P}_g)$ is the set of joint distributions $\\pi(x,y)$ whose
-                    marginals are $\\mathbb{P}_r,\\mathbb{P}_g$ respectively. Then if $f^*$ is differentiable and
-                    $x_t= (1-t)x+ty$ with $0 \\leq t \\leq 1$, it holds that</p>
-                <p class="text-xs md:text-sm">$$ \\mathbb{P}_{(x,y) \\sim \\pi} \\left[ \\nabla f^*(x_t)]=\\frac{y-x_t}{\\| y-x_t \\| } \\right] = 1. $$</p>
+                <p class="text-xs md:text-sm">$$ W(\mathbb{P}_r,\mathbb{P}_g) = \inf_{\pi \in \Pi(\mathbb{P}_r,\mathbb{P}_g) } \mathbb{E}_{y \sim \mathbb{P}_r}[f(y)]-\mathbb{E}_{x \sim \mathbb{P}_g} [f(x)], $$</p>
+                <p>where $\Pi(\mathbb{P}_r,\mathbb{P}_g)$ is the set of joint distributions $\pi(x,y)$ whose
+                    marginals are $\mathbb{P}_r,\mathbb{P}_g$ respectively. Then if $f^*$ is differentiable and
+                    $x_t= (1-t)x+ty$ with $0 \leq t \leq 1$, it holds that</p>
+                <p class="text-xs md:text-sm">$$ \mathbb{P}_{(x,y) \sim \pi} \left[ \nabla f^*(x_t)=\frac{y-x_t}{\| y-x_t \| } \right] = 1. $$</p>
             </div>
             <details class="p-5 rounded-2xl bg-gray-50/80 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 space-y-3">
                 <summary class="cursor-pointer font-semibold text-primary">Proof</summary>
                 <div class="space-y-3">
-                    <p>Since $\\mathcal{X}$ is a compact space, we know that there is an optimal $f^*$ and we know that
-                        if $\\pi$ is an optimal coupling,</p>
-                    <p class="text-xs md:text-sm">$$ \\mathbb{P}_{(x,y) \\sim \\pi} [ \\, f^*(y)-f^*(x)= \\|y-x \\| \\, ] = 1. $$</p>
-                    <p>Let $(x,y)$ be such that $f^*(y)-f^*(x) = \\|y-x \\|.$ We can safely assume that $x \\neq y$ as
-                        well, since this happens under $\\pi$ with probability 1. Let $\\psi(t)=f^*(x_t)-f^*(x)$. We
-                        claim that $$\\psi(t)=\\| x_t-x \\| = t \\| y-x \\|.$$</p>
-                    <p>Let $t,t' \\in [0,1]$, the</p>
-                    <p class="text-xs md:text-sm">$$ |\\psi(t)-\\psi(t')| = \\| f^*(x_t)-f^*(x_{t'}) \\| \\leq \\|x_t-x_{t'} \\| = |t-t'| \\|x-y \\|. $$</p>
-                    <p>Therefore, $\\psi$ is $\\| x-y \\|-$ Lipschitz.</p>
-                    <p class="text-xs md:text-sm">$$ \\psi(1)-\\psi(0) \\leq (1-t) \\| x-y \\|+ \\psi(t)-\\psi(0) \\leq (1-t) \\|x-y \\| + t \\|x-y \\| = \\| x-y \\|. $$</p>
-                    <p>However, $ \\psi(1)-\\psi(0)=|f^*(y)-f^*(x)|=\\| y-x \\|$ so the inequalities have to actually be
-                        equalities. In particular, $\\psi(t)-\\psi(0)=t \\|x-y \\|$ and $\\psi(0)=0$. Therefore,
-                        $\\psi(t)=t \\|x-y \\|$.</p>
+                    <p>Since $\mathcal{X}$ is a compact space, we know that there is an optimal $f^*$ and we know that
+                        if $\pi$ is an optimal coupling,</p>
+                    <p class="text-xs md:text-sm">$$ \mathbb{P}_{(x,y) \sim \pi} [ \, f^*(y)-f^*(x)= \|y-x \| \, ] = 1. $$</p>
+                    <p>Let $(x,y)$ be such that $f^*(y)-f^*(x) = \|y-x \|.$ We can safely assume that $x \neq y$ as
+                        well, since this happens under $\pi$ with probability 1. Let $\psi(t)=f^*(x_t)-f^*(x)$. We
+                        claim that $$\psi(t)=\| x_t-x \| = t \| y-x \|.$$</p>
+                    <p>Let $t,t' \in [0,1]$, the</p>
+                    <p class="text-xs md:text-sm">$$ |\psi(t)-\psi(t')| = \| f^*(x_t)-f^*(x_{t'}) \| \leq \|x_t-x_{t'} \| = |t-t'| \|x-y \|. $$</p>
+                    <p>Therefore, $\psi$ is $\| x-y \|-$ Lipschitz.</p>
+                    <p class="text-xs md:text-sm">$$ \psi(1)-\psi(0) \leq (1-t) \| x-y \|+ \psi(t)-\psi(0) \leq (1-t) \|x-y \| + t \|x-y \| = \| x-y \|. $$</p>
+                    <p>However, $ \psi(1)-\psi(0)=|f^*(y)-f^*(x)|=\| y-x \|$ so the inequalities have to actually be
+                        equalities. In particular, $\psi(t)-\psi(0)=t \|x-y \|$ and $\psi(0)=0$. Therefore,
+                        $\psi(t)=t \|x-y \|$.</p>
                     <p>Let</p>
-                    <p class="text-xs md:text-sm">$$ v= \\frac{y-x_t}{\\|y-x_t \\|}= \\frac{(1-t)(y-x)}{|1-t| \\|y-x \\|}= \\frac{y-x}{\\|y-x \\|}. $$</p>
-                    <p>Now we know that $f^*(x_t)-f^*(x)=\\psi(t)=t \\|x-y \\|$, hence,
-                        $$f^*(x_t)=f^*(x)+t \\|x-y \\|.$$ Then</p>
-                    <p class="text-xs md:text-sm">$$ \\frac{\\partial }{\\partial v} f^*(x_t)= \\lim_{h \\rightarrow 0} \\frac{f^*(x_t+hv)-f^*(x_t)}{h}=1. $$</p>
-                    <p>If $f^*$ is differentiable at $x_t$, then we know that $\\| \\nabla f^*(x_t) \\| \\leq 1, $ since
+                    <p class="text-xs md:text-sm">$$ v= \frac{y-x_t}{\|y-x_t \|}= \frac{(1-t)(y-x)}{|1-t| \|y-x \|}= \frac{y-x}{\|y-x \|}. $$</p>
+                    <p>Now we know that $f^*(x_t)-f^*(x)=\psi(t)=t \|x-y \|$, hence,
+                        $$f^*(x_t)=f^*(x)+t \|x-y \|.$$ Then</p>
+                    <p class="text-xs md:text-sm">$$ \frac{\partial }{\partial v} f^*(x_t)= \lim_{h \rightarrow 0} \frac{f^*(x_t+hv)-f^*(x_t)}{h}=1. $$</p>
+                    <p>If $f^*$ is differentiable at $x_t$, then we know that $\| \nabla f^*(x_t) \| \leq 1, $ since
                         it is a 1-Lipschitz continuous function. Using Pythagoras theorem with $v$ unit:</p>
-                    <p class="text-xs md:text-sm">$$ 1 \\leq  \\| \\nabla f^*(x) \\|^2= \\langle v, \\nabla f^*(x_t)\\rangle^2+ \\| \\nabla f^*(x_t)-\\langle v, \\nabla f^*(x_t)\\rangle v \\|^2 = 1+ \\| \\nabla f^*(x_t)-v \\|^2 \\leq  1. $$</p>
-                    <p>The equality chain forces $\\nabla f^*(x_t)=v=\\dfrac{y-x_t}{\\| y-x_t \\|}.$</p>
-                    <p>This shows that $ \\mathbb{P}_{(x,y)\\sim \\pi} \\left[ \\nabla f^*(x_t)=\\frac{y-x_t}{\\| y-x_t \\|} \\right] = 1.$</p>
+                    <p class="text-xs md:text-sm">$$ 1 \leq  \| \nabla f^*(x) \|^2= \langle v, \nabla f^*(x_t)\rangle^2+ \| \nabla f^*(x_t)-\langle v, \nabla f^*(x_t)\rangle v \|^2 = 1+ \| \nabla f^*(x_t)-v \|^2 \leq  1. $$</p>
+                    <p>The equality chain forces $\nabla f^*(x_t)=v=\dfrac{y-x_t}{\| y-x_t \|}.$</p>
+                    <p>This shows that $ \mathbb{P}_{(x,y)\sim \pi} \left[ \nabla f^*(x_t)=\frac{y-x_t}{\| y-x_t \|} \right] = 1.$</p>
                 </div>
             </details>
         </section>
@@ -451,7 +451,7 @@
                 <li>If $v$ is a unit vector, then show that $v$ and $(I - vv^T)v$ are orthogonal.</li>
                 <li>If $v$ is a unit </li>
                 <li>If $v$ is a unit vector, then for any vector $x,$ show that the following holds:
-                    $$ \\| x \\|^2 = (x^T v)^2 - \\| (x - x^T v)v \\|^2. $$</li>
+                    $$ \| x \|^2 = (x^T v)^2 - \| (x - x^T v)v \|^2. $$</li>
             </ul>
         </section>
 
@@ -461,19 +461,19 @@
                 <span class="bg-rose-100 text-rose-700 p-2 rounded-xl">⚙️</span>
                 <h2 class="text-2xl font-bold">WGAN Algorithm</h2>
             </div>
-            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The Wasserstein GAN algorithm Alg.
-                \\ref{alg:wgan} proceeds as follows:</p>
+            <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">The Wasserstein GAN algorithm proceeds as
+                follows:</p>
             <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                <li>The algorithm initializes with default values for the learning rate $(\\alpha)$, clipping parameter
+                <li>The algorithm initializes with default values for the learning rate $(\alpha)$, clipping parameter
                     $(c)$, batch size $(m)$, and the number of critic iterations per generator iteration
-                    $(n_{\\text{critic}})$. Initial parameters for the critic $(w_0)$ and the generator $(\\theta_0)$
+                    $(n_{\text{critic}})$. Initial parameters for the critic $(w_0)$ and the generator $(\theta_0)$
                     are also set.</li>
                 <li>The training loop continues until the generator's parameters converge.</li>
                 <li>Within the training loop, the following steps occur for a specified number of critic iterations
-                    $(n_{\\text{critic}})$:
+                    $(n_{\text{critic}})$:
                     <ul class="list-disc list-inside ml-5 space-y-2">
-                        <li>A batch of real data $\\{x^{(i)}\\}_{i=1}^m$ is sampled from the real data distribution.</li>
-                        <li>A batch of prior samples $\\{z^{(i)}\\}_{i=1}^m$ is drawn from the latent space's prior
+                        <li>A batch of real data $\{x^{(i)}\}_{i=1}^m$ is sampled from the real data distribution.</li>
+                        <li>A batch of prior samples $\{z^{(i)}\}_{i=1}^m$ is drawn from the latent space's prior
                             distribution.</li>
                         <li>The critic's stochastic gradient is computed based on the difference in evaluations between
                             the real data and the generated data from the generator.</li>
