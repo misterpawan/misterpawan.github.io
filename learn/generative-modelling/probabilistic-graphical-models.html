@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probabilistic Graphical Models | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover,
+        .tf-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover,
+        .dark .tf-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-amber-50 via-white to-pink-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="chip bg-pink-100 text-pink-700 border-pink-200">Quizzes</span>
+                <span class="chip bg-indigo-100 text-indigo-700 border-indigo-200">Animations</span>
+                <span class="chip bg-emerald-100 text-emerald-700 border-emerald-200">Poem</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-12">
+
+        <!-- Hero -->
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-orange-500">
+                Probabilistic Graphical Models
+            </h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">Represent joint distributions with
+                graphs, factorize for sanity, infer with structure.</p>
+            <p class="mt-4 text-lg italic text-gray-600 dark:text-gray-400">"Nodes whisper truths, edges carry clues;
+                factorize the world, choose your views."</p>
+        </header>
+
+        <!-- Representation -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">🧩</span>
+                <h2 class="text-2xl font-bold">Representation</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Graphs capture dependencies so we don’t list $2^8$ states for
+                $P(X_1,\dots,X_8)$. Factorization reduces parameters and boosts interpretability.</p>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Full joint</p>
+                    <p class="text-sm">$P(X_1,\dots,X_8)$ with $2^8$ configurations if binary.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Factorization idea</p>
+                    <p class="text-sm">Use a DAG with parents $\text{pa}(X_i)$, then
+                        $P(\mathbf{X})=\prod_i P(X_i \mid \text{pa}(X_i))$.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conditional independence example -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-green-100 text-green-700 p-2 rounded-xl">🔗</span>
+                <h2 class="text-2xl font-bold">Conditional independence: X ⟂ Y | Z</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">If $X$ and $Y$ are conditionally independent given $Z$, factor as
+                $P(X,Y,Z)=P(X|Z)P(Y|Z)P(Z)$.</p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Mini-graphic (text)</p>
+                    <p>Z → X, Z → Y (a V-structure flipped).</p>
+                    <p class="text-xs text-gray-500 mt-2">Edges carry dependencies, Z shields X,Y.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Factorized joint</p>
+                    <p class="leading-relaxed">$$P(X,Y,Z) = P(X|Z)P(Y|Z)P(Z)$$</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Example with observed/hidden/factor -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">🧱</span>
+                <h2 class="text-2xl font-bold">Observed, hidden, and a factor</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Observed $X_1,X_2$ depend on hidden $Z_1,Z_2$; a factor $F$
+                influences $Z_1,Z_2$; $Z_1$ connects to $Z_2$.</p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Dependency list</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>$X_1 \mid Z_1$</li>
+                        <li>$X_2 \mid Z_2$</li>
+                        <li>$Z_1 \mid F$</li>
+                        <li>$Z_2 \mid F$</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Joint factorization</p>
+                    <p class="leading-relaxed">$$P(X_1,X_2,Z_1,Z_2,F) = P(X_1|Z_1)P(X_2|Z_2)P(Z_1|F)P(Z_2|F)P(F)$$</p>
+                    <p class="text-xs text-gray-500 mt-2">Pick CPTs or potentials to instantiate the model.</p>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Diagram note: think rectangles for factors, circles for
+                variables; arrows show parent-child dependencies.</p>
+        </section>
+
+        <!-- Inference and estimation questions -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-amber-100 text-amber-700 p-2 rounded-xl">🧭</span>
+                <h2 class="text-2xl font-bold">Inference & estimation</h2>
+            </div>
+            <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                <li><strong>Parameter learning:</strong> Maximum likelihood/ MAP with lots of data; EM when latents hide
+                    values; incorporate priors to bake in domain knowledge.</li>
+                <li><strong>Data needs:</strong> Grows with parent configurations—sparse graphs win. Expert priors shrink
+                    sample requirements.</li>
+                <li><strong>Inference with hidden variables:</strong> Exact sums can be $2^n$. Use belief propagation
+                    (message passing), variational inference, or MCMC for tractable approximations.</li>
+                <li><strong>Query example:</strong> To get $P(H|A)$, sum/integrate over all other variables; replace
+                    brute force with BP on trees or variational ELBO on loopy graphs.</li>
+            </ul>
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-indigo-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 border border-indigo-100 dark:border-gray-700">
+                <p class="font-semibold mb-2">Poem to remember</p>
+                <p class="italic text-sm text-gray-700 dark:text-gray-300">"Sum over worlds, or pass the mail,<br>
+                    Messages fly so sums don’t fail.<br>
+                    Priors whisper what we know,<br>
+                    Graphs make hidden patterns show."</p>
+            </div>
+        </section>
+
+        <!-- Quick quiz -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700 space-y-4"
+            data-aos="zoom-in">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz</h3>
+                <button onclick="resetQuiz()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="font-semibold">Which factorization matches the X–Z–Y graph (Z → X, Z → Y)?</p>
+            <div class="grid sm:grid-cols-3 gap-3">
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, true)">$$P(X,Y,Z)=P(X|Z)P(Y|Z)P(Z)$$</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">$$P(X,Y,Z)=P(X)P(Y)P(Z)$$</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">$$P(X,Y,Z)=P(X|Y)P(Y|Z)P(Z)$$</button>
+            </div>
+            <p id="quiz-feedback" class="text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- True/False -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-gray-100 text-gray-700 p-2 rounded-xl">✅</span>
+                <h2 class="text-2xl font-bold">True / False speed round</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">Factorization reduces parameter count compared to a full joint table.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">Exact inference always scales linearly with variables.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">Belief propagation is exact on trees.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">You cannot add domain priors to graphical models.</button>
+            </div>
+            <p id="tf-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Mini lab -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-orange-100 text-orange-700 p-2 rounded-xl">🧪</span>
+                <h2 class="text-2xl font-bold">Mini Lab: pick an inference tool</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Click a chip to see how you’d use it on a PGM.</p>
+            <div class="flex flex-wrap gap-2">
+                <button class="chip hover:scale-105 transition border-pink-200 bg-pink-50"
+                    onclick="showUse('ml')">MLE / MAP</button>
+                <button class="chip hover:scale-105 transition border-blue-200 bg-blue-50"
+                    onclick="showUse('em')">EM</button>
+                <button class="chip hover:scale-105 transition border-purple-200 bg-purple-50"
+                    onclick="showUse('bp')">Belief Prop</button>
+                <button class="chip hover:scale-105 transition border-indigo-200 bg-indigo-50"
+                    onclick="showUse('vi')">Variational</button>
+                <button class="chip hover:scale-105 transition border-emerald-200 bg-emerald-50"
+                    onclick="showUse('mcmc')">MCMC</button>
+            </div>
+            <div id="lab-output"
+                class="mt-3 p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                Choose a tool to see an idea.
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="text-center space-y-4" data-aos="fade-up">
+            <h3 class="text-3xl font-bold">Remember the recipe</h3>
+            <p class="text-xl text-pink-700 dark:text-pink-300 italic">"Draw the graph, note who talks;<br>
+                Factor joints into local blocks.<br>
+                Sum the hidden, pass a note;<br>
+                Priors steady every vote."</p>
+            <a href="deep-learning.html"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-white font-semibold shadow-lg hover:scale-105 transition">
+                ← Back to Deep Learning
+            </a>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Quiz logic
+        function markQuiz(button, isCorrect) {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz-feedback').textContent = 'Correct! Z is the parent so X and Y both condition on it.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz-feedback').textContent = 'Not quite—think conditional independence given Z.';
+            }
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz-feedback').textContent = '';
+        }
+
+        // True/False logic
+        function markTF(button, isCorrect) {
+            document.querySelectorAll('.tf-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('tf-feedback').textContent = 'Yep! That statement is true.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('tf-feedback').textContent = 'Nope—flip it and check again.';
+            }
+        }
+
+        // Mini lab
+        const useCases = {
+            ml: 'MLE/MAP: estimate CPTs or potentials from data; add priors to encode domain beliefs.',
+            em: 'EM: alternate E-step (infer latents) and M-step (update parameters) when variables are hidden.',
+            bp: 'Belief propagation: exact on trees; approximate on loopy graphs for marginal queries.',
+            vi: 'Variational inference: choose a tractable family, optimize ELBO to approximate posteriors.',
+            mcmc: 'MCMC: sample from the posterior when analytic forms are hard; trade time for accuracy.'
+        };
+
+        function showUse(key) {
+            document.getElementById('lab-output').textContent = useCases[key];
+        }
+    </script>
+</body>
+
+</html>
