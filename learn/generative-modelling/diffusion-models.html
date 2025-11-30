@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffusion Models | Generative Modelling</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #dbeafe, #eff6ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .proof-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #fae8ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #d1fae5, #ecfdf5);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .remark-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, #fef9e7);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .algorithm-box {
+            border-left: 4px solid #ec4899;
+            background: linear-gradient(to right, #fce7f3, #fdf2f8);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .expandable-proof {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .expandable-proof:hover {
+            background: linear-gradient(to right, #ede9fe, #f5f3ff);
+        }
+
+        .proof-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .proof-content.expanded {
+            max-height: 10000px;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background-color: #f3f4f6;
+            border-color: #667eea;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+
+        .dag-node {
+            fill: #dbeafe;
+            stroke: #3b82f6;
+            stroke-width: 2;
+        }
+
+        .dag-edge {
+            stroke: #3b82f6;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+
+        .dag-edge-reverse {
+            stroke: #ef4444;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead-red);
+        }
+
+        .dag-label {
+            font-family: 'KaTeX_Math';
+            font-size: 16px;
+            fill: #1f2937;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Generative Modelling
+            </a>
+            <span class="text-sm font-semibold">Chapter 13: Diffusion Models</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">🌊</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Diffusion Models</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                From Hierarchical VAEs to Denoising Diffusion Probabilistic Models, Score Matching, and Langevin
+                Dynamics
+            </p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                <span class="bg-white/20 px-4 py-2 rounded-full">HVAE</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full">VDM</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full">DDPM</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full">Score Matching</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full">Langevin Dynamics</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- Introduction to Hierarchical VAE -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🏗️</span>
+                <h2 class="text-3xl font-bold">Hierarchical VAE</h2>
+            </div>
+
+            <div class="prose max-w-none space-y-4">
+                <p class="text-lg leading-relaxed">
+                    VAE, or Variational Autoencoder, appears straightforward at first glance, doesn't it? But what if we
+                    envision a more expansive version? How could we achieve this? And perhaps most importantly,
+                    <strong>why should we pursue such a modification?</strong>
+                </p>
+
+                <p class="text-lg leading-relaxed">
+                    Furthermore, is it feasible to <strong>stack multiple VAEs</strong> one on top of the other,
+                    creating a hierarchical structure? How might we go about implementing such a scheme? These questions
+                    form the basis of our exploration into extending VAEs to hierarchical VAEs, paving the way for
+                    deeper understanding and more powerful generative models.
+                </p>
+
+                <div class="remark-box mt-6">
+                    <h4 class="font-semibold text-lg mb-3">💡 The Idea</h4>
+                    <p>
+                        In envisioning the stacking of VAEs, we can consider a chain of nodes: \( x_1, x_2, \dots, x_5
+                        \). Each node in the sequence is "conditioned" on all previous nodes. For instance, \( x_3 \) is
+                        conditioned on \( x_1 \) and \( x_2 \). This conditioning reflects the <strong>encoding or
+                            "forward process"</strong> in the direction of the arrows.
+                    </p>
+                </div>
+
+                <!-- SVG for Hierarchical VAE 1 -->
+                <div class="bg-white p-6 rounded-xl my-6">
+                    <h4 class="text-center font-semibold mb-4">Figure 1: Is this how hierarchical VAE would look like?
+                    </h4>
+                    <svg viewBox="0 0 800 200" class="w-full" id="hvae-svg1">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+                            </marker>
+                        </defs>
+                        <!-- Nodes -->
+                        <circle cx="100" cy="100" r="40" class="dag-node" />
+                        <text x="100" y="107" class="dag-label" text-anchor="middle">x₁</text>
+
+                        <circle cx="250" cy="100" r="40" class="dag-node" />
+                        <text x="250" y="107" class="dag-label" text-anchor="middle">x₂</text>
+
+                        <circle cx="400" cy="100" r="40" class="dag-node" />
+                        <text x="400" y="107" class="dag-label" text-anchor="middle">x₃</text>
+
+                        <circle cx="550" cy="100" r="40" class="dag-node" />
+                        <text x="550" y="107" class="dag-label" text-anchor="middle">x₄</text>
+
+                        <circle cx="700" cy="100" r="40" class="dag-node" />
+                        <text x="700" y="107" class="dag-label" text-anchor="middle">x₅</text>
+
+                        <!-- Edges from x1 -->
+                        <path d="M 140 100 L 210 100" class="dag-edge" />
+                        <path d="M 140 95 Q 275 70 360 95" class="dag-edge" />
+                        <path d="M 140 90 Q 325 60 510 90" class="dag-edge" />
+                        <path d="M 140 85 Q 375 50 660 85" class="dag-edge" />
+
+                        <!-- Edges from x2 -->
+                        <path d="M 290 100 L 360 100" class="dag-edge" />
+                        <path d="M 290 95 Q 420 70 510 95" class="dag-edge" />
+                        <path d="M 290 90 Q 475 60 660 90" class="dag-edge" />
+
+                        <!-- Edges from x3 -->
+                        <path d="M 440 100 L 510 100" class="dag-edge" />
+                        <path d="M 440 95 Q 570 70 660 95" class="dag-edge" />
+
+                        <!-- Edge from x4 -->
+                        <path d="M 590 100 L 660 100" class="dag-edge" />
+                    </svg>
+                </div>
+
+                <p class="text-lg leading-relaxed">
+                    Using the product rule, we can express the joint distribution \( q(x_1, \ldots, x_5) \) as:
+                </p>
+
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
+                    \[ q(x_1, \ldots, x_5) = q(x_1) q(x_2 \mid x_1) q(x_3 \mid x_1, x_2) q(x_4 \mid x_1, x_2, x_3) q(x_5
+                    \mid x_1, x_2, x_3, x_4) \]
+                </div>
+
+                <p class="text-lg leading-relaxed">
+                    This equation illustrates how each variable \( x_i \) is conditioned on the previous variables in
+                    the forward process.
+                </p>
+            </div>
+        </section>
+
+        <!-- Should we consider all dependencies? -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-4">❓ Critical Questions</h3>
+
+            <div class="space-y-4">
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+                    <p class="font-semibold text-lg">Should we consider all possible dependencies?</p>
+                </div>
+
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+                    <p class="font-semibold text-lg">How could we simplify? Can we drop some dependencies?</p>
+                </div>
+            </div>
+
+            <p class="mt-6 text-lg leading-relaxed">
+                These questions prompt us to consider the trade-offs between model complexity and computational
+                efficiency. While capturing all possible dependencies may lead to a more accurate representation of the
+                data, it also increases the computational burden and model complexity.
+            </p>
+        </section>
+
+        <!-- Markovian VAE -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">⛓️</span>
+                <h2 class="text-3xl font-bold">Markovian VAE</h2>
+            </div>
+
+            <p class="text-lg leading-relaxed mb-6">
+                The answer is <strong>yes</strong> – we can simplify by using the <strong>Markov property</strong>: each
+                node depends only on the previous node!
+            </p>
+
+            <!-- Forward Process -->
+            <div class="bg-white p-6 rounded-xl my-6">
+                <h4 class="text-center font-semibold mb-4">Figure 2: Markovian Forward Process</h4>
+                <svg viewBox="0 0 800 150" class="w-full">
+                    <defs>
+                        <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+                        </marker>
+                    </defs>
+
+                    <!-- Nodes -->
+                    <circle cx="80" cy="75" r="45" class="dag-node" stroke-width="3" />
+                    <text x="80" y="82" class="dag-label" text-anchor="middle" font-size="18">x₀</text>
+
+                    <circle cx="230" cy="75" r="40" class="dag-node" />
+                    <text x="230" y="82" class="dag-label" text-anchor="middle">z₂</text>
+
+                    <circle cx="380" cy="75" r="40" class="dag-node" />
+                    <text x="380" y="82" class="dag-label" text-anchor="middle">z₃</text>
+
+                    <circle cx="530" cy="75" r="40" class="dag-node" />
+                    <text x="530" y="82" class="dag-label" text-anchor="middle">z₄</text>
+
+                    <circle cx="680" cy="75" r="40" class="dag-node" />
+                    <text x="680" y="82" class="dag-label" text-anchor="middle">z₅</text>
+
+                    <!-- Edges -->
+                    <path d="M 125 75 L 185 75" class="dag-edge" marker-end="url(#arrowhead2)" />
+                    <path d="M 270 75 L 340 75" class="dag-edge" marker-end="url(#arrowhead2)" />
+                    <path d="M 420 75 L 490 75" class="dag-edge" marker-end="url(#arrowhead2)" />
+                    <path d="M 570 75 L 640 75" class="dag-edge" marker-end="url(#arrowhead2)" />
+                </svg>
+                <p class="text-center text-sm mt-2 text-gray-600">Right node depends only on previous node (Markov
+                    property)</p>
+            </div>
+
+            <!-- Backward Process -->
+            <div class="bg-white p-6 rounded-xl my-6">
+                <h4 class="text-center font-semibold mb-4">Figure 3: Markovian Backward Process</h4>
+                <svg viewBox="0 0 800 150" class="w-full">
+                    <defs>
+                        <marker id="arrowhead3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+                        </marker>
+                    </defs>
+
+                    <!-- Nodes -->
+                    <circle cx="80" cy="75" r="45" class="dag-node" stroke-width="3" />
+                    <text x="80" y="82" class="dag-label" text-anchor="middle" font-size="18">x₀</text>
+
+                    <circle cx="230" cy="75" r="40" class="dag-node" />
+                    <text x="230" y="82" class="dag-label" text-anchor="middle">z₂</text>
+
+                    <circle cx="380" cy="75" r="40" class="dag-node" />
+                    <text x="380" y="82" class="dag-label" text-anchor="middle">z₃</text>
+
+                    <circle cx="530" cy="75" r="40" class="dag-node" />
+                    <text x="530" y="82" class="dag-label" text-anchor="middle">z₄</text>
+
+                    <circle cx="680" cy="75" r="40" class="dag-node" />
+                    <text x="680" y="82" class="dag-label" text-anchor="middle">z₅</text>
+
+                    <!-- Reverse Edges -->
+                    <path d="M 185 75 L 125 75" class="dag-edge" marker-end="url(#arrowhead3)" />
+                    <path d="M 340 75 L 270 75" class="dag-edge" marker-end="url(#arrowhead3)" />
+                    <path d="M 490 75 L 420 75" class="dag-edge" marker-end="url(#arrowhead3)" />
+                    <path d="M 640 75 L 570 75" class="dag-edge" marker-end="url(#arrowhead3)" />
+                </svg>
+                <p class="text-center text-sm mt-2 text-gray-600">Reverse process - also Markovian!</p>
+            </div>
+
+            <div class="definition-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">📐 Joint Distributions</h4>
+                <p class="mb-4">The joint distribution for the forward and backward processes becomes much simpler:</p>
+
+                <div class="bg-white p-4 rounded-lg space-y-4">
+                    <div>
+                        <p class="font-semibold mb-2">Joint Distribution (simplified thanks to Markov!):</p>
+                        \[ p(x, z_{1:T}) = p(z_T)p_{\theta}(x_0|z_1) \prod_{t=2}^{T} p_{\theta}(z_{t-1}|z_t) \]
+                    </div>
+
+                    <div>
+                        <p class="font-semibold mb-2">Posterior Distribution:</p>
+                        \[ q_\phi(z_{1:T}|x) = q_\phi (z_1|x) \prod_{t=2}^{T} q_\phi(z_t|z_{t-1}) \]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ELBO Derivation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">📊</span>
+                <h2 class="text-3xl font-bold">ELBO Derivation for Markovian VAE</h2>
+            </div>
+
+            <p class="text-lg mb-4">We now derive the Evidence Lower Bound (ELBO) step by step:</p>
+
+            <div class="proof-box">
+                <h4 class="font-semibold text-lg mb-3">🔍 Step-by-Step Derivation</h4>
+
+                <div class="space-y-4 text-sm">
+                    <div class="bg-white/50 p-3 rounded">
+                        <p class="font-semibold mb-2">Step 1: Start with log-likelihood</p>
+                        \[ \log p(x) = \log \int p(x, z_{1:T}) dz_{1:T} \]
+                        <p class="text-xs text-gray-600 mt-1">(Integrate out latent variables)</p>
+                    </div>
+
+                    <div class="bg-white/50 p-3 rounded">
+                        <p class="font-semibold mb-2">Step 2: Multiply and divide by \(q_{\phi}\)</p>
+                        \[ = \log \int \frac{p(x, z_{1:T})}{q_\phi(z_{1:T}|x)} q_\phi(z_{1:T}|x) dz_{1:T} \]
+                    </div>
+
+                    <div class="bg-white/50 p-3 rounded">
+                        <p class="font-semibold mb-2">Step 3: Write as expectation</p>
+                        \[ = \log \mathbb{E}_{q_\phi(z_{1:T}|x)} \left[ \frac{p(x, z_{1:T})}{q_\phi(z_{1:T}|x)} \right]
+                        \]
+                    </div>
+
+                    <div class="bg-white/50 p-3 rounded">
+                        <p class="font-semibold mb-2">Step 4: Apply Jensen's inequality</p>
+                        \[ \geq \mathbb{E}_{q_\phi(z_{1:T}|x)} \left[ \log \frac{p(x, z_{1:T})}{q_\phi(z_{1:T}|x)}
+                        \right] \]
+                        <p class="text-xs text-gray-600 mt-1">(Log is concave, so Jensen's inequality applies)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Variational Diffusion Models -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🌊</span>
+                <h2 class="text-3xl font-bold">VDM: Variational Diffusion Models</h2>
+            </div>
+
+            <div class="remark-box">
+                <h4 class="font-semibold text-lg mb-3">🔄 Key Changes from HVAE to VDM</h4>
+                <ul class="space-y-2 list-disc list-inside">
+                    <li>\( z_i \) is replaced by \( x_i \) — <strong>same dimensional</strong> latents!</li>
+                    <li>Traditional HVAE assumes \( \text{size}(z_i) < \text{size}(x_0) \), but VDM has \(
+                            \text{size}(x_i)=\text{size}(x_0) \)</li>
+                    <li>We don't see parametrized \( q_{\phi} \) but <strong>unparametrized</strong> \( q \)</li>
+                    <li>If the latent encoder \( q_{\phi} \) is not learned, how do we do forward process?</li>
+                    <li>At each timestep, \( q \) is assumed to be <strong>linear Gaussian</strong> that is "easy" to
+                        propagate</li>
+                    <li>Gaussian parameters are changed so that final distribution \( p_T \) is standard Gaussian \(
+                        \mathcal{N}(0,I) \)</li>
+                </ul>
+            </div>
+
+            <div class="definition-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">📋 The Forward Process Plan</h4>
+                <ul class="space-y-3 list-decimal list-inside">
+                    <li>Define the Gaussian encoder's <strong>mean</strong> as \( \mu_t(x_t) = \sqrt{\alpha_t}x_{t-1} \)
+                    </li>
+                    <li>Define the Gaussian encoder's <strong>variance</strong> as \( \Sigma_t(x_t) = (1 - \alpha_t)I \)
+                    </li>
+                    <li>Transitions within the encoder represented as:
+                        \[ q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{\alpha_t}x_{t-1}, (1 - \alpha_t)I) \]
+                    </li>
+                </ul>
+            </div>
+
+            <div class="theorem-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">🎯 Explicit Gaussian Form for \( q(x_t|x_0) \)</h4>
+                <p class="mb-4">A beautiful closed-form solution emerges from recursive application:</p>
+                \[ x_t \sim \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t}x_0, (1 - \bar{\alpha}_t)I), \quad \text{where}~
+                \bar{\alpha}_t = \prod_{i=1}^{t} \alpha_i \]
+
+                <button
+                    class="expandable-proof mt-4 px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-lg font-semibold"
+                    onclick="toggleProof('proof1')">
+                    📖 Show Proof
+                </button>
+
+                <div id="proof1" class="proof-content mt-4">
+                    <div class="bg-white/70 p-4 rounded-lg space-y-3 text-sm">
+                        <p class="font-semibold">Proof by recursion:</p>
+                        \begin{align*}
+                        x_t &= \sqrt{\alpha_t} x_{t-1} + \sqrt{1 - \alpha_t} \epsilon_{t-1}^* \\
+                        &= \sqrt{\alpha_t}(\sqrt{\alpha_{t-1}} x_{t-2} + \sqrt{1 - \alpha_{t-1}} \epsilon_{t-2}^*) +
+                        \sqrt{1 - \alpha_t} \epsilon_{t-1}^* \\
+                        &= \sqrt{\alpha_t\alpha_{t-1}} x_{t-2} + \sqrt{\alpha_t - \alpha_t\alpha_{t-1}} \epsilon_{t-2}^*
+                        + \sqrt{1 - \alpha_t} \epsilon_{t-1}^* \\
+                        &= \sqrt{\alpha_t \alpha_{t-1}} x_{t-2} + \sqrt{1 - \alpha_t \alpha_{t-1}} \epsilon_{t-2}
+                        \end{align*}
+                        <p class="text-xs text-gray-600">Note: We used the property that \( \gamma \epsilon_i + \zeta
+                            \epsilon_j \sim \mathcal{N}(0, \gamma^2 + \zeta^2) \)</p>
+                        <p class="mt-3">Continuing this recursion until \( t=0 \):</p>
+                        \[ x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon_0 \sim \mathcal{N}(x_t;
+                        \sqrt{\bar{\alpha}_t}x_0, (1 - \bar{\alpha}_t)I) \]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DDPM Training Algorithm -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-3xl font-bold">DDPM Training Algorithm</h2>
+            </div>
+
+            <div class="algorithm-box">
+                <h4 class="font-semibold text-lg mb-4">🔧 Training Procedure</h4>
+
+                <div class="space-y-4">
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">Input:</p>
+                        <p>Training data \( \{x^{(ℓ)}\}_{ℓ=1}^L \) (e.g., images)</p>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">Repeat until convergence:</p>
+                        <ol class="list-decimal list-inside space-y-2 ml-4 mt-2">
+                            <li>Sample random timestep: \( t \sim \mathcal{U}(1, T) \)</li>
+                            <li>Sample noise: \( z \sim \mathcal{N}(0, I) \)</li>
+                            <li>Generate noisy sample: \( x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}z \)
+                            </li>
+                            <li>Compute gradient and update: \( \nabla_{\theta} \| \widehat{x}_{\theta}(x_t) - x_0 \|^2
+                                \)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algorithm-box mt-6">
+                <h4 class="font-semibold text-lg mb-4">🎨 Sampling/Inference Procedure</h4>
+
+                <div class="space-y-4">
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">Initialize:</p>
+                        <p>Start with pure noise: \( x_T \sim \mathcal{N}(0, I) \)</p>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">For \( t = T \) down to 1:</p>
+                        <ol class="list-decimal list-inside space-y-2 ml-4 mt-2">
+                            <li>Compute denoised estimate: \( \widehat{x}_{\theta}(x_t) \)</li>
+                            <li>Sample noise: \( z \sim \mathcal{N}(0, I) \) if \( t > 1 \), else \( z = 0 \)</li>
+                            <li>Update:
+                                \[ x_{t-1} = \frac{(1 - \bar{\alpha}_{t-1})\sqrt{\alpha_t}}{1-\bar{\alpha}_t} x_t +
+                                \frac{(1 - \alpha_t)\sqrt{\bar{\alpha}_{t-1}}}{1 - \bar{\alpha}_t}
+                                \widehat{x}_{\theta}(x_t) + \sigma_q(t)z \]
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold">Output: \( x_0 \) (generated sample)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1: DDPM Understanding -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🎯 Quiz 1: Test Your Understanding of DDPM</h3>
+
+            <div class="space-y-6">
+                <div>
+                    <p class="font-semibold mb-3">What is the key difference between HVAE and VDM?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz1')">
+                            A) VDM uses larger latent dimensions
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz1')">
+                            B) VDM has learned forward process
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'quiz1')">
+                            C) VDM has same-dimensional latents and fixed Gaussian forward process
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz1')">
+                            D) VDM doesn't use variational inference
+                        </div>
+                    </div>
+                    <div id="quiz1-feedback" class="mt-3 p-3 rounded hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signal-to-Noise Ratio -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">📡</span>
+                <h2 class="text-3xl font-bold">Signal-to-Noise Ratio (SNR)</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-semibold text-lg mb-3">📐 SNR Definition</h4>
+                <p class="mb-4">For the forward process \( q(x_t \mid x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0,
+                    (1 - \bar{\alpha}_t) I) \):</p>
+
+                \[ \text{SNR}(t) = \frac{\bar{\alpha}_t}{1 - \bar{\alpha}_t} \]
+
+                <p class="mt-4">This ratio tells us how much signal remains versus noise at timestep \( t \).</p>
+            </div>
+
+            <div class="remark-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">💡 Key Insight</h4>
+                <p class="mb-4">The loss can be rewritten in terms of SNR difference:</p>
+
+                \[ L_t(x) = \frac{1}{2} \left( \text{SNR}(t-1) - \text{SNR}(t) \right) \| \widehat{x}_{\theta}(x_t, t) -
+                x_0\|_2^2 \]
+
+                <p class="mt-4">Since SNR decreases with \( t \), this means:</p>
+                <ul class="list-disc list-inside mt-2 space-y-2">
+                    <li><strong>Minimizing loss = Denoising!</strong></li>
+                    <li>Larger SNR difference → More emphasis on that timestep</li>
+                    <li>We're learning to reverse the noise addition process</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Score Matching -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-3xl font-bold">Score Matching & Unnormalized Models</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-semibold text-lg mb-3">📊 Unnormalized Probability Models</h4>
+                <p class="mb-4">Consider an unnormalized probability model:</p>
+
+                \[ p_\theta(x) = \frac{e^{-f_\theta(x)}}{Z_\theta}, \quad Z_\theta = \int e^{-f_\theta(x)} dx \]
+
+                <p class="mt-4">Problem: \( Z_\theta \) is often <strong>intractable</strong> to compute!</p>
+            </div>
+
+            <div class="definition-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">🌟 Score Function</h4>
+                <p class="mb-4">The <strong>score</strong> is the gradient of log-density:</p>
+
+                \[ \nabla_x \log p_{\theta}(x) = -\nabla_x f_{\theta}(x) \]
+
+                <p class="mt-4 text-green-700 font-semibold">✨ Beautiful property: Score doesn't depend on \( Z_\theta
+                    \)!</p>
+            </div>
+
+            <div class="theorem-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">🎓 Fisher Divergence / Score Matching</h4>
+                <p class="mb-4">We can train unnormalized models by minimizing:</p>
+
+                \[ \frac{1}{2} \mathbb{E}_{p_{\text{data}}} \left[ \| \nabla_x \log p_{\text{data}}(x) - \nabla_x \log
+                p_\theta(x) \|_2^2 \right] \]
+
+                <p class="mt-4">This bypasses the need to compute \( Z_\theta \)!</p>
+            </div>
+        </section>
+
+        <!-- Langevin Dynamics -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🔄</span>
+                <h2 class="text-3xl font-bold">Langevin Dynamics</h2>
+            </div>
+
+            <p class="text-lg mb-6">
+                Langevin dynamics provides a powerful method to <strong>sample from a distribution</strong> using only
+                its score function!
+            </p>
+
+            <div class="algorithm-box">
+                <h4 class="font-semibold text-lg mb-4">🌀 Langevin Dynamics Algorithm</h4>
+
+                <div class="bg-white/70 p-4 rounded-lg">
+                    <p class="mb-4">Given score function \( \nabla_x \log p(x) \), iterate:</p>
+
+                    \[ x_{t+1} = x_t + \tau \nabla_x \log p(x_t) + \sqrt{2\tau} z, \quad z \sim \mathcal{N}(0, I) \]
+
+                    <div class="mt-4 space-y-2">
+                        <p><strong>\( \tau \):</strong> Step size parameter</p>
+                        <p><strong>\( \nabla_x \log p(x_t) \):</strong> Guides toward high probability regions</p>
+                        <p><strong>\( \sqrt{2\tau} z \):</strong> Stochastic noise for exploration</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="remark-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">🔍 Connection to Gradient Ascent</h4>
+                <p class="mb-3">Langevin dynamics is like <strong>stochastic gradient ascent</strong> on \( \log p(x)
+                    \):</p>
+
+                <ul class="space-y-2 list-disc list-inside">
+                    <li><strong>Deterministic part:</strong> \( \tau \nabla_x \log p(x_t) \) moves toward maxima</li>
+                    <li><strong>Stochastic part:</strong> \( \sqrt{2\tau} z \) enables exploration</li>
+                    <li>Balance between exploitation and exploration!</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Denoising Score Matching -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🧹</span>
+                <h2 class="text-3xl font-bold">Denoising Score Matching</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-semibold text-lg mb-3">🎯 Denoising Score Matching Loss</h4>
+                <p class="mb-4">Instead of explicit score matching, we can train on <strong>noisy data</strong>:</p>
+
+                \[ \mathcal{J}_{\text{DSM}}(\theta) = \mathbb{E}_{p(x)} \left[ \frac{1}{2} \left\| s_\theta(x + \sigma
+                z) + \frac{z}{\sigma} \right\|^2 \right], \quad z \sim \mathcal{N}(0, I) \]
+
+                <p class="mt-4"><strong>Key idea:</strong> Train the model to predict the <strong>noise</strong> that
+                    was added!</p>
+            </div>
+
+            <div class="theorem-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">🌟 Vincent's Theorem (2011)</h4>
+                <p class="mb-4">Denoising score matching and explicit score matching are equivalent (up to a constant):
+                </p>
+
+                \[ L_{\text{DSM}}(\theta) = L_{\text{ESM}}(\theta) + C \]
+
+                <p class="mt-4 text-blue-700 font-semibold">
+                    This means training on noisy data is as good as having access to the true score!
+                </p>
+            </div>
+        </section>
+
+        <!-- Quiz 2: Score Matching -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🎯 Quiz 2: Score Matching Understanding</h3>
+
+            <div class="space-y-6">
+                <div>
+                    <p class="font-semibold mb-3">Why is the score function useful for unnormalized models?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz2')">
+                            A) It's easier to compute than the probability
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'quiz2')">
+                            B) It doesn't depend on the intractable normalization constant
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz2')">
+                            C) It gives exact samples from the distribution
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz2')">
+                            D) It reduces computational complexity to O(1)
+                        </div>
+                    </div>
+                    <div id="quiz2-feedback" class="mt-3 p-3 rounded hidden"></div>
+                </div>
+
+                <div class="mt-8">
+                    <p class="font-semibold mb-3">What role does noise play in Langevin dynamics?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz3')">
+                            A) It slows down convergence
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'quiz3')">
+                            B) It enables exploration and escaping local maxima
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz3')">
+                            C) It's not necessary, just traditional
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz3')">
+                            D) It makes the algorithm deterministic
+                        </div>
+                    </div>
+                    <div id="quiz3-feedback" class="mt-3 p-3 rounded hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-xl text-2xl">📚</span>
+                <h2 class="text-3xl font-bold">Summary: The Diffusion Journey</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div
+                    class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-purple-700 dark:text-purple-300">🏗️ Hierarchical VAE →
+                        Markovian VAE</h4>
+                    <p class="text-sm">Simplified dependencies using Markov property, each latent depends only on
+                        previous one</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-blue-700 dark:text-blue-300">🌊 VDM (Variational Diffusion
+                        Models)</h4>
+                    <p class="text-sm">Same-dimensional latents, fixed Gaussian forward process, learn reverse process
+                    </p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-green-700 dark:text-green-300">⚙️ DDPM Algorithm</h4>
+                    <p class="text-sm">Training: add noise at random timesteps. Inference: iteratively denoise from pure
+                        noise</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-yellow-700 dark:text-yellow-300">📡 Signal-to-Noise Ratio
+                    </h4>
+                    <p class="text-sm">SNR(t) = α̅ₜ/(1-α̅ₜ) controls diffusion schedule, decreases with time</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-red-700 dark:text-red-300">🎯 Score Matching</h4>
+                    <p class="text-sm">Train unnormalized models via gradients, bypasses intractable partition function
+                    </p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-indigo-700 dark:text-indigo-300">🔄 Langevin Dynamics</h4>
+                    <p class="text-sm">Sample using score function: gradient ascent + stochastic noise</p>
+                </div>
+            </div>
+
+            <div class="mt-8 p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl">
+                <h4 class="font-bold text-xl mb-3">🎓 The Big Picture</h4>
+                <p class="leading-relaxed">
+                    Diffusion models are a powerful class of generative models that gradually add noise to data (forward
+                    process)
+                    and learn to reverse this process (backward process). They achieve state-of-the-art results in image
+                    generation,
+                    connect deeply to score matching and Langevin dynamics, and provide a principled probabilistic
+                    framework
+                    for generation!
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Generative Modelling Course - Chapter 13: Diffusion Models</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+
+        // Toggle proof visibility
+        function toggleProof(proofId) {
+            const proof = document.getElementById(proofId);
+            proof.classList.toggle('expanded');
+            const button = event.target;
+            if (proof.classList.contains('expanded')) {
+                button.textContent = '📖 Hide Proof';
+            } else {
+                button.textContent = '📖 Show Proof';
+            }
+        }
+
+        // Quiz functionality
+        function checkAnswer(element, isCorrect, quizId) {
+            const feedback = document.getElementById(quizId + '-feedback');
+            const allOptions = element.parentElement.children;
+
+            // Disable all options
+            for (let option of allOptions) {
+                option.style.pointerEvents = 'none';
+            }
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.className = 'mt-3 p- rounded bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200';
+                feedback.textContent = '✅ Correct! Well done!';
+            } else {
+                element.classList.add('wrong');
+                feedback.className = 'mt-3 p-3 rounded bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200';
+                feedback.textContent = '❌ Not quite. Try reviewing the material above!';
+            }
+
+            feedback.classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>
