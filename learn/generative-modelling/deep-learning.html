@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Learning | Generative Modelling</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899',
+                        ink: '#0f172a'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .quiz-option:hover,
+        .tf-option:hover {
+            background-color: #fff1f2;
+            border-color: #ec4899;
+        }
+
+        .dark .quiz-option:hover,
+        .dark .tf-option:hover {
+            background-color: #374151;
+            border-color: #ec4899;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.65);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-indigo-50 via-white to-pink-50 text-ink dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-primary w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-primary transition">
+                <span>←</span> Back to Course
+            </a>
+            <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <span class="chip bg-pink-100 text-pink-700 border-pink-200">Animated</span>
+                <span class="chip bg-indigo-100 text-indigo-700 border-indigo-200">Quizzes</span>
+                <span class="chip bg-green-100 text-green-700 border-green-200">Memory Poem</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto px-4 pb-24 space-y-12">
+
+        <!-- Hero -->
+        <header class="text-center py-8" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-purple-600">
+                Deep Learning for Generative Models
+            </h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">From perceptrons to Transformers:
+                how layers, normalization, and attention power modern generators.</p>
+            <p class="mt-4 text-lg italic text-gray-600 dark:text-gray-400">"Layer by layer we paint a thought, weights
+                remember what gradients taught."</p>
+        </header>
+
+        <!-- History timeline -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-700 p-2 rounded-xl">⏳</span>
+                <h2 class="text-2xl font-bold">A (very) quick history</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <ul class="space-y-2">
+                        <li><strong>1943</strong> McCulloch-Pitts neurons kick off logical neuron modeling.</li>
+                        <li><strong>1958</strong> Rosenblatt's perceptron learns simple patterns.</li>
+                        <li><strong>1969</strong> Minsky &amp; Papert show XOR limits: single-layer pain.</li>
+                        <li><strong>1975/1986</strong> Werbos, Rumelhart, Hinton, Williams popularize backprop.</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <ul class="space-y-2">
+                        <li><strong>1990s</strong> CNNs for grids (LeCun); RNNs/Elman for sequences.</li>
+                        <li><strong>2010s</strong> Deep networks explode: vision, speech, NLP.</li>
+                        <li><strong>2017+</strong> Transformers + attention rule sequence land.</li>
+                        <li><strong>Today</strong> Diffusion, large generative models, and ever-bigger stacks.</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Reference credits: McCulloch &amp; Pitts, Rosenblatt,
+                Minsky &amp; Papert, Werbos, Rumelhart-Hinton-Williams, LeCun, Elman, Vaswani et al., and friends.</p>
+        </section>
+
+        <!-- What is a NN -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-pink-100 text-pink-700 p-2 rounded-xl">🧠</span>
+                <h2 class="text-2xl font-bold">What is a neural network?</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">A stack of neurons that take inputs, apply weights, bias, and an
+                activation. Feedforward nets push signals forward; losses + gradient descent pull weights into shape.</p>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-indigo-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-pink-100 dark:border-gray-700">
+                    <h3 class="font-semibold mb-2">Perceptron</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Weighted sum + activation decides a class. Great
+                        for lines, stuck on XOR.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 border border-orange-100 dark:border-gray-700">
+                    <h3 class="font-semibold mb-2">Deep stacks</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Input → hidden layers (nonlinear) → output.
+                        Learn via backprop + gradient descent on a loss (MSE, cross-entropy, hinge).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedforward example -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-green-100 text-green-700 p-2 rounded-xl">🔢</span>
+                <h2 class="text-2xl font-bold">Example: 2-layer feedforward</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Inputs $\mathbf{x} = [x_1, x_2]^T$, one hidden neuron, one
+                output neuron.</p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Parameters</p>
+                    <p class="leading-relaxed">$$
+\mathbf{W}^{(1)} = \begin{bmatrix} w_{11}^{(1)} & w_{12}^{(1)} \end{bmatrix},\;
+\mathbf{b}^{(1)} = \begin{bmatrix} b_1^{(1)} \end{bmatrix}
+$$
+$$
+\mathbf{W}^{(2)} = \begin{bmatrix} w_{11}^{(2)} \\ w_{12}^{(2)} \end{bmatrix},\;
+\mathbf{b}^{(2)} = \begin{bmatrix} b_1^{(2)} \end{bmatrix}
+$$</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Feedforward recipe</p>
+                    <p class="leading-relaxed">$$
+\mathbf{z}^{(l)} = \mathbf{W}^{(l)} \mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}, \quad
+\mathbf{a}^{(l)} = \sigma(\mathbf{z}^{(l)})
+$$</p>
+                    <p class="text-xs text-gray-500 mt-2">Repeat for layers $l = 1 \dots L$, return $\mathbf{a}^{(L)}$.
+                    </p>
+                </div>
+            </div>
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-green-100 dark:from-gray-800 dark:to-gray-800 border border-emerald-100 dark:border-gray-700">
+                <p class="font-semibold mb-2">Backprop sketch (2-layer)</p>
+                <p class="text-sm">Compute output error $\delta^{(2)} = (\hat{y}-y)\hat{y}(1-\hat{y})$, update
+                    $\mathbf{W}^{(2)} \leftarrow \mathbf{W}^{(2)} - \eta\,\delta^{(2)}\mathbf{h}^T$, then hidden error
+                    $\delta^{(1)} = (\mathbf{W}^{(2)T}\delta^{(2)}) \odot \text{ReLU}'(\mathbf{W}^{(1)}\mathbf{x}+\mathbf{b}^{(1)})$
+                    and update $\mathbf{W}^{(1)}, \mathbf{b}^{(1)}$.</p>
+            </div>
+        </section>
+
+        <!-- Batch Norm -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-yellow-100 text-yellow-700 p-2 rounded-xl">⚖️</span>
+                <h2 class="text-2xl font-bold">Batch Normalization</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Normalize per feature per mini-batch to fight internal
+                covariate shift (Ioffe &amp; Szegedy).</p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Equations</p>
+                    <p>$$\mu = \frac{1}{N}\sum_{i=1}^N x_i,\quad \sigma^2 = \frac{1}{N}\sum_{i=1}^N (x_i-\mu)^2$$
+                        $$\hat{x}_i = \frac{x_i-\mu}{\sqrt{\sigma^2+\epsilon}},\quad y_i = \gamma \hat{x}_i + \beta$$</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Why it helps</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Faster convergence, higher learning rates.</li>
+                        <li>Regularization via noisy batch stats.</li>
+                        <li>Less sensitive to initialization.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- RNN & LSTM -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-purple-100 text-purple-700 p-2 rounded-xl">🔁</span>
+                <h2 class="text-2xl font-bold">Recurrent Nets → LSTMs</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">RNNs carry state through time: $\mathbf{h}_t = f(\mathbf{x}_t,
+                \mathbf{h}_{t-1};\theta)$, $\mathbf{y}_t = g(\mathbf{h}_t;\theta)$. Trained with BPTT, but watch for
+                vanishing/exploding gradients.</p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">LSTM gates</p>
+                    <p>$$
+\mathbf{f}_t = \sigma(\mathbf{W}_f[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_f),\quad
+\mathbf{i}_t = \sigma(\mathbf{W}_i[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_i)
+$$
+$$
+\tilde{\mathbf{c}}_t = \tanh(\mathbf{W}_c[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_c),\quad
+\mathbf{c}_t = \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{c}}_t
+$$
+$$
+\mathbf{o}_t = \sigma(\mathbf{W}_o[\mathbf{h}_{t-1},\mathbf{x}_t]+\mathbf{b}_o),\quad
+\mathbf{h}_t = \mathbf{o}_t \odot \tanh(\mathbf{c}_t)
+$$</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Why LSTMs?</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Gate what to forget, what to write, what to read.</li>
+                        <li>Stabilize gradients on long sequences.</li>
+                        <li>Great for speech, language, time-series.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transformers -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-sky-100 text-sky-700 p-2 rounded-xl">🛰️</span>
+                <h2 class="text-2xl font-bold">Transformers &amp; Attention</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Self-attention scores tokens against each other, enabling global
+                context without recurrence. Masked self-attention keeps autoregressive models honest (no peeking at the
+                future).</p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Scaled dot-product</p>
+                    <p>$$Z = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$</p>
+                    <p class="text-xs text-gray-500 mt-2">Multi-head attention = many heads of this in parallel.</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <p class="font-semibold mb-2">Masked self-attention</p>
+                    <p class="text-sm">Apply $-\infty$ mask for $j>i$ so position $i$ only attends to $1\dots i$.
+                        Great for language modeling.</p>
+                </div>
+            </div>
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 border border-indigo-100 dark:border-gray-700">
+                <p class="font-semibold mb-2">Transformer poem</p>
+                <p class="italic text-sm text-gray-700 dark:text-gray-300">"Embed the words, add position hue,<br>
+                    Heads attend to what is true.<br>
+                    Skip the loops, let norms align,<br>
+                    Decode the future, one token at a time."</p>
+            </div>
+        </section>
+
+        <!-- Trivia + poem -->
+        <section class="glass p-6 rounded-3xl border-2 border-pink-100 dark:border-gray-700 space-y-4"
+            data-aos="zoom-in">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold flex items-center gap-2">🧠 Quick Quiz</h3>
+                <button onclick="resetQuiz()" class="text-sm text-primary font-semibold">Reset</button>
+            </div>
+            <p class="font-semibold">Which trick tackles internal covariate shift during training?</p>
+            <div class="grid sm:grid-cols-3 gap-3">
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, true)">Batch Normalization</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">Increasing batch size only</button>
+                <button class="quiz-option p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition"
+                    onclick="markQuiz(this, false)">Removing nonlinearities</button>
+            </div>
+            <p id="quiz-feedback" class="text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- True/False -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-gray-100 text-gray-700 p-2 rounded-xl">✅</span>
+                <h2 class="text-2xl font-bold">True / False speed round</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">A single-layer perceptron can model XOR.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">CNNs shine on grid-like data such as images.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, true)">Masked self-attention blocks access to future tokens.</button>
+                <button class="tf-option p-4 rounded-xl border border-gray-200 dark:border-gray-700 text-left transition"
+                    onclick="markTF(this, false)">Layer normalization depends on batch size.</button>
+            </div>
+            <p id="tf-feedback" class="mt-3 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
+        </section>
+
+        <!-- Mini lab -->
+        <section class="glass p-8 rounded-3xl shadow-sm space-y-4" data-aos="fade-up">
+            <div class="flex items-center gap-3">
+                <span class="bg-orange-100 text-orange-700 p-2 rounded-xl">🧪</span>
+                <h2 class="text-2xl font-bold">Mini Lab: pick an architecture</h2>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300">Click a chip to see how it helps generative modelling.</p>
+            <div class="flex flex-wrap gap-2">
+                <button class="chip hover:scale-105 transition border-pink-200 bg-pink-50"
+                    onclick="showUse('ffn')">Feedforward</button>
+                <button class="chip hover:scale-105 transition border-blue-200 bg-blue-50"
+                    onclick="showUse('cnn')">CNN</button>
+                <button class="chip hover:scale-105 transition border-purple-200 bg-purple-50"
+                    onclick="showUse('rnn')">RNN/LSTM</button>
+                <button class="chip hover:scale-105 transition border-indigo-200 bg-indigo-50"
+                    onclick="showUse('tr')">Transformer</button>
+                <button class="chip hover:scale-105 transition border-emerald-200 bg-emerald-50"
+                    onclick="showUse('norm')">Normalization</button>
+            </div>
+            <div id="lab-output"
+                class="mt-3 p-4 rounded-2xl bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                Choose an architecture to see an idea.
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="text-center space-y-4" data-aos="fade-up">
+            <h3 class="text-3xl font-bold">Memory hook (poem)</h3>
+            <p class="text-xl text-pink-700 dark:text-pink-300 italic">"Perceptrons learn but not XOR dreams,<br>
+                Backprop mends with gradient streams.<br>
+                Gates remember, norms align,<br>
+                Attention whispers: context, shine."</p>
+            <a href="divergence-measures.html"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-white font-semibold shadow-lg hover:scale-105 transition">
+                ← Back to Divergence Measures
+            </a>
+        </section>
+
+    </main>
+
+    <script>
+        AOS.init();
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / docHeight) * 100;
+            document.getElementById('progress-bar').style.width = `${scrolled}%`;
+        });
+
+        // Quiz logic
+        function markQuiz(button, isCorrect) {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('quiz-feedback').textContent = 'Correct! BatchNorm stabilizes layer inputs during training.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('quiz-feedback').textContent = 'Not quite—think normalization inside the batch.';
+            }
+        }
+
+        function resetQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            document.getElementById('quiz-feedback').textContent = '';
+        }
+
+        // True/False logic
+        function markTF(button, isCorrect) {
+            document.querySelectorAll('.tf-option').forEach(btn => btn.classList.remove('correct', 'wrong'));
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('tf-feedback').textContent = 'Yep! That statement is true.';
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('tf-feedback').textContent = 'Nope—flip it and check again.';
+            }
+        }
+
+        // Mini lab
+        const useCases = {
+            ffn: 'Feedforward: map noise → latent → data; simple MLP generators for tabular or low-dim tasks.',
+            cnn: 'CNN: great for images; convolutions capture locality—use in autoencoders or GAN generators.',
+            rnn: 'RNN/LSTM: model sequences (text, audio); autoregressive generators with gated memory.',
+            tr: 'Transformer: self-attention for long-range context; masked attention for autoregressive text and code.',
+            norm: 'Normalization: BatchNorm/LayerNorm smooth optimization, enable deeper, more stable generators.'
+        };
+
+        function showUse(key) {
+            document.getElementById('lab-output').textContent = useCases[key];
+        }
+    </script>
+</body>
+
+</html>
