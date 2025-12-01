@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommender Systems | Optimization Applications</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Optimization Methods
+            </a>
+            <span class="text-sm font-semibold">Chapter 7: Applications</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">🎬</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Recommender Systems</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Applying optimization to predict user preferences and recommend content.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Introduction -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🍿</span>
+                <h2 class="text-3xl font-bold">1. The Problem</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Movie Recommendation</h4>
+                <p>Given a history of movie ratings given by users, our goal is to <strong>recommend suitable
+                        movies</strong> that the user may like but hasn't seen yet.</p>
+            </div>
+
+            <p class="mb-4">Imagine a matrix where rows represent users and columns represent movies. The entries are
+                ratings (e.g., 1-5 stars). Most of this matrix is empty (missing ratings).</p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6 overflow-x-auto">
+                <table class="w-full text-center border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="p-3 border">User \ Movie</th>
+                            <th class="p-3 border">M1</th>
+                            <th class="p-3 border">M2</th>
+                            <th class="p-3 border">M3</th>
+                            <th class="p-3 border">M4</th>
+                            <th class="p-3 border">M5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-3 border font-bold">Ana</td>
+                            <td class="p-3 border">5</td>
+                            <td class="p-3 border text-gray-300">?</td>
+                            <td class="p-3 border">1</td>
+                            <td class="p-3 border">5</td>
+                            <td class="p-3 border">?</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 border font-bold">Bob</td>
+                            <td class="p-3 border text-gray-300">?</td>
+                            <td class="p-3 border">5</td>
+                            <td class="p-3 border">?</td>
+                            <td class="p-3 border">2</td>
+                            <td class="p-3 border">4</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 border font-bold">Carlos</td>
+                            <td class="p-3 border">1</td>
+                            <td class="p-3 border">?</td>
+                            <td class="p-3 border">5</td>
+                            <td class="p-3 border">?</td>
+                            <td class="p-3 border">1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>We rely on <strong>dependencies</strong> in the data. For example, if Ana and Carlos have similar ratings
+                for M1 and M3, they might have similar tastes for M5.</p>
+        </section>
+
+        <!-- 2. Matrix Factorization -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🧩</span>
+                <h2 class="text-3xl font-bold">2. Matrix Factorization</h2>
+            </div>
+
+            <p class="mb-4">We assume the ratings matrix \( A \) is low-rank. This means users' preferences and movies'
+                characteristics can be described by a small number of <strong>latent features</strong> (e.g., "Action",
+                "Comedy", "Romance").</p>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">User Feature Matrix (\( P \))</h4>
+                    <p class="text-sm text-gray-600">Describes how much each user likes each feature.</p>
+                    <div class="mt-2 font-mono text-xs bg-gray-50 p-2 rounded">
+                        Row u: [Comedy_score, Action_score, ...]
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">Movie Feature Matrix (\( Q \))</h4>
+                    <p class="text-sm text-gray-600">Describes how much each movie belongs to each feature.</p>
+                    <div class="mt-2 font-mono text-xs bg-gray-50 p-2 rounded">
+                        Col i: [Comedy_score, Action_score, ...]
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-xl text-center">
+                <p class="text-lg font-bold text-indigo-900 mb-2">The Prediction Model</p>
+                <p class="mb-2">The predicted rating for user \( u \) on movie \( i \) is the dot product of their
+                    feature vectors:</p>
+                \[ \hat{A}_{ui} = p_u \cdot q_i \]
+                <p class="text-sm text-indigo-700 mt-2">Matrix form: \( \hat{A} \approx P Q^T \)</p>
+            </div>
+        </section>
+
+        <!-- 3. Optimization Model -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">📉</span>
+                <h2 class="text-3xl font-bold">3. Optimization Model</h2>
+            </div>
+
+            <p class="mb-4">We want to find matrices \( P \) and \( Q \) that minimize the difference between predicted
+                ratings and actual ratings (for the ones we know).</p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Loss Function</h4>
+                <p class="mb-3">Let \( K \) be the set of indices \( (u,i) \) where we have a rating. We minimize the
+                    squared error:</p>
+                \[ \min_{P,Q} \sum_{(u,i) \in K} (A_{ui} - p_u \cdot q_i)^2 \]
+            </div>
+
+            <h4 class="font-bold text-xl mt-8 mb-4">Regularization</h4>
+            <p class="mb-4">To prevent <strong>overfitting</strong> (learning noise instead of patterns), we add a
+                penalty for large feature values:</p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                \[ \min_{P,Q} \sum_{(u,i) \in K} (A_{ui} - p_u \cdot q_i)^2 + \lambda (\|p_u\|^2 + \|q_i\|^2) \]
+                <p class="text-sm text-gray-600 mt-2 text-center">Here \( \lambda \) is the <strong>regularization
+                        parameter</strong>.</p>
+            </div>
+        </section>
+
+        <!-- 4. Training (Gradient Descent) -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🚀</span>
+                <h2 class="text-3xl font-bold">4. Training the Model</h2>
+            </div>
+
+            <p class="mb-4">We use <strong>Gradient Descent</strong> to find the optimal \( P \) and \( Q \). The
+                gradients for a single rating \( (u,i) \) are:</p>
+
+            <div class="bg-gray-50 p-6 rounded-xl font-mono text-sm mb-6">
+                Let error \( e_{ui} = A_{ui} - p_u \cdot q_i \) <br><br>
+                Update rule for \( p_u \): <br>
+                \( p_u \leftarrow p_u + \alpha (e_{ui} q_i - \lambda p_u) \) <br><br>
+                Update rule for \( q_i \): <br>
+                \( q_i \leftarrow q_i + \alpha (e_{ui} p_u - \lambda q_i) \)
+            </div>
+
+            <p>We repeat this for all known ratings until the error converges.</p>
+        </section>
+
+        <!-- 5. Interactive Quiz -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
+                <h2 class="text-3xl font-bold">5. Test Your Understanding</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. Why do we use matrix factorization for recommender systems?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Incorrect. It is actually to reduce dimensionality and find latent features.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">To store every single
+                            user interaction exactly.</button>
+                        <button
+                            onclick="alert('Correct! It captures latent features (like genre preferences) that explain the ratings.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">To discover latent
+                            features that explain user preferences.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What is the purpose of the regularization term \( \lambda (\|p\|^2 +
+                        \|q\|^2) \)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! It penalizes large weights to prevent the model from fitting noise.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">To prevent
+                            overfitting.</button>
+                        <button
+                            onclick="alert('Incorrect. It usually increases the training error slightly but decreases test error.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">To make the training
+                            error zero.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+            <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                <p class="font-semibold mb-4">A developer implements the loss function:</p>
+                <p class="italic text-gray-700 mb-4">"I will minimize \( \| PQ^T - A \|_F^2 \) over all entries of the
+                    matrix A."</p>
+
+                <div class="space-y-3">
+                    <div onclick="alert('Correct! We only know a few ratings. We should sum the error ONLY over the known entries (set K), not the missing ones (which are unknown/zero).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        Mistake: We don't know all entries of A! We should only sum over known ratings.
+                    </div>
+                    <div onclick="alert('Incorrect. The Frobenius norm is a standard loss, but the issue is the range of summation.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-red-50">
+                        Mistake: Frobenius norm cannot be used for matrices.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="duality.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous Chapter</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-green-600 transition">Duality
+                    </p>
+                </div>
+            </a>
+            <!-- Next chapter placeholder -->
+            <button
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next Chapter</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Optimization Methods Course - Chapter 7</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+    </script>
+</body>
+
+</html>
