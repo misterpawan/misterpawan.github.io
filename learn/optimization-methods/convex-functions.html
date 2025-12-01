@@ -441,6 +441,121 @@
             </div>
         </section>
 
+        <!-- 10. Conjugate Functions -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">⭐</span>
+                <h2 class="text-3xl font-bold">10. Conjugate Functions</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <div class="definition-box">
+                        <h4 class="font-bold text-lg mb-2">Definition</h4>
+                        <p class="mb-3">Let \( f: \mathbb{R}^n \rightarrow \mathbb{R} \). The <strong>conjugate
+                                function</strong> \( f^*: \mathbb{R}^n \rightarrow \mathbb{R} \) is defined as:</p>
+                        \[ f^*(y) = \sup_{x \in \textbf{dom } f} (y^T x - f(x)) \]
+                        <p class="mt-2 text-sm text-gray-600">The domain of \( f^* \) consists of \( y \) for which this
+                            supremum is finite.</p>
+                    </div>
+
+                    <div class="theorem-box mt-4">
+                        <h4 class="font-bold text-lg mb-2">Key Property</h4>
+                        <p>\( f^* \) is <strong>always convex</strong>, regardless of whether \( f \) is convex!</p>
+                        <p class="text-sm text-gray-600 mt-1">Reason: It is the pointwise supremum of a family of affine
+                            functions of \( y \).</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-lg">
+                    <img src="images/conjugate_function.jpg" alt="Conjugate Function Geometric Interpretation"
+                        class="w-full rounded-lg">
+                    <p class="text-sm text-gray-500 mt-2 text-center">Geometric interpretation: The maximum gap between
+                        the linear function \( y^T x \) and \( f(x) \).</p>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h4 class="font-bold text-xl mb-4">Examples of Conjugates</h4>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-gray-100">
+                        <p class="font-bold text-blue-600">Affine: \( ax + b \)</p>
+                        <p class="text-sm mt-1">\( f^*(y) = -b \) if \( y=a \), else \( \infty \)</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100">
+                        <p class="font-bold text-blue-600">Neg Log: \( -\log x \)</p>
+                        <p class="text-sm mt-1">\( f^*(y) = -1 - \log(-y) \) for \( y < 0 \)</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100">
+                        <p class="font-bold text-blue-600">Exp: \( e^x \)</p>
+                        <p class="text-sm mt-1">\( f^*(y) = y \log y - y \) for \( y \geq 0 \)</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100">
+                        <p class="font-bold text-blue-600">Entropy: \( x \log x \)</p>
+                        <p class="text-sm mt-1">\( f^*(y) = e^{y-1} \)</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-100">
+                        <p class="font-bold text-blue-600">Inverse: \( 1/x \)</p>
+                        <p class="text-sm mt-1">\( f^*(y) = -2\sqrt{-y} \) for \( y \leq 0 \)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. Interactive Quiz -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
+                <h2 class="text-3xl font-bold">11. Test Your Understanding</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. Is the function \( f(x) = x^3 \) convex on \( \mathbb{R} \)?</h4>
+                    <div class="flex gap-4">
+                        <button onclick="alert('Incorrect. Look at x < 0. f\'\'(x) = 6x, which is negative for x < 0.')"
+                            class="px-4 py-2 bg-gray-100 hover:bg-red-100 rounded transition">Yes</button>
+                        <button
+                            onclick="alert('Correct! The second derivative 6x is negative for x < 0, so it is concave there.')"
+                            class="px-4 py-2 bg-gray-100 hover:bg-green-100 rounded transition">No</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Is the conjugate function \( f^* \) always convex?</h4>
+                    <div class="flex gap-4">
+                        <button
+                            onclick="alert('Correct! It is the pointwise supremum of affine functions, which preserves convexity.')"
+                            class="px-4 py-2 bg-gray-100 hover:bg-green-100 rounded transition">Yes, always</button>
+                        <button onclick="alert('Incorrect. Even if f is non-convex, f* is convex.')"
+                            class="px-4 py-2 bg-gray-100 hover:bg-red-100 rounded transition">Only if f is
+                            convex</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+            <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                <p class="font-semibold mb-4">A student claims:</p>
+                <p class="italic text-gray-700 mb-4">"The function \( f(x) = x^2 \) is strictly convex, so its Hessian
+                    must be strictly positive definite everywhere (i.e., \( f''(x) > 0 \))."</p>
+
+                <div class="space-y-3">
+                    <div onclick="alert('Not quite. While x^2 has f\'\'(x)=2 > 0, consider x^4...')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-red-50">
+                        True. Strictly convex means strictly positive curvature.
+                    </div>
+                    <div onclick="alert('Correct! Consider f(x) = x^4. It is strictly convex, but f\'\'(0) = 0. The condition f\'\'(x) > 0 is sufficient but NOT necessary.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. Counterexample: \( f(x) = x^4 \).
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Chapter Navigation -->
         <div class="flex justify-between mt-12" data-aos="fade-up">
             <a href="analysis.html"
