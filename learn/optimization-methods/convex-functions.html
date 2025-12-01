@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convex Functions | Optimization Methods</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #faf5ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .example-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .proof-box {
+            border-left: 4px solid #6b7280;
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            font-family: 'Georgia', serif;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Optimization Methods
+            </a>
+            <span class="text-sm font-semibold">Chapter 4: Convex Functions</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">📈</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Convex Functions</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                From Jensen's Inequality to Log-Sum-Exp: The Core of Convex Optimization.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Definition -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">📘</span>
+                <h2 class="text-3xl font-bold">1. What is a Convex Function?</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <div class="definition-box">
+                        <h4 class="font-bold text-lg mb-2">Mathematical Definition</h4>
+                        <p class="mb-3">A function \( f: \mathbb{R}^n \rightarrow \mathbb{R} \) is
+                            <strong>convex</strong> if \( \textbf{dom } f \) is a convex set and for all \( x, y \in
+                            \textbf{dom } f \) and \( 0 \leq \theta \leq 1 \):</p>
+                        \[ f(\theta x + (1 - \theta) y) \leq \theta f(x) + (1-\theta) f(y) \]
+                    </div>
+
+                    <div class="definition-box mt-4">
+                        <h4 class="font-bold text-lg mb-2">Geometric Interpretation</h4>
+                        <p>The line segment joining points \( (x, f(x)) \) and \( (y, f(y)) \) lies
+                            <strong>above</strong> the graph of \( f \).</p>
+                    </div>
+
+                    <div class="bg-gray-100 p-4 rounded-xl mt-4">
+                        <h5 class="font-bold text-gray-700 mb-2">Terminology</h5>
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li><strong>Strictly Convex:</strong> Inequality is strict for \( x \neq y, 0 < \theta < 1
+                                    \).</li>
+                            <li><strong>Concave:</strong> \( -f \) is convex.</li>
+                            <li><strong>Strictly Concave:</strong> \( -f \) is strictly convex.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Interactive Visualization -->
+                <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                    <h4 class="font-bold mb-4 text-gray-700">Interactive Visualizer</h4>
+                    <svg width="350" height="250" viewBox="0 0 350 250" class="w-full border rounded-lg bg-gray-50">
+                        <!-- Graph of x^2 (Convex) -->
+                        <path d="M 50,200 Q 175,200 175,200 Q 175,200 300,200" fill="none" stroke="#e5e7eb"
+                            stroke-width="2" id="grid-line" />
+
+                        <!-- Parabola -->
+                        <path d="M 75,50 Q 175,250 275,50" fill="none" stroke="#3b82f6" stroke-width="3" />
+
+                        <!-- Chord -->
+                        <line x1="100" y1="150" x2="250" y2="150" stroke="#ef4444" stroke-width="2"
+                            stroke-dasharray="4" />
+                        <circle cx="100" cy="150" r="4" fill="#ef4444" />
+                        <circle cx="250" cy="150" r="4" fill="#ef4444" />
+
+                        <!-- Labels -->
+                        <text x="175" y="140" text-anchor="middle" font-size="12" fill="#ef4444">Chord (Above
+                            Graph)</text>
+                        <text x="175" y="220" text-anchor="middle" font-size="12" fill="#3b82f6">Convex Function</text>
+                    </svg>
+                    <p class="text-sm text-gray-500 mt-4 text-center">
+                        The red chord connects two points on the blue curve. Since the chord is always above the curve,
+                        the function is convex.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. First Order Condition -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">1️⃣</span>
+                <h2 class="text-3xl font-bold">2. First Order Condition</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <div class="theorem-box">
+                        <h4 class="font-bold text-lg mb-2">Gradient Inequality</h4>
+                        <p class="mb-3">Suppose \( f \) is differentiable. Then \( f \) is convex <strong>if and only
+                                if</strong> \( \textbf{dom } f \) is convex and:</p>
+                        \[ f(y) \geq f(x) + \nabla f(x)^T (y - x) \]
+                        <p class="mt-2 text-sm">for all \( x, y \in \textbf{dom } f \).</p>
+                    </div>
+                    <p class="text-gray-700 mt-4">
+                        <strong>Interpretation:</strong> The first-order Taylor approximation is a <strong>global
+                            underestimator</strong> of the function. The tangent plane always lies below the graph!
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                    <svg width="300" height="200" viewBox="0 0 300 200">
+                        <!-- Convex Curve -->
+                        <path d="M 50,50 Q 150,250 250,50" fill="none" stroke="#8b5cf6" stroke-width="3" />
+                        <!-- Tangent Line at bottom -->
+                        <line x1="50" y1="180" x2="250" y2="180" stroke="#10b981" stroke-width="2" />
+                        <circle cx="150" cy="180" r="4" fill="#10b981" />
+                        <text x="150" y="195" text-anchor="middle" font-size="12" fill="#10b981">Tangent Plane
+                            (Below)</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Second Order Condition -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">2️⃣</span>
+                <h2 class="text-3xl font-bold">3. Second Order Condition</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Hessian Condition</h4>
+                <p class="mb-3">Assume \( f \) is twice differentiable. Then \( f \) is convex <strong>if and only
+                        if</strong> its Hessian is <strong>positive semidefinite</strong>:</p>
+                \[ \nabla^2 f(x) \succeq 0 \]
+                <p class="mt-2 text-sm">For 1D functions, this means \( f''(x) \geq 0 \) (positive curvature).</p>
+            </div>
+
+            <div class="example-box mt-6">
+                <h4 class="font-bold text-lg mb-3">Example: Quadratic Function</h4>
+                <p>Consider \( f(x) = \frac{1}{2} x^T P x + q^T x + r \).</p>
+                <p class="mt-2">The gradient is \( \nabla f(x) = Px + q \).</p>
+                <p class="mt-2">The Hessian is \( \nabla^2 f(x) = P \).</p>
+                <p class="mt-2 font-bold text-green-700">Conclusion: \( f \) is convex if and only if \( P \succeq 0 \).
+                </p>
+            </div>
+
+            <div class="bg-red-50 p-4 rounded-xl mt-4 border border-red-100">
+                <h5 class="font-bold text-red-800">⚠️ Important Note</h5>
+                <p class="text-sm">The domain MUST be convex! Example: \( f(x) = 1/x^2 \) has \( f''(x) > 0 \)
+                    everywhere, but its domain \( \mathbb{R} \setminus \{0\} \) is not convex, so the function is not
+                    convex.</p>
+            </div>
+        </section>
+
+        <!-- 4. Examples & Operations -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">💡</span>
+                <h2 class="text-3xl font-bold">4. Famous Examples</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Log-Sum-Exp -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Log-Sum-Exp</h4>
+                    \[ f(x) = \log\left( \sum_{i=1}^n e^{x_i} \right) \]
+                    <p class="text-sm text-gray-600 mt-2">This is a smooth approximation of the max function. It is
+                        <strong>convex</strong>.</p>
+                </div>
+
+                <!-- Log-Determinant -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Log-Determinant</h4>
+                    \[ f(X) = \log \det X, \quad X \succ 0 \]
+                    <p class="text-sm text-gray-600 mt-2">This function is <strong>concave</strong> on the set of
+                        positive definite matrices.</p>
+                </div>
+
+                <!-- Norms -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Norms</h4>
+                    \[ f(x) = \|x\|_p \]
+                    <p class="text-sm text-gray-600 mt-2">Every norm is convex due to the triangle inequality.</p>
+                </div>
+
+                <!-- Negative Entropy -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Negative Entropy</h4>
+                    \[ f(x) = x \log x \]
+                    <p class="text-sm text-gray-600 mt-2">Convex on \( \mathbb{R}_{++} \) (since \( f''(x) = 1/x > 0
+                        \)).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Extended Value & Indicator Functions -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-6">5. Extended Value Extensions</h2>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="flex-1">
+                    <p class="mb-4">To handle domains implicitly, we define the <strong>extended value
+                            extension</strong> \( \tilde{f} \):</p>
+                    \[ \tilde{f}(x) = \begin{cases} f(x) & x \in \textbf{dom } f \\ \infty & x \notin \textbf{dom } f
+                    \end{cases} \]
+
+                    <div class="definition-box mt-6">
+                        <h4 class="font-bold text-lg mb-2">Indicator Function</h4>
+                        <p>For a set \( C \), the indicator function \( I_C(x) \) is 0 if \( x \in C \) and \( \infty \)
+                            otherwise.</p>
+                        <p class="mt-2 font-bold text-blue-600">Fact: A set \( C \) is convex if and only if its
+                            indicator function \( I_C \) is convex.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="analysis.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous Chapter</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">
+                        Analysis</p>
+                </div>
+            </a>
+            <!-- Next chapter placeholder -->
+            <button
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next Chapter</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Optimization Methods Course - Chapter 4</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+    </script>
+</body>
+
+</html>
