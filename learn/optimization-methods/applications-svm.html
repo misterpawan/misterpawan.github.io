@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Vector Machines | Optimization Applications</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f43f5e 0%, #e11d48 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Optimization Methods
+            </a>
+            <span class="text-sm font-semibold">Chapter 8: Applications</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">⚔️</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Support Vector Machines</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Maximizing the margin with convex quadratic programming.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Motivation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-3xl font-bold">1. Motivation</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">The Problem</h4>
+                <p>Find a <strong>linear decision surface (Hyperplane)</strong> that can separate two classes and has
+                    the <strong>largest distance (margin)</strong> between the border line classes.</p>
+                <ul class="list-disc list-inside mt-2 text-gray-700">
+                    <li><strong>Support Vectors:</strong> The data points on the boundary.</li>
+                    <li><strong>Margin:</strong> The largest gap between the classes.</li>
+                </ul>
+            </div>
+
+            <p class="mb-4">If the data is linearly separable, there are infinite hyperplanes that can separate the
+                classes. SVM finds the "best" one—the one that maximizes the margin.</p>
+        </section>
+
+        <!-- 2. Primal Formulation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">📐</span>
+                <h2 class="text-3xl font-bold">2. Primal Formulation</h2>
+            </div>
+
+            <p class="mb-4">Let the hyperplane be defined by \( w \cdot x + b = 0 \). We want to classify data points \(
+                (x_i, y_i) \) where \( y_i \in \{+1, -1\} \).</p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                <h4 class="font-bold text-lg mb-3">Geometric Insight</h4>
+                <p class="mb-2">We scale \( w \) and \( b \) such that the support vectors lie on the hyperplanes:</p>
+                \[ w \cdot x + b = 1 \quad \text{and} \quad w \cdot x + b = -1 \]
+                <p class="mt-2">The distance (margin) between these planes is \( \frac{2}{\|w\|} \). To maximize the
+                    margin, we <strong>minimize \( \|w\|^2 \)</strong>.</p>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">SVM Primal Optimization Problem</h4>
+                \[ \begin{aligned}
+                & \text{minimize} && \frac{1}{2} \|w\|^2 \\
+                & \text{subject to} && y_i (w \cdot x_i + b) \geq 1, \quad i=1,\dots,m
+                \end{aligned} \]
+            </div>
+            <p class="text-sm text-gray-600 mt-2">This is a <strong>Convex Quadratic Programming (QP)</strong> problem.
+            </p>
+        </section>
+
+        <!-- 3. Dual Formulation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🔄</span>
+                <h2 class="text-3xl font-bold">3. Dual Formulation</h2>
+            </div>
+
+            <p class="mb-4">By forming the Lagrangian and setting derivatives to zero, we obtain the dual problem. This
+                is useful when the number of features is large compared to the number of samples.</p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">SVM Dual Optimization Problem</h4>
+                \[ \begin{aligned}
+                & \text{maximize} && \sum_{i=1}^m \lambda_i - \frac{1}{2} \sum_{i,j=1}^m \lambda_i \lambda_j y_i y_j
+                (x_i \cdot x_j) \\
+                & \text{subject to} && \lambda_i \geq 0, \quad i=1,\dots,m \\
+                & && \sum_{i=1}^m \lambda_i y_i = 0
+                \end{aligned} \]
+            </div>
+
+            <div class="bg-yellow-50 p-4 rounded-lg mt-4 border border-yellow-200">
+                <h5 class="font-bold text-yellow-800">Key Observation</h5>
+                <p class="text-sm text-yellow-900">The dual problem depends only on the <strong>dot products</strong> \(
+                    x_i \cdot x_j \). This allows us to use the <strong>Kernel Trick</strong> to handle non-linearly
+                    separable data by implicitly mapping it to a higher-dimensional space!</p>
+            </div>
+        </section>
+
+        <!-- 4. Soft-Margin SVM -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🌫️</span>
+                <h2 class="text-3xl font-bold">4. Soft-Margin SVM</h2>
+            </div>
+
+            <p class="mb-4">Real-world data is often noisy and not perfectly separable. We introduce <strong>slack
+                    variables</strong> \( \xi_i \) to allow some misclassification, but penalize them with a parameter
+                \( C \).</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">Primal Soft-Margin</h4>
+                    \[ \min \frac{1}{2} \|w\|^2 + C \sum_{i=1}^m \xi_i \]
+                    <p class="text-sm mt-2">Subject to \( y_i(w \cdot x_i + b) \geq 1 - \xi_i \)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">Dual Soft-Margin</h4>
+                    <p class="text-sm mb-2">Same objective as standard dual, but with box constraints:</p>
+                    \[ 0 \leq \lambda_i \leq C \]
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quiz -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
+                <h2 class="text-3xl font-bold">5. Test Your Understanding</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What does the parameter C control in Soft-Margin SVM?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. That is controlled by the kernel.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The dimensionality of
+                            the feature space.</button>
+                        <button
+                            onclick="alert('Correct! A large C penalizes mistakes heavily (hard margin), while a small C allows more misclassification (softer margin).')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The trade-off between
+                            maximizing the margin and minimizing misclassification.</button>
+                        <button onclick="alert('Incorrect. C is a regularization parameter, not the learning rate.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The learning rate of
+                            the gradient descent.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Why is the Dual formulation particularly useful?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! Since it only uses dot products, we can replace them with Kernel functions.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It allows the use of
+                            Kernels for non-linear separation.</button>
+                        <button onclick="alert('Incorrect. The primal is also convex.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It makes the problem
+                            convex (the primal is not).</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="applications-recommender-systems.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous Chapter</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-pink-600 transition">
+                        Recommender Systems</p>
+                </div>
+            </a>
+            <!-- Next chapter placeholder -->
+            <button
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next Chapter</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Optimization Methods Course - Chapter 8</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+    </script>
+</body>
+
+</html>
