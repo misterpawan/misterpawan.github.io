@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimization Methods | Generative Modelling</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #dbeafe, #eff6ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .proof-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #fae8ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #d1fae5, #ecfdf5);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .example-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, #fef9e7);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .algorithm-box {
+            border-left: 4px solid #ec4899;
+            background: linear-gradient(to right, #fce7f3, #fdf2f8);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .historical-box {
+            border-left: 4px solid #6366f1;
+            background: linear-gradient(to right, #e0e7ff, #eef2ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .expandable-proof {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .expandable-proof:hover {
+            background: linear-gradient(to right, #ede9fe, #f5f3ff);
+        }
+
+        .proof-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .proof-content.expanded {
+            max-height: 10000px;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background-color: #f3f4f6;
+            border-color: #f093fb;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+
+        #gradient-canvas {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: crosshair;
+        }
+
+        .mistake-highlight {
+            background-color: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mistake-highlight:hover {
+            background-color: #fde68a;
+        }
+
+        .mistake-highlight.found {
+            background-color: #fca5a5 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Generative Modelling
+            </a>
+            <span class="text-sm font-semibold">Chapter 14: Optimization Methods</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">📈</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Optimization Methods</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                From Calculus Foundations to Gradient Descent: The Mathematics of Finding Extrema
+            </p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                <span class="bg-white/20 px-4 py-2 rounded-full">Gradients</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full">Level Curves</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full">Gradient Descent</span>
+                <span class="bg-white/20 px-4 py-2 rounded-full">Cauchy's Method</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- Functions -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🔢</span>
+                <h2 class="text-3xl font-bold">About Functions</h2>
+            </div>
+
+            <p class="text-lg mb-6">
+                We will mostly deal with functions with domain and co-domain subsets of \( \mathbb{R} \).
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-semibold text-lg mb-4">📐 Types of Functions</h4>
+
+                <div class="space-y-4">
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">1. Real-valued, Single Variable</p>
+                        \[ f: \mathbb{R} \rightarrow \mathbb{R} \]
+                        <p class="text-sm text-gray-600 mt-2">Example: \( f(x) = x^2 \)</p>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">2. Real-valued, Multi-variable</p>
+                        \[ f: \mathbb{R}^n \rightarrow \mathbb{R} \]
+                        <p class="text-sm text-gray-600 mt-2">Example: \( f(x,y) = x^2 + y^2 \)</p>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">3. Vector-valued, Multi-variable</p>
+                        \[ f: \mathbb{R}^n \rightarrow \mathbb{R}^m \]
+                        <p class="text-sm text-gray-600 mt-2">Example: \( f(x,y) = (x^2, \exp(x+y), \sin(x)) \)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">💡 More Examples</h4>
+                <ul class="space-y-2 list-disc list-inside">
+                    <li>\( f(x) = x, \quad x \in \mathbb{R} \)</li>
+                    <li>\( f(x) = \max(x), \quad x \in \mathbb{R}^n \)</li>
+                    <li>\( f(x,y) = x^2 + y^2 \)</li>
+                    <li>\( f(A) = \text{det}(A), \quad A \in \mathbb{R}^{n \times n} \)</li>
+                    <li>\( f(x,y) = (x^2, \exp(x+y), \sin(x)) \)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Gradients -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">∇</span>
+                <h2 class="text-3xl font-bold">What is a Gradient?</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-semibold text-lg mb-4">📊 Gradient Definition</h4>
+                <p class="mb-4">For a real-valued function:</p>
+
+                \[ f: \mathbb{R}^n \rightarrow \mathbb{R} \]
+
+                <p class="my-4">The <strong>gradient</strong> is the vector of partial derivatives:</p>
+
+                \[ \nabla f = \begin{pmatrix}
+                \dfrac{\partial f}{\partial x_1} \\
+                \dfrac{\partial f}{\partial x_2} \\
+                \dfrac{\partial f}{\partial x_3} \\
+                \vdots \\
+                \dfrac{\partial f}{\partial x_n}
+                \end{pmatrix} \in \mathbb{R}^n \]
+            </div>
+
+            <div class="example-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">✍️ Exercise: Compute Gradients</h4>
+                <p class="mb-4">Try computing the gradients for these functions:</p>
+
+                <div class="space-y-4">
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">1. \( f(x,y) = x^2 + y^2 \)</p>
+                        <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            onclick="revealAnswer('grad-ans-1')">
+                            Show Answer
+                        </button>
+                        <div id="grad-ans-1" class="hidden mt-3 p-3 bg-green-50 rounded">
+                            \[ \nabla f = \begin{pmatrix} 2x \\ 2y \end{pmatrix} \]
+                        </div>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">2. \( f(x,y) = x - y \)</p>
+                        <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            onclick="revealAnswer('grad-ans-2')">
+                            Show Answer
+                        </button>
+                        <div id="grad-ans-2" class="hidden mt-3 p-3 bg-green-50 rounded">
+                            \[ \nabla f = \begin{pmatrix} 1 \\ -1 \end{pmatrix} \]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jacobian -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🎛️</span>
+                <h2 class="text-3xl font-bold">Gradient of Vector-Valued Functions: The Jacobian</h2>
+            </div>
+
+            <p class="text-lg mb-6">
+                What happens when our function outputs a vector instead of a scalar?
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-semibold text-lg mb-4">🔷 Jacobian Matrix</h4>
+
+                <p class="mb-4">For a vector-valued function:</p>
+
+                \[ f: \mathbb{R}^n \rightarrow \mathbb{R}^m \]
+
+                <p class="my-4">We can view this as:</p>
+
+                \[ f\begin{pmatrix} x_1 \\ \vdots \\ x_n \end{pmatrix} = \begin{pmatrix} f_1(x) \\ \vdots \\ f_m(x)
+                \end{pmatrix} \]
+
+                <p class="my-4">The <strong>Jacobian matrix</strong> \( J \in \mathbb{R}^{m \times n} \) is:</p>
+
+                \[ J = \begin{pmatrix}
+                \dfrac{\partial f_1}{\partial x_1} & \dots & \dfrac{\partial f_1}{\partial x_n} \\
+                \vdots & \ddots & \vdots \\
+                \dfrac{\partial f_m}{\partial x_1} & \dots & \dfrac{\partial f_m}{\partial x_n}
+                \end{pmatrix} \]
+            </div>
+        </section>
+
+        <!-- Why Gradients -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">❓</span>
+                <h2 class="text-3xl font-bold">Why Gradients?</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 items-center">
+                <div>
+                    <div class="theorem-box">
+                        <h4 class="font-semibold text-lg mb-3 text-red-600">🔴 Question</h4>
+                        <p>Why are we interested in gradients?</p>
+                    </div>
+
+                    <div class="theorem-box mt-4">
+                        <h4 class="font-semibold text-lg mb-3 text-blue-600">📘 Fact from Calculus</h4>
+                        <p>Gradients point in the <strong>direction of greatest increase</strong> of the function!</p>
+                    </div>
+
+                    <div class="definition-box mt-4">
+                        <h4 class="font-semibold text-lg mb-3 text-green-600">✅ Answer</h4>
+                        <p>
+                            Hence, <strong>\( -\nabla f(x) \)</strong> gives the direction of <strong>descent</strong>.
+                            This helps us find local minima!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl">
+                    <img src="images/gradient_visual.png" alt="Gradient visualization"
+                        class="rounded-lg shadow-lg w-full">
+                    <p class="text-center text-sm mt-2 text-gray-600">Gradient vectors perpendicular to level curves</p>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-xl">
+                <h4 class="font-bold text-lg mb-3">🎯 Three Key Questions</h4>
+                <ol class="space-y-2 list-decimal list-inside">
+                    <li class="font-semibold">What is a level curve?</li>
+                    <li class="font-semibold">Where does \( \nabla \) point to?</li>
+                    <li class="font-semibold">How does gradient help in going to minima?</li>
+                </ol>
+                <p class="mt-4 text-sm text-gray-600">We'll answer each of these in detail!</p>
+            </div>
+        </section>
+
+        <!-- Level Curves -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🗺️</span>
+                <h2 class="text-3xl font-bold">1. Level Curves</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-semibold text-lg mb-4">📍 Level Curve Definition</h4>
+
+                <p class="mb-4">The <strong>level curve</strong> of a scalar-valued function:</p>
+
+                \[ f: \mathbb{R}^n \rightarrow \mathbb{R} \]
+
+                <p class="my-4">is defined as the set:</p>
+
+                \[ f_t = \{(x,y) \mid f(x,y) = t, \quad t \in \mathbb{R}\} \]
+
+                <p class="mt-4">These are the curves where the function has <strong>constant value</strong> \( t \).</p>
+            </div>
+
+            <div class="example-box mt-6">
+                <h4 class="font-semibold text-lg mb-3">✏️ Quiz: Draw Level Curves</h4>
+                <p class="mb-4">Can you visualize the level curves for these functions?</p>
+
+                <div class="space-y-4">
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">1. \( f(x,y) = x^2 + y^2 \) for \( t = 0, 1, 2 \)</p>
+                        <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            onclick="revealAnswer('level-ans-1')">
+                            Show Answer
+                        </button>
+                        <div id="level-ans-1" class="hidden mt-3 p-3 bg-green-50 rounded">
+                            <p class="font-semibold mb-2">Answer: Concentric circles!</p>
+                            <ul class="list-disc list-inside space-y-1 text-sm">
+                                <li>\( t = 0 \): A point at the origin</li>
+                                <li>\( t = 1 \): Circle with radius 1</li>
+                                <li>\( t = 2 \): Circle with radius \( \sqrt{2} \)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">2. \( f(x,y) = x^2 - y^2 \) for \( t = 0, 1, 2 \)</p>
+                        <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            onclick="revealAnswer('level-ans-2')">
+                            Show Answer
+                        </button>
+                        <div id="level-ans-2" class="hidden mt-3 p-3 bg-green-50 rounded">
+                            <p class="font-semibold mb-2">Answer: Hyperbolas!</p>
+                            <ul class="list-disc list-inside space-y-1 text-sm">
+                                <li>\( t = 0 \): Lines \( y = \pm x \) (degenerate hyperbola)</li>
+                                <li>\( t = 1 \): Hyperbola opening left-right</li>
+                                <li>\( t = 2 \): Wider hyperbola</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white p-4 rounded-xl">
+                <img src="images/level_curves.png" alt="Level curves example" class="rounded-lg shadow-lg w-full mb-4">
+                <p class="text-center text-sm text-gray-600">Level curves are convenient for showing directions towards
+                    minima/maxima</p>
+            </div>
+        </section>
+
+        <!-- Gradient Perpendicular to Level Curves -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">⊥</span>
+                <h2 class="text-3xl font-bold">2. Gradient is Perpendicular to Level Curves</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-semibold text-lg mb-3">🎓 Theorem</h4>
+                <p class="text-lg">
+                    The gradient vector \( \nabla f \) points in the direction <strong>perpendicular to the
+                        tangent</strong> drawn on the level curve.
+                </p>
+            </div>
+
+            <div class="proof-box mt-6">
+                <h4 class="font-semibold text-lg mb-4">🔍 Proof (2D Case)</h4>
+
+                <button class="expandable-proof px-4 py-2 bg-purple-100 rounded-lg font-semibold"
+                    onclick="toggleProof('proof-perp')">
+                    📖 Click to expand proof
+                </button>
+
+                <div id="proof-perp" class="proof-content mt-4">
+                    <div class="bg-white/70 p-4 rounded-lg space-y-4">
+                        <p class="font-semibold">Proof for 2D functions: \( w = f(x,y) \). Let \( f(x,y) = c \) be a
+                            level curve.</p>
+
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-blue-50 p-3 rounded">
+                                <p class="font-semibold mb-2">Step 1: Apply Implicit Function Theorem</p>
+                                <p>By the implicit function theorem, we can write:</p>
+                                \[ y = y(x) \]
+                            </div>
+
+                            <div class="bg-blue-50 p-3 rounded">
+                                <p class="font-semibold mb-2">Step 2: Level curves become</p>
+                                \[ f(x, y(x)) = c \]
+                            </div>
+
+                            <div class="bg-blue-50 p-3 rounded">
+                                <p class="font-semibold mb-2">Step 3: Apply Chain Rule</p>
+                                <p>Differentiating both sides with respect to \( x \):</p>
+                                \[ \dfrac{\partial f}{\partial x} + \dfrac{\partial f}{\partial y} \dfrac{dy}{dx} = 0 \]
+                                <p class="mt-2">Therefore:</p>
+                                \[ \dfrac{dy}{dx} = -\dfrac{\partial f / \partial x}{\partial f / \partial y} \]
+                            </div>
+
+                            <div class="bg-blue-50 p-3 rounded">
+                                <p class="font-semibold mb-2">Step 4: Find Tangent Vector</p>
+                                <p>The tangent vector to the level curve is:</p>
+                                \[ t = \begin{pmatrix} 1 \\ dy/dx \end{pmatrix} = \begin{pmatrix} 1 \\ -\frac{\partial f
+                                / \partial x}{\partial f / \partial y} \end{pmatrix} \]
+                                <p class="mt-2">Or equivalently (multiplying by \( \partial f / \partial y \)):</p>
+                                \[ t \propto \begin{pmatrix} -\partial f / \partial y \\ \partial f / \partial x
+                                \end{pmatrix} \]
+                            </div>
+
+                            <div class="bg-blue-50 p-3 rounded">
+                                <p class="font-semibold mb-2">Step 5: Compare with Gradient</p>
+                                <p>The gradient is:</p>
+                                \[ \nabla f = \begin{pmatrix} \partial f / \partial x \\ \partial f / \partial y
+                                \end{pmatrix} \]
+                            </div>
+
+                            <div class="bg-green-50 p-3 rounded">
+                                <p class="font-semibold mb-2">Step 6: Check Perpendicularity</p>
+                                <p>Compute the dot product:</p>
+                                \[ t \cdot \nabla f = (-\partial f / \partial y)(\partial f / \partial x) + (\partial f
+                                / \partial x)(\partial f / \partial y) = 0 \]
+                                <p class="mt-2 font-semibold text-green-700">Since the dot product is zero, \( \nabla f
+                                    \perp t \). ∎</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gradient Descent Algorithm -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">⬇️</span>
+                <h2 class="text-3xl font-bold">3. Gradient Descent Algorithm for Minima</h2>
+            </div>
+
+            <div class="bg-red-50 p-6 rounded-xl mb-6">
+                <p class="font-semibold text-lg text-red-700 mb-3">🔴 Question: How does gradient help in going to
+                    minima?</p>
+                <p class="font-semibold text-lg text-blue-700">📘 Answer: Just follow the descent direction, i.e.,
+                    <strong>negative of gradient</strong>!
+                </p>
+            </div>
+
+            <div class="algorithm-box">
+                <h4 class="font-semibold text-xl mb-4 text-center">🔧 Gradient Descent (GD) Algorithm</h4>
+
+                <div class="space-y-4">
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">Step 1: Start from initial guess</p>
+                        \[ x^0 \in \mathbb{R}^n \]
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">Step 2: Iterate - move in descent direction</p>
+                        \[ x^{i+1} \leftarrow x^i - t \nabla f(x^i), \quad i = 0, 1, 2, \dots \]
+                        <p class="text-sm text-gray-600 mt-2">where \( t > 0 \) is the <strong>step size</strong> (or
+                            learning rate) that tells how far to move</p>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">Step 3: Stopping Criteria</p>
+                        <p class="text-sm">Stop when:</p>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-sm mt-2">
+                            <li>Gradient is "flat": \( \|\nabla f(x^i)\| \approx 0 \) (at least machine precision)</li>
+                            <li>Or, position doesn't change: \( \|x^i - x^{i-1}\| \) is "small enough"</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/70 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">Step 4: Return minimizer</p>
+                        <p class="text-sm">Return \( x^i \) as the <strong>local minimum</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algorithm-box mt-6">
+                <h4 class="font-semibold text-xl mb-4 text-center">📈 Gradient Ascent Algorithm for Maxima</h4>
+
+                <p class="mb-4">To find <strong>maxima</strong> instead, just change the sign!</p>
+
+                <div class="bg-white/70 p-4 rounded-lg">
+                    <p class="font-semibold mb-2">Update Rule:</p>
+                    \[ x^{i+1} \leftarrow x^i + t \nabla f(x^i), \quad i = 0, 1, 2, \dots \]
+                    <p class="text-sm text-gray-600 mt-2">Note the <strong>+</strong> sign: we move <strong>in the
+                            direction</strong> of the gradient!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz 1: Algorithm Understanding -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🎯 Quiz 1: Gradient Descent Understanding</h3>
+
+            <div class="space-y-6">
+                <div>
+                    <p class="font-semibold mb-3">What is the key difference between gradient descent and gradient
+                        ascent?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz1')">
+                            A) Gradient descent is faster
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'quiz1')">
+                            B) Gradient descent moves in the direction of -∇f, while gradient ascent moves in the
+                            direction of +∇f
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz1')">
+                            C) They use different step sizes
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz1')">
+                            D) Gradient descent finds global minima, ascent finds local minima
+                        </div>
+                    </div>
+                    <div id="quiz1-feedback" class="mt-3 p-3 rounded hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cauchy History -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">👨‍🔬</span>
+                <h2 class="text-3xl font-bold">Gradient Descent History: Augustin-Louis Cauchy</h2>
+            </div>
+
+            <div class="historical-box">
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                    <div>
+                        <img src="images/cauchy_portrait.png" alt="Augustin-Louis Cauchy"
+                            class="rounded-lg shadow-lg w-full">
+                        <p class="text-center text-sm mt-2 text-gray-600 italic">Baron Augustin-Louis Cauchy (1789-1857)
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-lg mb-3">📜 Original Paper (1847)</h4>
+                        <p class="text-sm mb-4">
+                            <strong>Title:</strong> Methode generale pour la resolution des systemes d'equations
+                            simultanees
+                        </p>
+                        <p class="text-sm mb-4">
+                            <strong>Translation:</strong> "General method for resolution of systems of simultaneous
+                            equations"
+                        </p>
+                        <p class="text-sm">
+                            <strong>Published in:</strong> C. R. Acad. Sci. Paris, 25:536–538, 1847
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-2xl font-bold mb-4">📖 Review of Cauchy's Original Paper</h3>
+
+                <div class="space-y-6">
+                    <!-- Part 1 -->
+                    <div class="historical-box">
+                        <div class="bg-white p-4 rounded-lg mb-4">
+                            <img src="images/cauchy_paper1.png" alt="Cauchy's paper excerpt 1"
+                                class="rounded shadow-lg w-full">
+                        </div>
+
+                        <h4 class="font-semibold mb-3">🇫🇷 Translation (Introduction)</h4>
+                        <p class="text-sm leading-relaxed">
+                            "Given a system of simultaneous equations that we want to solve, we usually start with
+                            successive elimination of variables. However, it is important to observe that:
+                        </p>
+                        <ul class="list-decimal list-inside ml-4 space-y-2 text-sm mt-3">
+                            <li>In many cases, eliminations cannot be done in any manner.</li>
+                            <li>The resulting equations during eliminations are, in general, very complicated, even
+                                though the given equations are essentially simple..."</li>
+                        </ul>
+                    </div>
+
+                    <!-- Part 2 -->
+                    <div class="historical-box">
+                        <div class="bg-white p-4 rounded-lg mb-4">
+                            <img src="images/cauchy_paper2.png" alt="Cauchy's paper excerpt 2"
+                                class="rounded shadow-lg w-full">
+                        </div>
+
+                        <h4 class="font-semibold mb-3">🇫🇷 Translation (The Method)</h4>
+                        <p class="text-sm leading-relaxed mb-3">
+                            "Given these two points, we believe that it will be very useful to know one general method
+                            that can resolve a simultaneous system of equations. This is what I have got, and I am going
+                            to say a few words."
+                        </p>
+                        <p class="text-sm leading-relaxed">
+                            "First of all, let \( u = f(x,y,z,\dots) \) be a function of several variables \( x, y, z,
+                            \dots \) that is <strong>never negative</strong> and is continuous at least within certain
+                            limits..."
+                        </p>
+                    </div>
+
+                    <!-- Part 3: The Algorithm -->
+                    <div class="historical-box bg-gradient-to-r from-indigo-50 to-purple-50">
+                        <h4 class="font-semibold text-lg mb-3">🔬 Cauchy's Key Insight</h4>
+                        <p class="text-sm leading-relaxed mb-4">
+                            "To find the values \( x, y, z, \dots \) that will verify the equation \( u = 0 \), it will
+                            suffice to do an <strong>indefinite decrease</strong> of the function \( u \), until it
+                            vanishes."
+                        </p>
+
+                        <div class="bg-white/70 p-4 rounded-lg mt-4">
+                            <p class="font-semibold mb-2">Cauchy's Update Rule:</p>
+                            <p class="text-sm">Let \( \alpha, \beta, \gamma \) be small values. When we set:</p>
+                            \[ \alpha = -\theta X, \quad \beta = -\theta Y, \quad \gamma = -\theta Z \]
+                            <p class="text-sm mt-2">where \( X, Y, Z \) are \( D_x u, D_y u, D_z u \), we get:</p>
+                            \[ f(x - \theta X, y - \theta Y, z - \theta Z, \dots) = u - \theta(X^2 + Y^2 + Z^2 + \dots)
+                            \]
+                            <p class="text-sm mt-3 font-semibold text-green-700">
+                                Since we subtract a positive quantity from \( u \), the function is decreasing! This is
+                                <strong>gradient descent</strong>!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+
+            <div class="bg-yellow-50 p-6 rounded-xl mb-6">
+                <p class="font-semibold mb-4">Find the error in this "proof" that gradient descent always finds the
+                    global minimum:</p>
+
+                <div class="bg-white p-4 rounded-lg space-y-3 text-sm">
+                    <p class="mistake-highlight" onclick="checkMistake(this, false)" id="mistake-1">
+                        1. Gradient descent follows the direction -∇f(x).
+                    </p>
+                    <p class="mistake-highlight" onclick="checkMistake(this, false)" id="mistake-2">
+                        2. This direction points toward lower values of f.
+                    </p>
+                    <p class="mistake-highlight" onclick="checkMistake(this, true)" id="mistake-3">
+                        3. Therefore, gradient descent will always reach the global minimum of f.
+                    </p>
+                    <p class="mistake-highlight" onclick="checkMistake(this, false)" id="mistake-4">
+                        4. The algorithm stops when ∇f(x) ≈ 0.
+                    </p>
+                </div>
+
+                <div id="mistake-feedback" class="mt-4 p-3 rounded hidden"></div>
+            </div>
+        </section>
+
+        <!-- When GD Works -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">✅</span>
+                <h2 class="text-3xl font-bold">When is Gradient Descent Guaranteed to Work?</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-semibold text-lg mb-4">🎓 Key Question</h4>
+                <p class="text-lg mb-4">
+                    For which functions is GD <strong>guaranteed</strong> to find extrema (maxima or minima)?
+                </p>
+
+                <div class="bg-white/70 p-4 rounded-lg mt-4">
+                    <p class="font-semibold mb-3">Conditions for Convergence:</p>
+                    <ul class="space-y-3 list-disc list-inside">
+                        <li>
+                            <strong>Convex Functions:</strong> For minimization, if \( f \) is convex, GD finds the
+                            global minimum
+                        </li>
+                        <li>
+                            <strong>Concave Functions:</strong> For maximization, if \( f \) is concave, gradient ascent
+                            finds the global maximum
+                        </li>
+                        <li>
+                            <strong>Smooth Functions:</strong> \( f \) should be differentiable with Lipschitz
+                            continuous gradient
+                        </li>
+                        <li>
+                            <strong>Appropriate Step Size:</strong> \( t \) must be small enough for convergence
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-red-50 p-6 rounded-xl mt-6">
+                <h4 class="font-bold text-lg mb-3 text-red-700">⚠️ Warning: Non-Convex Functions</h4>
+                <p class="text-sm leading-relaxed">
+                    For <strong>non-convex</strong> functions (like most neural network loss functions!), gradient
+                    descent may:
+                </p>
+                <ul class="list-disc list-inside ml-4 space-y-2 text-sm mt-3">
+                    <li>Get stuck in <strong>local minima</strong></li>
+                    <li>Get stuck at <strong>saddle points</strong></li>
+                    <li>Depend heavily on <strong>initialization</strong></li>
+                </ul>
+                <p class="text-sm mt-4 font-semibold">
+                    This is why modern optimization uses variants like <strong>SGD</strong>, <strong>Adam</strong>,
+                    <strong>RMSProp</strong>, etc.!
+                </p>
+            </div>
+        </section>
+
+        <!-- Quiz 2: Advanced Understanding -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🎯 Quiz 2: Advanced Questions</h3>
+
+            <div class="space-y-8">
+                <div>
+                    <p class="font-semibold mb-3">1. Why is the gradient perpendicular to level curves?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz2')">
+                            A) It's a mathematical coincidence
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'quiz2')">
+                            B) Because the gradient points in the direction of greatest increase, which must be
+                            perpendicular to curves of constant value
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz2')">
+                            C) It's only true for quadratic functions
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz2')">
+                            D) Level curves don't exist for all functions
+                        </div>
+                    </div>
+                    <div id="quiz2-feedback" class="mt-3 p-3 rounded hidden"></div>
+                </div>
+
+                <div>
+                    <p class="font-semibold mb-3">2. What happens if the step size t is too large in gradient descent?
+                    </p>
+                    <div class="space-y-2">
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz3')">
+                            A) The algorithm converges faster
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz3')">
+                            B) It has no effect on convergence
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true, 'quiz3')">
+                            C) The algorithm may overshoot and diverge or oscillate
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false, 'quiz3')">
+                            D) It only affects the final accuracy
+                        </div>
+                    </div>
+                    <div id="quiz3-feedback" class="mt-3 p-3 rounded hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-gradient-to-r from-pink-500 to-purple-500 text-white p-3 rounded-xl text-2xl">📚</span>
+                <h2 class="text-3xl font-bold">Summary</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div
+                    class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-blue-700 dark:text-blue-300">🔢 Functions & Gradients</h4>
+                    <p class="text-sm">Gradients are vectors of partial derivatives that point in the direction of
+                        greatest increase</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-green-700 dark:text-green-300">🗺️ Level Curves</h4>
+                    <p class="text-sm">Curves where function has constant value; gradients are perpendicular to them</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-purple-700 dark:text-purple-300">⬇️ Gradient Descent</h4>
+                    <p class="text-sm">Iterative algorithm: x^(i+1) = x^i - t∇f(x^i) finds minima by following descent
+                        direction</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-900/30 dark:to-pink-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-pink-700 dark:text-pink-300">👨‍🔬 History</h4>
+                    <p class="text-sm">Cauchy invented gradient descent in 1847 for solving systems of equations</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-yellow-700 dark:text-yellow-300">✅ When It Works</h4>
+                    <p class="text-sm">Guaranteed for convex/concave functions; local minima for non-convex</p>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 p-6 rounded-xl">
+                    <h4 class="font-bold text-lg mb-3 text-indigo-700 dark:text-indigo-300">🎛️ Jacobian</h4>
+                    <p class="text-sm">Matrix of partial derivatives for vector-valued functions (m × n)</p>
+                </div>
+            </div>
+
+            <div class="mt-8 p-6 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl">
+                <h4 class="font-bold text-xl mb-3">🎓 The Big Picture</h4>
+                <p class="leading-relaxed">
+                    Optimization is at the heart of machine learning! Gradient descent and its variants (SGD, Adam,
+                    etc.)
+                    power the training of neural networks, making modern AI possible. Understanding the mathematics—from
+                    gradients and level curves to Cauchy's original insight—gives you deep intuition for how these
+                    algorithms work and when they succeed!
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Generative Modelling Course - Chapter 14: Optimization Methods</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+
+        // Reveal answer function
+        function revealAnswer(id) {
+            const answer = document.getElementById(id);
+            answer.classList.toggle('hidden');
+        }
+
+        // Toggle proof visibility
+        function toggleProof(proofId) {
+            const proof = document.getElementById(proofId);
+            proof.classList.toggle('expanded');
+            const button = event.target;
+            if (proof.classList.contains('expanded')) {
+                button.textContent = '📖 Click to collapse proof';
+            } else {
+                button.textContent = '📖 Click to expand proof';
+            }
+        }
+
+        // Quiz functionality
+        function checkAnswer(element, isCorrect, quizId) {
+            const feedback = document.getElementById(quizId + '-feedback');
+            const allOptions = element.parentElement.children;
+
+            // Disable all options
+            for (let option of allOptions) {
+                option.style.pointerEvents = 'none';
+            }
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.className = 'mt-3 p-3 rounded bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200';
+                feedback.textContent = '✅ Correct! Well done!';
+            } else {
+                element.classList.add('wrong');
+                feedback.className = 'mt-3 p-3 rounded bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200';
+                feedback.textContent = '❌ Not quite. Try reviewing the material above!';
+            }
+
+            feedback.classList.remove('hidden');
+        }
+
+        // Spot the mistake functionality
+        let mistakesFound = 0;
+        const totalMistakes = 1;
+
+        function checkMistake(element, isMistake) {
+            if (element.classList.contains('found')) return;
+
+            const feedback = document.getElementById('mistake-feedback');
+
+            if (isMistake) {
+                element.classList.add('found');
+                mistakesFound++;
+
+                feedback.className = 'mt-4 p-3 rounded bg-red-100 text-red-800';
+                feedback.innerHTML = `
+                    <p class="font-semibold mb-2">🎯 Found it!</p>
+                    <p class="text-sm">
+                        <strong>The error:</strong> Statement 3 is incorrect! Gradient descent may get stuck in 
+                        <strong>local minima</strong> and does NOT always find the <strong>global minimum</strong>. 
+                        It only guarantees finding the global minimum for convex functions.
+                    </p>
+                    <p class="text-sm mt-2">
+                        <strong>Correct statement:</strong> "Therefore, gradient descent will reach a <em>local</em> 
+                        minimum, which may or may not be the global minimum (unless f is convex)."
+                    </p>
+                `;
+                feedback.classList.remove('hidden');
+            } else {
+                element.style.backgroundColor = '#e5e7eb';
+                setTimeout(() => {
+                    element.style.backgroundColor = '#fef3c7';
+                }, 300);
+
+                feedback.className = 'mt-4 p-3 rounded bg-yellow-100 text-yellow-800';
+                feedback.textContent = '💭 Not quite! Keep looking...';
+                feedback.classList.remove('hidden');
+
+                setTimeout(() => {
+                    feedback.classList.add('hidden');
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+
+</html>
