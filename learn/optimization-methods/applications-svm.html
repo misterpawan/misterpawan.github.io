@@ -203,42 +203,135 @@
             </div>
         </section>
 
-        <!-- 5. Interactive Quiz -->
+        <!-- 5. The Kernel Trick -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">✨</span>
+                <h2 class="text-3xl font-bold">5. The Kernel Trick</h2>
+            </div>
+
+            <p class="mb-4">What if the data is <strong>not linearly separable</strong>? We can map the data to a
+                higher-dimensional feature space where it <em>is</em> separable.</p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                <h4 class="font-bold text-lg mb-3">Implicit Mapping</h4>
+                <p class="mb-2">Instead of computing the mapping \( \Phi(x) \) explicitly (which can be expensive or
+                    infinite-dimensional), we use a <strong>Kernel Function</strong> \( K(x_i, x_j) \) that computes the
+                    dot product in the feature space:</p>
+                \[ K(x_i, x_j) = \Phi(x_i) \cdot \Phi(x_j) \]
+                <p class="mt-2 text-sm text-gray-600">The dual formulation depends only on dot products, so we simply
+                    replace \( x_i \cdot x_j \) with \( K(x_i, x_j) \).</p>
+            </div>
+
+            <h4 class="font-bold text-lg mb-4">Popular Kernels</h4>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-indigo-50 p-4 rounded-lg">
+                    <p class="font-bold text-indigo-900">Polynomial Kernel</p>
+                    <p class="font-mono text-sm mt-1">\( K(x, z) = (x \cdot z + c)^d \)</p>
+                </div>
+                <div class="bg-indigo-50 p-4 rounded-lg">
+                    <p class="font-bold text-indigo-900">Gaussian (RBF) Kernel</p>
+                    <p class="font-mono text-sm mt-1">\( K(x, z) = \exp(-\gamma \|x - z\|^2) \)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Unconstrained SVM (Hinge Loss) -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">📉</span>
+                <h2 class="text-3xl font-bold">6. Unconstrained Form</h2>
+            </div>
+
+            <p class="mb-4">We can rewrite the Soft-Margin SVM as an unconstrained optimization problem involving the
+                <strong>Hinge Loss</strong>.</p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Loss + Penalty</h4>
+                \[ \text{minimize} \quad \sum_{i=1}^m \max(0, 1 - y_i f(x_i)) + \lambda \|w\|^2 \]
+                <ul class="list-disc list-inside mt-2 text-gray-700 text-sm">
+                    <li><strong>Loss:</strong> \( \max(0, 1 - y_i f(x_i)) \) (Hinge Loss) - penalizes misclassification.
+                    </li>
+                    <li><strong>Penalty:</strong> \( \lambda \|w\|^2 \) - regularization term (inverse of \( C \)).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. SVM Regression (SVR) -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">📊</span>
+                <h2 class="text-3xl font-bold">7. SVM Regression (SVR)</h2>
+            </div>
+
+            <p class="mb-4">SVM can also be used for regression! The goal is to find a function that fits the data
+                within an \( \epsilon \)-margin.</p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h4 class="font-bold text-lg mb-2">Optimization Model</h4>
+                \[ \begin{aligned}
+                & \text{minimize} && \frac{1}{2} \|w\|^2 \\
+                & \text{subject to} && |y_i - (w \cdot x_i + b)| \leq \epsilon
+                \end{aligned} \]
+                <p class="text-sm text-gray-600 mt-2">We ignore errors smaller than \( \epsilon \), creating a "tube"
+                    around the regression line.</p>
+            </div>
+        </section>
+
+        <!-- 8. Solving Dual Kernel SVM -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-gray-100 text-gray-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-3xl font-bold">8. Solving via QP</h2>
+            </div>
+
+            <p class="mb-4">To solve the Dual Kernel SVM, we map it to a standard Quadratic Programming (QP) solver.</p>
+
+            <div class="bg-gray-50 p-6 rounded-xl font-mono text-sm overflow-x-auto">
+                <strong>Standard QP:</strong> min (1/2)xᵀPx + qᵀx s.t. Gx ≤ h, Ax = b <br><br>
+                <strong>SVM Mapping:</strong> <br>
+                - Variable x = [λ₁, ..., λₘ]ᵀ <br>
+                - Matrix Pᵢⱼ = yᵢyⱼ K(xᵢ, xⱼ) <br>
+                - Vector q = [-1, ..., -1]ᵀ <br>
+                - Equality: Σ λᵢyᵢ = 0 (A = yᵀ, b = 0) <br>
+                - Bounds: 0 ≤ λᵢ ≤ C
+            </div>
+        </section>
+
+        <!-- 9. Interactive Quiz -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
                 <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
-                <h2 class="text-3xl font-bold">5. Test Your Understanding</h2>
+                <h2 class="text-3xl font-bold">9. Test Your Understanding</h2>
             </div>
 
             <div class="space-y-6">
                 <!-- Quiz 1 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">1. What does the parameter C control in Soft-Margin SVM?</h4>
+                    <h4 class="font-bold mb-3">1. What is the main advantage of the Kernel Trick?</h4>
                     <div class="flex flex-col gap-2">
-                        <button onclick="alert('Incorrect. That is controlled by the kernel.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The dimensionality of
-                            the feature space.</button>
+                        <button onclick="alert('Incorrect. It actually increases the effective dimensionality.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It reduces the
+                            dimensionality of the data.</button>
                         <button
-                            onclick="alert('Correct! A large C penalizes mistakes heavily (hard margin), while a small C allows more misclassification (softer margin).')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The trade-off between
-                            maximizing the margin and minimizing misclassification.</button>
-                        <button onclick="alert('Incorrect. C is a regularization parameter, not the learning rate.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The learning rate of
-                            the gradient descent.</button>
+                            onclick="alert('Correct! It allows us to operate in a high-dimensional space without explicitly computing the coordinates, using only dot products.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It avoids explicit
+                            computation of high-dimensional features.</button>
                     </div>
                 </div>
 
                 <!-- Quiz 2 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">2. Why is the Dual formulation particularly useful?</h4>
+                    <h4 class="font-bold mb-3">2. In Hinge Loss, when is the loss zero?</h4>
                     <div class="flex flex-col gap-2">
                         <button
-                            onclick="alert('Correct! Since it only uses dot products, we can replace them with Kernel functions.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It allows the use of
-                            Kernels for non-linear separation.</button>
-                        <button onclick="alert('Incorrect. The primal is also convex.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It makes the problem
-                            convex (the primal is not).</button>
+                            onclick="alert('Correct! If the point is correctly classified and outside the margin (y*f(x) >= 1), the loss is max(0, negative) = 0.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">When the point is
+                            correctly classified with a margin of at least 1.</button>
+                        <button
+                            onclick="alert('Incorrect. Even if correctly classified, if it is within the margin (0 < y*f(x) < 1), there is a loss.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Whenever the point is
+                            correctly classified (y*f(x) > 0).</button>
                     </div>
                 </div>
             </div>
