@@ -198,7 +198,8 @@
             <div class="definition-box">
                 <h4 class="font-bold text-lg mb-2">Definition</h4>
                 <p class="mb-3">For the problem minimize \( f(x) \) subject to \( h(x) = 0 \), we define the
-                    <strong>Lagrangian</strong>:</p>
+                    <strong>Lagrangian</strong>:
+                </p>
                 \[ \mathcal{L}(x, \lambda) = f(x) + \lambda h(x) \]
             </div>
 
@@ -243,6 +244,8 @@
             </div>
         </section>
 
+        </section>
+
         <!-- 5. Interactive Quiz -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
@@ -251,6 +254,7 @@
             </div>
 
             <div class="space-y-6">
+                <!-- Quiz 1 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
                     <h4 class="font-bold mb-3">1. At a constrained minimum, the gradient of the objective function is:
                     </h4>
@@ -266,14 +270,49 @@
                             constraint gradient</button>
                     </div>
                 </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What is the geometric interpretation of the Lagrange multiplier
+                        \(\lambda\)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Incorrect. It scales the constraint gradient to match the objective gradient.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It represents the slope
+                            of the objective function.</button>
+                        <button
+                            onclick="alert('Correct! \(\lambda\) is the scaling factor relating the two gradients.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The scaling factor
+                            between \(\nabla f\) and \(\nabla h\).</button>
+                        <button onclick="alert('Incorrect. It is a scalar, not a vector.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The direction of
+                            steepest descent.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. If \(\nabla f\) is orthogonal to the tangent of the constraint curve,
+                        what does this imply?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! This is the condition for a local extremum.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">We are at a critical
+                            point (candidate for min/max).</button>
+                        <button onclick="alert('Incorrect. It means we cannot decrease f by moving along the curve.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">We can decrease \(f\)
+                            by moving along the curve.</button>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- 6. Spot the Mistake -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
-            <div class="bg-red-50 p-6 rounded-xl border border-red-100">
-                <p class="font-semibold mb-4">A student claims:</p>
+
+            <!-- Scenario 1 -->
+            <div class="bg-red-50 p-6 rounded-xl border border-red-100 mb-6">
+                <p class="font-semibold mb-4">Scenario 1: A student claims:</p>
                 <p class="italic text-gray-700 mb-4">"If \( \nabla f(x) = 0 \), then \( x \) must be the solution to the
                     constrained optimization problem minimize \( f(x) \) subject to \( h(x)=0 \)."</p>
 
@@ -285,6 +324,24 @@
                     <div onclick="alert('Incorrect. Think about the geometric picture. The minimum is where the level curve touches the constraint, not necessarily the bottom of the bowl.')"
                         class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-red-50">
                         True. Gradient zero means minimum.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario 2 -->
+            <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                <p class="font-semibold mb-4">Scenario 2: Another student claims:</p>
+                <p class="italic text-gray-700 mb-4">"For the problem \(\min x^2 + y^2\) s.t. \(x+y=1\), the Lagrange
+                    multiplier \(\lambda\) must be positive."</p>
+
+                <div class="space-y-3">
+                    <div onclick="alert('Correct! The sign of \(\lambda\) depends on the direction of \(\nabla h\). For equality constraints, \(\lambda\) can be positive or negative.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. \(\lambda\) can be negative for equality constraints.
+                    </div>
+                    <div onclick="alert('Incorrect. Unlike inequality constraints (KKT conditions), equality constraints do not restrict the sign of \(\lambda\).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-red-50">
+                        True. Multipliers are always positive.
                     </div>
                 </div>
             </div>
