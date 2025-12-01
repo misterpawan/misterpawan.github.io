@@ -333,6 +333,120 @@
             </div>
         </section>
 
+        <!-- 6. Optimality Conditions -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🔑</span>
+                <h2 class="text-3xl font-bold">6. Optimality Conditions</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-3">General Criterion</h4>
+                <p class="mb-3">For a differentiable convex objective \( f_0 \), a point \( x \) is optimal if and only
+                    if \( x \) is feasible and:</p>
+                \[ \nabla f_0(x)^T (y - x) \geq 0 \quad \text{for all feasible } y \]
+                <p class="text-sm text-gray-600 mt-2">Geometric interpretation: The gradient makes an obtuse angle with
+                    any vector pointing into the feasible set.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Unconstrained Problem</h4>
+                    <p class="mb-2">If there are no constraints, the condition reduces to:</p>
+                    \[ \nabla f_0(x) = 0 \]
+                    <p class="text-sm text-gray-500 mt-2">Necessary and sufficient for convex problems.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Equality Constraints Only</h4>
+                    <p class="mb-2">Minimize \( f_0(x) \) subject to \( Ax = b \).</p>
+                    <p class="mb-2">Optimality condition (Lagrange):</p>
+                    \[ \nabla f_0(x) + A^T \nu = 0 \]
+                    <p class="text-sm text-gray-500">Gradient must be orthogonal to the nullspace of A.</p>
+                </div>
+            </div>
+
+            <div class="example-box mt-6">
+                <h4 class="font-bold text-lg mb-3">Example: Unconstrained Quadratic</h4>
+                <p>Minimize \( f_0(x) = \frac{1}{2}x^T P x + q^T x + r \) with \( P \succeq 0 \).</p>
+                <p class="mt-2">Optimality condition: \( Px + q = 0 \).</p>
+                <ul class="list-disc list-inside mt-2 text-sm text-gray-700">
+                    <li>If \( P \succ 0 \), unique solution \( x^* = -P^{-1}q \).</li>
+                    <li>If \( P \) is singular, solution exists only if \( q \in \mathcal{R}(P) \).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. Optimization Model Classes -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📚</span>
+                <h2 class="text-3xl font-bold">7. Optimization Model Classes</h2>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Linear Programming -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-indigo-500">
+                    <h4 class="font-bold text-xl mb-3">Linear Programming (LP)</h4>
+                    <p class="mb-3">Objective and constraints are all affine.</p>
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded mb-4">
+                        minimize &nbsp;&nbsp; c^T x + d <br>
+                        subject to &nbsp; Gx \leq h <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Ax = b
+                    </div>
+
+                    <div class="bg-indigo-50 p-4 rounded-lg">
+                        <h5 class="font-bold text-indigo-900 mb-2">Example: The Diet Problem</h5>
+                        <p class="text-sm mb-2">Find the cheapest diet satisfying nutrient requirements.</p>
+                        <ul class="list-disc list-inside text-sm text-indigo-800">
+                            <li><strong>Variables:</strong> Amounts of different foods \( x_j \).</li>
+                            <li><strong>Objective:</strong> Minimize cost \( c^T x \).</li>
+                            <li><strong>Constraints:</strong> Nutrient intake \( \geq \) required limits; \( x \geq 0
+                                \).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- QP and QCQP -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                    <h4 class="font-bold text-xl mb-3">Quadratic Programming (QP)</h4>
+                    <p class="mb-3">Convex quadratic objective, affine constraints.</p>
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded mb-4">
+                        minimize &nbsp;&nbsp; (1/2)x^T P x + q^T x + r <br>
+                        subject to &nbsp; Gx \leq h, \quad Ax = b
+                    </div>
+
+                    <h5 class="font-bold text-lg mt-4 mb-2">Quadratically Constrained QP (QCQP)</h5>
+                    <p class="mb-2">Constraints are also convex quadratics (intersections of ellipsoids).</p>
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded">
+                        subject to &nbsp; (1/2)x^T P_i x + q_i^T x + r_i \leq 0
+                    </div>
+                </div>
+
+                <!-- SOCP -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500">
+                    <h4 class="font-bold text-xl mb-3">Second Order Cone Programming (SOCP)</h4>
+                    <p class="mb-3">Includes constraints on the norm of affine functions (cones).</p>
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded">
+                        subject to &nbsp; || A_i x + b_i ||_2 \leq c_i^T x + d_i
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Generalizes LP and QCQP.</p>
+                </div>
+
+                <!-- SDP -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500">
+                    <h4 class="font-bold text-xl mb-3">Semidefinite Programming (SDP)</h4>
+                    <p class="mb-3">Optimization over the cone of positive semidefinite matrices.</p>
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded">
+                        minimize &nbsp;&nbsp; tr(C X) <br>
+                        subject to &nbsp; tr(A_i X) = b_i, \quad X \succeq 0
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Constraints are Linear Matrix Inequalities (LMIs).</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Chapter Navigation -->
         <div class="flex justify-between mt-12" data-aos="fade-up">
             <a href="convex-functions.html"
