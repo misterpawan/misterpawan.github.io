@@ -246,67 +246,176 @@
 
         </section>
 
-        <!-- 5. Interactive Quiz -->
+        <!-- 5. Lagrange Dual Function -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🔗</span>
+                <h2 class="text-3xl font-bold">5. Lagrange Dual Function</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p class="mb-3">The <strong>Lagrange dual function</strong> \( g: \mathbb{R}^m \times \mathbb{R}^p
+                    \rightarrow \mathbb{R} \) is defined as the minimum value of the Lagrangian over \( x \):</p>
+                \[ g(\lambda, \nu) = \inf_{x \in \mathcal{D}} L(x, \lambda, \nu) = \inf_{x \in \mathcal{D}} \left(
+                f_0(x) + \sum_{i=1}^m \lambda_i f_i(x) + \sum_{i=1}^p \nu_i h_i(x) \right) \]
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mt-6">
+                <h4 class="font-bold text-lg mb-3">Key Properties</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>Concavity:</strong> The dual function \( g(\lambda, \nu) \) is <strong>always
+                            concave</strong>, even if the original problem is not convex! (It's the pointwise infimum of
+                        affine functions).</li>
+                    <li><strong>Lower Bound:</strong> For any \( \lambda \geq 0 \) and any \( \nu \), \( g(\lambda, \nu)
+                        \leq p^* \).</li>
+                </ul>
+            </div>
+
+            <div class="example-box mt-6">
+                <h4 class="font-bold text-lg mb-3">Example: Least Squares</h4>
+                <p class="mb-2">Minimize \( x^T x \) subject to \( Ax = b \).</p>
+                <p class="mb-2">Lagrangian: \( L(x, \nu) = x^T x + \nu^T (Ax - b) \).</p>
+                <p class="mb-2">Minimize w.r.t \( x \): \( \nabla_x L = 2x + A^T \nu = 0 \implies x = -(1/2)A^T \nu \).
+                </p>
+                <p>Substitute back to get \( g(\nu) = -(1/4)\nu^T A A^T \nu - b^T \nu \).</p>
+            </div>
+        </section>
+
+        <!-- 6. Weak and Strong Duality -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">⚖️</span>
+                <h2 class="text-3xl font-bold">6. Weak and Strong Duality</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">Weak Duality</h4>
+                    <p class="mb-2">Let \( d^* \) be the optimal value of the dual problem (maximize \( g \)).</p>
+                    \[ d^* \leq p^* \]
+                    <p class="text-sm text-gray-600">This always holds. The difference \( p^* - d^* \) is the
+                        <strong>duality gap</strong>.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">Strong Duality</h4>
+                    <p class="mb-2">When the gap is zero:</p>
+                    \[ d^* = p^* \]
+                    <p class="text-sm text-gray-600">Usually holds for convex problems under certain conditions (like
+                        Slater's).</p>
+                </div>
+            </div>
+
+            <div class="theorem-box mt-6">
+                <h4 class="font-bold text-lg mb-2">Slater's Condition</h4>
+                <p class="mb-2">If the primal problem is convex and there exists a strictly feasible point \( x \)
+                    (where \( f_i(x) < 0 \)), then <strong>strong duality holds</strong>.</p>
+            </div>
+        </section>
+
+        <!-- 7. KKT Conditions -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🔑</span>
+                <h2 class="text-3xl font-bold">7. KKT Conditions</h2>
+            </div>
+
+            <p class="mb-6">For differentiable functions, if strong duality holds, the optimal primal and dual points
+                must satisfy the <strong>Karush-Kuhn-Tucker (KKT)</strong> conditions:</p>
+
+            <div class="bg-gray-50 p-6 rounded-xl font-mono text-sm space-y-3 border border-gray-200">
+                <div class="flex gap-4">
+                    <span class="font-bold text-blue-600">1. Primal Feasibility:</span>
+                    <span>\( f_i(x^*) \leq 0, \quad h_i(x^*) = 0 \)</span>
+                </div>
+                <div class="flex gap-4">
+                    <span class="font-bold text-blue-600">2. Dual Feasibility:</span>
+                    <span>\( \lambda^* \geq 0 \)</span>
+                </div>
+                <div class="flex gap-4">
+                    <span class="font-bold text-blue-600">3. Complementary Slackness:</span>
+                    <span>\( \lambda_i^* f_i(x^*) = 0 \)</span>
+                </div>
+                <div class="flex gap-4">
+                    <span class="font-bold text-blue-600">4. Stationarity:</span>
+                    <span>\( \nabla f_0(x^*) + \sum \lambda_i^* \nabla f_i(x^*) + \sum \nu_i^* \nabla h_i(x^*) = 0
+                        \)</span>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-teal-50 p-4 rounded-lg text-teal-900 text-sm">
+                <strong>Theorem:</strong> For convex problems, KKT conditions are <strong>sufficient</strong> for
+                optimality. If you find points satisfying these, you have found the solution!
+            </div>
+        </section>
+
+        <!-- 8. Solving Primal via Dual -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-6">8. Solving Primal via Dual</h2>
+            <p class="mb-4">If strong duality holds, we can solve the (often easier) dual problem to find \( \lambda^*,
+                \nu^* \). Then, we find the primal solution \( x^* \) by minimizing the Lagrangian:</p>
+            \[ x^* = \text{argmin}_x L(x, \lambda^*, \nu^*) \]
+        </section>
+
+        <!-- 9. Interactive Quiz -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
                 <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
-                <h2 class="text-3xl font-bold">5. Test Your Understanding</h2>
+                <h2 class="text-3xl font-bold">9. Test Your Understanding</h2>
             </div>
 
             <div class="space-y-6">
                 <!-- Quiz 1 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">1. At a constrained minimum, the gradient of the objective function is:
-                    </h4>
+                    <h4 class="font-bold mb-3">1. The Lagrange dual function \( g(\lambda, \nu) \) is always:</h4>
                     <div class="flex flex-col gap-2">
-                        <button onclick="alert('Incorrect. It is usually non-zero.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Zero</button>
-                        <button onclick="alert('Correct! It is parallel to the gradient of the constraint.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Parallel to the
-                            constraint gradient</button>
                         <button
-                            onclick="alert('Incorrect. That would mean we can move along the constraint to decrease the function.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Orthogonal to the
-                            constraint gradient</button>
+                            onclick="alert('Correct! It is the infimum of affine functions, which is always concave.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Concave</button>
+                        <button onclick="alert('Incorrect. It is concave, not convex.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Convex</button>
+                        <button onclick="alert('Incorrect. It depends on the primal problem.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Depends on the
+                            primal</button>
                     </div>
                 </div>
 
                 <!-- Quiz 2 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">2. What is the geometric interpretation of the Lagrange multiplier
-                        \(\lambda\)?</h4>
+                    <h4 class="font-bold mb-3">2. Slater's condition guarantees:</h4>
                     <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. It guarantees strong duality.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Weak duality
+                            only</button>
                         <button
-                            onclick="alert('Incorrect. It scales the constraint gradient to match the objective gradient.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It represents the slope
-                            of the objective function.</button>
+                            onclick="alert('Correct! If the problem is convex and Slater\'s condition holds, we have strong duality (zero gap).')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Strong
+                            duality</button>
                         <button
-                            onclick="alert('Correct! \(\lambda\) is the scaling factor relating the two gradients.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The scaling factor
-                            between \(\nabla f\) and \(\nabla h\).</button>
-                        <button onclick="alert('Incorrect. It is a scalar, not a vector.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The direction of
-                            steepest descent.</button>
+                            onclick="alert('Incorrect. It guarantees feasibility, but the main implication is strong duality.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Primal
+                            infeasibility</button>
                     </div>
                 </div>
 
                 <!-- Quiz 3 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">3. If \(\nabla f\) is orthogonal to the tangent of the constraint curve,
-                        what does this imply?</h4>
+                    <h4 class="font-bold mb-3">3. Complementary slackness \( \lambda_i f_i(x) = 0 \) implies:</h4>
                     <div class="flex flex-col gap-2">
-                        <button onclick="alert('Correct! This is the condition for a local extremum.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">We are at a critical
-                            point (candidate for min/max).</button>
-                        <button onclick="alert('Incorrect. It means we cannot decrease f by moving along the curve.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">We can decrease \(f\)
-                            by moving along the curve.</button>
+                        <button
+                            onclick="alert('Correct! Either the constraint is active (f=0) or the multiplier is zero.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">If \( \lambda_i > 0
+                            \), then \( f_i(x) = 0 \)</button>
+                        <button onclick="alert('Incorrect. Both can be zero.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Both must be
+                            non-zero</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 6. Spot the Mistake -->
+        <!-- 10. Spot the Mistake -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
 
