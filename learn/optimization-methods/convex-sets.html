@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convex Sets & Functions | Optimization Methods</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #dbeafe, #eff6ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .proof-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #fae8ff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #d1fae5, #ecfdf5);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .example-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fef3c7, #fef9e7);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background-color: #f3f4f6;
+            border-color: #fda085;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+
+        .placeholder-image {
+            width: 100%;
+            height: 200px;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            color: #6b7280;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Optimization Methods
+            </a>
+            <span class="text-sm font-semibold">Chapter 2: Convex Sets</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">🔶</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Convex Sets & Functions</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                The Foundation of Modern Optimization: From Geometry to Metric Spaces
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Definition of Convex Sets -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">📐</span>
+                <h2 class="text-3xl font-bold">1. What is a Convex Set?</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <div class="definition-box">
+                        <h4 class="font-semibold text-lg mb-4">🔷 Geometric Definition</h4>
+                        <p class="mb-4">
+                            A set is <span class="text-blue-600 font-bold">convex</span> if every line segment between
+                            two points in the set <strong>stays completely inside the set</strong>.
+                        </p>
+                        <p>Mathematically:</p>
+                        \[ \theta x_1 + (1 - \theta) x_2 \in C, \quad \forall \theta \in [0, 1] \]
+                    </div>
+
+                    <div class="definition-box mt-4">
+                        <h4 class="font-semibold text-lg mb-4">🔷 Algebraic Definition</h4>
+                        <p class="mb-4">
+                            Generally, a set is convex if all <span class="text-blue-600 font-bold">convex
+                                combinations</span> lie in the set:
+                        </p>
+                        \[ \sum \theta_i x_i \in C, \quad \text{where } \sum \theta_i = 1, \theta_i \geq 0 \]
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-inner flex flex-col items-center justify-center">
+                    <h4 class="font-bold mb-2">Interactive Visualization</h4>
+                    <svg width="300" height="200" viewBox="0 0 300 200" class="border rounded bg-gray-50">
+                        <!-- Convex Shape (Circle) -->
+                        <circle cx="80" cy="100" r="60" fill="rgba(255, 165, 0, 0.2)" stroke="orange"
+                            stroke-width="2" />
+                        <text x="80" y="180" text-anchor="middle" font-size="12" fill="orange">Convex</text>
+
+                        <!-- Non-Convex Shape (Kidney) -->
+                        <path d="M 200 60 Q 280 60 280 140 Q 200 180 200 140 Q 200 100 200 60"
+                            fill="rgba(255, 0, 0, 0.1)" stroke="red" stroke-width="2" />
+                        <text x="240" y="180" text-anchor="middle" font-size="12" fill="red">Non-Convex</text>
+
+                        <!-- Line Segment Example -->
+                        <line x1="220" y1="70" x2="220" y2="170" stroke="black" stroke-dasharray="4" />
+                        <circle cx="220" cy="70" r="3" fill="black" />
+                        <circle cx="220" cy="170" r="3" fill="black" />
+                        <text x="230" y="120" font-size="10">Line goes outside!</text>
+                    </svg>
+                    <p class="text-sm text-gray-500 mt-2 text-center">
+                        In the red shape, the line between two points goes outside the set.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-yellow-50 p-4 rounded-lg">
+                <h4 class="font-bold text-yellow-800 mb-2">🤔 Quiz: Equivalence</h4>
+                <p class="mb-2">Prove that the geometric definition (2 points) implies the algebraic definition (n
+                    points)!</p>
+                <button class="text-blue-600 underline text-sm"
+                    onclick="document.getElementById('proof-equiv').classList.toggle('hidden')">Show Hint</button>
+                <div id="proof-equiv" class="hidden mt-2 text-sm text-gray-700 italic">
+                    Hint: Use induction on the number of points \( n \).
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Metric Spaces & History -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📜</span>
+                <h2 class="text-3xl font-bold">2. Convexity in General Spaces</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Maurice Fréchet & Metric Spaces</h3>
+                    <p class="mb-4">
+                        Metric spaces were first proposed by French mathematician <strong>Maurice Fréchet</strong> in
+                        his 1906 thesis.
+                        A metric space is a pair \((X, d)\) where \(d\) is a distance function satisfying:
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-sm bg-white/50 p-4 rounded-lg">
+                        <li>\( d(x,y) \geq 0 \) (Non-negativity)</li>
+                        <li>\( d(x,y) = 0 \iff x=y \) (Identity)</li>
+                        <li>\( d(x,y) = d(y,x) \) (Symmetry)</li>
+                        <li>\( d(x,y) \leq d(x,z) + d(z,y) \) (Triangle Inequality)</li>
+                    </ul>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div
+                        class="placeholder-image bg-gray-200 rounded-lg w-48 h-64 mb-2 flex items-center justify-center">
+                        <span class="text-gray-500">Maurice Fréchet Portrait</span>
+                    </div>
+                    <p class="text-sm italic text-gray-600">Maurice Fréchet (1878-1973)</p>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-xl mb-6">
+                <h4 class="font-bold text-lg mb-3 text-indigo-800">🌐 Menger Convexity</h4>
+                <div class="flex gap-6 items-start">
+                    <div class="flex-1">
+                        <p class="mb-4">
+                            How do we define convexity if we don't have "lines"? Austrian mathematician <strong>Karl
+                                Menger</strong> (1928) proposed using only distance:
+                        </p>
+                        <div class="definition-box bg-white">
+                            <p>
+                                A metric space \((X, d)\) is <strong>Menger convex</strong> if for every distinct \(x, y
+                                \in X\), there exists a third point \(z \in X\) such that:
+                                \[ d(x,y) = d(x,z) + d(z,y) \]
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-32 flex-shrink-0 flex flex-col items-center">
+                        <div
+                            class="placeholder-image bg-gray-200 rounded-lg w-24 h-32 mb-2 flex items-center justify-center">
+                            <span class="text-xs text-gray-500">Karl Menger</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-100 p-4 rounded-lg text-center">
+                    <div class="placeholder-image bg-gray-300 rounded h-32 mb-2 flex items-center justify-center">
+                        <span class="text-gray-600">Real Projective Space</span>
+                    </div>
+                    <p class="text-sm font-semibold">Exotic Manifold: Real Projective Space</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg text-center">
+                    <div class="placeholder-image bg-gray-300 rounded h-32 mb-2 flex items-center justify-center">
+                        <span class="text-gray-600">Morin Surface</span>
+                    </div>
+                    <p class="text-sm font-semibold">Exotic Manifold: Morin Surface</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Examples of Convex Sets -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🧩</span>
+                <h2 class="text-3xl font-bold">3. Examples of Convex Sets</h2>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Hyperplanes & Halfspaces -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-xl mb-3">Hyperplanes & Halfspaces</h4>
+                        <div class="definition-box">
+                            <p class="font-semibold">Hyperplane:</p>
+                            \[ \{ x \mid a^T x = b \} \]
+                            <p class="font-semibold mt-2">Halfspace:</p>
+                            \[ \{ x \mid a^T x \leq b \} \]
+                        </div>
+                        <p class="mt-4 text-gray-700">
+                            <strong>Intuition:</strong> A hyperplane is like a flat sheet (line in 2D, plane in 3D). A
+                            halfspace is everything on one side of it.
+                        </p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col items-center">
+                        <svg width="250" height="150" viewBox="0 0 250 150">
+                            <!-- Halfspace shading -->
+                            <polygon points="0,150 250,50 250,0 0,0" fill="rgba(16, 185, 129, 0.1)" />
+                            <!-- Hyperplane line -->
+                            <line x1="0" y1="150" x2="250" y2="50" stroke="green" stroke-width="3" />
+                            <!-- Normal vector -->
+                            <line x1="125" y1="100" x2="145" y2="150" stroke="black" marker-end="url(#arrow)" />
+                            <text x="150" y="140" font-size="12">Normal a</text>
+                            <text x="50" y="50" font-size="12" fill="green">Halfspace (≤ b)</text>
+                        </svg>
+                        <p class="text-sm text-gray-500 mt-2">Green region is the halfspace defined by the line.</p>
+                    </div>
+                </div>
+
+                <!-- Norm Balls -->
+                <div>
+                    <h4 class="font-bold text-xl mb-3">Norm Balls</h4>
+                    <p class="mb-4">A norm ball is defined as \( \{ x \mid \|x\| \leq 1 \} \). The shape depends on the
+                        norm!</p>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <svg width="100" height="100" viewBox="-1.5 -1.5 3 3"
+                                class="mx-auto bg-white rounded border">
+                                <polygon points="1,0 0,1 -1,0 0,-1" fill="rgba(59, 130, 246, 0.2)" stroke="blue"
+                                    stroke-width="0.05" />
+                            </svg>
+                            <p class="mt-2 font-semibold">L1 Norm (Diamond)</p>
+                        </div>
+                        <div class="text-center">
+                            <svg width="100" height="100" viewBox="-1.5 -1.5 3 3"
+                                class="mx-auto bg-white rounded border">
+                                <circle cx="0" cy="0" r="1" fill="rgba(59, 130, 246, 0.2)" stroke="blue"
+                                    stroke-width="0.05" />
+                            </svg>
+                            <p class="mt-2 font-semibold">L2 Norm (Circle)</p>
+                        </div>
+                        <div class="text-center">
+                            <svg width="100" height="100" viewBox="-1.5 -1.5 3 3"
+                                class="mx-auto bg-white rounded border">
+                                <rect x="-1" y="-1" width="2" height="2" fill="rgba(59, 130, 246, 0.2)" stroke="blue"
+                                    stroke-width="0.05" />
+                            </svg>
+                            <p class="mt-2 font-semibold">L∞ Norm (Square)</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-red-50 p-3 rounded text-red-800 text-sm">
+                        <strong>Quiz:</strong> Are all norm balls convex? <br>
+                        <strong>Answer:</strong> Yes, for \( p \geq 1 \). For \( 0 < p < 1 \), the "ball" is star-shaped
+                            but NOT convex! </div>
+                    </div>
+
+                    <!-- Ellipsoids & Cones -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-xl mb-3">Ellipsoids</h4>
+                            <div class="definition-box">
+                                \[ \{ x \mid (x-x_c)^T P (x-x_c) \leq 1 \} \]
+                                <p class="text-sm mt-2">where \( P \) is symmetric positive definite.</p>
+                            </div>
+                            <p class="text-sm">Think of it as a squashed sphere. The eigenvalues of \( P \) determine
+                                the axis lengths.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl mb-3">Cones</h4>
+                            <div class="definition-box">
+                                <p class="text-sm"><strong>Norm Cone:</strong> \( \{ (x,t) \mid \|x\| \leq t \} \)</p>
+                                <p class="text-sm mt-2">Also known as the "Ice Cream Cone" or Second-Order Cone.</p>
+                            </div>
+                            <div class="flex justify-center mt-2">
+                                <svg width="100" height="100" viewBox="-1 -1 2 2">
+                                    <path d="M -0.5 1 L 0 0 L 0.5 1" fill="rgba(255, 165, 0, 0.2)" stroke="orange"
+                                        stroke-width="0.05" />
+                                    <ellipse cx="0" cy="1" rx="0.5" ry="0.1" fill="rgba(255, 165, 0, 0.2)"
+                                        stroke="orange" stroke-width="0.05" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Polyhedra -->
+                    <div class="bg-gray-50 p-6 rounded-xl">
+                        <h4 class="font-bold text-xl mb-3">Polyhedra</h4>
+                        <p class="mb-4">
+                            A <strong>polyhedron</strong> is the intersection of a finite number of halfspaces and
+                            hyperplanes.
+                        </p>
+                        \[ P = \{ x \mid Ax \leq b, Cx = d \} \]
+                        <p class="mt-4 text-sm text-gray-600">
+                            <strong>Note:</strong> A bounded polyhedron is called a <strong>polytope</strong>.
+                        </p>
+                    </div>
+                </div>
+        </section>
+
+        <!-- 4. Operations Preserving Convexity -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🛠️</span>
+                <h2 class="text-3xl font-bold">4. Operations Preserving Convexity</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Intersection -->
+                <div class="theorem-box">
+                    <h4 class="font-semibold text-lg mb-2">1. Intersection</h4>
+                    <p>If \( S_1 \) and \( S_2 \) are convex, then \( S_1 \cap S_2 \) is convex.</p>
+                    <p class="mt-2 text-sm"><strong>Generalization:</strong> The intersection of <em>any</em> number
+                        (even infinite!) of convex sets is convex.</p>
+                </div>
+
+                <!-- Affine Maps -->
+                <div class="theorem-box">
+                    <h4 class="font-semibold text-lg mb-2">2. Affine Maps</h4>
+                    <p>Let \( f(x) = Ax + b \) be an affine function.</p>
+                    <ul class="list-disc list-inside mt-2 text-sm">
+                        <li>The <strong>image</strong> of a convex set under \( f \) is convex.</li>
+                        <li>The <strong>inverse image</strong> of a convex set under \( f \) is convex.</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4 class="font-semibold text-lg mb-2">Examples of Affine Operations</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Scaling:</strong> \( \alpha S = \{ \alpha x \mid x \in S \} \) is convex.</li>
+                        <li><strong>Translation:</strong> \( S + a = \{ x + a \mid x \in S \} \) is convex.</li>
+                        <li><strong>Projection:</strong> The shadow of a convex object is convex!</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+            <div class="bg-yellow-50 p-6 rounded-xl">
+                <p class="font-semibold mb-4">Find the error in this statement about unions:</p>
+                <div class="bg-white p-4 rounded-lg space-y-3 text-sm">
+                    <p class="mistake-highlight cursor-pointer hover:bg-yellow-100 p-2 rounded"
+                        onclick="alert('Correct! This is true.')">
+                        1. The intersection of two convex sets is always convex.
+                    </p>
+                    <p class="mistake-highlight cursor-pointer hover:bg-yellow-100 p-2 rounded"
+                        onclick="alert('Correct! This is true.')">
+                        2. A single point is a convex set.
+                    </p>
+                    <p class="mistake-highlight cursor-pointer hover:bg-red-100 p-2 rounded"
+                        onclick="alert('FOUND IT! The union of two convex sets is NOT necessarily convex. Think of two disjoint circles!')">
+                        3. The union of two convex sets is always convex.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="gradients.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous Chapter</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 transition">
+                        Gradients & Descent</p>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Optimization Methods Course - Chapter 2</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+    </script>
+</body>
+
+</html>
