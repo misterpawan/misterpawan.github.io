@@ -130,14 +130,16 @@
                         <h4 class="font-bold text-lg mb-2">Mathematical Definition</h4>
                         <p class="mb-3">A function \( f: \mathbb{R}^n \rightarrow \mathbb{R} \) is
                             <strong>convex</strong> if \( \textbf{dom } f \) is a convex set and for all \( x, y \in
-                            \textbf{dom } f \) and \( 0 \leq \theta \leq 1 \):</p>
+                            \textbf{dom } f \) and \( 0 \leq \theta \leq 1 \):
+                        </p>
                         \[ f(\theta x + (1 - \theta) y) \leq \theta f(x) + (1-\theta) f(y) \]
                     </div>
 
                     <div class="definition-box mt-4">
                         <h4 class="font-bold text-lg mb-2">Geometric Interpretation</h4>
                         <p>The line segment joining points \( (x, f(x)) \) and \( (y, f(y)) \) lies
-                            <strong>above</strong> the graph of \( f \).</p>
+                            <strong>above</strong> the graph of \( f \).
+                        </p>
                     </div>
 
                     <div class="bg-gray-100 p-4 rounded-xl mt-4">
@@ -151,31 +153,13 @@
                     </div>
                 </div>
 
-                <!-- Interactive Visualization -->
+                <!-- Visual Illustration -->
                 <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-                    <h4 class="font-bold mb-4 text-gray-700">Interactive Visualizer</h4>
-                    <svg width="350" height="250" viewBox="0 0 350 250" class="w-full border rounded-lg bg-gray-50">
-                        <!-- Graph of x^2 (Convex) -->
-                        <path d="M 50,200 Q 175,200 175,200 Q 175,200 300,200" fill="none" stroke="#e5e7eb"
-                            stroke-width="2" id="grid-line" />
-
-                        <!-- Parabola -->
-                        <path d="M 75,50 Q 175,250 275,50" fill="none" stroke="#3b82f6" stroke-width="3" />
-
-                        <!-- Chord -->
-                        <line x1="100" y1="150" x2="250" y2="150" stroke="#ef4444" stroke-width="2"
-                            stroke-dasharray="4" />
-                        <circle cx="100" cy="150" r="4" fill="#ef4444" />
-                        <circle cx="250" cy="150" r="4" fill="#ef4444" />
-
-                        <!-- Labels -->
-                        <text x="175" y="140" text-anchor="middle" font-size="12" fill="#ef4444">Chord (Above
-                            Graph)</text>
-                        <text x="175" y="220" text-anchor="middle" font-size="12" fill="#3b82f6">Convex Function</text>
-                    </svg>
+                    <h4 class="font-bold mb-4 text-gray-700">Visual Definition</h4>
+                    <img src="images/convex_function_definition.jpg" alt="Convex Function Geometric Definition"
+                        class="w-full rounded-lg shadow-sm">
                     <p class="text-sm text-gray-500 mt-4 text-center">
-                        The red chord connects two points on the blue curve. Since the chord is always above the curve,
-                        the function is convex.
+                        The line segment (chord) connecting any two points on the graph lies on or above the curve.
                     </p>
                 </div>
             </div>
@@ -203,15 +187,11 @@
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-                    <svg width="300" height="200" viewBox="0 0 300 200">
-                        <!-- Convex Curve -->
-                        <path d="M 50,50 Q 150,250 250,50" fill="none" stroke="#8b5cf6" stroke-width="3" />
-                        <!-- Tangent Line at bottom -->
-                        <line x1="50" y1="180" x2="250" y2="180" stroke="#10b981" stroke-width="2" />
-                        <circle cx="150" cy="180" r="4" fill="#10b981" />
-                        <text x="150" y="195" text-anchor="middle" font-size="12" fill="#10b981">Tangent Plane
-                            (Below)</text>
-                    </svg>
+                    <img src="images/first_order_convexity.jpg" alt="First Order Convexity Condition"
+                        class="w-full rounded-lg shadow-sm">
+                    <p class="text-sm text-gray-500 mt-2 text-center">
+                        The tangent plane (first-order approximation) is always a global underestimator.
+                    </p>
                 </div>
             </div>
         </section>
@@ -261,7 +241,8 @@
                     <h4 class="font-bold text-lg mb-2">Log-Sum-Exp</h4>
                     \[ f(x) = \log\left( \sum_{i=1}^n e^{x_i} \right) \]
                     <p class="text-sm text-gray-600 mt-2">This is a smooth approximation of the max function. It is
-                        <strong>convex</strong>.</p>
+                        <strong>convex</strong>.
+                    </p>
                 </div>
 
                 <!-- Log-Determinant -->
