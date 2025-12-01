@@ -358,11 +358,65 @@
             \[ x^* = \text{argmin}_x L(x, \lambda^*, \nu^*) \]
         </section>
 
-        <!-- 9. Interactive Quiz -->
+        <!-- 9. Duality Examples -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-cyan-100 text-cyan-700 p-3 rounded-xl text-2xl">🧪</span>
+                <h2 class="text-3xl font-bold">9. Duality Examples</h2>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Example 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-cyan-500">
+                    <h4 class="font-bold text-xl mb-3">Example 1: Equality Constrained QP</h4>
+                    <p class="mb-3">Consider the problem:</p>
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded mb-4">
+                        minimize &nbsp;&nbsp; (1/2)x^T P x + q^T x + r <br>
+                        subject to &nbsp; Ax = b
+                    </div>
+                    <p class="mb-2 text-sm text-gray-600">where \( P \in S^n_+ \). The KKT conditions are:</p>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li><strong>Primal Feasibility:</strong> \( Ax^* = b \)</li>
+                        <li><strong>Dual Feasibility:</strong> None (no inequality constraints)</li>
+                        <li><strong>Complementary Slackness:</strong> None</li>
+                        <li><strong>Stationarity:</strong> \( Px^* + q + A^T \nu^* = 0 \)</li>
+                    </ul>
+                    <div class="mt-4 bg-cyan-50 p-3 rounded text-sm text-cyan-900">
+                        This leads to the KKT system:
+                        \[ \begin{bmatrix} P & A^T \\ A & 0 \end{bmatrix} \begin{bmatrix} x^* \\ \nu^* \end{bmatrix} =
+                        \begin{bmatrix} -q \\ b \end{bmatrix} \]
+                    </div>
+                </div>
+
+                <!-- Example 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <h4 class="font-bold text-xl mb-3">Example 2: Water-Filling Problem</h4>
+                    <p class="mb-3">Maximize total communication rate by allocating power \( x_i \) to channels with
+                        noise \( \alpha_i \):</p>
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded mb-4">
+                        minimize &nbsp;&nbsp; -\sum_{i=1}^n \log(\alpha_i + x_i) <br>
+                        subject to &nbsp; x \geq 0, \quad \mathbf{1}^T x = 1
+                    </div>
+                    <p class="mb-2 text-sm text-gray-600">KKT Conditions:</p>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li>\( x^* \geq 0, \quad \sum x_i^* = 1 \)</li>
+                        <li>\( \lambda^* \geq 0 \) (for \( -x \leq 0 \))</li>
+                        <li>\( \lambda_i^* x_i^* = 0 \)</li>
+                        <li>\( -1/(\alpha_i + x_i^*) - \lambda_i^* + \nu^* = 0 \)</li>
+                    </ul>
+                    <div class="mt-4 bg-blue-50 p-3 rounded text-sm text-blue-900">
+                        Solution: \( x_i^* = \max(0, 1/\nu^* - \alpha_i) \). This is called
+                        <strong>water-filling</strong> because we fill power up to a level \( 1/\nu^* \).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Interactive Quiz -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
                 <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
-                <h2 class="text-3xl font-bold">9. Test Your Understanding</h2>
+                <h2 class="text-3xl font-bold">10. Test Your Understanding</h2>
             </div>
 
             <div class="space-y-6">
@@ -415,7 +469,7 @@
             </div>
         </section>
 
-        <!-- 10. Spot the Mistake -->
+        <!-- 11. Spot the Mistake -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
 
