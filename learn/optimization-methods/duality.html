@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duality | Optimization Methods</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #faf5ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .example-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Optimization Methods
+            </a>
+            <span class="text-sm font-semibold">Chapter 6: Duality</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">☯️</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Duality</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Lagrange multipliers, geometric intuition, and the transformation from primal to dual.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Motivation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">💡</span>
+                <h2 class="text-3xl font-bold">1. Motivation</h2>
+            </div>
+
+            <p class="text-lg mb-6">
+                The core idea of duality is to transform a difficult <strong>primal</strong> problem into a potentially
+                easier <strong>dual</strong> problem. This concept has deep historical roots.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Joseph-Louis Lagrange</h4>
+                    <p class="text-sm text-gray-600">Introduced <strong>Lagrange multipliers</strong> for equality
+                        constrained problems, forming the basis of duality theory.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Werner Fenchel</h4>
+                    <p class="text-sm text-gray-600">Developed <strong>conjugate functions</strong>, providing a modern
+                        convex analysis perspective on duality.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Geometric Intuition -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">📐</span>
+                <h2 class="text-3xl font-bold">2. Geometric Intuition</h2>
+            </div>
+
+            <div class="example-box">
+                <h4 class="font-bold text-lg mb-3">Example Problem</h4>
+                <p class="mb-2">Minimize \( f(x,y) = 8x^2 - 2y \) subject to \( x^2 + y^2 = 1 \).</p>
+
+                <div class="mt-4 space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <h5 class="font-bold text-purple-800 mb-2">Key Insight</h5>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                            <li>The minimum occurs where the level curve of \( f \) <strong>just touches</strong> the
+                                constraint curve \( h(x,y)=0 \).</li>
+                            <li>At this touch point, their tangent lines are parallel.</li>
+                            <li>Therefore, their normal vectors (gradients) must be parallel:</li>
+                        </ul>
+                        <div class="text-center py-3 font-bold text-lg">
+                            \( \nabla f(x,y) = \lambda \nabla h(x,y) \)
+                        </div>
+                        <p class="text-sm text-gray-600 text-center">Here, \( \lambda \) is the <strong>Lagrange
+                                Multiplier</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h4 class="font-bold text-xl mb-4">Why Orthogonality?</h4>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="mb-4">Imagine moving along the constraint curve \( h(x,y)=0 \). The motion is along
+                            the tangent vector \( T \).</p>
+                        <p class="mb-4">To change the value of \( f \), we must move with a component along \( \nabla f
+                            \). If \( \nabla f \cdot T \neq 0 \), we can still decrease \( f \).</p>
+                        <p>At an extremum (min/max), we cannot decrease \( f \) anymore while staying on the curve.
+                            Thus, the motion along \( T \) must be orthogonal to \( \nabla f \):</p>
+                        \[ \nabla f \cdot T = 0 \]
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-xl flex items-center justify-center">
+                        <div class="text-center">
+                            <p class="font-bold mb-2">Conclusion</p>
+                            <p class="text-sm">Since \( T \) is orthogonal to \( \nabla h \) (by definition) and now
+                                also to \( \nabla f \), the gradients \( \nabla f \) and \( \nabla h \) must be parallel
+                                (or anti-parallel).</p>
+                            \[ \nabla f + \lambda \nabla h = 0 \]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. The Lagrangian -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-3xl font-bold">3. The Lagrangian</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p class="mb-3">For the problem minimize \( f(x) \) subject to \( h(x) = 0 \), we define the
+                    <strong>Lagrangian</strong>:</p>
+                \[ \mathcal{L}(x, \lambda) = f(x) + \lambda h(x) \]
+            </div>
+
+            <p class="mb-4">The condition \( \nabla \mathcal{L} = 0 \) encapsulates both the original constraint and the
+                parallel gradient condition:</p>
+            <div class="bg-white p-4 rounded-xl border border-gray-200 text-center">
+                \[ \nabla_x \mathcal{L} = \nabla f + \lambda \nabla h = 0 \]
+                \[ \nabla_\lambda \mathcal{L} = h(x) = 0 \]
+            </div>
+        </section>
+
+        <!-- 4. Example: Non-convex Problem -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🧩</span>
+                <h2 class="text-3xl font-bold">4. Example: Non-convex Problem</h2>
+            </div>
+
+            <div class="example-box">
+                <p class="mb-2"><strong>Minimize</strong> \( f(x,y) = xy \)</p>
+                <p class="mb-4"><strong>Subject to</strong> \( h(x,y) = \frac{x^2}{8} + \frac{y^2}{2} - 1 = 0 \)</p>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+                    <p class="font-bold mb-2">Lagrangian:</p>
+                    \[ \mathcal{L}(x,y,\lambda) = xy + \lambda(\frac{x^2}{8} + \frac{y^2}{2} - 1) \]
+                </div>
+
+                <p class="mb-2">Setting \( \nabla \mathcal{L} = 0 \) gives the system:</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="font-mono text-sm bg-gray-50 p-3 rounded">
+                        1) y + \lambda x / 4 = 0 <br>
+                        2) x + \lambda y = 0 <br>
+                        3) x^2/8 + y^2/2 = 1
+                    </div>
+                    <div>
+                        <p class="text-sm mb-2">Solving this system yields \( \lambda = \pm 2 \).</p>
+                        <p class="text-sm">Extremal points: \( (\pm 2, \pm 1) \).</p>
+                        <p class="text-sm font-bold text-green-600 mt-2">Minimum value: -2 at \( (2, -1) \) and \( (-2,
+                            1) \).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quiz -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
+                <h2 class="text-3xl font-bold">5. Test Your Understanding</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. At a constrained minimum, the gradient of the objective function is:
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. It is usually non-zero.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Zero</button>
+                        <button onclick="alert('Correct! It is parallel to the gradient of the constraint.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Parallel to the
+                            constraint gradient</button>
+                        <button
+                            onclick="alert('Incorrect. That would mean we can move along the constraint to decrease the function.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Orthogonal to the
+                            constraint gradient</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+            <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                <p class="font-semibold mb-4">A student claims:</p>
+                <p class="italic text-gray-700 mb-4">"If \( \nabla f(x) = 0 \), then \( x \) must be the solution to the
+                    constrained optimization problem minimize \( f(x) \) subject to \( h(x)=0 \)."</p>
+
+                <div class="space-y-3">
+                    <div onclick="alert('Correct! If the gradient is zero, it might be an unconstrained minimum, but it might not satisfy h(x)=0. Even if it does, the constrained minimum usually occurs where the gradient is NON-zero but orthogonal to the tangent of the constraint.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. The gradient doesn't have to be zero, just parallel to \( \nabla h \).
+                    </div>
+                    <div onclick="alert('Incorrect. Think about the geometric picture. The minimum is where the level curve touches the constraint, not necessarily the bottom of the bowl.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-red-50">
+                        True. Gradient zero means minimum.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="convex-optimization.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous Chapter</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-green-600 transition">
+                        Convex Optimization</p>
+                </div>
+            </a>
+            <!-- Next chapter placeholder -->
+            <button
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next Chapter</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Optimization Methods Course - Chapter 6</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+    </script>
+</body>
+
+</html>
