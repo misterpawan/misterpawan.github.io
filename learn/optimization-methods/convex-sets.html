@@ -181,26 +181,11 @@
                 </div>
 
                 <div class="bg-white p-4 rounded-xl shadow-inner flex flex-col items-center justify-center">
-                    <h4 class="font-bold mb-2">Interactive Visualization</h4>
-                    <svg width="300" height="200" viewBox="0 0 300 200" class="border rounded bg-gray-50">
-                        <!-- Convex Shape (Circle) -->
-                        <circle cx="80" cy="100" r="60" fill="rgba(255, 165, 0, 0.2)" stroke="orange"
-                            stroke-width="2" />
-                        <text x="80" y="180" text-anchor="middle" font-size="12" fill="orange">Convex</text>
-
-                        <!-- Non-Convex Shape (Kidney) -->
-                        <path d="M 200 60 Q 280 60 280 140 Q 200 180 200 140 Q 200 100 200 60"
-                            fill="rgba(255, 0, 0, 0.1)" stroke="red" stroke-width="2" />
-                        <text x="240" y="180" text-anchor="middle" font-size="12" fill="red">Non-Convex</text>
-
-                        <!-- Line Segment Example -->
-                        <line x1="220" y1="70" x2="220" y2="170" stroke="black" stroke-dasharray="4" />
-                        <circle cx="220" cy="70" r="3" fill="black" />
-                        <circle cx="220" cy="170" r="3" fill="black" />
-                        <text x="230" y="120" font-size="10">Line goes outside!</text>
-                    </svg>
+                    <h4 class="font-bold mb-2">Visual Examples</h4>
+                    <img src="images/convex_vs_nonconvex.png" alt="Convex vs Non-Convex Sets"
+                        class="rounded-lg shadow-sm max-w-full h-auto">
                     <p class="text-sm text-gray-500 mt-2 text-center">
-                        In the red shape, the line between two points goes outside the set.
+                        Left/Right: Convex sets. Middle: Non-convex set (line segment goes outside).
                     </p>
                 </div>
             </div>
@@ -312,18 +297,17 @@
                             halfspace is everything on one side of it.
                         </p>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col items-center">
-                        <svg width="250" height="150" viewBox="0 0 250 150">
-                            <!-- Halfspace shading -->
-                            <polygon points="0,150 250,50 250,0 0,0" fill="rgba(16, 185, 129, 0.1)" />
-                            <!-- Hyperplane line -->
-                            <line x1="0" y1="150" x2="250" y2="50" stroke="green" stroke-width="3" />
-                            <!-- Normal vector -->
-                            <line x1="125" y1="100" x2="145" y2="150" stroke="black" marker-end="url(#arrow)" />
-                            <text x="150" y="140" font-size="12">Normal a</text>
-                            <text x="50" y="50" font-size="12" fill="green">Halfspace (≤ b)</text>
-                        </svg>
-                        <p class="text-sm text-gray-500 mt-2">Green region is the halfspace defined by the line.</p>
+                    <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col items-center space-y-4">
+                        <div>
+                            <img src="images/hyperplane_definition.png" alt="Hyperplane Definition"
+                                class="rounded shadow-sm w-full">
+                            <p class="text-xs text-gray-500 mt-1 text-center">Hyperplane: \( a^T x = b \)</p>
+                        </div>
+                        <div>
+                            <img src="images/halfspace_definition.png" alt="Halfspace Definition"
+                                class="rounded shadow-sm w-full">
+                            <p class="text-xs text-gray-500 mt-1 text-center">Halfspace: \( a^T x \leq b \)</p>
+                        </div>
                     </div>
                 </div>
 
@@ -426,11 +410,19 @@
                 <!-- Affine Maps -->
                 <div class="theorem-box">
                     <h4 class="font-semibold text-lg mb-2">2. Affine Maps</h4>
-                    <p>Let \( f(x) = Ax + b \) be an affine function.</p>
-                    <ul class="list-disc list-inside mt-2 text-sm">
-                        <li>The <strong>image</strong> of a convex set under \( f \) is convex.</li>
-                        <li>The <strong>inverse image</strong> of a convex set under \( f \) is convex.</li>
-                    </ul>
+                    <div class="flex flex-col md:flex-row gap-4 items-center">
+                        <div class="flex-1">
+                            <p>Let \( f(x) = Ax + b \) be an affine function.</p>
+                            <ul class="list-disc list-inside mt-2 text-sm">
+                                <li>The <strong>image</strong> of a convex set under \( f \) is convex.</li>
+                                <li>The <strong>inverse image</strong> of a convex set under \( f \) is convex.</li>
+                            </ul>
+                        </div>
+                        <div class="w-full md:w-1/3">
+                            <img src="images/convex_map.png" alt="Convex Map Operation"
+                                class="rounded shadow-sm w-full bg-white p-2">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="example-box">
