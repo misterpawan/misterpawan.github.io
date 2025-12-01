@@ -280,9 +280,148 @@
             </div>
         </section>
 
-        <!-- 5. Extended Value & Indicator Functions -->
+        <!-- 5. Epigraph and Hypograph -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
-            <h2 class="text-3xl font-bold mb-6">5. Extended Value Extensions</h2>
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🏔️</span>
+                <h2 class="text-3xl font-bold">5. Epigraph and Hypograph</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <div class="definition-box">
+                        <h4 class="font-bold text-lg mb-2">Epigraph ("Above Graph")</h4>
+                        <p class="mb-2">The epigraph of a function \( f: \mathbb{R}^n \rightarrow \mathbb{R} \) is the
+                            set of points lying on or above its graph:</p>
+                        \[ \textbf{epi } f = \{ (x,t) \mid x \in \textbf{dom } f, f(x) \leq t \} \]
+                    </div>
+                    <div class="definition-box mt-4">
+                        <h4 class="font-bold text-lg mb-2">Hypograph ("Below Graph")</h4>
+                        <p class="mb-2">The hypograph is the set of points lying on or below the graph:</p>
+                        \[ \textbf{hypo } f = \{ (x,t) \mid x \in \textbf{dom } f, t \leq f(x) \} \]
+                    </div>
+                    <div class="theorem-box mt-4">
+                        <h4 class="font-bold text-lg mb-2">Key Theorems</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>A function is <strong>convex</strong> if and only if its <strong>epigraph</strong> is a
+                                convex set.</li>
+                            <li>A function is <strong>concave</strong> if and only if its <strong>hypograph</strong> is
+                                a convex set.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-lg">
+                    <img src="images/epigraph.jpg" alt="Epigraph Visualization" class="w-full rounded-lg">
+                    <p class="text-sm text-gray-500 mt-2 text-center">The epigraph is the shaded region above the curve.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Jensen's Inequality -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">⚖️</span>
+                <h2 class="text-3xl font-bold">6. Jensen's Inequality</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+                <img src="images/jensens_inequality.jpg" alt="Jensen's Inequality Visualization"
+                    class="w-full rounded-lg">
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="definition-box">
+                    <h4 class="font-bold text-lg mb-2">The Inequality</h4>
+                    <p class="mb-3">For a convex function \( f \), the function value of the average is less than or
+                        equal to the average of the function values:</p>
+                    \[ f(\theta x + (1-\theta)y) \leq \theta f(x) + (1-\theta)f(y) \]
+                    <p class="mt-2"><strong>General Form (Expectation):</strong></p>
+                    \[ f(\mathbb{E}[x]) \leq \mathbb{E}[f(x)] \]
+                </div>
+
+                <div class="example-box">
+                    <h4 class="font-bold text-lg mb-2">Applications</h4>
+                    <ul class="space-y-3">
+                        <li>
+                            <strong>AM-GM Inequality:</strong> \( \sqrt{ab} \leq \frac{a+b}{2} \)
+                            <p class="text-sm text-gray-600">Proof: Use \( f(x) = -\log x \) (convex) and \( \theta =
+                                0.5 \).</p>
+                        </li>
+                        <li>
+                            <strong>Hölder's Inequality:</strong> Relates \( L_p \) norms.
+                            <p class="text-sm text-gray-600">Proof uses \( f(x) = -\log x \) with specific weights.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Operations Preserving Convexity -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🔧</span>
+                <h2 class="text-3xl font-bold">7. Operations Preserving Convexity</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg text-teal-800 mb-2">1. Non-Negative Weighted Sum</h4>
+                    <p>If \( f_1, \dots, f_m \) are convex and \( w_i \geq 0 \), then \( f = \sum w_i f_i \) is convex.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg text-teal-800 mb-2">2. Composition with Affine Map</h4>
+                    <p>If \( f \) is convex, then \( g(x) = f(Ax + b) \) is convex.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg text-teal-800 mb-2">3. Pointwise Maximum</h4>
+                    <p>If \( f_1, f_2 \) are convex, then \( f(x) = \max\{ f_1(x), f_2(x) \} \) is convex.</p>
+                    <p class="text-sm text-gray-500 mt-1">Example: The max of affine functions \( \max_i (a_i^T x + b_i)
+                        \) is convex.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg text-teal-800 mb-2">4. Composition Rules</h4>
+                    <p class="mb-2">For \( f(x) = h(g(x)) \):</p>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        <li>\( f \) is convex if \( h \) is convex & non-decreasing, and \( g \) is convex.</li>
+                        <li>\( f \) is convex if \( h \) is convex & non-increasing, and \( g \) is concave.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Advanced Example: Geometric Mean -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🎓</span>
+                <h2 class="text-3xl font-bold">8. Advanced Example: Geometric Mean</h2>
+            </div>
+
+            <div class="proof-box">
+                <h4 class="font-bold text-lg mb-3">Theorem: Geometric Mean is Concave</h4>
+                <p class="mb-2">The function \( f(x) = (\prod_{i=1}^n x_i)^{1/n} \) is <strong>concave</strong> on \(
+                    \mathbb{R}_{++}^n \).</p>
+
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <p class="font-semibold mb-2">Proof Sketch:</p>
+                    <p class="mb-2">Consider the Hessian \( \nabla^2 f(x) \). After some derivation, we find:</p>
+                    \[ v^T \nabla^2 f(x) v = -\frac{\prod x_i^{1/n}}{n^2} \left( n \sum \frac{v_i^2}{x_i^2} - (\sum
+                    \frac{v_i}{x_i})^2 \right) \]
+                    <p class="mt-2">By the <strong>Cauchy-Schwarz inequality</strong> (with vectors \( \mathbf{1} \) and
+                        \( v_i/x_i \)), the term in the parentheses is non-negative.</p>
+                    <p class="mt-2">Thus, \( v^T \nabla^2 f(x) v \leq 0 \), so the Hessian is negative semidefinite.
+                        Therefore, \( f \) is concave. \(\blacksquare\)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Extended Value Extensions -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-6">9. Extended Value Extensions</h2>
 
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="flex-1">
