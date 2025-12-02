@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Programming Approach | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #ea580c;
+            background: linear-gradient(to right, #fff7ed, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 28: Linear Programming Approach</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">📏</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Linear Programming Approach</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Solving Dynamic Programming problems using Linear Programming and Approximate LP.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Exact LP Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Exact LP Formulation</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                We can view the optimal cost vector \( J^* \) as the solution to a maximization problem.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Key Idea</h4>
+                <p class="mb-2">
+                    \( J^* \) is the "largest" \( J \) that satisfies the Bellman inequality constraints:
+                </p>
+                \[ J(i) \leq \sum_{j=1}^{n} p_{ij}(u) ( g(i, u, j) + \alpha J(j) ) \]
+                <p class="text-sm text-gray-700 mt-2">
+                    for all states \( i \) and controls \( u \in U(i) \).
+                </p>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-2">The Linear Program</h4>
+                <p class="mb-2">Maximize the sum of values subject to the constraints:</p>
+                \[ \text{Maximize } \sum_{i=1}^{n} J(i) \]
+                <p class="text-sm text-gray-600">
+                    Subject to: \( J(i) \le E \{ g + \alpha J \} \) for all \( i, u \).
+                </p>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">Visualizing the Feasible Region</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    Constraint1("Constraint u_1") --> Region
+                    Constraint2("Constraint u_2") --> Region
+                    Constraint3("Constraint u_3") --> Region
+                    Region("Feasible Region (J <= J*)") --> Max("Maximize Sum(J)")
+                        Max --> Optimal("Optimal Solution J*")
+                        style Optimal fill:#ffedd5,stroke:#f97316
+                </div>
+                <p class="text-center text-sm text-gray-600 mt-2">
+                    \( J^* \) sits at the "corner" of the constraints, maximizing the objective.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. Proof & Difficulty -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🚧</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Proof & Challenges</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Proof Sketch</h4>
+                <p class="mb-2">
+                    Start with any \( J_0 \) that satisfies the constraints. This implies \( J_0 \le T J_0 = J_1 \).
+                </p>
+                <p class="mb-2">
+                    By the monotonicity of the DP operator \( T \):
+                </p>
+                \[ J_0 \le J_1 \le J_2 \dots \le J^* \]
+                <p class="text-sm text-gray-700">
+                    Thus, any feasible \( J \) is bounded above by \( J^* \). Maximizing \( J \) pushes it up to \( J^*
+                    \).
+                </p>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                <h4 class="font-bold text-lg mb-2">The Difficulty</h4>
+                <p class="text-gray-700">
+                    For large problems, this exact LP is intractable:
+                </p>
+                <ul class="list-disc list-inside mt-2 text-gray-600">
+                    <li><strong>Too many variables:</strong> One for each state \( n \).</li>
+                    <li><strong>Too many constraints:</strong> One for each state-control pair \( (i, u) \).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. Approximate Linear Programming (ALP) -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">📉</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Approximate Linear Programming</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                To handle large state spaces, we use <strong>Approximation in Value Space</strong> within the LP
+                framework.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Feature-Based Architecture</h4>
+                <p class="mb-2">
+                    Replace \( J(i) \) with a linear approximation:
+                </p>
+                \[ \tilde{J}(i, r) = \sum_{\ell=1}^{m} r_{\ell} \phi_{\ell}(i) \]
+                <p class="text-sm text-gray-700">
+                    This drastically reduces the number of variables from \( n \) (states) to \( m \) (features).
+                </p>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-2 text-blue-600">Constraint Sampling</h4>
+                <p class="text-sm text-gray-600 mb-2">
+                    We still have too many constraints. We solve this by <strong>sampling</strong> a subset of
+                    constraints to enforce.
+                </p>
+                <ul class="list-disc list-inside text-sm text-gray-600">
+                    <li>Use known suboptimal policies to visit "important" states.</li>
+                    <li>Enforce constraints only on these sampled states \( \tilde{I} \) and controls \( \tilde{U}(i)
+                        \).</li>
+                </ul>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">ALP Process</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    Params("Variables r") --> Approx("Approx J(i,r)")
+                    Approx --> Constraints("Sampled Constraints")
+                    Constraints --> LP("Solve Small LP")
+                    LP --> BestR("Optimal Weights r*")
+                    style LP fill:#dbeafe,stroke:#3b82f6
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. In the exact LP formulation, what are the variables?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! One variable per state.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The values \( J(i) \)
+                            for each state.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The policy
+                            parameters.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What does the objective function maximize?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We want the largest J satisfying constraints.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The sum of values \(
+                            \sum J(i) \).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The sum of
+                            costs.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. How does Approximate LP reduce the number of variables?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We solve for weights r instead of values J(i).')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">By using a
+                            feature-based architecture with fewer weights.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">By ignoring half the
+                            states.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. How do we handle the massive number of constraints in ALP?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We only enforce a subset.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Constraint
+                            Sampling.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">We use a
+                            supercomputer.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. What is a major benefit of the LP approach?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! LP solvers are very mature.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Reliability of
+                            large-scale LP software.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It is always faster
+                            than Value Iteration.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="fitted-value-iteration.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-cyan-600 transition">Lecture
+                        27</p>
+                </div>
+            </a>
+            <a href="index.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Return</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Course
+                        Home</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
