@@ -399,27 +399,74 @@
         let queens = []; // Array of {row, col}
         let currentRow = 0;
 
-        // Simple solution path for demo: (0,1) -> (1,3) -> (2,0) -> (3,2)
-        const demoSolution = [1, 3, 0, 2];
-
         function initBoard() {
             boardEl.innerHTML = '';
             for (let r = 0; r < 4; r++) {
                 for (let c = 0; c < 4; c++) {
                     const square = document.createElement('div');
-                    square.className = `square ${(r + c) % 2 === 0 ? 'white' : 'black'}`;
+                    square.className = `square ${(r + c) % 2 === 0 ? 'white' : 'black'} cursor-pointer hover:opacity-80`;
                     square.dataset.row = r;
                     square.dataset.col = c;
+                    square.onclick = () => handleSquareClick(r, c);
                     boardEl.appendChild(square);
                 }
             }
         }
 
+        function handleSquareClick(r, c) {
+            if (r !== currentRow) {
+                if (r < currentRow) {
+                    alert("You cannot change previous moves in this demo. Reset to start over.");
+                } else {
+                    alert(`Please place a queen in row ${currentRow + 1} first.`);
+                }
+                return;
+            }
+
+            if (isSafe(r, c)) {
+                placeQueen(r, c);
+            } else {
+                statusEl.textContent = "Invalid move! Queen is attacked.";
+                statusEl.className = "text-xs text-red-600 font-bold mt-2 h-4 text-center";
+
+                // Flash red
+                const sq = document.querySelector(`.square[data-row="${r}"][data-col="${c}"]`);
+                sq.classList.add('bg-red-400');
+                setTimeout(() => {
+                    sq.classList.remove('bg-red-400');
+                }, 300);
+            }
+        }
+
+        function isSafe(r, c) {
+            for (let q of queens) {
+                if (q.col === c || Math.abs(q.row - r) === Math.abs(q.col - c)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function placeQueen(r, c) {
+            queens.push({ row: r, col: c });
+            currentRow++;
+            updateBoard();
+
+            if (currentRow >= 4) {
+                statusEl.textContent = "🎉 Solution Found! Well done!";
+                statusEl.className = "text-xs text-green-600 font-bold mt-2 h-4 text-center";
+            } else {
+                statusEl.textContent = `Placed Queen at (${r}, ${c}). Now place for Row ${currentRow + 1}.`;
+                statusEl.className = "text-xs text-gray-500 mt-2 h-4 text-center";
+            }
+        }
+
         function updateBoard() {
-            // Clear queens
+            // Clear queens and styles
             document.querySelectorAll('.square').forEach(sq => {
                 sq.classList.remove('queen');
                 sq.classList.remove('attacked');
+                sq.classList.remove('bg-red-400'); // Safety clear
             });
 
             // Place queens
@@ -428,39 +475,52 @@
                 if (sq) sq.classList.add('queen');
             });
 
-            // Highlight attacked (simple logic for demo visual)
-            // In a full app, we'd calculate all attacked squares
+            // Highlight attacked squares (optional visual aid)
+            highlightAttackedSquares();
         }
 
-        function solveStep() {
-            if (currentRow >= 4) {
-                statusEl.textContent = "Solution Found!";
-                return;
-            }
+        function highlightAttackedSquares() {
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 4; c++) {
+                    // Skip if already has a queen
+                    if (queens.some(q => q.row === r && q.col === c)) continue;
 
-            const col = demoSolution[currentRow];
-            queens.push({ row: currentRow, col: col });
-            currentRow++;
-            updateBoard();
-
-            if (currentRow >= 4) {
-                statusEl.textContent = "Solution Found!";
-                statusEl.className = "text-xs text-green-600 font-bold mt-2 h-4 text-center";
-            } else {
-                statusEl.textContent = `Placed Queen ${currentRow} at (${currentRow}, ${col})`;
+                    if (!isSafe(r, c)) {
+                        const sq = document.querySelector(`.square[data-row="${r}"][data-col="${c}"]`);
+                        if (sq) sq.classList.add('attacked');
+                    }
+                }
             }
         }
 
         function resetBoard() {
             queens = [];
             currentRow = 0;
-            statusEl.textContent = "";
+            statusEl.textContent = "Place a queen in the first row.";
             statusEl.className = "text-xs text-gray-500 mt-2 h-4 text-center";
             updateBoard();
         }
 
+        // Auto-solve step (optional helper)
+        function solveStep() {
+            if (currentRow >= 4) return;
+
+            // Find first safe spot in current row
+            for (let c = 0; c < 4; c++) {
+                if (isSafe(currentRow, c)) {
+                    placeQueen(currentRow, c);
+                    return;
+                }
+            }
+
+            statusEl.textContent = "No safe moves! Backtrack or Reset.";
+            statusEl.className = "text-xs text-red-600 font-bold mt-2 h-4 text-center";
+        }
+
         initBoard();
+        statusEl.textContent = "Click on a square in the first row to place a queen.";
     </script>
 </body>
 
 </html>
+```
