@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Discrete Optimization | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(to right, #fef2f2, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 18: General Discrete Optimization</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🏗️</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">General Discrete Optimization</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Transforming static optimization problems into sequential decision processes.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. General Problem Definition -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. General Problem Definition</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">The Problem</h4>
+                <p class="mb-2">We want to minimize a cost function \( G(u) \) subject to \( u \in U \).</p>
+                <p>Here, \( u = (u_0, u_1, \dots, u_{N-1}) \) is a vector of \( N \) components.</p>
+            </div>
+        </section>
+
+        <!-- 2. Sequential View -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🔄</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Sequential View</h2>
+            </div>
+
+            <p class="mb-6 text-gray-700">
+                We can view the selection of the vector \( u \) as a <strong>sequential process</strong>, choosing one
+                component \( u_k \) at a time.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6 items-center">
+                <div>
+                    <ul class="space-y-3 text-sm text-gray-700">
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-600 font-bold">•</span>
+                            <span><strong>State:</strong> A partial solution \( (u_0, \dots, u_{k-1}) \), called a \( k
+                                \)-solution.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-600 font-bold">•</span>
+                            <span><strong>Control:</strong> The choice of the next component \( u_k \).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-600 font-bold">•</span>
+                            <span><strong>Constraint:</strong> \( u_k \) must be chosen such that it can lead to a
+                                feasible full solution.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mermaid text-center">
+                    graph LR
+                    S(("Start (s)")) --> U0_A["u_0 = A"]
+                    S --> U0_B["u_0 = B"]
+                    U0_A --> U1_C["u_1 = C"]
+                    U0_A --> U1_D["u_1 = D"]
+                    U0_B --> U1_E["u_1 = E"]
+                    U1_C --> Term(("End"))
+                    style S fill:#dcfce7,stroke:#22c55e
+                    style Term fill:#fce7f3,stroke:#ec4899
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. DP Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🧮</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. DP Formulation</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                We can define the optimal cost-to-go function \( J^*_k(u_0, \dots, u_{k-1}) \) as the minimum cost
+                achievable starting from the partial solution.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">DP Algorithm</h4>
+                <p class="mb-2"><strong>Backward Induction:</strong></p>
+                \[ J^*_k(u_0, \dots, u_{k-1}) = \min_{u_k \in U_k(\dots)} J^*_{k+1}(u_0, \dots, u_k) \]
+                <p class="mt-2"><strong>Terminal Condition:</strong> \( J^*_N(u) = G(u) \)</p>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-2">Forward Construction</h4>
+                <p class="text-gray-700 text-sm">
+                    Once we have the functions \( J^* \), we can construct the optimal solution component by component:
+                </p>
+                \[ u^*_k \in \arg \min_{u_k} J^*_{k+1}(u^*_0, \dots, u^*_{k-1}, u_k) \]
+            </div>
+        </section>
+
+        <!-- 4. Approximation & Rollout -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🚀</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Approximation & Rollout</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <h4 class="font-bold text-lg mb-2">The Challenge</h4>
+                <p class="text-sm text-gray-600 mb-4">
+                    The state space (all partial solutions) grows exponentially. Exact DP is usually impossible.
+                </p>
+                <h4 class="font-bold text-lg mb-2">The Solution: Rollout</h4>
+                <p class="text-sm text-gray-600">
+                    Instead of computing \( J^*_{k+1} \) exactly, we approximate it using a <strong>Base
+                        Heuristic</strong>.
+                </p>
+                <p class="text-sm text-gray-600 mt-2">
+                    \(\tilde{J}_{k+1}\) = Cost of the solution found by the heuristic starting from \((u_0, \dots,
+                    u_k)\).
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Feasibility as DP -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">✅</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Feasibility as DP</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Constraint satisfaction problems (finding <em>any</em> feasible \( u \)) can also be formulated as DP.
+            </p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Transformation</h4>
+                <p class="mb-2">Minimize the sum of constraint violations:</p>
+                \[ \min \sum_{k=1}^N \max \{0, h_k(x_k, u_k)\} \]
+                <p>If the minimum cost is 0, a feasible solution exists.</p>
+            </div>
+        </section>
+
+        <!-- 6. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">6. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is a "k-solution"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It represents the state at stage k.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">A partial solution
+                            with k components fixed.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A solution with k
+                            errors.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. In the sequential view, what corresponds to the "Control"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The cost function
+                            G(u).</button>
+                        <button onclick="alert('Correct! Choosing the next component u_k.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The choice of the
+                            component \( u_k \).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What is the cost of transitions before the last stage?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Only the terminal cost G(u) matters.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">0.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It depends on
+                            G(u).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. How does Rollout approximate the cost-to-go?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It runs a heuristic from the current state to the end.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">By running a
+                            heuristic to complete the solution.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">By guessing a random
+                            number.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Can Feasibility Problems be solved with DP?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! By minimizing constraint violations.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, only optimization
+                            problems.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="four-queens.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-pink-600 transition">Lecture
+                        17</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
