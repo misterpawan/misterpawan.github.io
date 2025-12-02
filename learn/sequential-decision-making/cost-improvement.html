@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Improvement with Rollout | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #ecfdf5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 21: Cost Improvement</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">📉</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Cost Improvement with Rollout</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Understanding Sequential Consistency and Sequential Improvement.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Sequential Consistency -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🤝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. Sequential Consistency</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p class="mb-2">A base heuristic is <strong>sequentially consistent</strong> if it "stays the course".
+                </p>
+                <p class="text-sm text-gray-700">
+                    If starting at \( x_k \) it generates a trajectory \( \{x_k, \dots, x_N\} \), then starting at \(
+                    x_{k+1} \) (the next state in that trajectory), it should generate the <strong>same
+                        remainder</strong> \( \{x_{k+1}, \dots, x_N\} \).
+                </p>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">Visualizing Consistency</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    subgraph "Start at x_k"
+                    xk((x_k)) -->|Heuristic| xk1((x_{k+1}))
+                    xk1 -->|Heuristic| xk2((x_{k+2}))
+                    xk2 -->|Heuristic| xN((x_N))
+                    end
+
+                    subgraph "Start at x_{k+1}"
+                    xk1_new((x_{k+1})) -->|Heuristic| xk2_new((x_{k+2}))
+                    xk2_new -->|Heuristic| xN_new((x_N))
+                    end
+
+                    style xk fill:#dcfce7,stroke:#22c55e
+                    style xk1_new fill:#dcfce7,stroke:#22c55e
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-2">The path from \( x_{k+1} \) is identical in both
+                    cases.</p>
+            </div>
+        </section>
+
+        <!-- 2. Cost Improvement Theorem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">📜</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Cost Improvement Theorem</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Theorem</h4>
+                <p class="mb-2">
+                    If the base heuristic is <strong>sequentially consistent</strong>, then the Rollout policy \(
+                    \tilde{\pi} \) performs <strong>at least as well as</strong> the base heuristic \( H \).
+                </p>
+                \[ J_{k, \tilde{\pi}}(x_k) \leq H_k(x_k) \]
+            </div>
+
+            <p class="mt-4 text-gray-700">
+                <strong>Why?</strong> Because the rollout algorithm considers the move suggested by the heuristic as
+                <em>one of the options</em>. Since the heuristic is consistent, taking that move and continuing with the
+                heuristic yields exactly \( H_k(x_k) \). The minimization step ensures we pick something better or
+                equal.
+            </p>
+        </section>
+
+        <!-- 3. Sequential Improvement -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🚀</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Sequential Improvement</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                What if the heuristic is NOT consistent? We need a stronger condition.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p class="mb-2">A heuristic is <strong>sequentially improving</strong> if at every state \( x_k \), the
+                    rollout minimum Q-factor is better than or equal to the heuristic cost.</p>
+                \[ \min_{u_k} \tilde{Q}_k(x_k, u_k) \leq H_k(x_k) \]
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-2 text-center">Trajectory Improvement</h4>
+                <p class="text-center text-gray-600 mb-4">
+                    Under sequential improvement, the cost of the generated trajectories decreases (or stays same) at
+                    each step.
+                </p>
+                <div class="flex justify-center items-center gap-4 text-lg font-bold text-gray-700 flex-wrap">
+                    <span>Cost(T_0)</span>
+                    <span>≥</span>
+                    <span>Cost(T_1)</span>
+                    <span>≥</span>
+                    <span>...</span>
+                    <span>≥</span>
+                    <span class="text-green-600">Cost(T_N)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Violation Example -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">⚠️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. When it Fails</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                If the heuristic is not consistent (e.g., changes its mind mid-way), rollout might actually perform
+                <strong>worse</strong>.
+            </p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                <h4 class="font-bold text-lg mb-2">Example: Manhattan Grid</h4>
+                <p class="text-sm text-gray-600">
+                    Imagine a heuristic that prefers "Go East" if x < 5, but "Go North" if x>= 5.
+                        If the rollout step moves you to x=5, the heuristic suddenly changes strategy, potentially
+                        abandoning a good path it "promised" earlier.
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What does "Sequentially Consistent" mean?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It stays the course.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The heuristic does
+                            not deviate from its own planned trajectory.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The heuristic always
+                            finds the optimal path.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Is the "Shortest Path" heuristic typically sequentially consistent?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Subpaths of shortest paths are shortest paths.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. If a heuristic is sequentially consistent, does Rollout improve cost?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It is guaranteed.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes,
+                            guaranteed.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, it might get
+                            worse.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. What is "Sequential Improvement"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! The rollout step is always better than or equal to the heuristic.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Min Q-factor <=
+                                Heuristic Cost at every state.</button>
+                                <button onclick="alert('Incorrect.')"
+                                    class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The cost
+                                    increases at every step.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Can Rollout perform worse than the heuristic?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! If the heuristic is not consistent or improving.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes, if
+                            consistency/improvement conditions are violated.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, never.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="rollout-discrete.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 transition">Lecture
+                        20</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
