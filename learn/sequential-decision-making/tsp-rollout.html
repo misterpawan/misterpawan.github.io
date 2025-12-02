@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP with Rollout | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #ecfdf5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 11: TSP with Rollout</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">🗺️</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Can we Solve TSP using Rollout?</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Applying the rollout algorithm to the classic Traveling Salesman Problem.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- Overview Image -->
+        <section class="glass p-4 rounded-3xl mb-8 flex justify-center" data-aos="fade-up">
+            <img src="assets/tsp-rollout-overview.jpg" alt="TSP Rollout Overview"
+                class="rounded-xl shadow-lg max-w-full h-auto">
+        </section>
+
+        <!-- 1. The TSP Problem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">1. The Traveling Salesman Problem (TSP)</h2>
+            <p class="text-gray-600 mb-4">
+                Recall the classic problem: A salesman wants to find a <strong>minimum cost</strong> tour that visits
+                each of \( N \) given cities \( c = 0, \dots, N - 1 \) exactly once and returns to the start.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Key Components</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>Cities:</strong> \( N \) cities.</li>
+                    <li><strong>Cost:</strong> \( g(c, c') \) is the traversal cost between distinct cities \( c \) and
+                        \( c' \).</li>
+                    <li><strong>Connectivity:</strong> Assume full connectivity (use high cost for non-existent links).
+                    </li>
+                    <li><strong>Goal:</strong> Find a visit order with minimum total cost.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. Base Policy: Nearest Neighbor -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">2. A Base Policy for TSP</h2>
+            <p class="text-gray-600 mb-4">
+                To use rollout, we need a base policy. A common and simple heuristic is the <strong>Nearest
+                    Neighbor</strong> heuristic.
+            </p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-lg text-green-600 mb-2">Nearest Neighbor Heuristic</h3>
+                <p class="text-gray-600 mb-4">
+                    This heuristic constructs a tour greedily:
+                </p>
+                <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                    <li>Start with an initial partial tour (e.g., just the starting city \( c_0 \)).</li>
+                    <li>Given the current city \( c_k \), choose the next city \( c_{k+1} \) that <strong>minimizes the
+                            cost</strong> \( g(c_k, c_{k+1}) \) among all unvisited cities.</li>
+                    <li>Repeat until all \( N \) cities are visited and return to \( c_0 \).</li>
+                </ol>
+                <p class="mt-4 text-sm text-gray-500 italic">
+                    Total Heuristic Cost = \( g(c_0, c_1) + \dots + g(c_{N-2}, c_{N-1}) + g(c_{N-1}, c_0) \)
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. Improving with Rollout -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">3. Improving with Rollout</h2>
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-4xl">🚀</span>
+                <p class="text-xl font-semibold text-gray-800">
+                    Given that we have a base policy, can we improve it? <span class="text-green-600 font-bold">Yes,
+                        with Rollout!</span>
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-lg mb-3">The Process</h4>
+                    <p class="text-gray-600 mb-4">
+                        At each step of constructing the tour:
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>Consider all possible next cities (controls).</li>
+                        <li>For each candidate next city, run the <strong>Nearest Neighbor</strong> heuristic to
+                            complete the tour.</li>
+                        <li>Calculate the total cost (immediate step + heuristic completion).</li>
+                        <li>Choose the next city that results in the lowest total estimated cost.</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl flex items-center justify-center">
+                    <!-- Mermaid Diagram for TSP Rollout -->
+                    <div class="mermaid">
+                        graph TD
+                        Start((Current City)) --> Option1(City A)
+                        Start --> Option2(City B)
+
+                        Option1 -.->|Nearest Neighbor| End1(End Tour Cost 100)
+                        Option2 -.->|Nearest Neighbor| End2(End Tour Cost 90)
+
+                        End1 --> Compare{Compare}
+                        End2 --> Compare
+
+                        Compare -->|Choose Min| Decision[Select City B]
+
+                        style Start fill:#d1fae5,stroke:#059669,stroke-width:2px
+                        style Decision fill:#10b981,stroke:#064e3b,stroke-width:2px,color:white
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Comparison -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">4. Comparison: Base vs. Rollout</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 dark:bg-gray-800">
+                            <th class="p-4 rounded-tl-xl">Method</th>
+                            <th class="p-4">Description</th>
+                            <th class="p-4 rounded-tr-xl">Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-100 dark:border-gray-700">
+                            <td class="p-4 font-bold text-gray-700">Base Heuristic (T0)</td>
+                            <td class="p-4">Nearest Neighbor: Always pick the closest unvisited city.</td>
+                            <td class="p-4 text-yellow-600">Fast, but often suboptimal (greedy).</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-green-600">Rollout (T1)</td>
+                            <td class="p-4">Look one step ahead, then use Nearest Neighbor to estimate the rest.</td>
+                            <td class="p-4 text-green-600">Slower, but typically finds a much better tour.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="mt-4 text-sm text-gray-500">
+                * Note: Rollout is not guaranteed to find the optimal solution, but it reliably improves upon the base
+                heuristic.
+            </p>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6">Test Your Knowledge</h2>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is the "Control" in the TSP context?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. The cost is the metric to minimize.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The cost between
+                            cities.</button>
+                        <button onclick="alert('Correct! Choosing the next city to visit is the control/action.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The choice of the
+                            next city to visit.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Why is Nearest Neighbor considered "Greedy"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It only considers the immediate cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It minimizes the
+                            immediate cost without considering future consequences.</button>
+                        <button onclick="alert('Incorrect. It actually ignores the total future cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It looks ahead to the
+                            end of the tour.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. Does Rollout guarantee the optimal TSP tour?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. It is an approximation method.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Yes, always.</button>
+                        <button
+                            onclick="alert('Correct! It improves the base heuristic but is not guaranteed to be optimal.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">No, but it typically
+                            improves upon the base heuristic.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="rollout-deterministic.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        10</p>
+                </div>
+            </a>
+            <a href="infinite-horizon.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        12</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
