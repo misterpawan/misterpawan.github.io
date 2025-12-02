@@ -13,12 +13,6 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Mermaid JS -->
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true, theme: 'default' });
-    </script>
-
     <!-- MathJax -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -44,7 +38,7 @@
         }
 
         .gradient-bg {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         }
 
         .definition-box {
@@ -54,14 +48,6 @@
             border-radius: 0.75rem;
             margin: 1rem 0;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .theorem-box {
-            border-left: 4px solid #8b5cf6;
-            background: linear-gradient(to right, #f3e8ff, #ffffff);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin: 1rem 0;
         }
 
         /* Animations */
@@ -93,7 +79,7 @@
             <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
                 ← Sequential Decision Making
             </a>
-            <span class="text-sm font-semibold">Lecture 16: Approx. in Value Space</span>
+            <span class="text-sm font-semibold">Lecture 08: Approximation in Value Space</span>
         </div>
     </nav>
 
@@ -105,7 +91,8 @@
             </div>
             <h1 class="text-4xl md:text-5xl font-bold mb-4">Approximation in Value Space</h1>
             <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
-                Bridging the gap between exact DP and practical Reinforcement Learning.
+                A central idea in Reinforcement Learning: replacing exact optimal cost-to-go functions with
+                approximations to overcome computational limits.
             </p>
         </div>
     </section>
@@ -113,175 +100,167 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-12 max-w-5xl">
 
-        <!-- 1. Introduction -->
+        <!-- 1. The Need for Approximation -->
         <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
-                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🚀</span>
-                <h2 class="text-2xl md:text-3xl font-bold">1. Introduction</h2>
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🤔</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Need for Approximation</h2>
             </div>
-            <p class="mb-4 text-gray-700">
-                This lecture focuses on <strong>Approximation in Value Space</strong> and <strong>Rollout
-                    Algorithms</strong>. These methods are crucial for solving large-scale problems where exact DP is
-                intractable.
-            </p>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-lg mb-2 text-blue-600">Why Finite Horizon?</h4>
-                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
-                        <li>Common in practice (e.g., MPC).</li>
-                        <li>Advantageous for Rollout.</li>
-                        <li>Deterministic nature eliminates need for Monte Carlo (simpler).</li>
-                    </ul>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-lg mb-2 text-purple-600">Key Applications</h4>
-                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
-                        <li>Integer Programming.</li>
-                        <li>Scheduling & Routing.</li>
-                        <li>Model Predictive Control (MPC).</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
 
-        <!-- 2. Recall: Deterministic Finite Horizon DP -->
-        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
-            <div class="flex items-center gap-3 mb-6">
-                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🔄</span>
-                <h2 class="text-2xl md:text-3xl font-bold">2. Recall: Deterministic DP</h2>
+            <p class="text-gray-600 mb-4">
+                The <strong>forward optimal control sequence</strong> construction requires us to solve:
+                \[ u_k^* \in \arg \min_{u_k \in U_k(x_k^*)} \left[ g_k(x_k^*, u_k) + J_{k+1}^*(f_k(x_k^*, u_k)) \right]
+                \]
+            </p>
+
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r mb-6">
+                <p class="font-bold text-red-700">The Problem:</p>
+                <p class="text-red-600">
+                    This is possible only <strong>after</strong> we have computed \( J^*_k(x_k) \) by DP for
+                    <strong>all</strong> \( x_k \) and \( k \). In practice, this is often prohibitively time-consuming
+                    because the number of possible states can be enormous.
+                </p>
             </div>
 
             <div class="definition-box">
-                <h4 class="font-bold text-lg mb-2">Problem Formulation</h4>
-                <p class="mb-2"><strong>System Dynamics:</strong> \( x_{k+1} = f_k(x_k, u_k) \)</p>
-                <p class="mb-2"><strong>Total Cost:</strong> \( J(x_0; u_0, \dots, u_{N-1}) = g_N(x_N) +
-                    \sum_{k=0}^{N-1} g_k(x_k, u_k) \)</p>
-                <p><strong>Objective:</strong> Minimize total cost to find \( J^*(x_0) \).</p>
+                <h4 class="font-bold text-lg mb-2">The Solution: Approximation in Value Space</h4>
+                <p>
+                    A similar forward algorithmic process can be used if the optimal cost-to-go functions \( J^*_k \)
+                    are replaced by some <strong>approximations</strong> \( \tilde{J}_k \).
+                </p>
+                <p class="mt-2 font-semibold text-blue-600">
+                    This constructs a suboptimal sequence \( \{ u^*_0, \dots, u^*_{N-1} \} \) based on using \(
+                    \tilde{J}_k \) in place of \( J^*_k \) in the DP algorithm.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. The Approximation Algorithm -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. The Algorithm</h2>
             </div>
 
-            <div class="mt-6">
-                <h4 class="font-bold text-lg mb-4">The DP Algorithm</h4>
-                <div class="mermaid">
-                    graph TD
-                    A["Start: Terminal Cost"] -->|"J*_N = g_N"| B["Backward Induction"]
-                    B -->|"For k = N-1 to 0"| C["Compute J*_k"]
-                    C -->|"Min over u_k"| D["J*_k = min (g_k + J*_{k+1})"]
-                    D -->|"Until k=0"| E["Optimal Cost J*_0"]
+            <p class="text-gray-600 mb-6">
+                We proceed sequentially forward, using the approximate cost-to-go functions \( \tilde{J}_k \).
+            </p>
+
+            <div class="space-y-6">
+                <!-- Step 1 -->
+                <div class="flex gap-4">
+                    <div
+                        class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                        1</div>
+                    <div>
+                        <h4 class="font-bold text-lg">Initial Step</h4>
+                        <p class="text-gray-600 mb-2">Start at \( x_0 \) and compute:</p>
+                        \[ \tilde{u}_0 = \arg\min_{u_0 \in U_0(x_0)} \left[ g_0(x_0, u_0) + \tilde{J}_1 (f_0(x_0, u_0))
+                        \right] \]
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex gap-4">
+                    <div
+                        class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                        2</div>
+                    <div>
+                        <h4 class="font-bold text-lg">State Transition</h4>
+                        <p class="text-gray-600 mb-2">Move to the next state:</p>
+                        \[ \tilde{x}_1 = f_0(x_0, \tilde{u}_0) \]
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex gap-4">
+                    <div
+                        class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                        3</div>
+                    <div>
+                        <h4 class="font-bold text-lg">Sequential Steps</h4>
+                        <p class="text-gray-600 mb-2">For \( k = 1, 2, \dots, N - 1 \), set:</p>
+                        \[ \tilde{u}_k = \arg\min_{u_k \in U_k(\tilde{x}_k)} \left[ g_k(\tilde{x}_k, u_k) +
+                        \tilde{J}_{k+1} (f_k(\tilde{x}_k, u_k)) \right] \]
+                        <p class="text-gray-600 mt-2">and update the state:</p>
+                        \[ \tilde{x}_{k+1} = f_k(\tilde{x}_k, \tilde{u}_k) \]
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. Shortest Path Equivalence -->
+        <!-- 3. Key Remarks -->
         <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
-                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">📍</span>
-                <h2 class="text-2xl md:text-3xl font-bold">3. Shortest Path Equivalence</h2>
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Key Remarks</h2>
             </div>
 
-            <p class="mb-6 text-gray-700">
-                A deterministic finite-horizon DP problem is mathematically equivalent to finding the <strong>Shortest
-                    Path</strong> in a layered graph.
-            </p>
-
-            <div class="flex justify-center mb-8">
-                <div class="mermaid">
-                    graph LR
-                    S(("Start x0")) --> A(("x1"))
-                    S --> B(("x1'"))
-                    A --> C(("x2"))
-                    A --> D(("x2'"))
-                    B --> D
-                    B --> E(("x2''"))
-                    C --> T(("Term"))
-                    D --> T
-                    E --> T
-                    style S fill:#dcfce7,stroke:#22c55e,stroke-width:2px
-                    style T fill:#fce7f3,stroke:#ec4899,stroke-width:2px
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2 text-purple-600">Forward Computation Only</h4>
+                    <p class="text-gray-600">
+                        The suboptimal sequence \( \{\tilde{u}_0, \dots, \tilde{u}_{N-1}\} \) is obtained by going
+                        <strong>forward</strong>. No backward calculation is required if the approximate functions \(
+                        \tilde{J}_k \) are already available.
+                    </p>
                 </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
-                <h4 class="font-bold text-lg mb-2">Key Insight</h4>
-                <p class="text-sm text-gray-600">
-                    Nodes represent states \(x_k\). Edges represent controls \(u_k\) with weights equal to stage costs
-                    \(g_k\). Finding the optimal control sequence is exactly finding the path with minimum total weight.
-                </p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2 text-green-600">Vastly Reduced Computation</h4>
+                    <p class="text-gray-600">
+                        The minimization needs to be performed <strong>only</strong> for the \( N \) states \( \{x_0,
+                        \tilde{x}_1, \dots, \tilde{x}_{N-1}\} \) that are actually encountered during the on-line
+                        control of the system, not for every state in the state space.
+                    </p>
+                </div>
             </div>
         </section>
 
         <!-- 4. Interactive Quizzes -->
         <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
-                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🧠</span>
                 <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
             </div>
 
             <div class="space-y-6">
                 <!-- Quiz 1 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">1. In deterministic problems, do we need Policies or Control Sequences?
-                    </h4>
+                    <h4 class="font-bold mb-3">1. Why do we use Approximation in Value Space?</h4>
                     <div class="flex flex-col gap-2">
-                        <button
-                            onclick="alert('Correct! Since there is no uncertainty, a fixed sequence works just as well.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Both yield the same
-                            optimal cost.</button>
-                        <button onclick="alert('Incorrect.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Only Policies
-                            work.</button>
+                        <button onclick="alert('Correct! Exact DP is often too slow for large state spaces.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Because computing
+                            exact \( J^*_k \) for all states is computationally prohibitive.</button>
+                        <button onclick="alert('Incorrect. It actually produces a suboptimal sequence.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Because it guarantees a
+                            better solution than exact DP.</button>
                     </div>
                 </div>
 
                 <!-- Quiz 2 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">2. What is the "Backward Induction" step?</h4>
+                    <h4 class="font-bold mb-3">2. In this approach, for which states do we perform the minimization?
+                    </h4>
                     <div class="flex flex-col gap-2">
-                        <button onclick="alert('Correct! We compute optimal costs from N back to 0.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Computing \(J^*_k\)
-                            from \(N\) down to 0.</button>
-                        <button onclick="alert('Incorrect.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Simulating forward from
-                            0 to N.</button>
+                        <button onclick="alert('Incorrect. That is what exact DP does.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">For all possible states
+                            in the state space.</button>
+                        <button onclick="alert('Correct! We only compute for the states we actually visit.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Only for the states
+                            encountered during the on-line control.</button>
                     </div>
                 </div>
 
                 <!-- Quiz 3 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">3. Can Finite Horizon problems be viewed as Infinite Horizon?</h4>
+                    <h4 class="font-bold mb-3">3. What replaces \( J^*_k \) in the minimization step?</h4>
                     <div class="flex flex-col gap-2">
-                        <button onclick="alert('Correct! By adding a cost-free terminal state.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes,
-                            conceptually.</button>
-                        <button onclick="alert('Incorrect.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, they are
-                            fundamentally different.</button>
-                    </div>
-                </div>
-
-                <!-- Quiz 4 -->
-                <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">4. What is the equivalent graph problem for Deterministic Finite Horizon
-                        DP?</h4>
-                    <div class="flex flex-col gap-2">
-                        <button onclick="alert('Correct!')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Shortest Path
-                            Problem.</button>
-                        <button onclick="alert('Incorrect.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Maximum Flow
-                            Problem.</button>
-                    </div>
-                </div>
-
-                <!-- Quiz 5 -->
-                <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">5. Why is "Deterministic" nature advantageous for Rollout?</h4>
-                    <div class="flex flex-col gap-2">
-                        <button onclick="alert('Correct! We can just calculate the cost of a trajectory directly.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Eliminates need for
-                            Monte Carlo simulation.</button>
-                        <button onclick="alert('Incorrect.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It makes the problem
-                            harder.</button>
+                        <button onclick="alert('Correct! We use an approximation function.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">An approximation \(
+                            \tilde{J}_k \).</button>
+                        <button onclick="alert('Incorrect. g_k is the cost of the current step, not the future cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The stage cost \( g_k
+                            \).</button>
                     </div>
                 </div>
             </div>
@@ -289,22 +268,23 @@
 
         <!-- Footer Navigation -->
         <div class="flex justify-between mt-12" data-aos="fade-up">
-            <a href="rl-vs-dp.html"
+            <a href="tsp-algorithm.html"
                 class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
                 <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
                 <div class="text-left">
                     <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
-                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 transition">Lecture
-                        15</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        07</p>
                 </div>
             </a>
-            <a href="#"
-                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+            <a href="infinite-horizon.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
                 <div class="text-right">
                     <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
-                    <p class="font-bold text-gray-900">Coming Soon</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        09</p>
                 </div>
-                <span class="text-2xl">→</span>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
             </a>
         </div>
 
