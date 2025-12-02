@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP for Tetris | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 09: Tetris</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🧱</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">DP Formulation for Playing Tetris</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Modeling the classic game as a stochastic Dynamic Programming problem.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Introduction & Infographic -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🎮</span>
+                <h2 class="text-3xl font-bold">1. Introduction</h2>
+            </div>
+
+            <img src="assets/dp_tetris_infographic.jpg" alt="DP Formulation for Tetris Infographic"
+                class="w-full rounded-xl shadow-lg mb-8">
+
+            <p class="mb-4">Tetris can be modeled as a <strong>finite horizon stochastic DP problem</strong> with a very
+                long horizon.</p>
+        </section>
+
+        <!-- 2. State Formulation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">📐</span>
+                <h2 class="text-3xl font-bold">2. State Formulation</h2>
+            </div>
+
+            <p class="mb-4">The state consists of two primary components:</p>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <h4 class="font-bold text-lg mb-2">1. Board Position (\(x\))</h4>
+                    <p class="text-gray-600">A binary description indicating whether each square is full or empty.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                    <h4 class="font-bold text-lg mb-2">2. Falling Block Shape (\(y\))</h4>
+                    <p class="text-gray-600">The shape of the currently falling block (e.g., L-shape, Square).</p>
+                </div>
+            </div>
+
+            <p class="mb-4"><strong>Control (\(u\)):</strong> Determines the horizontal position and rotation applied to
+                the falling block.</p>
+        </section>
+
+        <!-- 3. DP Algorithm -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-3xl font-bold">3. DP Algorithm</h2>
+            </div>
+
+            <p class="mb-4">The shape \(y\) is generated by a probability distribution \(p(y)\) and is independent of
+                the control. It is an <strong>uncontrollable state component</strong>.</p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Reduced Bellman Equation</h4>
+                <p class="mb-2">We can average out \(y\) to define \(\tilde{J}(x)\), the "average score" at position
+                    \(x\):</p>
+                \[
+                \tilde{J}(x) = \sum_y p(y) \max_u \left[ g(x, y, u) + \tilde{J}(f(x, y, u)) \right]
+                \]
+                <p class="mt-2 text-sm">
+                    Where:<br>
+                    - \(g(x, y, u)\): Points scored (rows removed).<br>
+                    - \(f(x, y, u)\): Next board position.
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Remarks -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">📚</span>
+                <h2 class="text-3xl font-bold">4. Remarks</h2>
+            </div>
+
+            <p class="mb-4">Tetris has been a compelling platform for RL research (1995-2015).</p>
+            <ul class="list-disc list-inside space-y-2 mb-4 ml-4 text-gray-700">
+                <li>The state space \(x\) is <strong>vast</strong> (astronomical number of board configurations).</li>
+                <li>Exact DP is impossible; <strong>suboptimal methods</strong> and approximation in value space are
+                    required.</li>
+                <li>Notable works: [TsV96], [BeI96], [BeT96], [GGS13], [SGG15].</li>
+            </ul>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. The state in Tetris consists of:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Board configuration and current block.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Board position \(x\)
+                            and falling block \(y\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Only the board position
+                            \(x\).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Which component is uncontrollable?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The horizontal position
+                            of the block.</button>
+                        <button onclick="alert('Correct! It is randomly generated.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The shape of the
+                            falling block \(y\).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. The value \(\tilde{J}(x)\) represents:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Averaged over the random block shapes.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Average score at
+                            position \(x\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Maximum possible score
+                            from \(x\).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. Why do we need approximation methods for Tetris?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The number of board states is huge.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The state space is
+                            too vast for exact DP.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The rules are too
+                            complex.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. The immediate reward \(g(x,y,u)\) is typically:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! This is the standard scoring mechanism.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Number of rows
+                            removed.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Time survived.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+
+            <div class="space-y-6">
+                <!-- Mistake 1 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 1:</p>
+                    <p class="italic text-gray-700 mb-4">"We can control the next block shape by playing well."</p>
+                    <div onclick="alert('Correct! The next block is random and independent of control.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. The block shape \(y\) is independent of control \(u\).
+                    </div>
+                </div>
+
+                <!-- Mistake 2 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 2:</p>
+                    <p class="italic text-gray-700 mb-4">"The reduced Bellman equation eliminates the need for
+                        maximization."</p>
+                    <div onclick="alert('Correct! We still maximize over control u.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. We still maximize over \(u\) inside the expectation.
+                    </div>
+                </div>
+
+                <!-- Mistake 3 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 3:</p>
+                    <p class="italic text-gray-700 mb-4">"Tetris is a deterministic shortest path problem."</p>
+                    <div onclick="alert('Correct! It is stochastic due to random blocks.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. It is a stochastic problem.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="uncontrollable-states.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-red-600 transition">Lecture 08
+                    </p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
