@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduling Example | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 03: Scheduling Example</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">📅</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Scheduling Example</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Applying Dynamic Programming to a Discrete-State Deterministic Scheduling Problem.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Problem Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">📋</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. Problem Formulation</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">The Setup</h4>
+                    <p class="text-sm text-gray-600 mb-4">
+                        We have 4 operations: A, B, C, D.
+                        <br>Constraints: B after A, D after C.
+                        <br>We want to find the optimal schedule (sequence of operations) to minimize cost.
+                    </p>
+                    <div class="mermaid flex justify-center">
+                        graph TD
+                        Start((Start)) --> A
+                        Start --> C
+                        A --> B
+                        A --> C
+                        C --> A
+                        C --> D
+                        B --> C
+                        B --> D
+                        D --> A
+                        D --> B
+                    </div>
+                </div>
+                <div class="definition-box">
+                    <h4 class="font-bold text-lg mb-2">DP Elements</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                        <li><strong>States:</strong> Partial Schedules (e.g., {A}, {A,C}, {A,B}).</li>
+                        <li><strong>Controls:</strong> Decisions at Stage 0, 1, and 2 (which operation to do next).</li>
+                        <li><strong>Cost:</strong> Associated with each transition (arc).</li>
+                        <li><strong>Goal:</strong> Find the path with minimum total cost.</li>
+                    </ul>
+                    <p class="text-sm text-gray-700 mt-4 font-bold">
+                        Strategy: Start from the last decision and go backwards!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Stage 2: Tail Sub-problems -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">2️⃣</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Stage 2 (The End)</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                We look at the states where 3 operations are done, and we need to choose the last one.
+            </p>
+
+            <div class="step-box">
+                <h4 class="font-bold text-lg mb-2">Solving Stage 2</h4>
+                <ul class="list-disc list-inside text-sm text-gray-700 mb-4">
+                    <li>Solve the stage 2 sub-problems using terminal costs.</li>
+                    <li>Record optimal cost-to-go and optimal decision for each state.</li>
+                </ul>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    subgraph "Stage 2 Decisions"
+                    ABC -->|D| ABCD((End))
+                    ABD -->|C| ABCD
+                    ACD -->|B| ABCD
+                    BCD -->|A| ABCD
+                    end
+                    style ABCD fill:#dcfce7,stroke:#16a34a
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-2">
+                    (Simplified view: From 3-op states to Done)
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. Stage 1: Tail Sub-problems -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">1️⃣</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Stage 1 (Middle)</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Now we step back. We are at states with 2 operations done. We choose the 3rd operation, knowing the
+                optimal cost from Stage 2.
+            </p>
+
+            <div class="step-box">
+                <h4 class="font-bold text-lg mb-2">Solving Stage 1</h4>
+                <ul class="list-disc list-inside text-sm text-gray-700 mb-4">
+                    <li>For each state (e.g., AB, AC, CD...), consider all possible next operations.</li>
+                    <li>Calculate Cost = (Immediate Cost) + (Optimal Cost from Stage 2).</li>
+                    <li>Pick the minimum.</li>
+                </ul>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    subgraph "Stage 1 Decisions"
+                    AB -->|C| ABC
+                    AB -->|D| ABD
+                    AC -->|B| ABC
+                    AC -->|D| ACD
+                    end
+                    style ABC fill:#fcd34d,stroke:#f59e0b
+                    style ABD fill:#fcd34d,stroke:#f59e0b
+                    style ACD fill:#fcd34d,stroke:#f59e0b
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Stage 0: The Beginning -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">0️⃣</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Stage 0 (Start)</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Finally, we are at the start. We choose the 1st operation.
+            </p>
+
+            <div class="step-box">
+                <h4 class="font-bold text-lg mb-2">Solving Stage 0</h4>
+                <ul class="list-disc list-inside text-sm text-gray-700 mb-4">
+                    <li>Stage 0 problem is the entire problem.</li>
+                    <li>Calculate Cost = (Immediate Cost) + (Optimal Cost from Stage 1).</li>
+                    <li>The result is the global optimal cost \( J^* \).</li>
+                </ul>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    subgraph "Stage 0 Decisions"
+                    Start((Start)) -->|A| A
+                    Start -->|C| C
+                    end
+                    style A fill:#fcd34d,stroke:#f59e0b
+                    style C fill:#fcd34d,stroke:#f59e0b
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6 border-l-4 border-green-500">
+                <h4 class="font-bold text-lg mb-2">Forward Pass</h4>
+                <p class="text-sm text-gray-600">
+                    Once we have \( J^* \) and the optimal decisions at each stage, we can construct the optimal
+                    sequence going forward from the start!
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Recap -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Recap: The DP Idea</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Principle of Optimality</h4>
+                <p class="mb-2 italic">
+                    The tail of an optimal sequence is optimal for the tail subproblem.
+                </p>
+                <h4 class="font-bold text-lg mb-2 mt-4">DP Algorithm Idea</h4>
+                <p class="mb-2">
+                    Solve all the tail subproblems of a given length using the solution of all the tail subproblems of
+                    shorter time length.
+                </p>
+            </div>
+        </section>
+
+        <!-- 6. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">6. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. In the scheduling example, what represents a "State"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The set of completed operations defines where we are.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The partial schedule
+                            (set of completed operations).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The time of
+                            day.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Why do we solve Stage 2 before Stage 1?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We need the cost-to-go from the future to solve the present.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Because Stage 1 needs
+                            the optimal cost-to-go from Stage 2.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Because Stage 2 is
+                            easier.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. Once we have the optimal cost J*, how do we find the optimal sequence?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We follow the recorded optimal decisions.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Construct it going
+                            forward using the stored optimal decisions.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Run the DP algorithm
+                            again.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="principle-of-optimality.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-green-600 transition">Lecture
+                        02</p>
+                </div>
+            </a>
+            <a href="infinite-horizon.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        04</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
