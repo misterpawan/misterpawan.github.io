@@ -198,9 +198,16 @@
                     <li>\( k \): Time index.</li>
                     <li>\( x_k \): State of the system.</li>
                     <li>\( u_k \): Control/Decision variable from set \( U_k(x_k) \).</li>
-                    <li>\( f_k \): System dynamics function.</li>
+                    <li>\( f_k \): System dynamics function (table or formula).</li>
                     <li>\( N \): Horizon (number of stages).</li>
                 </ul>
+                <div class="mt-4 border-t border-blue-200 pt-2">
+                    <p class="text-sm text-gray-700"><strong>Definitions:</strong></p>
+                    <ul class="list-disc list-inside text-sm text-gray-700">
+                        <li><strong>State Space:</strong> The set of all possible \( x_k \) at time \( k \).</li>
+                        <li><strong>Control Space:</strong> The set of all possible \( u_k \) at time \( k \).</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
@@ -216,13 +223,25 @@
                 x0((x0)) -->|u0, g0| x1((x1))
                 x1 -->|u1, g1| x2((x2))
                 x2 -->|...| xN((xN))
+                xN -->|Final Cost| t((t))
                 style x0 fill:#dbeafe,stroke:#3b82f6
-                style xN fill:#dcfce7,stroke:#16a34a
+                style t fill:#dcfce7,stroke:#16a34a
             </div>
 
-            <p class="text-center text-gray-600 mb-6">
-                The problem is equivalent to finding a shortest path from the initial node to the terminal node.
-            </p>
+            <div class="bg-white p-4 rounded-xl shadow-sm mb-6">
+                <h4 class="font-bold text-lg mb-2">Graph Structure</h4>
+                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                    <li><strong>Nodes:</strong> Correspond to states \( x_k \).</li>
+                    <li><strong>Arcs:</strong> Correspond to state-control pairs \( (x_k, u_k) \).</li>
+                    <li><strong>Cost:</strong> Length of the arc \( g_k(x_k, u_k) \).</li>
+                    <li><strong>Terminal Node:</strong> An artificial node \( t \) is added to handle the final stage.
+                    </li>
+                </ul>
+                <p class="text-center text-gray-800 font-semibold mt-4">
+                    The problem is equivalent to finding a shortest path from the initial node to the terminal node \( t
+                    \).
+                </p>
+            </div>
 
             <div class="definition-box">
                 <h4 class="font-bold text-lg mb-2">Cost Function</h4>
@@ -261,6 +280,18 @@
                 </p>
             </div>
 
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6 border-l-4 border-orange-400">
+                <h4 class="font-bold text-lg mb-2">Overlapping Sub-problems</h4>
+                <p class="text-sm text-gray-600 mb-2">
+                    Many sub-problems are repeated (overlapping).
+                </p>
+                <ul class="list-disc list-inside text-sm text-gray-600">
+                    <li><strong>DP Strategy:</strong> Avoid recomputing by memorizing results or using a recursion
+                        stack.</li>
+                    <li>Once the optimal tail sub-problem is found, use it to compute the "higher" level.</li>
+                </ul>
+            </div>
+
             <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
                 <h4 class="font-bold text-lg mb-2">Scheduling Example</h4>
                 <p class="text-sm text-gray-600 mb-4">
@@ -277,7 +308,8 @@
                     D --> End
                 </div>
                 <p class="text-sm text-gray-600 mt-4">
-                    This is a deterministic problem. Each choice leads to a unique next state.
+                    This is a deterministic problem. At a given state, each choice of control leads to a uniquely
+                    determined state.
                 </p>
             </div>
         </section>
