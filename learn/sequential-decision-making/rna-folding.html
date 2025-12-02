@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNA Folding | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #ec4899;
+            background: linear-gradient(to right, #fce7f3, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 25: RNA Folding</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🧬</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">RNA Folding</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Applying Discrete Optimization and Rollout to Computational Biology.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Problem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">🔬</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The RNA Folding Problem</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Given a sequence of nucleotides, we want to "fold" it by introducing pairings that result in a stable
+                structure (minimizing free energy).
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Constraints</h4>
+                <p class="mb-2">
+                    A common constraint is that pairings should not "cross".
+                </p>
+                <p class="text-sm text-gray-700">
+                    If \( (i_1, i_2) \) is a pair, there should be no pair \( (i_3, i_4) \) such that \( i_1 < i_3 < i_2
+                        < i_4 \). </p>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">RNA Structure Representation</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    N1((A)) --- N2((U))
+                    N2 --- N3((G))
+                    N3 --- N4((C))
+                    N4 --- N5((A))
+                    N5 --- N6((U))
+                    N1 -.-> N6
+                    N2 -.-> N5
+                    style N1 fill:#fce7f3,stroke:#ec4899
+                    style N6 fill:#fce7f3,stroke:#ec4899
+                    style N2 fill:#e0e7ff,stroke:#6366f1
+                    style N5 fill:#e0e7ff,stroke:#6366f1
+                    linkStyle 5,6 stroke:#ec4899,stroke-width:2px,stroke-dasharray: 5 5
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-2">Dashed lines represent pairings (Hydrogen bonds).</p>
+            </div>
+        </section>
+
+        <!-- 2. Optimization Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Optimization Formulation</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                We can model this as a sequential decision problem. At each nucleotide, we have at most 3 choices:
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+                    <span class="text-2xl block mb-2">🔓</span>
+                    <h4 class="font-bold text-gray-800">Open</h4>
+                    <p class="text-sm text-gray-500">Start a new pairing.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+                    <span class="text-2xl block mb-2">🔒</span>
+                    <h4 class="font-bold text-gray-800">Close</h4>
+                    <p class="text-sm text-gray-500">Complete an existing pairing.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+                    <span class="text-2xl block mb-2">➡️</span>
+                    <h4 class="font-bold text-gray-800">Do Nothing</h4>
+                    <p class="text-sm text-gray-500">Leave unpaired.</p>
+                </div>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Rollout Application</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>State:</strong> Partial folding of the sequence.</li>
+                    <li><strong>Base Heuristic:</strong> Existing software that generates a "reasonable" complete
+                        folding from a partial one.</li>
+                    <li><strong>Expert Software:</strong> Evaluates the quality (energy) of complete foldings.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. Multistep Lookahead -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🔭</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Multistep Lookahead</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Since the branching factor is small (at most 3), this problem is ideal for <strong>multistep
+                    lookahead</strong>.
+            </p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-2">Complexity</h4>
+                <p class="text-gray-700 mb-2">
+                    With \( \ell \)-step lookahead, the number of Q-factors to compute is at most \( 3^\ell \).
+                </p>
+                <p class="text-gray-700">
+                    This allows for deeper exploration of the folding space compared to simple one-step lookahead.
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Videos -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">📺</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Learn More</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <h4 class="font-bold">AlphaFold Explained (8 min)</h4>
+                    <a href="https://youtu.be/gg7WjuFs8F4?si=aheu1-bLwFbJHBQU" target="_blank"
+                        class="block p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition text-blue-600 font-semibold">
+                        Watch Video →
+                    </a>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold">Protein Folding (2 min)</h4>
+                    <a href="https://youtu.be/KpedmJdrTpY?si=brKr3OEmcJO48tuB" target="_blank"
+                        class="block p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition text-blue-600 font-semibold">
+                        Watch Video →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is the goal of RNA folding?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Minimizing free energy leads to stability.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">To find a structure
+                            with minimum free energy.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">To make the RNA
+                            sequence as long as possible.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What is a common constraint in RNA folding?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Pairings should not cross.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Pairings should not
+                            cross (pseudoknots are often excluded).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">All nucleotides must be
+                            paired.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. How many control choices are typically available at each step?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Open, Close, or Do Nothing.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">At most 3.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">10 or more.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. Why is multistep lookahead suitable for this problem?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The branching factor is small.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Because the number of
+                            controls is small, keeping the tree manageable.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Because it is a
+                            stochastic problem.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. What plays the role of the cost function in the rollout formulation?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It evaluates the final structure.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The expert software
+                            that evaluates folding quality.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The length of the RNA
+                            sequence.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="deepseek-grpo.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        24</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
