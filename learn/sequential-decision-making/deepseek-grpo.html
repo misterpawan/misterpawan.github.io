@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek & GRPO | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 24: DeepSeek & GRPO</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🧠</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">DeepSeek & GRPO</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Group Relative Policy Optimization and Rule-Based Reward Systems.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. DeepSeek Reward System -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🏆</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. DeepSeek Reward System</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                DeepSeek eliminates the need for a separate value network by using a rule-based reward system.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-blue-600">Accuracy Rewards</h4>
+                    <p class="text-sm text-gray-600 mb-2">
+                        For deterministic problems (Math, Code):
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-gray-600">
+                        <li><strong>Math:</strong> Correct final answer in specified format.</li>
+                        <li><strong>Code:</strong> Passes compiler and test cases (e.g., LeetCode).</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-purple-600">Format Rewards</h4>
+                    <p class="text-sm text-gray-600 mb-2">
+                        Enforces structural consistency:
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-gray-600">
+                        <li>Reasoning must be inside <code>&lt;think&gt;</code> tags.</li>
+                        <li>Rewards for adherence, penalties for violation.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GRPO: Group Relative Policy Optimization -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">👥</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. What is GRPO?</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p class="mb-2">
+                    <strong>GRPO</strong> generates a <em>group</em> of responses for each input and evaluates them
+                    <em>relative</em> to each other, rather than against an absolute standard.
+                </p>
+                <p class="text-sm text-gray-700">
+                    This stabilizes learning and removes the need for a large, separate critic model (Value Network).
+                </p>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">GRPO Process Flow</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    Input("Input Prompt") --> Gen("Generate Group of K Responses")
+                    Gen --> R1("Response 1")
+                    Gen --> R2("Response 2")
+                    Gen --> R3("Response 3")
+                    R1 --> Score1("Score: Reward Model")
+                    R2 --> Score2("Score: Reward Model")
+                    R3 --> Score3("Score: Reward Model")
+                    Score1 --> Avg("Calculate Group Average")
+                    Score2 --> Avg
+                    Score3 --> Avg
+                    Avg --> Adv("Compute Advantage (Score - Avg)")
+                    Adv --> Update("Update Policy")
+                    style Gen fill:#e0e7ff,stroke:#6366f1
+                    style Adv fill:#f3e8ff,stroke:#a855f7
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Example -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🍎</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Example Scenario</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                <strong>Problem:</strong> "John has 5 apples, gives 2 to Sarah. How many left?"
+            </p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="pb-2">Response</th>
+                            <th class="pb-2">Correct?</th>
+                            <th class="pb-2">Reward</th>
+                            <th class="pb-2">Advantage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600">
+                        <tr class="border-b">
+                            <td class="py-2">A: "3 apples left"</td>
+                            <td class="text-green-600 font-bold">Yes</td>
+                            <td>1.0</td>
+                            <td class="text-green-600">+High</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">B: "2 apples left"</td>
+                            <td class="text-red-600 font-bold">No</td>
+                            <td>0.0</td>
+                            <td class="text-red-600">-Low</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">C: "5 - 2 = 3"</td>
+                            <td class="text-green-600 font-bold">Yes</td>
+                            <td>1.0</td>
+                            <td class="text-green-600">+High</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">D: "John has 5"</td>
+                            <td class="text-red-600 font-bold">No</td>
+                            <td>0.0</td>
+                            <td class="text-red-600">-Low</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="mt-4 text-xs text-gray-500">
+                    *Advantages are calculated relative to the group mean (0.5 in this case).
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Mathematical Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">📐</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Mathematical Formulation</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">GRPO Objective</h4>
+                <p class="mb-2">
+                    The loss function extends PPO with a group-based advantage:
+                </p>
+                \[
+                L_{\text{GRPO}}(\theta) = \mathbb{E} \left[ \min\left( r_t^g(\theta) A_t, \text{clip}(r_t^g(\theta), 1 -
+                \epsilon, 1 + \epsilon) A_t \right) \right] - \beta D_{KL}(\pi_\theta || \pi_{ref})
+                \]
+                <div class="mt-4 space-y-2 text-sm text-gray-700">
+                    <p><strong>\( r_t^g(\theta) \):</strong> Relative importance ratio (New Policy / Old Policy).</p>
+                    <p><strong>\( A_t \):</strong> Advantage computed from the group rewards.</p>
+                    <p><strong>\( D_{KL} \):</strong> KL Divergence penalty to prevent drifting too far from the
+                        reference model.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. Does DeepSeek use a separate Value Network (Critic)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It uses rule-based rewards and group relative scoring.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">No, it eliminates the
+                            need for one.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Yes, it uses a large
+                            Critic model.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What are the two main types of rewards in DeepSeek?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct!')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Accuracy Rewards and
+                            Format Rewards.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Speed Rewards and
+                            Length Rewards.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. How is the "Advantage" calculated in GRPO?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Relative to the group mean.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">By comparing a
+                            response's score to the group average.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">By using a fixed
+                            baseline of zero.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. What is the purpose of the KL Divergence term?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Stability is key.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">To prevent the policy
+                            from diverging too far from the reference.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">To maximize exploration
+                            at all costs.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. GRPO is an extension of which algorithm?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Proximal Policy Optimization.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">PPO (Proximal Policy
+                            Optimization).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">DQN (Deep
+                            Q-Network).</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="model-free-rollout.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-indigo-600 transition">Lecture
+                        23</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
