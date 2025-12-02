@@ -243,13 +243,13 @@
                 </div>
                 <div class="mermaid text-center">
                     graph TD
-                    S((Start)) --> Q1_1[Q at (1,1)]
-                    S --> Q1_2[Q at (1,2)]
-                    Q1_1 --> Q2_3[Q at (2,3)]
-                    Q1_1 --> Q2_4[Q at (2,4)]
-                    Q1_2 --> Q2_4_2[Q at (2,4)]
-                    Q2_4 --> Q3_2[Q at (3,2)]
-                    Q3_2 --> DeadEnd((X))
+                    S((Start)) --> Q1_1["Q at (1,1)"]
+                    S --> Q1_2["Q at (1,2)"]
+                    Q1_1 --> Q2_3["Q at (2,3)"]
+                    Q1_1 --> Q2_4["Q at (2,4)"]
+                    Q1_2 --> Q2_4_2["Q at (2,4)"]
+                    Q2_4 --> Q3_2["Q at (3,2)"]
+                    Q3_2 --> DeadEnd(("X"))
                     style DeadEnd fill:#fee2e2,stroke:#ef4444
                     style S fill:#dcfce7,stroke:#22c55e
                 </div>

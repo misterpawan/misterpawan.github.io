@@ -163,10 +163,10 @@
                 <h4 class="font-bold text-lg mb-4">The DP Algorithm</h4>
                 <div class="mermaid">
                     graph TD
-                    A[Start: Terminal Cost] -->|J*_N = g_N| B[Backward Induction]
-                    B -->|For k = N-1 to 0| C[Compute J*_k]
-                    C -->|Min over u_k| D[J*_k = min (g_k + J*_{k+1})]
-                    D -->|Until k=0| E[Optimal Cost J*_0]
+                    A["Start: Terminal Cost"] -->|"J*_N = g_N"| B["Backward Induction"]
+                    B -->|"For k = N-1 to 0"| C["Compute J*_k"]
+                    C -->|"Min over u_k"| D["J*_k = min (g_k + J*_{k+1})"]
+                    D -->|"Until k=0"| E["Optimal Cost J*_0"]
                 </div>
             </div>
         </section>
@@ -186,13 +186,13 @@
             <div class="flex justify-center mb-8">
                 <div class="mermaid">
                     graph LR
-                    S((Start x0)) --> A((x1))
-                    S --> B((x1'))
-                    A --> C((x2))
-                    A --> D((x2'))
+                    S(("Start x0")) --> A(("x1"))
+                    S --> B(("x1'"))
+                    A --> C(("x2"))
+                    A --> D(("x2'"))
                     B --> D
-                    B --> E((x2''))
-                    C --> T((Term))
+                    B --> E(("x2''"))
+                    C --> T(("Term"))
                     D --> T
                     E --> T
                     style S fill:#dcfce7,stroke:#22c55e,stroke-width:2px
