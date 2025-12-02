@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model-Free & Truncated Rollout | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #6366f1;
+            background: linear-gradient(to right, #e0e7ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #a855f7;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 23: Model-Free & Truncated Rollout</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🤖</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Model-Free & Truncated Rollout</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Handling large horizons with truncation and unknown costs with expert feedback.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Truncated Rollout -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">✂️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. Truncated Rollout</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                For problems with very long horizons (large \( N \)), running the heuristic to the end is too expensive.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">The Strategy</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Run the base heuristic for only \( \ell \) steps (truncation).</li>
+                    <li>Add a <strong>Terminal Cost Approximation</strong> \( \tilde{J}(x_{k+\ell}) \) at the leaf
+                        nodes.</li>
+                    <li>This bridges the gap between full rollout and pure value space approximation.</li>
+                </ul>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">Truncated Lookahead</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    Root("State x_k") -->|u_k| Next("x_{k+1}")
+                    Next -->|Heuristic Step 1| H1("...")
+                    H1 -->|Heuristic Step l| Leaf("Leaf x_{k+l}")
+                    Leaf -->|Approx Cost| Cost("Terminal Cost J~(x_{k+l})")
+                    style Leaf fill:#e0e7ff,stroke:#6366f1
+                    style Cost fill:#f3e8ff,stroke:#a855f7
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Model-Free Rollout -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Model-Free Rollout</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                What if we don't know the cost function \( G(u) \) or the constraints?
+            </p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">The Setup</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>Base Heuristic:</strong> Can generate complete feasible solutions from partial ones.
+                    </li>
+                    <li><strong>Expert:</strong> A human or software oracle that can <strong>rank</strong> any two
+                        solutions (better/worse) without giving numbers.</li>
+                </ul>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-4 text-center">Expert-Guided Selection</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    Partial("Partial Solution (u_0...u_k)") -->|Extend u^1| Sol1("Complete Sol 1")
+                    Partial -->|Extend u^2| Sol2("Complete Sol 2")
+                    Sol1 --> Expert("Expert Ranking")
+                    Sol2 --> Expert
+                    Expert --> Choice("Select Best u_{k+1}")
+                    style Expert fill:#fef3c7,stroke:#f59e0b
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. LLMs for Rollout -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">💬</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. LLMs as Rollout Policies</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Large Language Models (LLMs) like GPT can be viewed as policies for generating text (sequential
+                decisions).
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-blue-600">The Analogy</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
+                        <li><strong>State:</strong> Context window (partial text).</li>
+                        <li><strong>Control:</strong> Next word selection.</li>
+                        <li><strong>Heuristic:</strong> The LLM generating the rest of the sentence.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-purple-600">Challenges</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
+                        <li><strong>Cost Function:</strong> Hard to define "quality" numerically.</li>
+                        <li><strong>Expert:</strong> Need a way to rank completions (e.g., Reward Models in RLHF).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. Why do we use Truncated Rollout?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Full rollout is too expensive for large N.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">To handle problems
+                            with very long horizons.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">To make the code
+                            shorter.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What compensates for the truncation error?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It estimates the remaining cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Terminal Cost
+                            Approximation.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Nothing, we just ignore
+                            it.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. In Model-Free Rollout, what replaces the cost function?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! They rank the solutions.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">An Expert (Human or
+                            Software).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A random number
+                            generator.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. Does the Expert need to provide numerical values?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Ranking is sufficient.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">No, only ranking is
+                            needed.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Yes, exact costs are
+                            required.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. How can an LLM act as a base heuristic?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It completes the partial text.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">By generating the
+                            rest of the sequence (text completion).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">By calculating
+                            gradients.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="advanced-rollout.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-yellow-600 transition">Lecture
+                        22</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
