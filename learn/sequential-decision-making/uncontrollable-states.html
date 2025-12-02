@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uncontrollable States | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <!-- Mermaid -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(to right, #fef2f2, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 08: Uncontrollable States</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🎲</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Uncontrollable State Components</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Simplifying DP by averaging out state components that we cannot control.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Introduction -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🧩</span>
+                <h2 class="text-3xl font-bold">1. Introduction</h2>
+            </div>
+
+            <p class="mb-4">In many problems, the state consists of two types of components:</p>
+            <ul class="list-disc list-inside space-y-2 mb-4 ml-4">
+                <li><strong>Controllable \(x_k\):</strong> Affected by control \(u_k\).</li>
+                <li><strong>Uncontrollable \(y_k\):</strong> Unaffected by control \(u_k\) (except via \(x_k\)).</li>
+            </ul>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">System Dynamics</h4>
+                \[ x_{k+1} = f_k(x_k, y_k, u_k, w_k) \]
+                <p class="mt-2">\(y_k\) evolves according to a given conditional distribution \(P_k(y_k | x_k)\).</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+                <h4 class="font-bold text-lg mb-3 text-center">State Components</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    subgraph State
+                    xk[Controllable x_k]
+                    yk[Uncontrollable y_k]
+                    end
+                    uk[Control u_k] -->|Affects| xk
+                    uk -.->|No Direct Effect| yk
+                    style xk fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+                    style yk fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Averaging Out -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">⚖️</span>
+                <h2 class="text-3xl font-bold">2. Averaging Out Uncontrollable Components</h2>
+            </div>
+
+            <p class="mb-4">Key Insight: We can structure DP to operate primarily on the controllable component \(x_k\),
+                "averaging out" \(y_k\).</p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Average Cost-to-Go</h4>
+                <p class="mb-2">Define \(\hat{J}_k(x_k)\) as the expected optimal cost given only \(x_k\):</p>
+                \[ \hat{J}_k(x_k) = E_{y_k} \{J^*_k(x_k, y_k) | x_k\} \]
+            </div>
+        </section>
+
+        <!-- 3. Simplified DP Algorithm -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">📉</span>
+                <h2 class="text-3xl font-bold">3. Simplified DP Algorithm</h2>
+            </div>
+
+            <p class="mb-4">The DP algorithm for \(\hat{J}_k(x_k)\) operates on a <strong>reduced state space</strong>
+                (only \(x_k\)).</p>
+
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 overflow-x-auto">
+                <h4 class="font-bold text-sm text-gray-500 uppercase mb-2">Simplified Bellman Equation</h4>
+                \[
+                \hat{J}_k(x_k) = E_{y_k} \left\{ \min_{u_k} E_{w_k} \left\{ g_k(x_k, y_k, u_k, w_k) + \hat{J}_{k+1}
+                (f_k(\dots)) \mid x_k, y_k, u_k \right\} \mid x_k \right\}
+                \]
+            </div>
+
+            <p class="mt-4 text-sm text-gray-600">This is advantageous because approximating \(\hat{J}_k(x_k)\) is
+                typically easier than approximating the full \(J^*_k(x_k, y_k)\).</p>
+        </section>
+
+        <!-- 4. Application to Forecasts -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🔮</span>
+                <h2 class="text-3xl font-bold">4. Application to Forecasts</h2>
+            </div>
+
+            <p class="mb-4">Recall the Forecast example from Lecture 07. The forecast \(y_k\) is an <strong>uncontrolled
+                    state component</strong>.</p>
+            <p class="mb-4">If \(y_k\) takes values \(i = 1, \dots, m\) with probability \(p_i\), the algorithm
+                simplifies to:</p>
+
+            \[
+            \hat{J}_k(x_k) = \sum_{i=1}^{m} p_i \min_{u_k} E_{w_k} \left\{ g_k + \hat{J}_{k+1}(f_k(\dots)) \mid y_k = i
+            \right\}
+            \]
+
+            <p class="mt-4 font-bold text-green-600">This runs over the space of \(x_k\) only, not the combined \((x_k,
+                y_k)\)!</p>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. An uncontrollable state component \(y_k\) is:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It evolves independently of direct control.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Unaffected by \(u_k\)
+                            directly.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Controlled directly by
+                            \(u_k\).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Is \(y_k\) the same as a disturbance \(w_k\)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Yes, they are
+                            identical.</button>
+                        <button onclick="alert('Correct! y_k is observed BEFORE control, w_k happens AFTER.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">No, \(y_k\) is
+                            observed before control is applied.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. The simplified DP algorithm computes:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We average out y_k.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The average
+                            cost-to-go \(\hat{J}_k(x_k)\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The worst-case
+                            cost.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. The main advantage of this approach is:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We only need to store values for x_k.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Reduced state space
+                            dimension.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It eliminates the need
+                            for expectations.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. In the forecast example, the simplified state is:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The forecast y_k is averaged out.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Just the physical
+                            state \(x_k\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The augmented state
+                            \((x_k, y_k)\).</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+
+            <div class="space-y-6">
+                <!-- Mistake 1 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 1:</p>
+                    <p class="italic text-gray-700 mb-4">"Since \(y_k\) is uncontrollable, we can just ignore it
+                        completely."</p>
+                    <div onclick="alert('Correct! We cannot ignore it; it affects dynamics and costs. We average it out.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. It still affects the system dynamics and cost.
+                    </div>
+                </div>
+
+                <!-- Mistake 2 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 2:</p>
+                    <p class="italic text-gray-700 mb-4">"The optimal control \(u_k\) depends only on \(x_k\) in the
+                        simplified problem."</p>
+                    <div onclick="alert('Correct! The control still depends on the full observed state (x_k, y_k).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. The minimization is done for each \((x_k, y_k)\), so \(u^*\) depends on both.
+                    </div>
+                </div>
+
+                <!-- Mistake 3 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 3:</p>
+                    <p class="italic text-gray-700 mb-4">"This simplification works even if \(y_k\) is affected by
+                        \(u_{k-1}\)."</p>
+                    <div onclick="alert('Correct! If u affects y, it is controllable.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. If \(u\) affects \(y\), then \(y\) is controllable.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="dp-forecast.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 transition">Lecture
+                        07</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
