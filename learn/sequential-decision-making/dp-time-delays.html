@@ -133,11 +133,11 @@
                 <h4 class="font-bold text-lg mb-3 text-center">System with Delay</h4>
                 <div class="mermaid flex justify-center">
                     graph LR
-                    xk[x_k] --> System
-                    xk1[x_{k-1}] --> System
-                    uk[u_k] --> System
-                    uk1[u_{k-1}] --> System
-                    System[System Dynamics f_k] --> xk_new[x_{k+1}]
+                    xk["x_k"] --> System
+                    xk1["x_{k-1}"] --> System
+                    uk["u_k"] --> System
+                    uk1["u_{k-1}"] --> System
+                    System["System Dynamics f_k"] --> xk_new["x_{k+1}"]
                     style System fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
                 </div>
             </div>
@@ -164,9 +164,9 @@
                 <div class="mermaid flex justify-center">
                     classDiagram
                     class AugmentedState {
-                    x_k (Current State)
-                    y_k (Previous State x_{k-1})
-                    z_k (Previous Control u_{k-1})
+                    "x_k (Current State)"
+                    "y_k (Previous State x_{k-1})"
+                    "z_k (Previous Control u_{k-1})"
                     }
                     style AugmentedState fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
                 </div>
