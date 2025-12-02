@@ -236,11 +236,65 @@
             </div>
         </section>
 
-        <!-- 5. Interactive Quizzes -->
+        <!-- 5. The Fortified Rollout Algorithm -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🛡️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. The Fortified Rollout Algorithm</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                To guarantee cost improvement even when the base heuristic is <strong>not</strong> sequentially
+                improving, we can use the <strong>Fortified Rollout</strong> algorithm.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Key Concepts</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>Permanent Trajectory (\( P_k \)):</strong> The fixed path we have already traversed up
+                        to step \( k \).</li>
+                    <li><strong>Tentative Best Trajectory (\( \bar{T}_k \)):</strong> The best complete trajectory found
+                        so far (from start to finish).</li>
+                </ul>
+            </div>
+
+            <div class="theorem-box mt-6">
+                <h4 class="font-bold text-lg mb-2">Update Rule</h4>
+                <p class="mb-2">
+                    At each step \( k \), we compute a new candidate trajectory \( \tilde{T}_k \) using standard
+                    rollout.
+                </p>
+                <p class="mb-2">
+                    <strong>If</strong> Cost(\( \tilde{T}_k \)) < Cost(\( \bar{T}_k \)): <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Update \( \bar{T}_{k+1} = \tilde{T}_k \) (Switch to the new better
+                        path).
+                </p>
+                <p>
+                    <strong>Else:</strong> <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Keep \( \bar{T}_{k+1} = \bar{T}_k \) (Stick to the best known path).
+                </p>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">Fortified Update Logic</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    Start("Current Best: T_bar") --> New("Compute New: T_tilde")
+                    New --> Check{"Is T_tilde < T_bar?"} Check -- Yes --> Update("Update Best: T_bar = T_tilde")
+                        Check -- No --> Keep("Keep Best: T_bar")
+                        Update --> Next("Proceed to k+1")
+                        Keep --> Next
+                        style Update fill:#dcfce7,stroke:#22c55e
+                        style Keep fill:#fce7f3,stroke:#ec4899
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Interactive Quizzes -->
         <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
                 <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
-                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+                <h2 class="text-2xl md:text-3xl font-bold">6. Test Your Knowledge</h2>
             </div>
 
             <div class="space-y-6">
