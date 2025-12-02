@@ -162,13 +162,14 @@
             <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
                 <h4 class="font-bold text-lg mb-3 text-center">Augmented State Visualization</h4>
                 <div class="mermaid flex justify-center">
-                    classDiagram
-                    class AugmentedState {
-                    "x_k (Current State)"
-                    "y_k (Previous State x_{k-1})"
-                    "z_k (Previous Control u_{k-1})"
-                    }
-                    style AugmentedState fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+                    graph TD
+                    subgraph AS["Augmented State"]
+                    direction TB
+                    x["x_k (Current State)"]
+                    y["y_k (Previous State x_{k-1})"]
+                    z["z_k (Previous Control u_{k-1})"]
+                    end
+                    style AS fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
                 </div>
             </div>
         </section>
