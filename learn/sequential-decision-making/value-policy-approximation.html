@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value and Policy Approximation | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 26: Value & Policy Approximation</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">📉</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Value and Policy Approximation</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Training Nonlinear Architectures and Incremental Gradient Methods.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Training Nonlinear Architectures -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Training Problem</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                The core challenge is to exploit the structure of the training problem to solve it efficiently.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Least Squares Minimization</h4>
+                <p class="mb-2">We want to minimize the error between our approximation \( \tilde{J} \) and the target
+                    values \( \beta \):</p>
+                \[ \min_r \sum_{s=1}^{q} \left( \tilde{J}(x^s, r) - \beta^s \right)^2 \]
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-red-600">Challenges</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
+                        <li><strong>Nonconvexity:</strong> Many local minima, especially with Neural Networks.</li>
+                        <li><strong>Complicated Landscape:</strong> The cost function graph is "horribly complicated".
+                        </li>
+                        <li><strong>Large Sums:</strong> Standard gradient/Newton methods are too slow for large \( q
+                            \).</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-green-600">The Solution</h4>
+                    <p class="text-sm text-gray-600">
+                        <strong>Incremental Iterative Methods</strong> that operate on a <em>single term</em> at each
+                        iteration have proven effective.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Incremental Gradient Methods -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">⚡</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Incremental Gradient Methods</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Consider minimizing a sum of terms: \( f(y) = \sum_{i=1}^{m} f_i(y) \).
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-gray-400">
+                    <h4 class="font-bold text-lg mb-2">Ordinary Gradient</h4>
+                    <p class="text-sm text-gray-600 mb-2">Updates using the full gradient sum:</p>
+                    \[ y^{k+1} = y^k - \gamma^k \sum_{i=1}^{m} \nabla f_i(y^k) \]
+                    <p class="text-xs text-gray-500 mt-2">Slow per iteration (computes all \( m \) gradients).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <h4 class="font-bold text-lg mb-2">Incremental Gradient</h4>
+                    <p class="text-sm text-gray-600 mb-2">Updates using a <strong>single term</strong> \( i_k \):</p>
+                    \[ y^{k+1} = y^k - \gamma^k \nabla f_{i_k}(y^k) \]
+                    <p class="text-xs text-gray-500 mt-2">Fast per iteration. \( i_k \) can be chosen cyclically or
+                        randomly.</p>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h4 class="font-bold text-lg mb-4 text-center">Performance Comparison</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    subgraph "Far from Convergence"
+                    A[Incremental] -->|1/m work| B[Same Progress as Ordinary]
+                    end
+                    subgraph "Close to Convergence"
+                    C[Incremental] -->|Oscillates| D[Needs Diminishing Stepsize]
+                    end
+                    style A fill:#dbeafe,stroke:#3b82f6
+                    style C fill:#fee2e2,stroke:#ef4444
+                </div>
+                <p class="text-center text-sm text-gray-600 mt-4">
+                    <strong>Far from convergence:</strong> Incremental is much faster (effective speedup of \( m
+                    \)).<br>
+                    <strong>Close to convergence:</strong> Incremental gets "confused" and needs smaller steps.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. Advanced Variants -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🚀</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Advanced Variants</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="definition-box">
+                    <h4 class="font-bold text-lg mb-2">Incremental Aggregated Gradient</h4>
+                    <p class="mb-2">Aims to accelerate convergence by using <strong>memory</strong>.</p>
+                    \[ y^{k+1} = y^k - \gamma^k \sum_{\ell=0}^{m-1} \nabla f_{i_{k-\ell}}(y^{k-\ell}) \]
+                    <p class="text-sm text-gray-700">It uses previously calculated gradients as if they were up-to-date.
+                        This provides a better approximation of the full gradient.</p>
+                </div>
+
+                <div class="theorem-box">
+                    <h4 class="font-bold text-lg mb-2">Stochastic Gradient Descent (SGD)</h4>
+                    <p class="mb-2">Minimizes an expected value: \( f(y) = \mathbb{E} \{ F(y, w) \} \).</p>
+                    \[ y^{k+1} = y^k - \gamma^k \nabla_y F(y^k, w^k) \]
+                    <p class="text-sm text-gray-700">
+                        <strong>Insight:</strong> The incremental gradient method with <strong>random index
+                            selection</strong> is mathematically equivalent to SGD (viewing the sum as an expectation
+                        over a uniform distribution of indices).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Implementation Issues -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Implementation Issues</h2>
+            </div>
+
+            <ul class="grid md:grid-cols-2 gap-4">
+                <li class="bg-white p-4 rounded-xl shadow-sm">
+                    <strong class="block text-gray-800 mb-1">Stepsize (\( \gamma^k \))</strong>
+                    <span class="text-sm text-gray-600">Usually diminishing, e.g., \( \gamma^k = \frac{\gamma}{k+1} \),
+                        to handle the region of confusion.</span>
+                </li>
+                <li class="bg-white p-4 rounded-xl shadow-sm">
+                    <strong class="block text-gray-800 mb-1">Term Order</strong>
+                    <span class="text-sm text-gray-600">Cyclic (1 to m) or Random (sampling). Random often breaks cycles
+                        and works better.</span>
+                </li>
+                <li class="bg-white p-4 rounded-xl shadow-sm">
+                    <strong class="block text-gray-800 mb-1">Diagonal Scaling</strong>
+                    <span class="text-sm text-gray-600">Using a different stepsize for each component of \( y \) to
+                        handle ill-conditioning.</span>
+                </li>
+                <li class="bg-white p-4 rounded-xl shadow-sm">
+                    <strong class="block text-gray-800 mb-1">Region of Confusion</strong>
+                    <span class="text-sm text-gray-600">Detecting when progress stalls due to noise and reducing the
+                        stepsize.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 5. Neural Networks -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Neural Network Approximation</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Neural Networks are the primary nonlinear architecture used today.
+            </p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+                <h4 class="font-bold text-lg mb-2">Training Formulation</h4>
+                <p class="mb-2">Given pairs \( (x^s, \beta^s) \), we find parameters \( (A, b, r) \) to minimize:</p>
+                \[ \min_{A, b, r} \sum_{s=1}^{q} \left( \sum_{\ell=1}^{m} r_{\ell} \sigma \left( (A y(x^s) + b)_{\ell}
+                \right) - \beta^s \right)^2 \]
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Universal Approximation Property</h4>
+                <p>
+                    A neural network with a single hidden layer and sufficiently many neurons can approximate
+                    <strong>any</strong> continuous function arbitrarily well.
+                </p>
+            </div>
+        </section>
+
+        <!-- 6. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">6. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. Why are standard gradient methods ill-suited for the training problem?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The sum has too many terms.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Because the number of
+                            terms \( q \) is very large.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Because the functions
+                            are linear.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. When is the Incremental Gradient method most effective?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It makes rapid progress initially.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">When far from
+                            convergence.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">When very close to the
+                            optimal solution.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What is the "Region of Confusion"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The method oscillates.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">An area near the
+                            optimum where incremental gradients conflict.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A region where the
+                            gradient is zero.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. How does SGD relate to Incremental Gradient?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! They are equivalent.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">SGD is Incremental
+                            Gradient with random index selection.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">They are completely
+                            different algorithms.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. What does the Universal Approximation Property state?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! NNs are powerful approximators.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">NNs can approximate
+                            any continuous function arbitrarily well.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">NNs can solve any
+                            problem exactly.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="rna-folding.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 transition">Lecture
+                        25</p>
+                </div>
+            </a>
+            <a href="index.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Return</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Course
+                        Home</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
