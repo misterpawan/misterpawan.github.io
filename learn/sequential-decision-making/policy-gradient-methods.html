@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Gradient Methods | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #6366f1;
+            background: linear-gradient(to right, #e0e7ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 31: Policy Gradient Methods</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">📈</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Policy Gradient Methods</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Gradient-based optimization for Deterministic and Stochastic Problems.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Deterministic Problems -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. Deterministic Problems</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                We want to minimize \( J_{\tilde{\mu}(r)}(i_0) \) over \( r \) using the gradient method:
+            </p>
+            \[ r^{k+1} = r^k - \gamma^k \nabla J_{\tilde{\mu}(r^k)}(i_0) \]
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">The Challenge</h4>
+                <p class="mb-2">
+                    The gradient \( \nabla J \) is often not explicitly available.
+                </p>
+                <p class="text-sm text-gray-700">
+                    <strong>Solution:</strong> Approximate it by <strong>finite differences</strong> of cost function
+                    values.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <h4 class="font-bold text-lg mb-2">Deterministic Case</h4>
+                    <p class="text-sm text-gray-600">
+                        Finite differences work well because the cost function evaluation is exact (no noise).
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                    <h4 class="font-bold text-lg mb-2">Stochastic Case</h4>
+                    <p class="text-sm text-gray-600">
+                        Cost values are noisy (Monte Carlo). Differencing noisy values leads to <strong>very poor
+                            gradient estimates</strong>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Stochastic Problems -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🎲</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Stochastic Problems</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                To handle stochastic problems, we take an unusual step: convert the minimization of \( F(z) \) into a
+                stochastic optimization problem over probability distributions.
+            </p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">The Transformation</h4>
+                <p class="mb-2">
+                    Instead of \( \min_{z \in Z} F(z) \), we solve:
+                </p>
+                \[ \min_{p \in \mathcal{P}_Z} E_p \{ F(z) \} \]
+                <ul class="list-disc list-inside text-sm text-gray-700 mt-2 space-y-1">
+                    <li>\( z \): Random variable (e.g., state-control trajectory).</li>
+                    <li>\( \mathcal{P}_Z \): Set of probability distributions over \( Z \).</li>
+                    <li>\( p \): A generic distribution (the policy).</li>
+                </ul>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-2 text-indigo-600">Relation to DP</h4>
+                <p class="text-sm text-gray-600 mb-2">
+                    For this to apply to DP, we must <strong>enlarge the set of policies</strong> to include
+                    <strong>randomized policies</strong>.
+                </p>
+                <div class="mermaid flex justify-center mb-4">
+                    graph LR
+                    State(State i) -->|Randomized Policy| Dist(Distribution over U)
+                    Dist --> Control(Control u)
+                    style Dist fill:#e0e7ff,stroke:#6366f1
+                </div>
+                <p class="text-sm text-gray-600">
+                    <strong>Note:</strong> In standard DP, optimization over randomized policies yields the same optimal
+                    cost as deterministic policies. However, this "smoothing" allows us to compute gradients more easily
+                    (as we will see).
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. How do we typically approximate gradients in deterministic problems?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Finite differences work well here.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Finite differences of
+                            cost function values.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">By asking an
+                            oracle.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Why is finite differencing bad for stochastic problems?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Noise makes differences unreliable.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Because the cost
+                            evaluations are noisy (Monte Carlo).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It is actually very
+                            good.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What "unusual step" is taken for stochastic policy gradients?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We optimize over distributions.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Convert the problem
+                            to minimizing an expected value over distributions.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Convert the problem to
+                            a linear program.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. What does 'z' represent in the DP context?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The full trajectory.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The state-control
+                            trajectory.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The discount
+                            factor.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Does optimizing over randomized policies improve the optimal cost in
+                        standard DP?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Deterministic policies are sufficient.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">No, it gives the same
+                            result as ordinary policies.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Yes, it always gives a
+                            strictly better cost.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="optimization-framework.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-rose-600 transition">Lecture
+                        30</p>
+                </div>
+            </a>
+            <a href="index.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Return</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Course
+                        Home</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
