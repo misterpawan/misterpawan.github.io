@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Quadratic Problems | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(to right, #fef2f2, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 05: Linear Quadratic</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">📉</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Infinite Horizon Linear Quadratic Problems</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Understanding the Bellman equation, Riccati equation, and Newton's method in the context of LQ control.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Linear Quadratic Problem -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-3xl font-bold">1. The Linear Quadratic Problem</h2>
+            </div>
+
+            <p class="mb-4">We explore a classical problem with linear dynamics and quadratic cost. This provides deep
+                insights into the Bellman equation.</p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">General Form</h4>
+                <p class="mb-2"><strong>System:</strong> \( x_{k+1} = Ax_k + Bu_k \)</p>
+                <p class="mb-2"><strong>Cost:</strong> \( g(x, u) = x^TQx + u^TRu \)</p>
+                <ul class="list-disc list-inside text-sm text-gray-700 mt-2">
+                    <li>\( Q, R \) are positive definite symmetric matrices.</li>
+                    <li>No control constraints.</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+                <h4 class="font-bold text-lg mb-3">One-Dimensional Version</h4>
+                <p class="mb-2">To simplify, we look at the scalar case:</p>
+                \[ x_{k+1} = ax_k + bu_k \]
+                \[ \text{Cost} = \sum_{k=0}^{\infty} (q x_k^2 + r u_k^2) \]
+                <p class="text-sm text-gray-500 mt-2">This scalar version captures the core algorithmic challenges.</p>
+            </div>
+        </section>
+
+        <!-- 2. The Riccati Equation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">📐</span>
+                <h2 class="text-3xl font-bold">2. The Riccati Equation</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center mb-8">
+                <div>
+                    <p class="mb-4">The optimal cost is quadratic: \( J^*(x) = K^* x^2 \).</p>
+                    <p class="mb-4">The scalar \( K^* \) satisfies the <strong>Riccati Equation</strong> \( K = F(K) \),
+                        where:</p>
+                    \[ F(K) = \frac{a^2 r K}{r + b^2 K} + q \]
+                    <p class="mt-4 text-sm text-gray-600">The optimal policy is linear: \( \mu^*(x) = L^* x \).</p>
+                </div>
+                <div>
+                    <img src="assets/riccati_curve.png" alt="Riccati Curve" class="rounded-xl shadow-lg w-full">
+                    <p class="text-center text-xs text-gray-500 mt-2">Fig 1: The Riccati Operator \( F(K) \)</p>
+                </div>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Stable Linear Policy</h4>
+                <p class="mb-2">For a stable linear policy \( \mu(x) = Lx \) (where \( |a+bL| < 1 \)), the cost is \(
+                        J_\mu(x)=K_L x^2 \).</p>
+                        <p class="mb-2">\( K_L \) is the unique solution to the linear equation:</p>
+                        \[ K = F_L(K) = (a + bL)^2 K + q + rL^2 \]
+            </div>
+
+            <div class="mt-6">
+                <img src="assets/stable_policy_line.png" alt="Stable Policy Line"
+                    class="rounded-xl shadow-lg mx-auto max-w-2xl">
+                <p class="text-center text-xs text-gray-500 mt-2">Fig 2: Riccati Equation for Stable Policy</p>
+            </div>
+        </section>
+
+        <!-- 3. Value Iteration -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🔄</span>
+                <h2 class="text-3xl font-bold">3. Value Iteration (VI)</h2>
+            </div>
+
+            <p class="mb-4">The VI algorithm generates a sequence of quadratic costs \( J_k(x) = K_k x^2 \).</p>
+            \[ K_{k+1} = F(K_k) \]
+            <p class="mb-4">Starting from any \( K_0 \geq 0 \), it converges to \( K^* \).</p>
+
+            <!-- Animation Placeholder -->
+            <div class="bg-gray-100 p-6 rounded-xl text-center">
+                <h4 class="font-bold text-gray-700 mb-2">VI Convergence Animation</h4>
+                <div class="h-2 bg-gray-300 rounded-full overflow-hidden w-full max-w-md mx-auto">
+                    <div class="h-full bg-blue-500 w-0 animate-[width_3s_ease-in-out_infinite]" style="width: 100%">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Visualizing convergence of K to K*</p>
+            </div>
+        </section>
+
+        <!-- 4. Approximation & Newton's Method -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">⚡</span>
+                <h2 class="text-3xl font-bold">4. Approximation as Newton's Method</h2>
+            </div>
+
+            <p class="mb-6">Approximation in value space with one-step lookahead can be viewed as a <strong>Newton
+                    step</strong> for solving the Bellman equation.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">One-Step Lookahead</h4>
+                    <p class="text-sm text-gray-600 mb-2">Maps a terminal cost approx \( \tilde{J} \) to the cost of the
+                        one-step lookahead policy \( \tilde{\mu} \).</p>
+                    <p class="text-sm text-gray-600">This is equivalent to linearizing the Riccati operator \( F \) at
+                        \( \tilde{K} \) and solving the linear system.</p>
+                </div>
+                <div>
+                    <img src="assets/newton_step.png" alt="Newton Step Diagram" class="rounded-xl shadow-lg w-full">
+                    <p class="text-center text-xs text-gray-500 mt-2">Fig 3: One-Step Lookahead as Newton Step</p>
+                </div>
+            </div>
+
+            <div class="bg-purple-50 p-6 rounded-xl border border-purple-100 mb-8">
+                <h4 class="font-bold text-lg mb-2">Multistep Lookahead</h4>
+                <p class="mb-4">For \( \ell \)-step lookahead, we perform \( \ell-1 \) VI steps (staircase) before the
+                    Newton step.</p>
+                <img src="assets/multistep_lookahead.png" alt="Multistep Lookahead"
+                    class="rounded-xl shadow-md mx-auto max-w-2xl">
+            </div>
+        </section>
+
+        <!-- 5. Rollout & Policy Iteration -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🚀</span>
+                <h2 class="text-3xl font-bold">5. Rollout & Policy Iteration</h2>
+            </div>
+
+            <p class="mb-6"><strong>Policy Iteration</strong> is simply repeated application of non-truncated rollout.
+            </p>
+
+            <div class="mb-8">
+                <img src="assets/rollout_diagram.png" alt="Rollout Diagram"
+                    class="rounded-xl shadow-lg mx-auto max-w-2xl">
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Quadratic Convergence</h4>
+                <p class="mb-2">For the LQ problem, Policy Iteration (Newton's method) converges
+                    <strong>quadratically</strong> to the optimal cost.</p>
+                \[ ||K_{k+1} - K^*|| = O(||K_k - K^*||^2) \]
+            </div>
+        </section>
+
+        <!-- 6. Interactive Quizzes -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-3xl font-bold">6. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. The Riccati operator \( F(K) \) is:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It increases but the slope decreases.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Concave and
+                            monotonically increasing.</button>
+                        <button onclick="alert('Incorrect. It is concave.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Convex and
+                            monotonically increasing.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. For a stable linear policy \( \mu(x) = Lx \), the cost equation is:
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. That is the optimal Bellman equation.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Non-linear (Quadratic
+                            in K).</button>
+                        <button onclick="alert('Correct! It is a linear equation in K.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Linear in K.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. One-step lookahead minimization is equivalent to:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It linearizes the problem.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">A Newton step for
+                            solving the Riccati equation.</button>
+                        <button onclick="alert('Incorrect. That is Value Iteration.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A Gradient Descent
+                            step.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. Policy Iteration convergence rate for LQ problems is:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. That is for Value Iteration.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Linear.</button>
+                        <button onclick="alert('Correct! Newton method converges quadratically.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Quadratic.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. In truncated rollout, we use:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We run the policy for m steps then use the approximation.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">m steps of VI
+                            followed by a Newton step.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Only Newton
+                            steps.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+
+            <div class="space-y-6">
+                <!-- Mistake 1 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 1:</p>
+                    <p class="italic text-gray-700 mb-4">"The Riccati equation always has a unique solution."</p>
+                    <div onclick="alert('Correct! It has a positive solution K* and a negative solution (irrelevant).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. It has two solutions (one positive, one negative).
+                    </div>
+                </div>
+
+                <!-- Mistake 2 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 2:</p>
+                    <p class="italic text-gray-700 mb-4">"Value Iteration converges in a finite number of steps for LQ
+                        problems."</p>
+                    <div onclick="alert('Correct! It converges asymptotically (infinite steps).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. It converges asymptotically.
+                    </div>
+                </div>
+
+                <!-- Mistake 3 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 3:</p>
+                    <p class="italic text-gray-700 mb-4">"Newton's method is slower than Value Iteration."</p>
+                    <div onclick="alert('Correct! Newton (PI) is much faster (quadratic convergence) than VI (linear).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. Newton's method is usually much faster.
+                    </div>
+                </div>
+
+                <!-- Mistake 4 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 4:</p>
+                    <p class="italic text-gray-700 mb-4">"Any linear policy is stable."</p>
+                    <div onclick="alert('Correct! Only if |a+bL| < 1.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. Only if the closed loop system eigenvalues are within the unit circle.
+                    </div>
+                </div>
+
+                <!-- Mistake 5 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 5:</p>
+                    <p class="italic text-gray-700 mb-4">"Rollout is an offline planning method."</p>
+                    <div onclick="alert('Correct! Rollout is an online method.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. Rollout is an online method.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="infinite-horizon.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 transition">Lecture
+                        04</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+    </script>
+</body>
+
+</html>
