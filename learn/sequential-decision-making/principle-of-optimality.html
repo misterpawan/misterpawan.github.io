@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principle of Optimality | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #ecfdf5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #f59e0b;
+            background: linear-gradient(to right, #fffbeb, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 02: Principle of Optimality</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">✂️</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Principle of Optimality</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                The foundation of Dynamic Programming: Constructing optimal solutions from optimal sub-solutions.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Tail Sub-problem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🦎</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Tail Sub-problem</h2>
+            </div>
+
+            <div class="mermaid flex justify-center mb-6">
+                graph LR
+                subgraph "Past (Fixed)"
+                x0((x0)) -->|u0*| x1((...))
+                x1 -->|...| xk((xk*))
+                end
+                subgraph "Tail Sub-problem"
+                xk -->|uk| xk1((xk+1))
+                xk1 -->|...| xN((xN))
+                end
+                style xk fill:#fcd34d,stroke:#f59e0b,stroke-width:4px
+                style xN fill:#dcfce7,stroke:#16a34a
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Concept</h4>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                    <li>Let \( \{ u_0^*, \dots, u_{N-1}^* \} \) be an optimal control sequence with state sequence \( \{
+                        x_1^*, \dots, x_N^* \} \).</li>
+                    <li>Consider the <strong>tail sub-problem</strong> starting at \( x_k^* \) at time \( k \).</li>
+                    <li>We want to minimize the "cost-to-go" from \( k \) to \( N \):
+                        \[ g_k(x_k^*, u_k) + \sum_{m=k+1}^{N-1} g_m(x_m, u_m) + g_N(x_N) \]
+                    </li>
+                    <li><strong>Key Insight:</strong> The tail of the optimal sequence \( \{ u_k^*, \dots, u_{N-1}^* \}
+                        \) is optimal for this sub-problem.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. The Theorem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">📜</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Theorem: Principle of Optimality</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Statement</h4>
+                <p class="mb-4 text-gray-800 italic">
+                    Let \( \{u_0^*, \dots, u_{N-1}^*\} \) be an optimal control sequence, which together with \( x_0 \)
+                    determines the corresponding state sequence \( \{x_1^*, \dots, x_N^*\} \).
+                </p>
+                <p class="mb-4 text-gray-800 italic">
+                    Consider the subproblem whereby we start at \( x_k^* \) at time \( k \) and wish to minimize the
+                    "cost-to-go" from time \( k \) to time \( N \),
+                    \[ g_k(x_k^*, u_k) + \sum_{m=k+1}^{N-1} g_m(x_m, u_m) + g_N(x_N), \]
+                    over \( \{u_k, \dots, u_{N-1}\} \) with \( u_m \in U_m(x_m) \).
+                </p>
+                <p class="mb-2 text-gray-800 font-bold">
+                    Then the truncated optimal control sequence \( \{u_k^*, \dots, u_{N-1}^*\} \) is optimal for this
+                    subproblem.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. In Words -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🗣️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. In Plain English</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    The principle of optimality suggests that the optimal cost function can be constructed in a
+                    <strong>piecemeal fashion going backwards</strong>.
+                </p>
+                <div class="mt-4 space-y-2">
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="bg-blue-100 text-blue-600 w-8 h-8 flex items-center justify-center rounded-full font-bold">1</span>
+                        <p class="text-gray-600">First compute the optimal cost function for the "tail subproblem"
+                            involving the <strong>last stage</strong>.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="bg-blue-100 text-blue-600 w-8 h-8 flex items-center justify-center rounded-full font-bold">2</span>
+                        <p class="text-gray-600">Then solve the "tail subproblem" involving the <strong>last two
+                                stages</strong>.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="bg-blue-100 text-blue-600 w-8 h-8 flex items-center justify-center rounded-full font-bold">3</span>
+                        <p class="text-gray-600">Continue in this manner until the optimal cost function for the
+                            <strong>entire problem</strong> is constructed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. If a path is optimal, what can we say about its tail?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! The tail must be optimal for the subproblem starting at that point.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The tail is also
+                            optimal for the remaining problem.</button>
+                        <button
+                            onclick="alert('Incorrect. If the tail wasn\'t optimal, we could replace it with a better tail and improve the whole path!')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The tail might be
+                            suboptimal.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. In which direction does the Principle of Optimality suggest we solve
+                        the problem?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We start from the end and work backwards.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Backwards (from last
+                            stage to first).</button>
+                        <button
+                            onclick="alert('Incorrect. While possible (Forward DP), the principle is most naturally applied backwards.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Forwards (from first
+                            stage to last).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What defines a "Tail Sub-problem"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It minimizes the cost-to-go from a specific state and time.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Minimizing the
+                            "cost-to-go" from a specific state \( x_k \) at time \( k \) to the end.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Minimizing the cost of
+                            the first step only.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="sequential-decision-problems.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        01</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-green-600 transition">Coming
+                        Soon</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
