@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approximation in Policy Space | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #14b8a6;
+            background: linear-gradient(to right, #f0fdfa, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #0f766e;
+            background: linear-gradient(to right, #ccfbf1, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 29: Approximation in Policy Space</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🎛️</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Approximation in Policy Space</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Parametrizing policies directly, Expert Supervised Training, and Unconventional Information Structures.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. General Framework -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🏗️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. General Framework</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Instead of approximating the value function, we can parametrize the policy itself.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Parametrized Stationary Policies</h4>
+                <p class="mb-2">
+                    We define a policy \( \tilde{\mu}(r) \) with components \( \tilde{\mu}(i, r) \), where \( r \) is a
+                    parameter vector.
+                </p>
+                <p class="text-sm text-gray-700">
+                    <strong>Goal:</strong> Optimize some measure of performance with respect to \( r \).
+                </p>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-2 text-blue-600">Example: Supply Chain</h4>
+                <div class="mermaid flex justify-center mb-4">
+                    graph LR
+                    A[Production Center] --> B[Delay]
+                    B --> C[Retail Storage]
+                    C --> D[Demand]
+                    style A fill:#e0f2fe,stroke:#0284c7
+                    style C fill:#dcfce7,stroke:#16a34a
+                </div>
+                <p class="text-sm text-gray-600">
+                    <strong>Natural Parametrization:</strong> When inventory drops below \( r_1 \), order amount \( r_2
+                    \).
+                    <br>Optimize over \( r = (r_1, r_2) \).
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. Indirect Parametrization -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🔄</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Indirect Parametrization</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                We can also parametrize policies <em>through</em> cost features.
+            </p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Value-Based Parametrization</h4>
+                <p class="mb-2">
+                    Let \( \tilde{J}(i, r) \) be a cost approximation (e.g., linear features). Define the policy by
+                    minimizing the Bellman equation using this approximation:
+                </p>
+                \[ \tilde{\mu}(i, r) \in \arg \min_{u \in U(i)} \sum_{j=1}^{n} p_{ij}(u) ( g(i, u, j) + \tilde{J}(j, r)
+                ) \]
+                <p class="text-sm text-gray-700 mt-2">
+                    Useful when we know good features (like in Tetris) but want to optimize in policy space.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. Expert Supervised Training -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🎓</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Expert Supervised Training</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Learning from a software or human expert (Cloning).
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500">
+                    <h4 class="font-bold text-lg mb-2">The Process</h4>
+                    <ol class="list-decimal list-inside text-sm text-gray-600 space-y-2">
+                        <li><strong>Expert:</strong> Obtain "good" controls \( u^s \) at states \( i^s \) from an
+                            expert.</li>
+                        <li><strong>Dataset:</strong> Form pairs \( (i^s, u^s) \).</li>
+                        <li><strong>Train:</strong> Find \( r \) to minimize the difference:
+                            \[ \min_{r} \sum_{s=1}^{q} \| u^s - \tilde{\mu}(i^s, r) \|^2 \]
+                        </li>
+                    </ol>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <h4 class="font-bold text-lg mb-2">Applications</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
+                        <li><strong>Games:</strong> Backgammon, Chess (initialization).</li>
+                        <li><strong>Policy Approximation:</strong> Approximating a rollout policy \( \hat{\mu} \) to
+                            make it faster to compute online.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Unconventional Information -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">📡</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Unconventional Information Structures</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Conventional DP assumes access to the full state (or belief state). What if that's not available?
+            </p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+                <h4 class="font-bold text-lg mb-2 text-red-600">When DP Breaks Down</h4>
+                <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
+                    <li><strong>Limited Memory:</strong> Controller "forgets" information.</li>
+                    <li><strong>Distributed Agents:</strong> Each agent acts on <em>local</em> information only.</li>
+                    <li><strong>Delayed Information:</strong> Agents receive data from others with a lag.</li>
+                </ul>
+                <p class="mt-4 text-gray-800 font-semibold">
+                    In these cases, Approximation in Policy Space is still applicable, whereas Value Space methods often
+                    fail.
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is the main idea of Approximation in Policy Space?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We optimize parameters of the policy directly.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Parametrize the
+                            policy and optimize performance w.r.t. parameters.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Approximate the value
+                            function and use one-step lookahead.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. In the supply chain example, what are the parameters (r1, r2)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Threshold and Order Amount.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Inventory threshold
+                            and Order amount.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Production cost and
+                            Retail price.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What is "Indirect Parametrization"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Defining policy via a parametrized cost function.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Defining the policy
+                            through minimization of a parametrized cost function.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Parametrizing the
+                            policy using a neural network directly.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. What is "Expert Supervised Training"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Cloning an expert\'s decisions.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Training a policy to
+                            mimic an expert's actions.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Training an expert to
+                            use the software.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Why is Policy Space Approximation useful for Multiagent Systems?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It handles local information constraints where DP fails.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It works even when
+                            agents have only local information (no full state access).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Because multiagent
+                            systems are always linear.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="linear-programming-dp.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 transition">Lecture
+                        28</p>
+                </div>
+            </a>
+            <a href="index.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Return</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Course
+                        Home</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
