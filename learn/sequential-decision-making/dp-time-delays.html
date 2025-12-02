@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP with Time Delays | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <!-- Mermaid -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #ecfdf5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 06: Time Delays</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">⏳</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">DP with Time Delays</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Handling systems where the future depends on more than just the immediate past.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Introduction -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🐢</span>
+                <h2 class="text-3xl font-bold">1. Introduction to Time Delays</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p>In many applications, the next state \(x_{k+1}\) is influenced not just by \(x_k\) and \(u_k\), but
+                    also by previous states \(x_{k-1}, \dots\) and controls \(u_{k-1}, \dots\).</p>
+            </div>
+
+            <p class="mb-4">Consider a system with <strong>at most one stage delay</strong>:</p>
+            \[ x_{k+1} = f_k(x_k, x_{k-1}, u_k, u_{k-1}) \]
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+                <h4 class="font-bold text-lg mb-3 text-center">System with Delay</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    xk[x_k] --> System
+                    xk1[x_{k-1}] --> System
+                    uk[u_k] --> System
+                    uk1[u_{k-1}] --> System
+                    System[System Dynamics f_k] --> xk_new[x_{k+1}]
+                    style System fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. State Augmentation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">📦</span>
+                <h2 class="text-3xl font-bold">2. State Augmentation</h2>
+            </div>
+
+            <p class="mb-4">We can transform this into a standard system by introducing new state variables:</p>
+            \[ y_k = x_{k-1}, \quad z_k = u_{k-1} \]
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Augmented State Vector</h4>
+                <p class="mb-2">Define the new state \(\tilde{x}_k = (x_k, y_k, z_k)\). The system becomes:</p>
+                \[ \tilde{x}_{k+1} = \tilde{f}_k(\tilde{x}_k, u_k, w_k) \]
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+                <h4 class="font-bold text-lg mb-3 text-center">Augmented State Visualization</h4>
+                <div class="mermaid flex justify-center">
+                    classDiagram
+                    class AugmentedState {
+                    x_k (Current State)
+                    y_k (Previous State x_{k-1})
+                    z_k (Previous Control u_{k-1})
+                    }
+                    style AugmentedState fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. DP Algorithm -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🧮</span>
+                <h2 class="text-3xl font-bold">3. DP Algorithm with Delays</h2>
+            </div>
+
+            <p class="mb-4">By expressing the cost in terms of \(\tilde{x}_k\), we get a problem without delays. The
+                policy \(\mu_k\) now depends on \((x_k, x_{k-1}, u_{k-1})\).</p>
+
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 overflow-x-auto">
+                <h4 class="font-bold text-sm text-gray-500 uppercase mb-2">Reformulated Bellman Equation</h4>
+                \[
+                J^*_k(x_k, x_{k-1}, u_{k-1}) = \min_{u_k} E_{w_k} \left[ g_k + J^*_{k+1}(f_k(\dots), x_k, u_k) \right]
+                \]
+            </div>
+        </section>
+
+        <!-- 4. Non-additive Cost -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">🔗</span>
+                <h2 class="text-3xl font-bold">4. Non-additive Cost Structures</h2>
+            </div>
+
+            <p class="mb-4">In extreme cases, cost might depend on the entire history:</p>
+            \[ E\{g_N(x_N, \dots, x_0, u_{N-1}, \dots, u_0)\} \]
+
+            <p class="mb-4">We augment the state to include the <strong>entire history</strong>:</p>
+            \[ \tilde{x}_k = (x_k, \dots, x_0, u_{k-1}, \dots, u_0) \]
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. To handle a 1-step time delay in state \(x_{k-1}\), we augment the
+                        state with:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We define y_k = x_{k-1}.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">A new variable \(y_k
+                            = x_{k-1}\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Nothing, DP handles it
+                            automatically.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. If the control \(u_{k-1}\) affects \(x_{k+1}\), the policy \(\mu_k\)
+                        must depend on:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Only \(x_k\).</button>
+                        <button onclick="alert('Correct! The state is augmented with u_{k-1}.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">\(x_k\) and
+                            \(u_{k-1}\).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. State augmentation transforms a delayed system into:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It becomes a standard Markovian system.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">A standard system
+                            without delays.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A continuous-time
+                            system.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. For non-additive costs depending on full history, the state dimension:
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It grows linearly with time k.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Increases with
+                            time.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Stays
+                            constant.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Can we handle delays in disturbances \(w_{k-1}\)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Assuming they are observed.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes, by including
+                            them in the state.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, never.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+
+            <div class="space-y-6">
+                <!-- Mistake 1 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 1:</p>
+                    <p class="italic text-gray-700 mb-4">"We can ignore past controls \(u_{k-1}\) if only \(x_{k-1}\)
+                        affects the dynamics."</p>
+                    <div onclick="alert('Correct! If u_{k-1} is not in f_k, we do not need to augment it.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        True/False? (Click to reveal: It depends on the specific dynamics f_k.)
+                    </div>
+                </div>
+
+                <!-- Mistake 2 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 2:</p>
+                    <p class="italic text-gray-700 mb-4">"Augmenting the state reduces the computational complexity."
+                    </p>
+                    <div onclick="alert('Correct! It increases the state space dimension, making it harder (Curse of Dimensionality).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. It drastically increases complexity.
+                    </div>
+                </div>
+
+                <!-- Mistake 3 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 3:</p>
+                    <p class="italic text-gray-700 mb-4">"The cost function must always be additive for DP to work."</p>
+                    <div onclick="alert('Correct! We can handle non-additive costs by state augmentation.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. We can handle non-additive costs by augmenting the state.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="linear-quadratic.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-green-600 transition">Lecture
+                        05</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
