@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-Factors & TSP | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 06: Q-Factors & TSP</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🧩</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Q-Factors & TSP</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                An alternative form of DP using Q-factors (crucial for Q-learning) and an application to the Traveling
+                Salesman Problem.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Q-Factors -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">ℚ</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. Q-Factors: Alternative Form of DP</h2>
+            </div>
+
+            <p class="text-gray-600 mb-4">
+                The DP algorithm can be restated using <strong>Q-factors</strong> (or Q-values), which are defined for
+                all state-control pairs \( (x_k, u_k) \). This formulation is fundamental to Reinforcement Learning,
+                specifically Q-Learning.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-4">Definition of Q-Factors</h4>
+                <p class="mb-2">The optimal Q-factor \( Q^*_k(x_k, u_k) \) is the cost of starting at state \( x_k \),
+                    taking control \( u_k \), and then acting optimally thereafter:</p>
+                \[ Q^*_k (x_k, u_k) = g_k(x_k, u_k) + J^*_{k+1} (f_k(x_k, u_k)) \]
+
+                <h4 class="font-bold text-lg mt-6 mb-2">Relationship with \( J^*_k \)</h4>
+                <p class="mb-2">The optimal cost-to-go \( J^*_k(x_k) \) is simply the minimum Q-factor over all possible
+                    controls:</p>
+                \[ J^*_k(x_k) = \min_{u_k \in U_k(x_k)} Q^*_k (x_k, u_k) \]
+
+                <h4 class="font-bold text-lg mt-6 mb-2">DP Algorithm in Q-Factors</h4>
+                <p class="mb-2">Substituting \( J^*_{k+1} \) with the minimization of \( Q^*_{k+1} \), we get the
+                    Q-factor recurrence:</p>
+                \[ Q_k^* (x_k, u_k) = g_k(x_k, u_k) + \min_{u_{k+1} \in U_k(f_k(x_k, u_k))} Q^*_{k+1}(f_k(x_k, u_k),
+                u_{k+1}) \]
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r mt-6">
+                <p class="font-bold text-yellow-800">Why is this useful?</p>
+                <p class="text-yellow-700">
+                    Q-factors allow us to evaluate the quality of a specific action \( u_k \) in a specific state \( x_k
+                    \) without immediately committing to it. This is the core idea behind <strong>Q-Learning</strong>!
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. Traveling Salesman Problem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🌍</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. DP for Traveling Salesman Problem (TSP)</h2>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center mb-6">
+                <div class="w-full md:w-1/2">
+                    <!-- Placeholder for slide18.png -->
+                    <div class="bg-gray-100 rounded-xl p-8 text-center border-2 border-dashed border-gray-300">
+                        <p class="text-gray-400 italic">Image: TSP Map Illustration (slide18.png)</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h3 class="font-bold text-xl mb-2">Problem Statement</h3>
+                    <p class="text-gray-700 mb-4">
+                        Given \( N \) cities and the travel time between each pair of cities, find a minimum time tour
+                        that visits each city <strong>exactly once</strong> and returns to the start city.
+                    </p>
+                    <div
+                        class="bg-red-50 text-red-700 px-4 py-2 rounded-lg inline-block text-sm font-bold border border-red-200">
+                        ⚠️ NP-Complete Problem
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2 text-red-600">Brute Force Approach</h4>
+                    <p class="text-gray-600 mb-2">Try all possible permutations of cities.</p>
+                    <p class="font-mono text-xl bg-gray-100 p-2 rounded text-center">Complexity: \( O(N!) \)</p>
+                    <p class="text-sm text-gray-500 mt-2">Extremely slow for large \( N \).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2 text-green-600">Dynamic Programming Approach</h4>
+                    <p class="text-gray-600 mb-2">Use held-karp algorithm (state involves set of visited cities).</p>
+                    <p class="font-mono text-xl bg-gray-100 p-2 rounded text-center">Complexity: \( O(N^2 2^N) \)</p>
+                    <p class="text-sm text-gray-500 mt-2">Much faster than brute force, but still exponential.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. How is the optimal cost-to-go \( J^*_k(x_k) \) related to Q-factors?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. It is the minimum, not the sum.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It is the sum of all
+                            Q-factors at that state.</button>
+                        <button onclick="alert('Correct! J* is the minimum Q-factor over all possible controls.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It is the minimum of
+                            \( Q^*_k(x_k, u_k) \) over all \( u_k \).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Why are Q-factors important?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! They are the foundation for Q-Learning.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">They are used in
+                            Q-Learning.</button>
+                        <button onclick="alert('Incorrect. They are mathematically equivalent.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">They are less accurate
+                            than J factors.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. Which approach is faster for solving TSP?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! O(N^2 2^N) is much faster than O(N!).')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Dynamic
+                            Programming.</button>
+                        <button onclick="alert('Incorrect. Brute force is O(N!), which is much slower.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Brute Force.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="optimal-control-sequence.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        05</p>
+                </div>
+            </a>
+            <a href="infinite-horizon.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        07</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
