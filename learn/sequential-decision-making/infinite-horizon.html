@@ -92,7 +92,8 @@
             </div>
             <h1 class="text-5xl font-bold mb-4">Infinite Horizon Problems</h1>
             <p class="text-xl mb-6 max-w-3xl mx-auto">
-                Minimizing cost over an infinite number of stages using Value Iteration and Policy Iteration.
+                Minimizing cost over an infinite number of stages using Value Iteration, Policy Iteration, and
+                Approximation in Value Space.
             </p>
         </div>
     </section>
@@ -149,11 +150,22 @@
             </div>
 
             <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
-                <h4 class="font-bold text-lg mb-3">Optimal Cost \( J^* \)</h4>
-                <p class="mb-2">The optimal infinite horizon cost is the limit:</p>
-                \[ J^*(x) = \lim_{N \to \infty} J_N(x) \]
-                <p class="mb-2">It satisfies the famous <strong>Bellman Equation</strong>:</p>
+                <h4 class="font-bold text-lg mb-3">Optimal Cost \( J^* \) & Bellman Equation</h4>
+                <p class="mb-2">The optimal infinite horizon cost is the limit \( J^*(x) = \lim_{N \to \infty} J_N(x)
+                    \). It satisfies the famous <strong>Bellman Equation</strong>:</p>
                 \[ J^*(x) = \min_{u \in U(x)} E_w \left\{ g(x, u, w) + \alpha J^* (f(x, u, w)) \right\} \]
+
+                <div class="mt-4 border-t pt-4">
+                    <h5 class="font-bold text-purple-800 mb-2">Remarks on Bellman Equation</h5>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 text-sm">
+                        <li>It is a <strong>system of equations</strong> (one per state \( x \)).</li>
+                        <li>If \( \mu(x) \) attains the minimum for each \( x \), then the stationary policy \( \{\mu,
+                            \mu, \dots\} \) is optimal.</li>
+                        <li>The cost \( J_\mu \) of a stationary policy \( \mu \) satisfies:
+                            \[ J_\mu(x) = E_w \left\{ g(x, \mu(x), w) + \alpha J_\mu (f(x, \mu(x), w)) \right\} \]
+                        </li>
+                    </ul>
+                </div>
             </div>
         </section>
 
@@ -164,8 +176,7 @@
                 <h2 class="text-3xl font-bold">3. Policy Iteration (PI)</h2>
             </div>
 
-            <p class="mb-6 text-lg">Can we iterate on policies instead of values? Yes! This forms the foundation of
-                Reinforcement Learning.</p>
+            <p class="mb-6 text-lg">Policy Iteration forms the foundation for self-learning in RL.</p>
 
             <div class="mb-8">
                 <img src="assets/fig29_recreated.png" alt="Policy Iteration Block Diagram"
@@ -176,16 +187,16 @@
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
                     <h4 class="font-bold text-lg mb-2">1. Policy Evaluation</h4>
                     <p class="text-sm text-gray-600 mb-2">Compute cost \( J_\mu \) of current policy \( \mu \) by
-                        solving:</p>
-                    \[ J_\mu(x) = E_w \{ g(x, \mu(x), w) + \alpha J_\mu(f(x, \mu(x), w)) \} \]
-                    <p class="text-xs text-gray-500 mt-2">Can be done via Monte Carlo simulation.</p>
+                        solving the Bellman equation for \( \mu \).</p>
+                    <p class="text-xs text-gray-500 mt-2">Can be done via Monte Carlo simulation (averaging over many
+                        trajectories).</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
                     <h4 class="font-bold text-lg mb-2">2. Policy Improvement</h4>
                     <p class="text-sm text-gray-600 mb-2">Compute improved policy \( \tilde{\mu} \) via one-step
-                        lookahead:</p>
-                    \[ \tilde{\mu}(x) \in \text{arg min}_{u} E_w \{ g(x, u, w) + \alpha J_\mu(f(x, u, w)) \} \]
-                    <p class="text-xs text-gray-500 mt-2">Theorem: \( J_{\tilde{\mu}}(x) \leq J_\mu(x) \).</p>
+                        lookahead minimization.</p>
+                    <p class="text-xs text-gray-500 mt-2">This is also known as the <strong>Rollout Algorithm</strong>
+                        when performed online.</p>
                 </div>
             </div>
         </section>
@@ -194,91 +205,188 @@
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
                 <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🔭</span>
-                <h2 class="text-3xl font-bold">4. Approximation & Lookahead</h2>
+                <h2 class="text-3xl font-bold">4. Approximation in Value Space</h2>
             </div>
 
-            <p class="mb-6">In practice, we can't solve Bellman's equation exactly for large state spaces. We use
-                approximations.</p>
-
-            <div class="mb-8">
-                <img src="assets/fig32_recreated.png" alt="Lookahead Diagram"
-                    class="w-full max-w-3xl mx-auto rounded-xl shadow-lg mb-4">
-                <p class="text-center text-sm text-gray-500">One-step vs Multistep Lookahead</p>
-            </div>
+            <p class="mb-6">For large state spaces, we use an approximation \( \tilde{J} \) instead of \( J^* \). We
+                then generate controls using <strong>Lookahead Minimization</strong>.</p>
 
             <div class="mb-8">
                 <img src="assets/fig32b_recreated.png" alt="Approximation Diagram"
                     class="w-full max-w-3xl mx-auto rounded-xl shadow-lg mb-4">
-                <p class="text-center text-sm text-gray-500">Approximation in Value Space</p>
             </div>
 
-            <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
-                <h4 class="font-bold text-lg mb-3">Feature Extraction Example</h4>
-                <p class="mb-4">For complex games like Tetris or Atari, we extract features from the state to
-                    approximate the cost.</p>
-                <img src="assets/tetris_recreated.png" alt="Tetris Feature Extraction"
-                    class="w-64 mx-auto rounded shadow-md">
+            <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+                <h4 class="font-bold text-lg mb-3">The Three Approximations</h4>
+                <ul class="space-y-4">
+                    <li class="flex gap-3">
+                        <span class="font-bold text-indigo-600">(a)</span>
+                        <div>
+                            <strong>Terminal Cost Approximation \( \tilde{J} \):</strong> Replaces the optimal cost \(
+                            J^* \). In infinite horizon, we only need one such function (unlike \( N \) functions for
+                            finite horizon).
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="font-bold text-indigo-600">(b)</span>
+                        <div>
+                            <strong>Expected Value Approximation:</strong> Replaces the \( E\{\cdot\} \) operation. For
+                            example, replacing stochastic disturbances with deterministic values (Certainty
+                            Equivalence).
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="font-bold text-indigo-600">(c)</span>
+                        <div>
+                            <strong>Minimization Approximation:</strong> Simplifies the \( \min_u \) operation,
+                            especially useful in multiagent systems where the control space is vast.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- l-step lookahead -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold mb-4">\( \ell \)-Step Lookahead</h3>
+                <img src="assets/fig32_recreated.png" alt="Lookahead Diagram"
+                    class="w-full max-w-3xl mx-auto rounded-xl shadow-lg mb-6">
+
+                <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+                    <h4 class="font-bold text-lg mb-2">Motivation</h4>
+                    <p class="mb-3">Why look further ahead? By increasing \( \ell \), we might get better performance
+                        even with a less precise approximation \( \tilde{J} \).</p>
+                    <p class="text-sm text-gray-700"><strong>Example:</strong> In <strong>AlphaZero</strong> (Chess/Go),
+                        a deep multistep lookahead is crucial for effective online play. It also helps with the
+                        stability of the policy.</p>
+                </div>
             </div>
         </section>
 
-        <!-- 5. Interactive Quiz -->
+        <!-- 5. Constructing Approximations -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">🏗️</span>
+                <h2 class="text-3xl font-bold">5. Constructing Approximations</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-pink-600">Off-line Approximation</h4>
+                    <p class="text-sm text-gray-600 mb-2">Compute \( \tilde{J} \) off-line by solving a simpler problem.
+                    </p>
+                    <ul class="list-disc list-inside text-xs text-gray-500 space-y-1">
+                        <li><strong>Simplification:</strong> Reduce state space, remove constraints, or assume
+                            deterministic dynamics.</li>
+                        <li><strong>Aggregation:</strong> Group states into clusters and solve the aggregate problem.
+                        </li>
+                        <li><strong>Parametric Approximation:</strong> Train a neural network \( J(x, r) \) using
+                            methods like \( Q \)-learning or TD-methods.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-pink-600">On-line Approximation</h4>
+                    <p class="text-sm text-gray-600 mb-2">Compute values on-the-fly.</p>
+                    <ul class="list-disc list-inside text-xs text-gray-500 space-y-1">
+                        <li><strong>Rollout:</strong> Run a "base policy" (heuristic) via simulation to estimate costs.
+                        </li>
+                        <li><strong>MPC:</strong> Solve a short-horizon optimization problem online.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 flex gap-6 items-center">
+                <div class="flex-1">
+                    <h4 class="font-bold text-lg mb-2">Feature Extraction</h4>
+                    <p class="text-sm text-gray-600">For parametric approximation, we often extract "features" from the
+                        state (e.g., height of columns in Tetris) and learn a function of these features.</p>
+                </div>
+                <img src="assets/tetris_recreated.png" alt="Tetris Feature Extraction" class="w-48 rounded shadow-md">
+            </div>
+        </section>
+
+        <!-- 6. From Online Training to Play -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🎮</span>
+                <h2 class="text-3xl font-bold">6. From Training to Play</h2>
+            </div>
+
+            <p class="mb-4">Once we have trained a policy \( \mu \) or value function \( \tilde{J} \) off-line, how do
+                we use it?</p>
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-400">
+                    <h5 class="font-bold">1. Given a Policy \( \mu \)</h5>
+                    <p class="text-sm text-gray-600">Use \( \tilde{J} = J_\mu \) as the terminal cost. Perform one-step
+                        or \( \ell \)-step lookahead (Rollout).</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-400">
+                    <h5 class="font-bold">2. Given a Value Approx \( \tilde{J} \)</h5>
+                    <p class="text-sm text-gray-600">Use \( \tilde{J} \) directly as the terminal cost in lookahead
+                        minimization.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-400">
+                    <h5 class="font-bold">3. Truncated Rollout</h5>
+                    <p class="text-sm text-gray-600">Run rollout with policy \( \mu \) for some steps, then use \(
+                        \tilde{J} \) to approximate the rest (e.g., TD-Gammon).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Interactive Quiz -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <div class="flex items-center gap-3 mb-6">
                 <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
-                <h2 class="text-3xl font-bold">5. Test Your Understanding</h2>
+                <h2 class="text-3xl font-bold">7. Test Your Understanding</h2>
             </div>
 
             <div class="space-y-6">
                 <!-- Quiz 1 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">1. What is the Bellman Equation for infinite horizon problems?</h4>
+                    <h4 class="font-bold mb-3">1. Why do we use \( \ell \)-step lookahead instead of 1-step?</h4>
                     <div class="flex flex-col gap-2">
-                        <button onclick="alert('Incorrect. This is just the immediate cost.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">\( J^*(x) = \min E \{
-                            g(x,u,w) \} \)</button>
+                        <button onclick="alert('Incorrect. It is actually more computationally expensive.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It is computationally
+                            cheaper.</button>
                         <button
-                            onclick="alert('Correct! It balances immediate cost plus discounted future optimal cost.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">\( J^*(x) = \min E \{
-                            g(x,u,w) + \alpha J^*(f(x,u,w)) \} \)</button>
-                        <button onclick="alert('Incorrect. This is for finite horizon without discount.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">\( J^*(x) = \min E \{
-                            g(x,u,w) + J^*(f(x,u,w)) \} \)</button>
+                            onclick="alert('Correct! A longer lookahead can compensate for a poor terminal cost approximation.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It can improve
+                            performance when the approximation \( \tilde{J} \) is imperfect.</button>
                     </div>
                 </div>
 
                 <!-- Quiz 2 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm">
-                    <h4 class="font-bold mb-3">2. In Policy Iteration, the "Policy Improvement" step:</h4>
+                    <h4 class="font-bold mb-3">2. What is "Certainty Equivalence"?</h4>
                     <div class="flex flex-col gap-2">
-                        <button
-                            onclick="alert('Correct! It generates a new policy that is at least as good as the old one.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Generates a policy \(
-                            \tilde{\mu} \) with \( J_{\tilde{\mu}} \leq J_\mu \)</button>
-                        <button onclick="alert('Incorrect. That is Policy Evaluation.')"
-                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Calculates the cost of
-                            the current policy</button>
+                        <button onclick="alert('Correct! It simplifies the expected value operation.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Replacing stochastic
+                            disturbances with deterministic values.</button>
+                        <button onclick="alert('Incorrect. That is Value Iteration.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Solving the Bellman
+                            equation exactly.</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 6. Spot the Mistake -->
+        <!-- 8. Spot the Mistake -->
         <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
             <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
 
             <div class="bg-red-50 p-6 rounded-xl border border-red-100 mb-6">
                 <p class="font-semibold mb-4">Scenario: A student claims:</p>
-                <p class="italic text-gray-700 mb-4">"In the infinite horizon problem, the discount factor \( \alpha \)
-                    can be any positive number, i.e., \( \alpha > 0 \)."</p>
+                <p class="italic text-gray-700 mb-4">"Rollout is an off-line algorithm because it requires simulation."
+                </p>
 
                 <div class="space-y-3">
-                    <div onclick="alert('Correct! If alpha > 1, the cost sum might not converge (it could be infinite). Alpha is usually in (0, 1].')"
+                    <div onclick="alert('Correct! Rollout is an ON-LINE algorithm. It runs simulations from the current state to make a decision right now.')"
                         class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
-                        False. \( \alpha \) must be in \( (0, 1] \) for convergence.
+                        False. Rollout is an on-line algorithm.
                     </div>
-                    <div onclick="alert('Incorrect. Think about what happens to the sum if alpha is 2, for example.')"
+                    <div onclick="alert('Incorrect. While simulation takes time, the key is that it happens during execution (on-line), not before.')"
                         class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-red-50">
-                        True. Any positive discount works.
+                        True. Simulation means off-line.
                     </div>
                 </div>
             </div>
