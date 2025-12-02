@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approximation in Value Space (Deterministic) | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #06b6d4;
+            background: linear-gradient(to right, #ecfeff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 19: Approx. in Value Space</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🔭</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Approximation in Value Space</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Deterministic Problems, One-Step Lookahead, and Q-Factors.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Core Idea -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-cyan-100 text-cyan-700 p-3 rounded-xl text-2xl">💡</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Core Idea</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Exact DP is often too expensive. Instead, we replace the optimal cost-to-go \( J^*_{k+1} \) with an
+                <strong>approximate cost function</strong> \( \tilde{J}_{k+1} \).
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">One-Step Lookahead Minimization</h4>
+                <p class="mb-2">At state \( \tilde{x}_k \), we choose control \( \tilde{u}_k \) by solving:</p>
+                \[ \tilde{u}_k \in \arg\min_{u_k \in U_k(\tilde{x}_k)} \left[ g_k(\tilde{x}_k, u_k) + \tilde{J}_{k+1}
+                (f_k(\tilde{x}_k, u_k)) \right] \]
+                <p class="mt-2">Then we move to the next state: \( \tilde{x}_{k+1} = f_k(\tilde{x}_k, \tilde{u}_k) \).
+                </p>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">Visualizing the Process</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    State["Current State x_k"] -->|Apply u_k| NextState["Next State x_{k+1}"]
+                    NextState -->|Evaluate| Cost["Approx Cost J~(x_{k+1})"]
+                    State -->|Plus Stage Cost g_k| Total["Total: g_k + J~"]
+                    Total -->|Minimize| Decision["Choose Best u_k"]
+                    style Decision fill:#cffafe,stroke:#06b6d4,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Q-Factors -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">Q</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Approximate Q-Factors</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p class="mb-2">The <strong>Q-factor</strong> represents the value of taking action \( u_k \) in state
+                    \( x_k \) and then following the approximate policy thereafter.</p>
+                \[ \tilde{Q}_k(x_k, u_k) = g_k(x_k, u_k) + \tilde{J}_{k+1} (f_k(x_k, u_k)) \]
+            </div>
+
+            <p class="mt-4 text-gray-700">
+                The control selection simply becomes minimizing the Q-factor:
+            </p>
+            \[ \tilde{u}_k \in \arg\min_{u_k \in U_k(\tilde{x}_k)} \tilde{Q}_k(\tilde{x}_k, u_k) \]
+        </section>
+
+        <!-- 3. Offline vs Online -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">⚖️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Offline vs Online</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-blue-600">Online Approximation</h4>
+                    <p class="text-sm text-gray-600 mb-2">
+                        Compute \( \tilde{J}_{k+1} \) on the fly (e.g., using Rollout).
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-gray-600">
+                        <li><strong>Pros:</strong> Adapts to the current state.</li>
+                        <li><strong>Cons:</strong> Computationally expensive at each step.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-purple-600">Offline Q-Factors</h4>
+                    <p class="text-sm text-gray-600 mb-2">
+                        Train \( \tilde{Q}_k \) beforehand (e.g., Neural Networks) and use it directly.
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-gray-600">
+                        <li><strong>Pros:</strong> Very fast online execution.</li>
+                        <li><strong>Cons:</strong> Performance depends on training quality; errors can degrade results.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What do we replace \( J^*_{k+1} \) with in Approximation in Value
+                        Space?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct!')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">An approximate cost
+                            function \( \tilde{J}_{k+1} \).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The exact cost
+                            function.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What is the "One-Step Lookahead"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We look one step ahead and approximate the rest.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Minimizing current
+                            cost + approximate future cost.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Looking at the entire
+                            future exactly.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What is a Q-Factor?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The quality of the
+                            state.</button>
+                        <button onclick="alert('Correct! It combines stage cost and future cost-to-go.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Sum of stage cost and
+                            cost-to-go.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. What is a risk of using Offline Trained Q-Factors?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! If the training is bad, the policy will be bad.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Performance
+                            degradation due to training errors.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">They are too
+                            slow.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Which method is typically faster during online execution?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Just a function evaluation.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Offline
+                            Q-Factors.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Online
+                            Rollout.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="general-discrete-optimization.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 transition">Lecture
+                        18</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
