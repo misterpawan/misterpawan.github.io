@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RL vs DP Terminology | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        }
+
+        .term-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .term-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .term-card.selected {
+            box-shadow: 0 0 0 2px #8b5cf6;
+            background-color: #f3e8ff;
+        }
+
+        .term-card.matched {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            cursor: default;
+        }
+
+        .term-card.wrong {
+            background-color: #fee2e2;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 15: RL vs DP</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🗣️</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">RL & DP Terminology</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Decoding the language of Reinforcement Learning and Dynamic Programming.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Rosetta Stone -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🗿</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Rosetta Stone</h2>
+            </div>
+
+            <p class="mb-6 text-gray-600">Reinforcement Learning (RL) and Dynamic Programming (DP) often describe the
+                same concepts using different words. Here is the translation guide:</p>
+
+            <div class="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <tr>
+                            <th class="px-6 py-3 w-1/2">Reinforcement Learning (RL)</th>
+                            <th class="px-6 py-3 w-1/2">Dynamic Programming (DP) / Control</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-purple-600">Environment</td>
+                            <td class="px-6 py-4 font-medium text-blue-600">System</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-purple-600">Agent</td>
+                            <td class="px-6 py-4 font-medium text-blue-600">Decision Maker / Controller</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-purple-600">Action</td>
+                            <td class="px-6 py-4 font-medium text-blue-600">Decision / Control</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-purple-600">Reward</td>
+                            <td class="px-6 py-4 font-medium text-blue-600">(Negative) Cost</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-purple-600">Value Function</td>
+                            <td class="px-6 py-4 font-medium text-blue-600">(Negative) Cost Function</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-purple-600">Action Value (Q-Value)</td>
+                            <td class="px-6 py-4 font-medium text-blue-600">Q-Factor of State-Control Pair</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 2. Interactive Matcher Game -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">🎮</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Terminology Matcher</h2>
+            </div>
+
+            <p class="mb-4 text-sm text-gray-600">Click a term on the left (RL), then click its matching term on the
+                right (DP).</p>
+
+            <div class="grid grid-cols-2 gap-8" id="game-container">
+                <!-- RL Terms -->
+                <div class="space-y-3" id="rl-terms">
+                    <!-- Injected via JS -->
+                </div>
+                <!-- DP Terms -->
+                <div class="space-y-3" id="dp-terms">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <div id="game-message" class="mt-4 text-center font-bold text-lg h-8"></div>
+            <button onclick="resetGame()"
+                class="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-semibold transition mx-auto block">Reset
+                Game</button>
+        </section>
+
+        <!-- 3. Advanced Concepts -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Advanced Concepts</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-indigo-500">
+                    <h4 class="font-bold text-lg mb-2">Planning vs. Learning</h4>
+                    <p class="text-sm text-gray-600 mb-2"><strong>Planning:</strong> Solving a DP problem with a
+                        <em>known</em> model.
+                    </p>
+                    <p class="text-sm text-gray-600"><strong>Learning:</strong> Solving a DP problem <em>without</em> an
+                        explicit model (using simulation/data).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-pink-500">
+                    <h4 class="font-bold text-lg mb-2">Deep RL</h4>
+                    <p class="text-sm text-gray-600">Approximate DP using value and/or policy approximation with
+                        <strong>Deep Neural Networks</strong>.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                    <h4 class="font-bold text-lg mb-2">Self-Learning / Self-Play</h4>
+                    <p class="text-sm text-gray-600">Solving a DP problem using some form of <strong>Policy
+                            Iteration</strong> (often optimistic).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <h4 class="font-bold text-lg mb-2">Prediction</h4>
+                    <p class="text-sm text-gray-600">Equivalent to <strong>Policy Evaluation</strong> (finding the value
+                        of a fixed policy).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. In RL, "Maximizing Value" is equivalent to what in DP?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! They are opposite objectives mathematically.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Minimizing
+                            Cost.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Maximizing
+                            Cost.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What is "Experience Replay"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Restarting the
+                            game.</button>
+                        <button onclick="alert('Correct! Reusing past samples in simulation.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Reuse of samples in a
+                            simulation process.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. "System Identification" in Control is similar to what in RL?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Building a model from data.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Learning a
+                            Model.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Policy
+                            Gradient.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="exercising-option.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-emerald-600 transition">
+                        Lecture 14</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Game Logic
+        const terms = [
+            { rl: "Environment", dp: "System" },
+            { rl: "Agent", dp: "Controller" },
+            { rl: "Action", dp: "Control" },
+            { rl: "Reward", dp: "(Negative) Cost" },
+            { rl: "Value Function", dp: "(Negative) Cost Function" }
+        ];
+
+        let selectedRL = null;
+        let selectedDP = null;
+        let matchedCount = 0;
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function initGame() {
+            const rlContainer = document.getElementById('rl-terms');
+            const dpContainer = document.getElementById('dp-terms');
+            rlContainer.innerHTML = '';
+            dpContainer.innerHTML = '';
+            matchedCount = 0;
+            document.getElementById('game-message').textContent = '';
+
+            // Create RL Cards
+            terms.forEach((pair, index) => {
+                const card = document.createElement('div');
+                card.className = 'term-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 font-bold text-purple-600';
+                card.textContent = pair.rl;
+                card.dataset.index = index;
+                card.onclick = () => selectRL(card, index);
+                rlContainer.appendChild(card);
+            });
+
+            // Create DP Cards (Shuffled)
+            const shuffledDP = shuffle([...terms].map((t, i) => ({ ...t, originalIndex: i })));
+            shuffledDP.forEach((pair) => {
+                const card = document.createElement('div');
+                card.className = 'term-card bg-white p-4 rounded-xl shadow-sm border border-gray-100 font-bold text-blue-600';
+                card.textContent = pair.dp;
+                card.dataset.index = pair.originalIndex;
+                card.onclick = () => selectDP(card, pair.originalIndex);
+                dpContainer.appendChild(card);
+            });
+        }
+
+        function selectRL(card, index) {
+            if (card.classList.contains('matched')) return;
+            if (selectedRL) selectedRL.classList.remove('selected');
+            selectedRL = card;
+            selectedRL.classList.add('selected');
+            checkMatch();
+        }
+
+        function selectDP(card, index) {
+            if (card.classList.contains('matched')) return;
+            if (selectedDP) selectedDP.classList.remove('selected');
+            selectedDP = card;
+            selectedDP.classList.add('selected');
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (selectedRL && selectedDP) {
+                const rlIndex = parseInt(selectedRL.dataset.index);
+                const dpIndex = parseInt(selectedDP.dataset.index);
+
+                if (rlIndex === dpIndex) {
+                    // Match
+                    selectedRL.classList.remove('selected');
+                    selectedDP.classList.remove('selected');
+                    selectedRL.classList.add('matched');
+                    selectedDP.classList.add('matched');
+                    selectedRL = null;
+                    selectedDP = null;
+                    matchedCount++;
+                    if (matchedCount === terms.length) {
+                        document.getElementById('game-message').textContent = "🎉 All Matched! You speak both languages now.";
+                        document.getElementById('game-message').className = "mt-4 text-center font-bold text-lg h-8 text-green-600";
+                    }
+                } else {
+                    // No Match
+                    selectedRL.classList.add('wrong');
+                    selectedDP.classList.add('wrong');
+                    setTimeout(() => {
+                        selectedRL.classList.remove('wrong', 'selected');
+                        selectedDP.classList.remove('wrong', 'selected');
+                        selectedRL = null;
+                        selectedDP = null;
+                    }, 500);
+                }
+            }
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // Start Game
+        initGame();
+    </script>
+</body>
+
+</html>
