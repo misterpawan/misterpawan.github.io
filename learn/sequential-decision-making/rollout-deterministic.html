@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rollout with Base Heuristic | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 10: Rollout with Base Heuristic</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">🎲</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Rollout with Base Heuristic</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Using on-line simulation with a base policy to approximate cost-to-go.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- Overview Image -->
+        <section class="glass p-4 rounded-3xl mb-8 flex justify-center" data-aos="fade-up">
+            <img src="assets/rollout-heuristic-overview.jpg" alt="Rollout with Base Heuristic Overview"
+                class="rounded-xl shadow-lg max-w-full h-auto">
+        </section>
+
+        <!-- 1. Introduction to Rollout -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">1. Constructing \( \tilde{J}_k \)</h2>
+            <p class="text-gray-600 mb-4">
+                A major challenge in value space approximation is constructing suitable approximate cost-to-go functions
+                \( \tilde{J}_k \). This can be done in various ways:
+            </p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-lg text-purple-600 mb-2">Off-line Training</h3>
+                    <p class="text-sm text-gray-600">Constructing \( \tilde{J}_k \) using sophisticated training methods
+                        (e.g., Neural Networks) before the decision process begins.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 ring-2 ring-blue-500">
+                    <h3 class="font-bold text-lg text-blue-600 mb-2">On-line Rollout</h3>
+                    <p class="text-sm text-gray-600">Obtaining \( \tilde{J}_k(x_k) \) <strong>when needed</strong> by
+                        running a heuristic control scheme, called a <em>base heuristic</em> or <em>base policy</em>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. The Rollout Concept -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">2. The Rollout Algorithm</h2>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">High-Level Plan</h4>
+                <p>
+                    Given a state \( x_k \) at time \( k \), the algorithm considers all tail subproblems starting at
+                    every possible next state \( x_{k+1} \), and solves them <strong>suboptimally</strong> by using a
+                    <strong>base heuristic</strong>.
+                </p>
+            </div>
+
+            <h3 class="text-xl font-bold mt-6 mb-3">Detailed Steps</h3>
+            <ol class="list-decimal list-inside space-y-4 text-gray-700">
+                <li class="pl-2">
+                    <strong>Generate Next States:</strong> At \( x_k \), consider all possible controls \( u_k \in
+                    U_k(x_k) \) and generate the corresponding next states \( x_{k+1} \).
+                </li>
+                <li class="pl-2">
+                    <strong>Run Base Heuristic:</strong> From each \( x_{k+1} \), simulate the system forward using the
+                    base heuristic to generate a sequence of states and controls up to the terminal stage \( N \):
+                    \[ x_{t+1} = f_t(x_t, u_t), \quad t = k, \dots, N - 1 \]
+                </li>
+                <li class="pl-2">
+                    <strong>Calculate Heuristic Cost:</strong> Accumulate the costs incurred during this simulation to
+                    get \( H_{k+1}(x_{k+1}) \):
+                    \[ H_{k+1}(x_{k+1}) = g_{k+1}(x_{k+1}, u_{k+1}) + \dots + g_{N-1}(x_{N-1}, u_{N-1}) + g_N(x_N) \]
+                </li>
+                <li class="pl-2">
+                    <strong>Minimization:</strong> Select the control \( u_k \) that minimizes the immediate cost plus
+                    the heuristic cost:
+                    \[ \tilde{u}_k = \arg\min_{u_k \in U_k(x_k)} \left[ g_k(x_k, u_k) + H_{k+1}(f_k(x_k, u_k)) \right]
+                    \]
+                </li>
+            </ol>
+        </section>
+
+        <!-- 3. Q-Factor Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">3. Q-Factor Formulation</h2>
+            <p class="text-gray-600 mb-4">
+                We can express the rollout algorithm more succinctly using approximate Q-factors.
+            </p>
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <p class="mb-4">The rollout algorithm applies the control \( \mu_k(x_k) \) given by:</p>
+                \[ \mu_k(x_k) \in \arg \min_{u_k \in U_k(x_k)} \tilde{Q}_k(x_k, u_k) \]
+                <p class="mt-4 mb-2">where the approximate Q-factor is defined as:</p>
+                \[ \tilde{Q}_k(x_k, u_k) = g_k(x_k, u_k) + H_{k+1}(f_k(x_k, u_k)) \]
+            </div>
+        </section>
+
+        <!-- 4. Visual Illustration -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6">4. Visual Illustration</h2>
+
+            <div class="flex justify-center mb-8">
+                <div class="mermaid">
+                    graph LR
+                    xk((x_k)) -->|u_k^1| xk1_1((x_{k+1}^1))
+                    xk((x_k)) -->|u_k^2| xk1_2((x_{k+1}^2))
+
+                    subgraph "Base Heuristic Simulation"
+                    xk1_1 -.->|Base Policy| xN_1((x_N))
+                    xk1_2 -.->|Base Policy| xN_2((x_N))
+                    end
+
+                    xk1_1 -- "Cost H(x_{k+1}^1)" --> Cost1[Total Cost 1]
+                    xk1_2 -- "Cost H(x_{k+1}^2)" --> Cost2[Total Cost 2]
+
+                    Cost1 --> Min{Minimize}
+                    Cost2 --> Min
+
+                    Min --> Decision[Select Best u_k]
+
+                    style xk fill:#e0e7ff,stroke:#3b82f6,stroke-width:2px
+                    style Min fill:#fef3c7,stroke:#d97706,stroke-width:2px
+                    style Decision fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+                </div>
+            </div>
+            <p class="text-center text-sm text-gray-500 italic">
+                Fig: The rollout process. For each possible control, we simulate the future using the base heuristic to
+                estimate the "tail cost", then pick the best option.
+            </p>
+        </section>
+
+        <!-- 5. Remarks on Complexity -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4">5. Computational Complexity</h2>
+            <div class="bg-yellow-50 p-6 rounded-xl border-l-4 border-yellow-400">
+                <h4 class="font-bold text-yellow-800 mb-2">How expensive is it?</h4>
+                <ul class="list-disc list-inside text-yellow-900 space-y-2">
+                    <li>The algorithm runs the base heuristic at most \( N \times n \) times, where \( n \) is the max
+                        number of controls at each state.</li>
+                    <li>If \( n \) is small relative to \( N \), the cost is just a small multiple of \( N \) times the
+                        base heuristic cost.</li>
+                    <li>If \( n \) is polynomial in \( N \), the total ratio is also polynomial in \( N \).</li>
+                </ul>
+                <p class="mt-4 text-sm text-yellow-800">
+                    <strong>Key Takeaway:</strong> Rollout is generally computationally feasible if the base heuristic
+                    is fast.
+                </p>
+            </div>
+        </section>
+
+        <!-- 6. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6">Test Your Knowledge</h2>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is the "Base Heuristic" used for in Rollout?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. It is used to estimate the future cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">To determine the
+                            immediate cost \( g_k \).</button>
+                        <button
+                            onclick="alert('Correct! It simulates the future to provide an approximate cost-to-go.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">To approximate the
+                            cost-to-go \( \tilde{J}_{k+1} \) by simulation.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Is the Base Heuristic optimal?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It is usually suboptimal, but rollout improves upon it.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">No, it solves the
+                            tail subproblems suboptimally.</button>
+                        <button onclick="alert('Incorrect. If it were optimal, we would just use it directly!')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Yes, it must be
+                            optimal.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. When is the Rollout computation performed?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. That would be off-line training.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Off-line, before the
+                            process starts.</button>
+                        <button onclick="alert('Correct! It generates values when needed.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">On-line, at each
+                            state \( x_k \) as it is encountered.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="lookahead-approximation.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        09</p>
+                </div>
+            </a>
+            <a href="infinite-horizon.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        11</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
