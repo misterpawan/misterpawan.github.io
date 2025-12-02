@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP Algorithm & Examples | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f5f3ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 04: DP Algorithm & Examples</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🧩</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">DP Algorithm & Examples</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                The general Dynamic Optimization Algorithm and real-world examples of States, Controls, and Rewards.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The DP Algorithm Idea -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">💡</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The DP Algorithm Idea</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Key Idea: To solve tail sub-problem at \( x_k \):</h4>
+                <ol class="list-decimal list-inside text-gray-700 space-y-4">
+                    <li>
+                        <strong>Consider every possible \( u_k \)</strong> and solve the tail sub-problem that starts at
+                        the next state:
+                        \[ x_{k+1} = f_k(x_k, u_k) \]
+                        <ul class="list-disc list-inside ml-6 text-sm text-gray-600 mt-1">
+                            <li>This gives the cost-to-go from the next state.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Optimize over all possible \( u_k \):</strong>
+                        Pick the control that minimizes the sum of the immediate cost \( g_k(x_k, u_k) \) and the
+                        optimal cost-to-go from \( x_{k+1} \).
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- 2. Real-World Examples -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🌍</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Examples of State, Control, & Reward</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <!-- Traffic Light -->
+                <div class="example-card">
+                    <div class="text-4xl mb-3">🚦</div>
+                    <h4 class="font-bold text-xl mb-2">Traffic Light Control</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><strong>State:</strong> Traffic situation (cars waiting, current phase).</li>
+                        <li><strong>Control:</strong> Change light (switch phase, extend green).</li>
+                        <li><strong>Outcome:</strong> Traffic flow (reduced waiting time).</li>
+                    </ul>
+                </div>
+
+                <!-- Self-Driving Car -->
+                <div class="example-card">
+                    <div class="text-4xl mb-3">🚗</div>
+                    <h4 class="font-bold text-xl mb-2">Self-Driving Car</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><strong>State:</strong> Environment (position, speed, obstacles).</li>
+                        <li><strong>Control:</strong> Driving commands (accelerate, steer).</li>
+                        <li><strong>Outcome:</strong> Safe & efficient driving.</li>
+                    </ul>
+                </div>
+
+                <!-- Inventory Management -->
+                <div class="example-card">
+                    <div class="text-4xl mb-3">📦</div>
+                    <h4 class="font-bold text-xl mb-2">Inventory Management</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><strong>State:</strong> Inventory levels, demand rate.</li>
+                        <li><strong>Control:</strong> Restocking (order units, adjust production).</li>
+                        <li><strong>Outcome:</strong> Meet demand, minimize holding costs.</li>
+                    </ul>
+                </div>
+
+                <!-- Home Heating -->
+                <div class="example-card">
+                    <div class="text-4xl mb-3">🌡️</div>
+                    <h4 class="font-bold text-xl mb-2">Home Heating System</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><strong>State:</strong> Indoor temperature.</li>
+                        <li><strong>Control:</strong> Adjust heating/cooling (on/off).</li>
+                        <li><strong>Outcome:</strong> Comfortable temperature, energy efficiency.</li>
+                    </ul>
+                </div>
+
+                <!-- Robot Arm -->
+                <div class="example-card">
+                    <div class="text-4xl mb-3">🦾</div>
+                    <h4 class="font-bold text-xl mb-2">Robot Arm Manipulation</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><strong>State:</strong> Joint angles, end-effector position.</li>
+                        <li><strong>Control:</strong> Motor torques, movement commands.</li>
+                        <li><strong>Outcome:</strong> Successful pick & place.</li>
+                    </ul>
+                </div>
+
+                <!-- Recommendation System -->
+                <div class="example-card">
+                    <div class="text-4xl mb-3">🛒</div>
+                    <h4 class="font-bold text-xl mb-2">Recommendation System</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><strong>State:</strong> User history (views, purchases).</li>
+                        <li><strong>Control:</strong> Recommend items, discounts.</li>
+                        <li><strong>Outcome:</strong> Sales, user satisfaction.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. Formal DP Algorithm -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Formal DP Algorithm</h2>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-4">Backward Induction Steps</h4>
+                <div class="space-y-4">
+                    <div>
+                        <span class="font-bold text-purple-600">1. Initialization (Last Stage):</span>
+                        <p class="mt-1">
+                            \[ J^*_N(x_N) = g_N(x_N), \quad \text{for all } x_N \]
+                        </p>
+                    </div>
+                    <div>
+                        <span class="font-bold text-purple-600">2. Backward Recursion:</span>
+                        <p class="mt-1">
+                            For \( k = N-1, \dots, 0 \), compute:
+                            \[ J^*_k(x_k) = \min_{u_k \in U_k(x_k)} \left[ g_k(x_k, u_k) + J^*_{k+1}(f_k(x_k, u_k))
+                            \right] \]
+                        </p>
+                    </div>
+                    <div>
+                        <span class="font-bold text-purple-600">3. Result:</span>
+                        <p class="mt-1">
+                            The optimal cost \( J^*(x_0) \) is obtained at the last step (time 0).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. In the DP algorithm, where do we start the computation?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! We start at the terminal stage N.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">At the final stage \(
+                            N \).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">At the initial stage
+                            0.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What is the "State" in the Inventory Management example?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct!')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Inventory levels and
+                            demand rate.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The price of the
+                            product.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What does \( J^*_k(x_k) \) represent?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct!')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The optimal
+                            cost-to-go from state \( x_k \) at time \( k \) to the end.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The immediate cost at
+                            time \( k \).</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="scheduling-example.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 transition">Lecture
+                        03</p>
+                </div>
+            </a>
+            <a href="infinite-horizon.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        05</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
