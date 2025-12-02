@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimization Framework | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #f43f5e;
+            background: linear-gradient(to right, #ffe4e6, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #e11d48;
+            background: linear-gradient(to right, #fff1f2, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 30: Optimization Framework</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🎯</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Optimization Framework</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Random Search Methods and the Cross Entropy Method for Policy Optimization.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Optimization Problem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-rose-100 text-rose-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Optimization Problem</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                We want to find the optimal policy parameters \( r \) directly.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Problem Statement</h4>
+                <p class="mb-2">
+                    Each \( r \) defines a stationary policy \( \tilde{\mu}(r) \). We determine \( r \) by minimizing
+                    the cost:
+                </p>
+                \[ \min_{r} J_{\tilde{\mu}(r)}(i_0) \]
+                <p class="text-sm text-gray-700 mt-2">
+                    Or more generally, minimizing the expected cost over a distribution of initial states:
+                </p>
+                \[ \min_{r} E \{J_{\tilde{\mu}(r)}(i_0)\} \]
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">Optimization Loop</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    Params("Parameters r") --> Policy("Policy μ(r)")
+                    Policy --> Cost("Cost J(i0)")
+                    Cost --> Update("Update r")
+                    Update --> Params
+                    style Update fill:#ffe4e6,stroke:#f43f5e
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Random Search Methods -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">🎲</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Random Search Methods</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                These methods apply to the general minimization \( \min_{r \in R} F(r) \).
+            </p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500">
+                <h4 class="font-bold text-lg mb-2">How they work</h4>
+                <p class="text-sm text-gray-600 mb-2">
+                    Given a current parameter \( r^k \):
+                </p>
+                <ol class="list-decimal list-inside text-sm text-gray-600 space-y-1">
+                    <li>Choose points randomly in a neighborhood of \( r^k \).</li>
+                    <li>Select a new point \( r^{k+1} \) from these samples (aiming for lower cost).</li>
+                </ol>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-green-600">Pros</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
+                        <li><strong>Robust:</strong> Less affected by local minima than gradient methods.</li>
+                        <li><strong>Flexible:</strong> No gradients required; works for discrete optimization.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-red-600">Cons</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-2">
+                        <li><strong>Speed:</strong> Can be slow in practice.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-gray-50 p-4 rounded-xl">
+                <h4 class="font-bold text-sm mb-2">Examples</h4>
+                <div class="flex flex-wrap gap-2">
+                    <span
+                        class="px-3 py-1 bg-white border rounded-full text-xs font-semibold text-gray-600">Evolutionary
+                        Programming</span>
+                    <span class="px-3 py-1 bg-white border rounded-full text-xs font-semibold text-gray-600">Tabu
+                        Search</span>
+                    <span class="px-3 py-1 bg-white border rounded-full text-xs font-semibold text-gray-600">Simulated
+                        Annealing</span>
+                    <span class="px-3 py-1 bg-white border rounded-full text-xs font-semibold text-gray-600">Cross
+                        Entropy Method</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Cross Entropy Method -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🧬</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Cross Entropy Method</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                An iterative method that resembles a "gradient method" but uses sampling.
+            </p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Algorithm Steps</h4>
+                <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                    <li><strong>Ellipsoid:</strong> At iterate \( r^k \), construct an ellipsoid \( E_k \) centered at
+                        \( r^k \).</li>
+                    <li><strong>Sample:</strong> Generate random samples within \( E_k \).</li>
+                    <li><strong>Select:</strong> "Accept" a subset of samples that have low cost.</li>
+                    <li><strong>Update Mean:</strong> Let \( r^{k+1} \) be the sample mean of the accepted samples.</li>
+                    <li><strong>Update Covariance:</strong> Construct a new sample covariance matrix from the accepted
+                        samples to define \( E_{k+1} \).</li>
+                </ol>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold text-lg mb-4 text-center">Visualizing Cross Entropy</h4>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    Start((r_k)) --> Sample("Sample Points")
+                    Sample --> Evaluate("Evaluate Costs")
+                    Evaluate --> Filter("Keep Best %")
+                    Filter --> Mean("Compute New Mean")
+                    Filter --> Cov("Compute New Cov")
+                    Mean --> Next((r_k+1))
+                    Cov --> Next
+                    style Filter fill:#dbeafe,stroke:#3b82f6
+                </div>
+                <p class="text-center text-sm text-gray-600 mt-2">
+                    Ideally, the distribution narrows down towards the optimal parameter region.
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is the objective function in the optimization framework?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The cost of the policy defined by r.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The cost \(
+                            J_{\tilde{\mu}(r)}(i_0) \) (or its expectation).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The Bellman
+                            error.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Which of the following is a key advantage of Random Search methods?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! They don\'t get stuck as easily.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">They are less
+                            affected by local minima.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">They are extremely
+                            fast.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. Do Random Search methods require gradients?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! They work with function evaluations only.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">No.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Yes, always.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. In the Cross Entropy method, how is the new parameter \( r^{k+1} \)
+                        chosen?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The average of the best samples.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">It is the sample mean
+                            of the accepted (low cost) samples.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">It is the single best
+                            sample found.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. What defines the sampling region in the Cross Entropy method?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Updated using sample covariance.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">An ellipsoid defined
+                            by the mean and covariance matrix.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A fixed
+                            hypercube.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="policy-space-approximation.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-teal-600 transition">Lecture
+                        29</p>
+                </div>
+            </a>
+            <a href="index.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Return</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Course
+                        Home</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
