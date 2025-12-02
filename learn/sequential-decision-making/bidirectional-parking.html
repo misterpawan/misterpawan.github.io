@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bidirectional Parking | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #059669;
+            background: linear-gradient(to right, #ecfdf5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #d1fae5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Parking Line Visual */
+        .parking-spot {
+            transition: all 0.3s ease;
+        }
+
+        .parking-spot:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 11: Bidirectional Parking</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🚗</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Bidirectional Parking</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Optimizing parking search with forward and backward movement and uncertain occupancy.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Scenario & Infographic -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🅿️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Scenario</h2>
+            </div>
+
+            <img src="assets/bidirectional_parking_infographic.jpg" alt="Bidirectional Parking Infographic"
+                class="w-full rounded-xl shadow-lg mb-8">
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">The Setup</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                        <li>Line of \(N\) parking spaces ending in a Garage.</li>
+                        <li>Driver can move <strong>Forward</strong> or <strong>Backward</strong>.</li>
+                        <li>Cost \(c(i)\) to park at space \(i\).</li>
+                        <li>Movement cost \(t_i\) between adjacent spaces.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2">Memory & Uncertainty</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                        <li>Driver remembers status of visited spaces.</li>
+                        <li>Occupancy probability \(p(i)\) <strong>fluctuates</strong> over time.</li>
+                        <li>Status may change between visits!</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Dynamics & Belief State -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Dynamics & Belief State</h2>
+            </div>
+
+            <p class="mb-4">Since probabilities change, we need to track the <strong>Belief State</strong>.</p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Belief State \(b_k\)</h4>
+                <p>The vector of current probabilities for all spaces:</p>
+                \[ b_k = (p(0), p(1), \dots, p(N-1)) \]
+            </div>
+
+            <p class="mb-4 text-sm text-gray-600">
+                <strong>Update Mechanism:</strong> At each step, the belief state is updated based on:
+                <br>1. The known dynamics (e.g., probability increases by a factor).
+                <br>2. The latest observation (Free/Taken) if a space is visited.
+            </p>
+        </section>
+
+        <!-- 3. DP Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. DP Formulation</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Bellman Equation for Belief State</h4>
+                \[
+                J^*_k(b_k) = \min_{u_k \in U_k} \left\{ \hat{g}(b_k, u_k) + E_{z_{k+1}} \left[ J^*_{k+1} \left( F(b_k,
+                u_k, z_{k+1}) \right) \mid b_k, u_k \right] \right\}
+                \]
+                <div class="mt-4 text-sm space-y-2">
+                    <p><strong>\(J^*_k(b_k)\):</strong> Optimal cost-to-go from belief \(b_k\).</p>
+                    <p><strong>\(\hat{g}(b_k, u_k)\):</strong> Expected stage cost.</p>
+                    <p><strong>\(F(b_k, u_k, z_{k+1})\):</strong> Sequential Belief Estimator (System Equation).</p>
+                    <p><strong>\(z_{k+1}\):</strong> Random observation (Disturbance).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Multiagent Problems (Teaser) -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🤖</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Beyond Single Agent</h2>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-full md:w-1/2">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/c/c2/WALL-Eposter.jpg" alt="Wall-E Poster"
+                        class="w-full max-w-xs mx-auto rounded-xl shadow-lg rotate-3 hover:rotate-0 transition duration-500">
+                    <p class="text-center text-xs text-gray-500 mt-2">Image Source: Wikipedia (Fair Use)</p>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-xl font-bold mb-4">Multiagent Systems</h3>
+                    <p class="mb-4">What if there are multiple drivers? Or multiple robots like <strong>Wall-E</strong>
+                        working together?</p>
+                    <p class="mb-4">This leads to <strong>Multiagent Problems</strong> and <strong>Multiagent
+                            Rollout</strong>, where agents must coordinate their decisions.</p>
+                    <a href="https://youtu.be/UTZ0fJDCbtg?si=A8adzX40rlOnQulO" target="_blank"
+                        class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-bold">
+                        <span>Watch Wall-E Trailer</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-red-100 text-red-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. In this problem, the driver can move:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Only Forward towards
+                            the garage.</button>
+                        <button onclick="alert('Correct! Bidirectional movement is allowed.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Both Forward and
+                            Backward.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. The belief state \(b_k\) represents:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It tracks the probability of occupancy for all spaces.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Vector of occupancy
+                            probabilities.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The exact location of
+                            the car.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. The function \(F(b_k, u_k, z_{k+1})\) acts as a:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It updates the belief based on new info.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Sequential Belief
+                            Estimator.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Random Number
+                            Generator.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="pomdp.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-indigo-600 transition">Lecture
+                        10</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>

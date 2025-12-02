@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POMDP & Belief State | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #6366f1;
+            background: linear-gradient(to right, #e0e7ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #a855f7;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Fog Effect */
+        .fog-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fog-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.1));
+            animation: fogMove 10s linear infinite;
+        }
+
+        @keyframes fogMove {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 10: POMDP</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🌫️</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Partial State Information & Belief State</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Making optimal decisions when the world is not fully visible.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. What is a State? & Infographic -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🤔</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. What is a State?</h2>
+            </div>
+
+            <img src="assets/pomdp_infographic.jpg" alt="POMDP Infographic" class="w-full rounded-xl shadow-lg mb-8">
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-indigo-600">MDP Perspective</h4>
+                    <p class="text-sm text-gray-600">"A physical system characterized at any stage by a small set of
+                        parameters." - Bellman (1957)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-purple-600">RL Perspective</h4>
+                    <p class="text-sm text-gray-600">"The state must include all aspects of the past that make a
+                        difference for the future." - Sutton & Barto</p>
+                </div>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Professor Powell's Definition</h4>
+                <p><strong>Optimization Version:</strong> A function of history necessary to compute the cost,
+                    constraints, and future transitions.</p>
+            </div>
+        </section>
+
+        <!-- 2. Types of State Variables -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">📊</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Types of State Variables</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 text-center">
+                    <span class="text-4xl block mb-2">📦</span>
+                    <h4 class="font-bold text-blue-800">Physical (\(R_t\))</h4>
+                    <p class="text-xs text-gray-600 mt-2">Inventory, Location, Battery Level.</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-xl border border-green-100 text-center">
+                    <span class="text-4xl block mb-2">📈</span>
+                    <h4 class="font-bold text-green-800">Informational (\(I_t\))</h4>
+                    <p class="text-xs text-gray-600 mt-2">Market Prices, Weather Forecasts.</p>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 text-center">
+                    <span class="text-4xl block mb-2">🧠</span>
+                    <h4 class="font-bold text-orange-800">Belief (\(B_t\))</h4>
+                    <p class="text-xs text-gray-600 mt-2">Probabilistic beliefs about uncertain quantities.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold mb-3">Example: Clinical Trial Modeling</h4>
+                <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
+                    <li><strong>Physical:</strong> Number of patients, dosage levels.</li>
+                    <li><strong>Informational:</strong> Medical guidelines, regulatory approvals.</li>
+                    <li><strong>Belief:</strong> Effectiveness of drug (Bayesian), likelihood of side effects.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. The Need for Partial Observation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-gray-100 text-gray-700 p-3 rounded-xl text-2xl">🌫️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Why Partial Observation?</h2>
+            </div>
+
+            <p class="mb-6">In the real world, we rarely have perfect information. Sensors are flawed, measurements are
+                costly, or states are hidden.</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Man in Fog -->
+                <div class="bg-gray-100 p-6 rounded-xl fog-container flex flex-col items-center justify-center h-48">
+                    <div class="text-6xl z-10">🚶</div>
+                    <div class="fog-overlay"></div>
+                    <p class="mt-4 font-bold text-gray-600 z-10">Man in Fog</p>
+                    <p class="text-xs text-gray-500 z-10">Limited visibility of surroundings.</p>
+                </div>
+
+                <!-- Robot in Smoke -->
+                <div class="bg-gray-800 p-6 rounded-xl fog-container flex flex-col items-center justify-center h-48">
+                    <div class="text-6xl z-10">🤖</div>
+                    <div class="fog-overlay"
+                        style="background: linear-gradient(to right, rgba(100,100,100,0.1), rgba(100,100,100,0.9), rgba(100,100,100,0.1));">
+                    </div>
+                    <p class="mt-4 font-bold text-gray-300 z-10">Robot in Smoke</p>
+                    <p class="text-xs text-gray-400 z-10">Sensors obscured by environment.</p>
+                </div>
+
+                <!-- Blind Chess -->
+                <div
+                    class="bg-amber-50 p-6 rounded-xl flex flex-col items-center justify-center h-48 border border-amber-100">
+                    <div class="text-6xl">♟️🙈</div>
+                    <p class="mt-4 font-bold text-amber-800">Blindfolded Chess</p>
+                    <p class="text-xs text-amber-600">State must be maintained in memory (Belief).</p>
+                </div>
+
+                <!-- Car Accident -->
+                <div
+                    class="bg-red-50 p-6 rounded-xl flex flex-col items-center justify-center h-48 border border-red-100">
+                    <div class="text-6xl">🚗💥</div>
+                    <p class="mt-4 font-bold text-red-800">Miscalculated Belief</p>
+                    <p class="text-xs text-red-600">Fatal errors due to wrong assumptions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. POMDP & Belief State -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-teal-100 text-teal-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. POMDP & Belief State</h2>
+            </div>
+
+            <p class="mb-4"><strong>POMDP (Partially Observed Markov Decision Process)</strong>: The framework for
+                decision making when state information is imperfect.</p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">The Solution: Sufficient Statistic</h4>
+                <p class="mb-2">To solve a POMDP, we convert it to a problem with perfect information using a
+                    <strong>Sufficient Statistic</strong>.</p>
+                <p class="mb-2">The most common sufficient statistic is the <strong>Belief State (\(b_k\))</strong>:</p>
+                <ul class="list-disc list-inside text-sm">
+                    <li>Represents the probability distribution of \(x_k\) given all history.</li>
+                    <li>Updated using Bayes' rule (e.g., Kalman Filter, Particle Filter).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. In a self-driving car, "Traffic Light Color" is which type of
+                        variable?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It is an observable physical state.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Physical State
+                            Variable (\(R_t\))</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Belief Variable
+                            (\(B_t\))</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. "Effectiveness of a new drug" in a trial is best modeled as:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Physical State
+                            Variable</button>
+                        <button onclick="alert('Correct! We do not know it for sure, we have a probabilistic belief.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Belief Variable
+                            (\(B_t\))</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. Why is exact solution of POMDPs difficult?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The belief space is continuous and high-dimensional.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Computational
+                            complexity is very high.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The math does not
+                            exist.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. What is a "Sufficient Statistic"?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It summarizes all necessary past info.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">A measure capturing
+                            all relevant history.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A random guess of the
+                            state.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Which method is used to update belief states?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Kalman and Particle filters are common.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Kalman Filtering /
+                            Particle Filtering.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Linear
+                            Regression.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="dp-tetris.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Lecture
+                        09</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
