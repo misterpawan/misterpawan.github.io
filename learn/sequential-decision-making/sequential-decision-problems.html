@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequential Decision Problems | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #ecfdf5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 01: Foundations</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🤔</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Sequential Decision Problems</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Decision, information, decision, information... How to make effective decisions in the presence of
+                uncertainty.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Introduction -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🌍</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. What are Sequential Decision Problems?</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700 text-lg text-center font-medium">
+                decision, information, decision, information, ...
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">The Challenge</h4>
+                <p class="mb-2">
+                    How to represent the information that will arrive in the future and how to make decisions now and in
+                    the future.
+                </p>
+                <p class="text-sm text-gray-700 mt-2">
+                    <strong>Goal:</strong> Modeling these problems, and making effective decisions in the presence of
+                    the uncertainty of new information.
+                </p>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-2 text-blue-600">Two Major Classes</h4>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border p-4 rounded-lg">
+                        <h5 class="font-bold">Finite Horizon</h5>
+                        <ul class="list-disc list-inside text-sm text-gray-600">
+                            <li>Deterministic</li>
+                            <li>Stochastic</li>
+                        </ul>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h5 class="font-bold">Infinite Horizon</h5>
+                        <ul class="list-disc list-inside text-sm text-gray-600">
+                            <li>Deterministic</li>
+                            <li>Stochastic</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Finite Horizon Deterministic Problems -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">⏱️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. Finite Horizon Problems</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Tasks where the decision-making process has a fixed time limit or number of steps \( T \).
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-4xl mb-2">🤖</div>
+                    <h4 class="font-bold mb-1">Robot Navigation</h4>
+                    <p class="text-sm text-gray-500">Reach a goal in \( T \) steps.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-4xl mb-2">🎮</div>
+                    <h4 class="font-bold mb-1">Video Games</h4>
+                    <p class="text-sm text-gray-500">Complete level before timer runs out.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-4xl mb-2">📈</div>
+                    <h4 class="font-bold mb-1">Portfolio Mgmt</h4>
+                    <p class="text-sm text-gray-500">Maximize returns over a fixed period.</p>
+                </div>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Mathematical Formulation</h4>
+                <p class="mb-2">
+                    System evolution:
+                    \[ x_{k+1} = f_k(x_k, u_k), \quad k=0,1, \dots, N-1 \]
+                </p>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    <li>\( k \): Time index.</li>
+                    <li>\( x_k \): State of the system.</li>
+                    <li>\( u_k \): Control/Decision variable from set \( U_k(x_k) \).</li>
+                    <li>\( f_k \): System dynamics function.</li>
+                    <li>\( N \): Horizon (number of stages).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. Transition Graph & Cost -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">📊</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Transition Graph & Cost</h2>
+            </div>
+
+            <div class="mermaid flex justify-center mb-6">
+                graph LR
+                x0((x0)) -->|u0, g0| x1((x1))
+                x1 -->|u1, g1| x2((x2))
+                x2 -->|...| xN((xN))
+                style x0 fill:#dbeafe,stroke:#3b82f6
+                style xN fill:#dcfce7,stroke:#16a34a
+            </div>
+
+            <p class="text-center text-gray-600 mb-6">
+                The problem is equivalent to finding a shortest path from the initial node to the terminal node.
+            </p>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Cost Function</h4>
+                <p class="mb-2">
+                    We want to minimize the total cost:
+                </p>
+                \[ J(x_0; u_0, \dots, u_{N-1}) = g_N(x_N) + \sum_{k=0}^{N-1} g_k(x_k, u_k) \]
+                <p class="text-sm text-gray-700 mt-2">
+                    <strong>Optimal Cost Function:</strong>
+                    \[ J^*(x_0) = \min_{u_k \in U_k(x)} J(x_0; u_0, \dots, u_{N-1}) \]
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Dynamic Programming Principle -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-orange-100 text-orange-700 p-3 rounded-xl text-2xl">💡</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. The DP Principle</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700">
+                Some costs can be estimated by evaluating backwards!
+            </p>
+
+            <div class="example-box">
+                <h4 class="font-bold text-lg mb-2">Example: Climbing Stairs</h4>
+                <p class="mb-2 text-sm text-gray-600">
+                    A person wants to reach the \( n \)-th stair. Can climb 1 or 2 stairs at a time. How many ways?
+                </p>
+                <p class="mb-2 font-mono text-blue-600">
+                    ways(n) = ways(n-1) + ways(n-2)
+                </p>
+                <p class="text-sm text-gray-600">
+                    This is a <strong>Tail Subproblem</strong>. We solve smaller problems to solve the larger one.
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+                <h4 class="font-bold text-lg mb-2">Scheduling Example</h4>
+                <p class="text-sm text-gray-600 mb-4">
+                    Operations A, B, C, D. B after A, D after C.
+                    <br>Cost = \( S_A + C_{AC} + C_{CD} + C_{DB} \).
+                </p>
+                <div class="mermaid flex justify-center">
+                    graph TD
+                    Start --> A
+                    Start --> C
+                    A --> B
+                    C --> D
+                    B --> End
+                    D --> End
+                </div>
+                <p class="text-sm text-gray-600 mt-4">
+                    This is a deterministic problem. Each choice leads to a unique next state.
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What defines a deterministic system?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! The next state is uniquely determined by current state and control.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The next state is
+                            determined solely by \( x_k \) and \( u_k \).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The next state is
+                            random.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. In the shortest path view, what corresponds to the cost \( g_k(x_k,
+                        u_k) \)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The arc length represents the transition cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The length of the arc
+                            connecting nodes.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The number of
+                            nodes.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. What is the core idea of Dynamic Programming shown in the stairs
+                        example?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Breaking down into subproblems.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Solving tail
+                            sub-problems and using recursion.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Guessing the
+                            answer.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <span class="text-2xl">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900">None</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition">Coming
+                        Soon</p>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
