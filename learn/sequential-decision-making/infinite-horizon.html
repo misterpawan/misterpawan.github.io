@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Horizon Problems | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #faf5ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.2s;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 04: Infinite Horizon</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full">
+                <span class="text-6xl">♾️</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Infinite Horizon Problems</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Minimizing cost over an infinite number of stages using Value Iteration and Policy Iteration.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Definition -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">📖</span>
+                <h2 class="text-3xl font-bold">1. Infinite Horizon Stochastic DP Problem</h2>
+            </div>
+
+            <div class="mb-8">
+                <img src="assets/fig28_recreated.png" alt="Infinite Horizon Diagram"
+                    class="w-full max-w-3xl mx-auto rounded-xl shadow-lg mb-6">
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Problem Statement</h4>
+                <p class="mb-3">We aim to minimize the total cost over an infinite number of stages, given by:</p>
+                \[ J_\pi(x_0) = \lim_{N \to \infty} E_{{w_k}, \: k=0,1,\dots} \left\{ \sum_{k=0}^{N-1} \alpha^k g(x_k,
+                \mu_k(x_k), w_k) \right\} \]
+
+                <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700">
+                    <li>\( J_\pi(x_0) \) is the cost associated with initial state \( x_0 \) and policy \( \pi =
+                        \{\mu_0, \mu_1, \dots\} \).</li>
+                    <li>\( \alpha \) is a discount factor in the interval \( (0, 1] \).</li>
+                    <li>System equation: \( x_{k+1} = f(x_k, u_k, w_k) \).</li>
+                    <li>Stochastic disturbances \( w_k \) have a common probability distribution \( P(\cdot | x_k, u_k)
+                        \).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. Value Iteration -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🔄</span>
+                <h2 class="text-3xl font-bold">2. Value Iteration (VI)</h2>
+            </div>
+
+            <p class="mb-4 text-lg">How do we solve this? We can think of it as the limit of finite horizon problems.
+            </p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">The Algorithm</h4>
+                <p class="mb-3">Let \( J_N(x) \) denote the optimal cost of an \( N \)-stage problem. The <strong>Value
+                        Iteration</strong> algorithm generates this cost iteratively:</p>
+                \[ J_{k+1}(x) = \min_{u \in U(x)} E_w \left\{ g(x, u, w) + \alpha J_k (f(x, u, w)) \right\}, \quad k =
+                0, 1, \dots \]
+                <p class="mt-2">Starting from \( J_0(x) = 0 \).</p>
+            </div>
+
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-sm">
+                <h4 class="font-bold text-lg mb-3">Optimal Cost \( J^* \)</h4>
+                <p class="mb-2">The optimal infinite horizon cost is the limit:</p>
+                \[ J^*(x) = \lim_{N \to \infty} J_N(x) \]
+                <p class="mb-2">It satisfies the famous <strong>Bellman Equation</strong>:</p>
+                \[ J^*(x) = \min_{u \in U(x)} E_w \left\{ g(x, u, w) + \alpha J^* (f(x, u, w)) \right\} \]
+            </div>
+        </section>
+
+        <!-- 3. Policy Iteration -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">🎯</span>
+                <h2 class="text-3xl font-bold">3. Policy Iteration (PI)</h2>
+            </div>
+
+            <p class="mb-6 text-lg">Can we iterate on policies instead of values? Yes! This forms the foundation of
+                Reinforcement Learning.</p>
+
+            <div class="mb-8">
+                <img src="assets/fig29_recreated.png" alt="Policy Iteration Block Diagram"
+                    class="w-full max-w-3xl mx-auto rounded-xl shadow-lg">
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <h4 class="font-bold text-lg mb-2">1. Policy Evaluation</h4>
+                    <p class="text-sm text-gray-600 mb-2">Compute cost \( J_\mu \) of current policy \( \mu \) by
+                        solving:</p>
+                    \[ J_\mu(x) = E_w \{ g(x, \mu(x), w) + \alpha J_\mu(f(x, \mu(x), w)) \} \]
+                    <p class="text-xs text-gray-500 mt-2">Can be done via Monte Carlo simulation.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <h4 class="font-bold text-lg mb-2">2. Policy Improvement</h4>
+                    <p class="text-sm text-gray-600 mb-2">Compute improved policy \( \tilde{\mu} \) via one-step
+                        lookahead:</p>
+                    \[ \tilde{\mu}(x) \in \text{arg min}_{u} E_w \{ g(x, u, w) + \alpha J_\mu(f(x, u, w)) \} \]
+                    <p class="text-xs text-gray-500 mt-2">Theorem: \( J_{\tilde{\mu}}(x) \leq J_\mu(x) \).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Approximation in Value Space -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">🔭</span>
+                <h2 class="text-3xl font-bold">4. Approximation & Lookahead</h2>
+            </div>
+
+            <p class="mb-6">In practice, we can't solve Bellman's equation exactly for large state spaces. We use
+                approximations.</p>
+
+            <div class="mb-8">
+                <img src="assets/fig32_recreated.png" alt="Lookahead Diagram"
+                    class="w-full max-w-3xl mx-auto rounded-xl shadow-lg mb-4">
+                <p class="text-center text-sm text-gray-500">One-step vs Multistep Lookahead</p>
+            </div>
+
+            <div class="mb-8">
+                <img src="assets/fig32b_recreated.png" alt="Approximation Diagram"
+                    class="w-full max-w-3xl mx-auto rounded-xl shadow-lg mb-4">
+                <p class="text-center text-sm text-gray-500">Approximation in Value Space</p>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+                <h4 class="font-bold text-lg mb-3">Feature Extraction Example</h4>
+                <p class="mb-4">For complex games like Tetris or Atari, we extract features from the state to
+                    approximate the cost.</p>
+                <img src="assets/tetris_recreated.png" alt="Tetris Feature Extraction"
+                    class="w-64 mx-auto rounded shadow-md">
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quiz -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">✍️</span>
+                <h2 class="text-3xl font-bold">5. Test Your Understanding</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is the Bellman Equation for infinite horizon problems?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect. This is just the immediate cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">\( J^*(x) = \min E \{
+                            g(x,u,w) \} \)</button>
+                        <button
+                            onclick="alert('Correct! It balances immediate cost plus discounted future optimal cost.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">\( J^*(x) = \min E \{
+                            g(x,u,w) + \alpha J^*(f(x,u,w)) \} \)</button>
+                        <button onclick="alert('Incorrect. This is for finite horizon without discount.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">\( J^*(x) = \min E \{
+                            g(x,u,w) + J^*(f(x,u,w)) \} \)</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. In Policy Iteration, the "Policy Improvement" step:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! It generates a new policy that is at least as good as the old one.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Generates a policy \(
+                            \tilde{\mu} \) with \( J_{\tilde{\mu}} \leq J_\mu \)</button>
+                        <button onclick="alert('Incorrect. That is Policy Evaluation.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Calculates the cost of
+                            the current policy</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+
+            <div class="bg-red-50 p-6 rounded-xl border border-red-100 mb-6">
+                <p class="font-semibold mb-4">Scenario: A student claims:</p>
+                <p class="italic text-gray-700 mb-4">"In the infinite horizon problem, the discount factor \( \alpha \)
+                    can be any positive number, i.e., \( \alpha > 0 \)."</p>
+
+                <div class="space-y-3">
+                    <div onclick="alert('Correct! If alpha > 1, the cost sum might not converge (it could be infinite). Alpha is usually in (0, 1].')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. \( \alpha \) must be in \( (0, 1] \) for convergence.
+                    </div>
+                    <div onclick="alert('Incorrect. Think about what happens to the sum if alpha is 2, for example.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-red-50">
+                        True. Any positive discount works.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="index.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Back to Course</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 transition">
+                        Syllabus</p>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const progress = (scrollTop / documentHeight) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        });
+    </script>
+</body>
+
+</html>
