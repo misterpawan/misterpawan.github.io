@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP with Forecast | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <!-- Mermaid -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #ec4899;
+            background: linear-gradient(to right, #fce7f3, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 07: Forecasts</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🔮</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">DP with Forecast</h1>
+            <p class="text-xl mb-6 max-w-3xl mx-auto">
+                Integrating future predictions into the decision-making process.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Introduction -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🌤️</span>
+                <h2 class="text-3xl font-bold">1. Introduction to Forecasts</h2>
+            </div>
+
+            <p class="mb-4">At time \(k\), the controller receives a forecast \(y_k\). This forecast changes our belief
+                about the upcoming disturbance \(w_k\).</p>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <span class="text-4xl block mb-2">🌦️</span>
+                    <h4 class="font-bold">Weather</h4>
+                    <p class="text-sm text-gray-500">Rain probability affects agriculture decisions.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <span class="text-4xl block mb-2">📉</span>
+                    <h4 class="font-bold">Interest Rates</h4>
+                    <p class="text-sm text-gray-500">Economic forecasts affect investment.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                    <span class="text-4xl block mb-2">📦</span>
+                    <h4 class="font-bold">Demand</h4>
+                    <p class="text-sm text-gray-500">Inventory needs based on market trends.</p>
+                </div>
+            </div>
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Forecast Model</h4>
+                <p>If the forecast is \(y_k = i\), then the disturbance \(w_k\) is selected according to a specific
+                    probability distribution \(P_i\).</p>
+            </div>
+        </section>
+
+        <!-- 2. The Forecasting Equation -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">📐</span>
+                <h2 class="text-3xl font-bold">2. The Forecasting Equation</h2>
+            </div>
+
+            <p class="mb-4">The forecast itself evolves over time:</p>
+            \[ y_{k+1} = \xi_k \]
+            <p class="mb-4">Where \(\xi_k\) is a random variable representing the <em>next</em> forecast.</p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+                <h4 class="font-bold text-lg mb-3 text-center">Forecast Evolution</h4>
+                <div class="mermaid flex justify-center">
+                    graph LR
+                    yk[Forecast y_k] -->|Determines P_i| wk[Disturbance w_k]
+                    xik[Random Variable xi_k] -->|Becomes| yk1[Next Forecast y_{k+1}]
+                    style yk fill:#f3e8ff,stroke:#8b5cf6,stroke-width:2px
+                    style yk1 fill:#f3e8ff,stroke:#8b5cf6,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Augmented System -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">🔗</span>
+                <h2 class="text-3xl font-bold">3. Augmented System</h2>
+            </div>
+
+            <p class="mb-4">We combine the physical system state \(x_k\) and the information state (forecast) \(y_k\)
+                into a new augmented state.</p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Augmented State Definition</h4>
+                \[ \tilde{x}_k = \begin{bmatrix} x_k \\ y_k \end{bmatrix}, \quad \tilde{w}_k = \begin{bmatrix} w_k \\
+                \xi_k \end{bmatrix} \]
+                <p class="mt-2">The system dynamics become:</p>
+                \[ \tilde{x}_{k+1} = \begin{bmatrix} f_k(x_k, u_k, w_k) \\ \xi_k \end{bmatrix} \]
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-6">
+                <h4 class="font-bold text-lg mb-3 text-center">Augmented System Diagram</h4>
+                <div class="mermaid flex justify-center">
+                    classDiagram
+                    class AugmentedState {
+                    x_k (Physical State)
+                    y_k (Forecast State)
+                    }
+                    class AugmentedDisturbance {
+                    w_k (Physical Noise)
+                    xi_k (Forecast Noise)
+                    }
+                    AugmentedState --> AugmentedDisturbance : Influences Distribution
+                    style AugmentedState fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DP Algorithm -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-3xl font-bold">4. DP Algorithm with Forecast</h2>
+            </div>
+
+            <p class="mb-4">The DP algorithm is applied to the augmented state \((x_k, y_k)\).</p>
+
+            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 overflow-x-auto">
+                <h4 class="font-bold text-sm text-gray-500 uppercase mb-2">Bellman Equation</h4>
+                \[
+                J^*_k(x_k, y_k) = \min_{u_k} E_{w_k} \left\{ g_k(x_k, u_k, w_k) + \sum_{i=1}^{m} p_i J^*_{k+1}(f_k(x_k,
+                u_k, w_k), i) \mid y_k \right\}
+                \]
+                <p class="text-sm text-gray-500 mt-2">Note: The expectation \(E_{w_k}\) depends on the current forecast
+                    \(y_k\).</p>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. A forecast \(y_k\) primarily affects:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It tells us which distribution w_k comes from.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The probability
+                            distribution of the disturbance \(w_k\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">The system dynamics
+                            function \(f_k\) directly.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. The "Forecasting Equation" \(y_{k+1} = \xi_k\) implies:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Forecasts are
+                            deterministic.</button>
+                        <button onclick="alert('Correct! The next forecast is a random variable.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The next forecast is
+                            a random variable.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. In the augmented state \(\tilde{x}_k = (x_k, y_k)\), the variable
+                        \(y_k\) is:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It is part of the state we base decisions on.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">An information state
+                            variable.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">A control
+                            variable.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. The DP algorithm expectation is conditional on:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The distribution of w_k depends on y_k.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">The current forecast
+                            \(y_k\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Only the previous
+                            state.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Can forecasts be influenced by control actions?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! E.g., paying for better data.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes, in extended
+                            formulations.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, never.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Spot the Mistake -->
+        <section class="glass p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">🔍 Spot the Mistake!</h3>
+
+            <div class="space-y-6">
+                <!-- Mistake 1 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 1:</p>
+                    <p class="italic text-gray-700 mb-4">"The forecast \(y_k\) is always a perfect prediction of
+                        \(w_k\)."</p>
+                    <div onclick="alert('Correct! It usually predicts a distribution, not an exact value.')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. It often just identifies a probability distribution.
+                    </div>
+                </div>
+
+                <!-- Mistake 2 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 2:</p>
+                    <p class="italic text-gray-700 mb-4">"We can solve the problem without augmenting the state with
+                        \(y_k\)."</p>
+                    <div onclick="alert('Correct! Without y_k, the problem is not Markovian (parameters change).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. The system is not Markovian without \(y_k\).
+                    </div>
+                </div>
+
+                <!-- Mistake 3 -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <p class="font-semibold mb-2">Scenario 3:</p>
+                    <p class="italic text-gray-700 mb-4">"The next forecast \(y_{k+1}\) depends on the current
+                        disturbance \(w_k\)."</p>
+                    <div onclick="alert('Correct! In the basic model, y_{k+1} evolves independently (via xi_k).')"
+                        class="bg-white p-3 rounded shadow-sm cursor-pointer hover:bg-green-50 border-l-4 border-green-500">
+                        False. In this model, it depends on \(\xi_k\), which is independent of \(w_k\).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="dp-time-delays.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-green-600 transition">Lecture
+                        06</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
