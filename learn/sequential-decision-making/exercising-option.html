@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercising an Option | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(to right, #ecfdf5, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(to right, #eff6ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Stock Chart Visual */
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            border-left: 2px solid #cbd5e1;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(59, 130, 246, 0.1), transparent);
+        }
+
+        .chart-path {
+            stroke: #3b82f6;
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-out forwards;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 14: Exercising an Option</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">📈</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Exercising a Stock Option</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Optimal stopping in a stochastic environment.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. The Problem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-green-100 text-green-700 p-3 rounded-xl text-2xl">❓</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. The Problem</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="mb-4"><strong>Goal:</strong> Decide when to sell a stock to maximize expected value.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                        <li><strong>Horizon:</strong> \(N\) time periods.</li>
+                        <li><strong>Initial Price:</strong> \(x_0\).</li>
+                        <li><strong>Dynamics:</strong> Price \(x_k\) evolves stochastically.</li>
+                        <li><strong>Constraint:</strong> Must sell by period \(N\).</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 text-blue-600">Price Evolution</h4>
+                    <p class="text-sm mb-2">If \(0 < x_k < \bar{x}\):</p>
+                            \[
+                            x_{k+1} =
+                            \begin{cases}
+                            x_k + 1 & \text{prob } p^+ \\
+                            x_k & \text{prob } 1 - p^+ - p^- \\
+                            x_k - 1 & \text{prob } p^-
+                            \end{cases}
+                            \]
+                            <p class="text-xs text-gray-500 mt-2">Boundaries at 0 and \(\bar{x}\) are
+                                reflective/absorbing as defined.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. DP Formulation -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. DP Formulation</h2>
+            </div>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Bellman Equation</h4>
+                <p class="mb-2">For \(0 < x_k < \bar{x}\), the optimal reward-to-go \(J^*_k(x_k)\) is:</p>
+                        \[
+                        J^*_k(x_k) = \max \left\{ x_k, \quad p^+ J^*_{k+1}(x_k+1) + (1 - p^+ - p^-) J^*_{k+1}(x_k) + p^-
+                        J^*_{k+1}(x_k-1) \right\}
+                        \]
+                        <p class="mt-4 text-sm">
+                            <strong>Interpretation:</strong> Maximize between <strong>Selling Now</strong> (getting
+                            \(x_k\)) and <strong>Waiting</strong> (expected future value).
+                        </p>
+            </div>
+        </section>
+
+        <!-- 3. Heuristic & Rollout -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. Heuristic & Rollout</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="definition-box">
+                    <h4 class="font-bold text-lg mb-2">Base Heuristic</h4>
+                    <p class="text-sm">Sell if price \(x_k \geq \beta x_0\) (where \(\beta > 1\)).</p>
+                    <p class="text-xs text-gray-600 mt-2">Simple rule, but not optimal.</p>
+                </div>
+                <div class="definition-box border-purple-500 bg-purple-50">
+                    <h4 class="font-bold text-lg mb-2">Rollout Policy</h4>
+                    <p class="text-sm">At each step, look one step ahead and use the Base Heuristic to estimate future
+                        costs.</p>
+                    <p class="text-xs text-gray-600 mt-2">Improves upon the base heuristic.</p>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-4">Performance Comparison</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-3">Method</th>
+                                <th class="px-6 py-3">Expected Reward (\(x_0=3\))</th>
+                                <th class="px-6 py-3">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Base Heuristic</td>
+                                <td class="px-6 py-4">2.268</td>
+                                <td class="px-6 py-4">Simple threshold rule.</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Rollout (20 samples)</td>
+                                <td class="px-6 py-4">2.264</td>
+                                <td class="px-6 py-4">Degraded by noise.</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Rollout (200 samples)</td>
+                                <td class="px-6 py-4">2.273</td>
+                                <td class="px-6 py-4">Beats heuristic!</td>
+                            </tr>
+                            <tr class="bg-green-50 border-b">
+                                <td class="px-6 py-4 font-bold text-green-900">Optimal Policy</td>
+                                <td class="px-6 py-4 font-bold">2.400</td>
+                                <td class="px-6 py-4">Exact DP solution.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-gray-500 mt-2"><em>*Values based on example parameters: \(N=14, \bar{x}=7,
+                        p^+=p^-=0.25\).</em></p>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. In the DP formulation, what are the two choices at each step?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Sell now or Wait for future.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Sell (get \(x_k\)) or
+                            Wait.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Buy or Sell.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. What happens at the terminal period \(N\)?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">You can choose to wait
+                            longer.</button>
+                        <button onclick="alert('Correct! You must sell at the current price.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">You MUST sell at
+                            price \(x_N\).</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. Does the Rollout policy always beat the Base Heuristic?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! Theoretically yes (cost improvement), but simulation noise can degrade it.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Theoretically yes,
+                            but simulation noise matters.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, it is always
+                            worse.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. What is the "Base Heuristic" used in this example?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Sell if price exceeds a multiple of initial price.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Sell if \(x_k \geq
+                            \beta x_0\).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Sell randomly.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. Why use Monte Carlo simulation for Rollout?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button
+                            onclick="alert('Correct! Exact calculation is often too expensive for complex problems.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">To approximate
+                            expected values when exact DP is hard.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Because it is more
+                            accurate than exact DP.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="mpc.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-amber-600 transition">Lecture
+                        13</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
