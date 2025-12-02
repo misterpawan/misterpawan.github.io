@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiagent Rollout | Sequential Decision Making</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                tags: 'ams'
+            }
+        };
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+
+        .definition-box {
+            border-left: 4px solid #ec4899;
+            background: linear-gradient(to right, #fdf2f8, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theorem-box {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(to right, #f3e8ff, #ffffff);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                ← Sequential Decision Making
+            </a>
+            <span class="text-sm font-semibold">Lecture 12: Multiagent Rollout</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20" data-aos="fade-down">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-block mb-4 p-3 bg-white/20 rounded-full animate-float">
+                <span class="text-6xl">🤖</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Multiagent Problems & Rollout</h1>
+            <p class="text-lg md:text-xl mb-6 max-w-3xl mx-auto">
+                Efficient control for systems with multiple decision-making agents.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+
+        <!-- 1. Introduction & Infographic -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-pink-100 text-pink-700 p-3 rounded-xl text-2xl">🌐</span>
+                <h2 class="text-2xl md:text-3xl font-bold">1. Multiagent Systems (MAS)</h2>
+            </div>
+
+            <img src="assets/multiagent_infographic.jpg" alt="Multiagent Rollout Infographic"
+                class="w-full rounded-xl shadow-lg mb-8">
+
+            <div class="definition-box">
+                <h4 class="font-bold text-lg mb-2">Definition</h4>
+                <p>A collection of decision-making entities (<strong>agents</strong>) aiming to optimally achieve a
+                    <strong>common goal</strong> by collecting/exchanging information and interacting.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mt-4">
+                <h4 class="font-bold text-lg mb-2">General Challenges</h4>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                    <li><strong>Communication:</strong> Limited bandwidth, noisy channels, lack of synchronization.</li>
+                    <li><strong>Complexity:</strong> Joint decision space grows <strong>exponentially</strong> with the
+                        number of agents (\(n^m\)).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. The Complexity Problem -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-purple-100 text-purple-700 p-3 rounded-xl text-2xl">📉</span>
+                <h2 class="text-2xl md:text-3xl font-bold">2. The Complexity Problem</h2>
+            </div>
+
+            <p class="mb-4">Consider \(m\) agents, each with \(n\) possible controls. The joint control space is the
+                Cartesian product:</p>
+            \[ U(x) = U^1(x) \times \cdots \times U^m(x) \]
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <h4 class="font-bold text-red-800 mb-2">Standard Rollout</h4>
+                    <p class="text-sm text-gray-600 mb-2">Minimizes over all joint controls simultaneously.</p>
+                    <p class="font-mono text-xl text-center my-4">\( O(n^m) \)</p>
+                    <p class="text-xs text-red-600 font-bold text-center">Exponential Complexity!</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-xl border border-green-100">
+                    <h4 class="font-bold text-green-800 mb-2">Multiagent Rollout</h4>
+                    <p class="text-sm text-gray-600 mb-2">Minimizes one agent at a time.</p>
+                    <p class="font-mono text-xl text-center my-4">\( O(nm) \)</p>
+                    <p class="text-xs text-green-600 font-bold text-center">Linear Complexity!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Multiagent Rollout Algorithm -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-100 text-indigo-700 p-3 rounded-xl text-2xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">3. The Algorithm</h2>
+            </div>
+
+            <p class="mb-4">We replace the one-step lookahead minimization with \(m\) successive minimizations,
+                <strong>one-agent-at-a-time</strong>.</p>
+
+            <div class="theorem-box">
+                <h4 class="font-bold text-lg mb-2">Sequential Minimization</h4>
+                <ol class="list-decimal list-inside space-y-3 text-sm">
+                    <li><strong>Agent 1</strong> minimizes cost, assuming other agents use the base policy.</li>
+                    <li><strong>Agent 2</strong> minimizes cost, given Agent 1's choice and others using base policy.
+                    </li>
+                    <li>...</li>
+                    <li><strong>Agent m</strong> minimizes cost, given all previous choices.</li>
+                </ol>
+            </div>
+
+            <p class="mt-4 text-sm text-gray-600"><strong>Cost Improvement:</strong> It can be proven that Multiagent
+                Rollout achieves cost improvement over the base policy: \( J_{\tilde{\mu}}(x) \leq J_{\mu}(x) \).</p>
+        </section>
+
+        <!-- 4. Case Studies -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-yellow-100 text-yellow-700 p-3 rounded-xl text-2xl">🕷️</span>
+                <h2 class="text-2xl md:text-3xl font-bold">4. Case Studies</h2>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Spiders and Flies -->
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Spiders and Flies</h3>
+                    <p class="text-sm text-gray-600 mb-4">Spiders must coordinate to catch flies. Greedy approach fails
+                        (spiders cluster). Multiagent rollout splits spiders strategically.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/kgF6T2Cabio?start=1421" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Warehouse Robots -->
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Warehouse Robots</h3>
+                    <p class="text-sm text-gray-600 mb-4">Efficient path planning for hundreds of robots in Amazon-like
+                        warehouses.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/bYTebne_4-Q" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Search and Rescue -->
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Search and Rescue</h3>
+                    <p class="text-sm text-gray-600 mb-4">Collaborative search in unknown environments.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/dCch804gCSA" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interactive Quizzes -->
+        <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-blue-100 text-blue-700 p-3 rounded-xl text-2xl">📝</span>
+                <h2 class="text-2xl md:text-3xl font-bold">5. Test Your Knowledge</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">1. What is the main challenge in standard rollout for multiagent systems?
+                    </h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! The search space grows as n^m.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Exponential growth of
+                            joint control space.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Lack of base
+                            policies.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">2. Multiagent rollout reduces complexity from \(O(n^m)\) to:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">\(O(n^2)\)</button>
+                        <button onclick="alert('Correct! Linear in number of agents.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">\(O(nm)\)</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">3. In "Spiders and Flies", what does multiagent rollout achieve over
+                        greedy?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! It coordinates spiders to target different flies.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Better coordination
+                            (splitting tasks).</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Faster movement
+                            speed.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">4. Does multiagent rollout guarantee cost improvement over the base
+                        policy?</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! This is a key theoretical property.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Yes.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">No, it is heuristic
+                            only.</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-3">5. The "One-at-a-time" minimization means:</h4>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="alert('Correct! Agents optimize sequentially.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-green-100 rounded transition">Agents optimize
+                            sequentially, fixing previous choices.</button>
+                        <button onclick="alert('Incorrect.')"
+                            class="p-3 text-left bg-gray-50 hover:bg-red-100 rounded transition">Agents optimize
+                            independently in parallel.</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Navigation -->
+        <div class="flex justify-between mt-12" data-aos="fade-up">
+            <a href="bidirectional-parking.html"
+                class="group flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition border border-gray-100 dark:border-gray-700">
+                <span class="text-2xl group-hover:-translate-x-1 transition">←</span>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Previous</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-green-600 transition">Lecture
+                        11</p>
+                </div>
+            </a>
+            <a href="#"
+                class="group flex items-center gap-3 px-6 py-3 bg-gray-100 rounded-xl cursor-not-allowed opacity-50">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Next</p>
+                    <p class="font-bold text-gray-900">Coming Soon</p>
+                </div>
+                <span class="text-2xl">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass p-6 mt-12">
+        <div class="container mx-auto text-center text-gray-600 dark:text-gray-400">
+            <p>© 2024 Sequential Decision Making Course</p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+
+</html>
