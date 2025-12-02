@@ -87,6 +87,20 @@
         .animate-float {
             animation: float 3s ease-in-out infinite;
         }
+
+        @keyframes expandWidth {
+            0% {
+                width: 0%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .animate-expand {
+            animation: expandWidth 3s ease-in-out infinite;
+        }
     </style>
 </head>
 
@@ -164,7 +178,7 @@
                     <p class="mt-4 text-sm text-gray-600">The optimal policy is linear: \( \mu^*(x) = L^* x \).</p>
                 </div>
                 <div>
-                    <img src="assets/riccati_curve.png" alt="Riccati Curve" class="rounded-xl shadow-lg w-full">
+                    <img src="assets/riccati.png" alt="Riccati Curve" class="rounded-xl shadow-lg w-full">
                     <p class="text-center text-xs text-gray-500 mt-2">Fig 1: The Riccati Operator \( F(K) \)</p>
                 </div>
             </div>
@@ -178,7 +192,7 @@
             </div>
 
             <div class="mt-6">
-                <img src="assets/stable_policy_line.png" alt="Stable Policy Line"
+                <img src="assets/stable_policy.png" alt="Stable Policy Line"
                     class="rounded-xl shadow-lg mx-auto max-w-2xl">
                 <p class="text-center text-xs text-gray-500 mt-2">Fig 2: Riccati Equation for Stable Policy</p>
             </div>
@@ -199,7 +213,7 @@
             <div class="bg-gray-100 p-6 rounded-xl text-center">
                 <h4 class="font-bold text-gray-700 mb-2">VI Convergence Animation</h4>
                 <div class="h-2 bg-gray-300 rounded-full overflow-hidden w-full max-w-md mx-auto">
-                    <div class="h-full bg-blue-500 w-0 animate-[width_3s_ease-in-out_infinite]" style="width: 100%">
+                    <div class="h-full bg-blue-500 animate-expand">
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 mt-2">Visualizing convergence of K to K*</p>
@@ -257,7 +271,8 @@
             <div class="theorem-box">
                 <h4 class="font-bold text-lg mb-2">Quadratic Convergence</h4>
                 <p class="mb-2">For the LQ problem, Policy Iteration (Newton's method) converges
-                    <strong>quadratically</strong> to the optimal cost.</p>
+                    <strong>quadratically</strong> to the optimal cost.
+                </p>
                 \[ ||K_{k+1} - K^*|| = O(||K_k - K^*||^2) \]
             </div>
         </section>
