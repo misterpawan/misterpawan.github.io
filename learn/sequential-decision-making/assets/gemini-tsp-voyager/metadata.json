@@ -1,0 +1,5 @@
+{
+  "name": "Gemini TSP Voyager",
+  "description": "An interactive Travelling Salesman Game where users connect cities to find the shortest path, powered by Gemini for dynamic city generation and trivia.",
+  "requestFramePermissions": []
+}

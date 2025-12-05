@@ -152,11 +152,12 @@
 
             <div class="flex flex-col md:flex-row gap-8 items-center">
                 <div class="w-full md:w-1/2">
-                    <!-- Placeholder for fig25.png -->
-                    <div class="bg-white rounded-xl p-2 shadow-sm border border-gray-100">
-                        <img src="assets/fig25.jpeg" alt="Illustration of DP with Tail Subproblem"
-                            class="w-full rounded-lg">
-                        <p class="text-sm text-gray-500 mt-2 text-center">The tail subproblem starts at \( x_k \) at
+                    <!-- Gemini TSP Voyager Demo -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <iframe src="assets/gemini-tsp-voyager/dist/index.html" title="Gemini TSP Voyager Demo"
+                            class="w-full h-[500px] border-0" loading="lazy"></iframe>
+                        <p class="text-sm text-gray-500 p-2 text-center">Interactive Demo: The tail subproblem starts at
+                            \( x_k \) at
                             time \( k \) and minimizes over \( \{ u_k, \dots, u_{N-1} \} \).</p>
                     </div>
                 </div>
@@ -186,9 +187,9 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
                 <h3 class="font-bold text-xl mb-4 text-center">Graph Representation</h3>
-<div class="bg-white rounded-xl p-2 shadow-sm border border-gray-100 mb-4">
-    <img src="assets/slide8.jpeg" alt="Finite-State Transition Graph" class="w-full rounded-lg">
-</div>
+                <div class="bg-white rounded-xl p-2 shadow-sm border border-gray-100 mb-4">
+                    <img src="assets/slide8.jpeg" alt="Finite-State Transition Graph" class="w-full rounded-lg">
+                </div>
 
                 <div class="grid md:grid-cols-2 gap-6 mt-6">
                     <div class="definition-box mt-0">
