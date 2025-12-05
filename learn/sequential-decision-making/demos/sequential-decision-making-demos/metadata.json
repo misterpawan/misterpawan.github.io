@@ -1,0 +1,5 @@
+{
+  "name": "Sequential Decision Making Demos",
+  "description": "Interactive educational demos for Finite Horizon Sequential Decision problems: Robot Navigation, Portfolio Management, and Time-Constraint Games.",
+  "requestFramePermissions": []
+}

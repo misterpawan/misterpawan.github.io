@@ -1,0 +1,5 @@
+{
+  "name": "Climbing Stairs DP Interactive",
+  "description": "An interactive demonstration of the Dynamic Programming principle using the Climbing Stairs problem. Users discover paths to derive the recurrence relation.",
+  "requestFramePermissions": []
+}
