@@ -292,7 +292,7 @@ const App: React.FC = () => {
         </p>
       </header>
 
-      <main className="flex flex-col md:flex-row gap-8 items-start justify-center w-full max-w-6xl">
+      <main className="flex flex-row flex-wrap justify-center gap-8 items-start w-full max-w-6xl">
 
         {/* Left: Board */}
         <div className="flex flex-col items-center gap-6 w-full lg:w-auto">
