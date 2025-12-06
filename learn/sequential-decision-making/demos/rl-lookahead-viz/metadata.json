@@ -1,0 +1,5 @@
+{
+  "name": "RL Lookahead Viz",
+  "description": "Interactive visualization of reinforcement learning lookahead concepts using chess scenarios. Explore one-step and multi-step search trees to understand decision making.",
+  "requestFramePermissions": []
+}
