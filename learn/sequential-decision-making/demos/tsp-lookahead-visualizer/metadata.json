@@ -1,0 +1,5 @@
+{
+  "name": "TSP Lookahead Visualizer",
+  "description": "An interactive educational tool to visualize 1-step and 2-step lookahead strategies for the Travelling Salesman Problem.",
+  "requestFramePermissions": []
+}

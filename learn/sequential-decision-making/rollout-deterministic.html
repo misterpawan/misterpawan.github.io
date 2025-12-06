@@ -170,30 +170,12 @@
         <section class="glass p-6 md:p-8 rounded-3xl mb-8" data-aos="fade-up">
             <h2 class="text-2xl md:text-3xl font-bold mb-6">4. Visual Illustration</h2>
 
-            <div class="flex justify-center mb-8">
-                <div class="mermaid">
-                    graph LR
-                    xk((x_k)) -->|u_k^1| xk1_1((x_{k+1}^1))
-                    xk((x_k)) -->|u_k^2| xk1_2((x_{k+1}^2))
-
-                    subgraph "Base Heuristic Simulation"
-                    xk1_1 -.->|Base Policy| xN_1((x_N))
-                    xk1_2 -.->|Base Policy| xN_2((x_N))
-                    end
-
-                    xk1_1 -- "Cost H(x_{k+1}^1)" --> Cost1[Total Cost 1]
-                    xk1_2 -- "Cost H(x_{k+1}^2)" --> Cost2[Total Cost 2]
-
-                    Cost1 --> Min{Minimize}
-                    Cost2 --> Min
-
-                    Min --> Decision[Select Best u_k]
-
-                    style xk fill:#e0e7ff,stroke:#3b82f6,stroke-width:2px
-                    style Min fill:#fef3c7,stroke:#d97706,stroke-width:2px
-                    style Decision fill:#dcfce7,stroke:#16a34a,stroke-width:2px
-                </div>
+            <!-- TSP Lookahead Visualizer (Full Width) -->
+            <div class="mb-8 rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                <iframe src="demos/tsp-lookahead-visualizer/dist/index.html" class="w-full h-[900px]" frameborder="0"
+                    scrolling="no"></iframe>
             </div>
+
             <p class="text-center text-sm text-gray-500 italic">
                 Fig: The rollout process. For each possible control, we simulate the future using the base heuristic to
                 estimate the "tail cost", then pick the best option.
