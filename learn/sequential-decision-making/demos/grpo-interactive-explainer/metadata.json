@@ -1,0 +1,5 @@
+{
+  "name": "GRPO Interactive Explainer",
+  "description": "An interactive educational tool demonstrating Group Relative Policy Optimization (GRPO) in Reinforcement Learning, using math problem examples to calculate rewards and advantages.",
+  "requestFramePermissions": []
+}
