@@ -2,22 +2,22 @@ import React, { useState, useMemo } from 'react';
 import { INITIAL_SCENARIOS } from './data';
 import { ProblemScenario } from './types';
 import { calculateGroupStats, formatNumber } from './utils';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ReferenceLine, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ReferenceLine,
   ResponsiveContainer,
   Cell
 } from 'recharts';
-import { 
-  Calculator, 
-  BrainCircuit, 
-  Target, 
-  CheckCircle2, 
+import {
+  Calculator,
+  BrainCircuit,
+  Target,
+  CheckCircle2,
   ArrowRight,
   TrendingUp,
   Sigma,
@@ -56,13 +56,13 @@ const App: React.FC = () => {
   const [activeScenarioId, setActiveScenarioId] = useState<number>(1);
   const [scenarios, setScenarios] = useState<ProblemScenario[]>(INITIAL_SCENARIOS);
 
-  const activeScenario = useMemo(() => 
-    scenarios.find(s => s.id === activeScenarioId) || scenarios[0], 
-  [activeScenarioId, scenarios]);
+  const activeScenario = useMemo(() =>
+    scenarios.find(s => s.id === activeScenarioId) || scenarios[0],
+    [activeScenarioId, scenarios]);
 
-  const stats = useMemo(() => 
-    calculateGroupStats(activeScenario.candidates), 
-  [activeScenario]);
+  const stats = useMemo(() =>
+    calculateGroupStats(activeScenario.candidates),
+    [activeScenario]);
 
   const handleCandidateToggle = (candidateId: string, field: 'isCorrect' | 'hasFormat') => {
     setScenarios(prev => prev.map(scenario => {
@@ -113,7 +113,7 @@ const App: React.FC = () => {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        
+
         {/* Intro */}
         <section className="mb-8 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex flex-col md:flex-row gap-6">
@@ -123,8 +123,8 @@ const App: React.FC = () => {
                 The Core Concept: Relative over Absolute
               </h2>
               <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                In traditional RL (like PPO), a separate "Critic" model judges an answer. In <strong>GRPO</strong>, we generate a group of answers and compare them <em>against each other</em>. 
-                Answers better than the group average get a <span className="text-green-600 font-bold">positive advantage</span>. 
+                In traditional RL (like PPO), a separate "Critic" model judges an answer. In <strong>GRPO</strong>, we generate a group of answers and compare them <em>against each other</em>.
+                Answers better than the group average get a <span className="text-green-600 font-bold">positive advantage</span>.
                 Answers worse than average get a <span className="text-red-500 font-bold">negative advantage</span>.
               </p>
               <div className="flex flex-wrap items-center gap-4 text-xs">
@@ -167,8 +167,8 @@ const App: React.FC = () => {
               onClick={() => setActiveScenarioId(s.id)}
               className={`
                 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border
-                ${activeScenarioId === s.id 
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105' 
+                ${activeScenarioId === s.id
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105'
                   : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'}
               `}
             >
@@ -177,11 +177,11 @@ const App: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 items-start">
-          
+        <div className="grid md:grid-cols-3 gap-8 items-start">
+
           {/* Left Column: Problem & Inputs */}
-          <div className="lg:col-span-2 space-y-6">
-            
+          <div className="md:col-span-2 space-y-6">
+
             {/* Question Card */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -218,10 +218,10 @@ const App: React.FC = () => {
                 const reward = stats.rewards[index];
                 const adv = stats.advantages[index];
                 const isPositive = adv > 0;
-                
+
                 return (
-                  <div 
-                    key={candidate.id} 
+                  <div
+                    key={candidate.id}
                     className={`
                       relative group rounded-xl border transition-all duration-300 overflow-hidden
                       ${isPositive ? 'bg-white border-green-200 shadow-sm ring-1 ring-green-100' : 'bg-slate-50 border-slate-200 opacity-90'}
@@ -256,8 +256,8 @@ const App: React.FC = () => {
                         {/* Controls */}
                         <div className="pl-8 flex flex-wrap gap-x-6 gap-y-2">
                           <label className="flex items-center gap-2 cursor-pointer select-none">
-                            <input 
-                              type="checkbox" 
+                            <input
+                              type="checkbox"
                               checked={candidate.hasFormat}
                               onChange={() => handleCandidateToggle(candidate.id, 'hasFormat')}
                               className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-gray-300"
@@ -268,8 +268,8 @@ const App: React.FC = () => {
                           </label>
 
                           <label className="flex items-center gap-2 cursor-pointer select-none">
-                            <input 
-                              type="checkbox" 
+                            <input
+                              type="checkbox"
                               checked={candidate.isCorrect}
                               onChange={() => handleCandidateToggle(candidate.id, 'isCorrect')}
                               className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-gray-300"
@@ -303,14 +303,14 @@ const App: React.FC = () => {
           </div>
 
           {/* Right Column: Stats & Viz */}
-          <div className="lg:col-span-1 space-y-6 sticky top-24">
-            
+          <div className="md:col-span-1 space-y-6 sticky top-24">
+
             {/* Stats Card */}
             <div className="bg-slate-900 text-white rounded-xl shadow-lg p-6">
               <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
                 <Sigma size={14} /> Group Statistics
               </h3>
-              
+
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700">
                   <div className="text-xs text-slate-400 mb-1">Mean (μ)</div>
@@ -342,34 +342,34 @@ const App: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: -20 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false} 
-                      fontSize={11} 
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      fontSize={11}
                       width={40}
-                      tick={{fill: '#94a3b8'}}
+                      tick={{ fill: '#94a3b8' }}
                     />
-                    <Tooltip 
+                    <Tooltip
                       cursor={{ fill: '#f8fafc' }}
                       content={<CustomTooltip />}
                     />
                     <ReferenceLine y={0} stroke="#94a3b8" />
                     {/* Split bars to handle border radius correctly for positive vs negative values */}
-                    <Bar 
-                      dataKey="posAdv" 
-                      name="Positive" 
-                      stackId="a" 
-                      fill="#16a34a" 
-                      radius={[4, 4, 0, 0]} 
+                    <Bar
+                      dataKey="posAdv"
+                      name="Positive"
+                      stackId="a"
+                      fill="#16a34a"
+                      radius={[4, 4, 0, 0]}
                       maxBarSize={60}
                     />
-                    <Bar 
-                      dataKey="negAdv" 
-                      name="Negative" 
-                      stackId="a" 
-                      fill="#ef4444" 
-                      radius={[0, 0, 4, 4]} 
+                    <Bar
+                      dataKey="negAdv"
+                      name="Negative"
+                      stackId="a"
+                      fill="#ef4444"
+                      radius={[0, 0, 4, 4]}
                       maxBarSize={60}
                     />
                   </BarChart>
@@ -379,17 +379,17 @@ const App: React.FC = () => {
                 Hover over bars to see raw Reward and Mean
               </div>
             </div>
-            
+
             {/* Context Helper */}
-             <div className="text-xs text-slate-500 p-4 bg-slate-50 rounded-xl border border-slate-100">
-               {stats.stdDev === 0 ? (
-                 <p className="text-amber-600 font-medium flex gap-2">
-                    <Info size={16} className="shrink-0" />
-                    <span>Since all rewards are equal, the Standard Deviation is 0. This makes the Advantage 0 for everyone (no relative difference to learn from).</span>
-                 </p>
-               ) : (
-                 <p>Notice how high positive advantages (green) strongly encourage the model to repeat that behavior, while negative advantages (red) suppress it.</p>
-               )}
+            <div className="text-xs text-slate-500 p-4 bg-slate-50 rounded-xl border border-slate-100">
+              {stats.stdDev === 0 ? (
+                <p className="text-amber-600 font-medium flex gap-2">
+                  <Info size={16} className="shrink-0" />
+                  <span>Since all rewards are equal, the Standard Deviation is 0. This makes the Advantage 0 for everyone (no relative difference to learn from).</span>
+                </p>
+              ) : (
+                <p>Notice how high positive advantages (green) strongly encourage the model to repeat that behavior, while negative advantages (red) suppress it.</p>
+              )}
             </div>
 
           </div>
