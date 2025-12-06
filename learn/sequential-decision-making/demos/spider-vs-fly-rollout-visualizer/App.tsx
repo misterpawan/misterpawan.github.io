@@ -295,7 +295,7 @@ const App: React.FC = () => {
       <main className="flex flex-row flex-wrap justify-center gap-8 items-start w-full max-w-6xl">
 
         {/* Left: Board */}
-        <div className="flex flex-col items-center gap-6 w-full lg:w-auto">
+        <div className="flex flex-col items-center gap-6 w-auto">
           <GridBoard
             gameState={gameState}
             interactionState={interactionState}
