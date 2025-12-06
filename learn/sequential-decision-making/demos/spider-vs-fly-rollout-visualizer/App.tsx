@@ -3,9 +3,9 @@ import GridBoard from './components/GridBoard';
 import StatsPanel from './components/StatsPanel';
 import { GameState, Spider, Fly, AlgorithmType, InteractionState, MoveOption, Position, InteractionMode } from './types';
 import { GRID_SIZE, SPIDER_COLORS } from './constants';
-import { 
-  getSequentialRolloutMoves, 
-  getSimultaneousRolloutMoves, 
+import {
+  getSequentialRolloutMoves,
+  getSimultaneousRolloutMoves,
   getGreedyMoves,
   calculateMoveOptions,
   calculateSimultaneousOptions,
@@ -18,7 +18,7 @@ const createInitialState = (numSpiders: number, numFlies: number): GameState => 
   const spiders: Spider[] = [];
   const flies: Fly[] = [];
 
-  const getUniquePos = (existing: {x:number, y:number}[]) => {
+  const getUniquePos = (existing: { x: number, y: number }[]) => {
     let x, y;
     do {
       x = Math.floor(Math.random() * GRID_SIZE);
@@ -27,7 +27,7 @@ const createInitialState = (numSpiders: number, numFlies: number): GameState => 
     return { x, y };
   };
 
-  const occupied: {x:number, y:number}[] = [];
+  const occupied: { x: number, y: number }[] = [];
 
   for (let i = 0; i < numSpiders; i++) {
     const pos = getUniquePos(occupied);
@@ -61,11 +61,11 @@ const App: React.FC = () => {
   // Config
   const [numSpiders, setNumSpiders] = useState(2);
   const [numFlies, setNumFlies] = useState(4);
-  
+
   // Game & Algorithm State
   const [gameState, setGameState] = useState<GameState>(() => createInitialState(2, 4));
   const [algorithm, setAlgorithm] = useState<AlgorithmType>('SEQUENTIAL');
-  
+
   // Interactive Rollout State
   const [interactionState, setInteractionState] = useState<InteractionState | null>(null);
 
@@ -100,7 +100,7 @@ const App: React.FC = () => {
   const handleNextStep = useCallback(() => {
     // If in interactive modes, we don't auto-step the logic unless explicitly requested (e.g. Greedy Auto)
     // But since Sequential/Simultaneous are now both interactive, 'Auto' might just imply 'Run the algorithm automatically'
-    
+
     setGameState(prev => {
       if (prev.isGameOver) return prev;
 
@@ -135,52 +135,52 @@ const App: React.FC = () => {
 
   // --- INTERACTIVE FLOW START ---
   const startInteractiveTurn = () => {
-      if (gameState.isGameOver) return;
-      
-      if (algorithm === 'SIMULTANEOUS') {
-        // Initialize Drafts with current positions (STAY) or Greedy? 
-        // Greedy is a better starting point for the user to optimize from.
-        const greedyResult = getGreedyMoves(gameState);
-        const initialDrafts = greedyResult.nextMoves;
-        
-        // Calculate options for all spiders based on this draft
-        const optionsMap = calculateSimultaneousOptions(gameState, initialDrafts);
-        const jointCost = calculateJointCost(gameState, initialDrafts);
+    if (gameState.isGameOver) return;
 
-        setInteractionState({
-          mode: 'SIMULTANEOUS',
-          draftMoves: initialDrafts,
-          simultaneousOptions: optionsMap,
-          currentJointCost: jointCost,
-          currentOptions: [] // Not used in sim mode the same way
-        });
+    if (algorithm === 'SIMULTANEOUS') {
+      // Initialize Drafts with current positions (STAY) or Greedy? 
+      // Greedy is a better starting point for the user to optimize from.
+      const greedyResult = getGreedyMoves(gameState);
+      const initialDrafts = greedyResult.nextMoves;
 
-      } else {
-        // SEQUENTIAL
-        const initialOptions = calculateMoveOptions(0, gameState, new Map());
-        setInteractionState({
-            mode: 'SEQUENTIAL',
-            activeSpiderIndex: 0,
-            currentOptions: initialOptions,
-            committedMoves: new Map()
-        });
-      }
+      // Calculate options for all spiders based on this draft
+      const optionsMap = calculateSimultaneousOptions(gameState, initialDrafts);
+      const jointCost = calculateJointCost(gameState, initialDrafts);
+
+      setInteractionState({
+        mode: 'SIMULTANEOUS',
+        draftMoves: initialDrafts,
+        simultaneousOptions: optionsMap,
+        currentJointCost: jointCost,
+        currentOptions: [] // Not used in sim mode the same way
+      });
+
+    } else {
+      // SEQUENTIAL
+      const initialOptions = calculateMoveOptions(0, gameState, new Map());
+      setInteractionState({
+        mode: 'SEQUENTIAL',
+        activeSpiderIndex: 0,
+        currentOptions: initialOptions,
+        committedMoves: new Map()
+      });
+    }
   };
 
   // --- HANDLE USER CHOICE ---
   const handleOptionSelect = (option: MoveOption, spiderId?: number) => {
-      if (!interactionState) return;
+    if (!interactionState) return;
 
-      if (interactionState.mode === 'SEQUENTIAL') {
-          handleSequentialSelect(option);
-      } else if (interactionState.mode === 'SIMULTANEOUS' && spiderId !== undefined) {
-          handleSimultaneousSelect(option, spiderId);
-      }
+    if (interactionState.mode === 'SEQUENTIAL') {
+      handleSequentialSelect(option);
+    } else if (interactionState.mode === 'SIMULTANEOUS' && spiderId !== undefined) {
+      handleSimultaneousSelect(option, spiderId);
+    }
   };
 
   const handleSequentialSelect = (option: MoveOption) => {
     if (!interactionState || interactionState.mode !== 'SEQUENTIAL') return;
-    
+
     const { activeSpiderIndex, committedMoves } = interactionState;
     if (activeSpiderIndex === undefined) return;
 
@@ -193,17 +193,17 @@ const App: React.FC = () => {
     const nextSpiderIndex = activeSpiderIndex + 1;
 
     if (nextSpiderIndex < gameState.spiders.length) {
-        // Prepare next spider
-        const nextOptions = calculateMoveOptions(nextSpiderIndex, gameState, newCommittedMoves);
-        setInteractionState({
-            ...interactionState,
-            activeSpiderIndex: nextSpiderIndex,
-            currentOptions: nextOptions,
-            committedMoves: newCommittedMoves
-        });
+      // Prepare next spider
+      const nextOptions = calculateMoveOptions(nextSpiderIndex, gameState, newCommittedMoves);
+      setInteractionState({
+        ...interactionState,
+        activeSpiderIndex: nextSpiderIndex,
+        currentOptions: nextOptions,
+        committedMoves: newCommittedMoves
+      });
     } else {
-        // All spiders decided! Execute Turn.
-        executeTurn(newCommittedMoves);
+      // All spiders decided! Execute Turn.
+      executeTurn(newCommittedMoves);
     }
   };
 
@@ -233,27 +233,27 @@ const App: React.FC = () => {
   };
 
   const executeTurn = (finalMoves: Map<number, Position>) => {
-      setInteractionState(null); // Clear interaction overlay
-      
-      setGameState(prev => {
-          const newSpiders = prev.spiders.map(s => ({
-              ...s,
-              pos: finalMoves.get(s.id) || s.pos
-          }));
+    setInteractionState(null); // Clear interaction overlay
 
-          const newFlies = prev.flies.map(f => {
-              if (f.isCaught) return f;
-              const isCaughtNow = newSpiders.some(s => s.pos.x === f.pos.x && s.pos.y === f.pos.y);
-              return isCaughtNow ? { ...f, isCaught: true } : f;
-          });
+    setGameState(prev => {
+      const newSpiders = prev.spiders.map(s => ({
+        ...s,
+        pos: finalMoves.get(s.id) || s.pos
+      }));
 
-          return {
-              spiders: newSpiders,
-              flies: newFlies,
-              stepCount: prev.stepCount + 1,
-              isGameOver: newFlies.every(f => f.isCaught)
-          };
+      const newFlies = prev.flies.map(f => {
+        if (f.isCaught) return f;
+        const isCaughtNow = newSpiders.some(s => s.pos.x === f.pos.x && s.pos.y === f.pos.y);
+        return isCaughtNow ? { ...f, isCaught: true } : f;
       });
+
+      return {
+        spiders: newSpiders,
+        flies: newFlies,
+        stepCount: prev.stepCount + 1,
+        isGameOver: newFlies.every(f => f.isCaught)
+      };
+    });
   };
 
   // --- UTILS ---
@@ -275,14 +275,14 @@ const App: React.FC = () => {
 
   // Switch algorithm reset
   const handleSetAlgorithm = (algo: AlgorithmType) => {
-      setAlgorithm(algo);
-      setInteractionState(null);
-      setIsAutoPlaying(false);
+    setAlgorithm(algo);
+    setInteractionState(null);
+    setIsAutoPlaying(false);
   };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8 flex flex-col items-center font-sans">
-      
+
       <header className="mb-8 text-center max-w-3xl">
         <h1 className="text-3xl md:text-5xl font-black mb-3 tracking-tight text-slate-800">
           Spiders & Flies
@@ -292,41 +292,41 @@ const App: React.FC = () => {
         </p>
       </header>
 
-      <main className="flex flex-col lg:flex-row gap-8 items-start justify-center w-full max-w-6xl">
-        
+      <main className="flex flex-col md:flex-row gap-8 items-start justify-center w-full max-w-6xl">
+
         {/* Left: Board */}
         <div className="flex flex-col items-center gap-6 w-full lg:w-auto">
-          <GridBoard 
-            gameState={gameState} 
+          <GridBoard
+            gameState={gameState}
             interactionState={interactionState}
             onSelectOption={handleOptionSelect}
           />
-          
+
           {/* Quick Config */}
           <div className="flex gap-6 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
             <div className="flex flex-col items-center">
-               <span className="text-[10px] text-slate-400 font-bold mb-2 tracking-widest">SPIDERS</span>
-               <div className="flex items-center gap-3">
-                 <button onClick={() => handleUpdateConfig(-1, 0)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Minus size={14}/></button>
-                 <span className="w-6 text-center font-bold text-lg">{numSpiders}</span>
-                 <button onClick={() => handleUpdateConfig(1, 0)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Plus size={14}/></button>
-               </div>
+              <span className="text-[10px] text-slate-400 font-bold mb-2 tracking-widest">SPIDERS</span>
+              <div className="flex items-center gap-3">
+                <button onClick={() => handleUpdateConfig(-1, 0)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Minus size={14} /></button>
+                <span className="w-6 text-center font-bold text-lg">{numSpiders}</span>
+                <button onClick={() => handleUpdateConfig(1, 0)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Plus size={14} /></button>
+              </div>
             </div>
             <div className="w-px bg-slate-100"></div>
             <div className="flex flex-col items-center">
-               <span className="text-[10px] text-slate-400 font-bold mb-2 tracking-widest">FLIES</span>
-               <div className="flex items-center gap-3">
-                 <button onClick={() => handleUpdateConfig(0, -1)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Minus size={14}/></button>
-                 <span className="w-6 text-center font-bold text-lg">{numFlies}</span>
-                 <button onClick={() => handleUpdateConfig(0, 1)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Plus size={14}/></button>
-               </div>
+              <span className="text-[10px] text-slate-400 font-bold mb-2 tracking-widest">FLIES</span>
+              <div className="flex items-center gap-3">
+                <button onClick={() => handleUpdateConfig(0, -1)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Minus size={14} /></button>
+                <span className="w-6 text-center font-bold text-lg">{numFlies}</span>
+                <button onClick={() => handleUpdateConfig(0, 1)} className="w-8 h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"><Plus size={14} /></button>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Right: Controls */}
-        <StatsPanel 
-          gameState={gameState} 
+        <StatsPanel
+          gameState={gameState}
           algorithm={algorithm}
           setAlgorithm={handleSetAlgorithm}
           onNextStep={handleNextStep}
@@ -341,24 +341,24 @@ const App: React.FC = () => {
 
       <footer className="mt-16 max-w-4xl text-slate-400 text-sm border-t border-slate-200 pt-8 grid md:grid-cols-2 gap-8">
         <div>
-            <h3 className="font-bold text-slate-700 flex items-center gap-2 mb-2">
+          <h3 className="font-bold text-slate-700 flex items-center gap-2 mb-2">
             <Info size={16} /> Multiagent Rollout (Sequential)
-            </h3>
-            <p className="leading-relaxed mb-4">
+          </h3>
+          <p className="leading-relaxed mb-4">
             A cooperative control scheme where agents optimize their moves one by one.
-            When Agent 1 optimizes, it assumes all subsequent agents (2, 3...) will act according to a 
+            When Agent 1 optimizes, it assumes all subsequent agents (2, 3...) will act according to a
             <span className="bg-slate-100 px-1 rounded mx-1 text-slate-600 font-mono text-xs">Base Policy</span> (Greedy).
             Once Agent 1 locks in a move, Agent 2 optimizes knowing Agent 1's choice, and so on.
-            </p>
+          </p>
         </div>
         <div>
-            <h3 className="font-bold text-slate-700 flex items-center gap-2 mb-2">
+          <h3 className="font-bold text-slate-700 flex items-center gap-2 mb-2">
             <Info size={16} /> Simultaneous Rollout
-            </h3>
-            <p className="leading-relaxed">
-            All agents optimize jointly. The algorithm considers combinations of moves. 
+          </h3>
+          <p className="leading-relaxed">
+            All agents optimize jointly. The algorithm considers combinations of moves.
             In interactive mode, you can <span className="font-bold text-slate-600">draft moves for all agents</span> simultaneously and see how the total cost changes dynamically before committing.
-            </p>
+          </p>
         </div>
       </footer>
 
