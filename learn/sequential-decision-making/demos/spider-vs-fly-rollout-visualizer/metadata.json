@@ -1,0 +1,5 @@
+{
+  "name": "Spider vs Fly Rollout Visualizer",
+  "description": "An interactive educational simulation demonstrating Multiagent Rollout (Sequential vs Simultaneous) algorithms in the classic Spiders and Flies grid problem.",
+  "requestFramePermissions": []
+}
