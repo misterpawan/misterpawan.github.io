@@ -1,0 +1,5 @@
+{
+  "name": "Discrete Optimization Visualizer",
+  "description": "An interactive, animated visualization of sequential decision making in discrete optimization, featuring dynamic path selection and cost accumulation.",
+  "requestFramePermissions": []
+}
