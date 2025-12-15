@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 3: Numerical Representation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        accent: '#f59e0b' // Amber/Orange accent for this lecture
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .quiz-option:hover {
+            background-color: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #78350f;
+            border-color: #f59e0b;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-orange-500 to-amber-600 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="computational-experiments.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-amber-600 transition">
+                <span>←</span> Lecture 2
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">CS 357</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-amber-600 uppercase bg-amber-100 rounded-full dark:bg-amber-900/30 dark:text-amber-300">
+                Lecture 3
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-amber-500">
+                Numerical Representation
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Floating point standards, base conversions, and the reality of rounding errors.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-4">Agenda: The World of Errors</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Key Topics</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-500">▶</span> Floating point representation
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-500">▶</span> Rounding vs. Truncation errors
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-500">▶</span> The IEEE-754 Standard
+                        </li>
+                    </ul>
+                </div>
+                <div
+                    class="bg-amber-50 dark:bg-amber-900/10 p-4 rounded-xl border border-amber-100 dark:border-amber-800">
+                    <p class="italic text-sm text-gray-600 dark:text-gray-400">
+                        "Errors come in two forms: truncation and rounding. We always have them. Our job as developers
+                        is to reduce their impact."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Number Systems</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-3">Base 10 (Decimal)</h3>
+                    <p class="text-sm mb-4">We write $1234.1234$ as:</p>
+                    <div class="bg-white dark:bg-gray-800 p-3 rounded-lg font-mono text-xs mb-4">
+                        Integer: $4\times 10^0 + 3\times 10^1 + 2\times 10^2 + 1\times 10^3$<br>
+                        Fraction: $1\times 10^{-1} + 2\times 10^{-2} + 3\times 10^{-3} + \dots$
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-3">Base $\beta$</h3>
+                    <p class="text-sm mb-4">Binary ($\beta=2$), Octal ($\beta=8$), Hex ($\beta=16$).</p>
+                    <div class="bg-white dark:bg-gray-800 p-3 rounded-lg font-mono text-xs mb-4">
+                        \[ (a_n\dots a_0.b_1\dots)_{\beta} = \sum_{k=0}^{n}a_k\beta^{k} + \sum_{k=0}^{\infty} b_k
+                        \beta^{-k} \]
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 border-t pt-6 border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold text-lg mb-4">Conversion Algorithms</h3>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Integer Conversion -->
+                    <div class="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-2xl">
+                        <h4 class="font-bold text-blue-700 dark:text-blue-300 mb-2">Integer (Divide by 2)</h4>
+                        <p class="text-xs mb-2">Example: $(11)_{10}$ to Base 2</p>
+                        <div
+                            class="font-mono text-xs bg-white dark:bg-gray-900 p-2 rounded border border-blue-100 dark:border-blue-900">
+                            11 / 2 = 5 R 1 -> a_0 = 1<br>
+                            5 / 2 = 2 R 1 -> a_1 = 1<br>
+                            2 / 2 = 1 R 0 -> a_2 = 0<br>
+                            1 / 2 = 0 R 1 -> a_3 = 1<br>
+                            <strong>Result: (1011)_2</strong>
+                        </div>
+                    </div>
+
+                    <!-- Fraction Conversion -->
+                    <div class="bg-green-50 dark:bg-green-900/10 p-5 rounded-2xl">
+                        <h4 class="font-bold text-green-700 dark:text-green-300 mb-2">Fraction (Multiply by 2)</h4>
+                        <p class="text-xs mb-2">Example: $(0.625)_{10}$ to Base 2</p>
+                        <div
+                            class="font-mono text-xs bg-white dark:bg-gray-900 p-2 rounded border border-green-100 dark:border-green-900">
+                            2 * 0.625 = 1.25 -> b_1 = 1<br>
+                            2 * 0.25 = 0.50 -> b_2 = 0<br>
+                            2 * 0.50 = 1.00 -> b_3 = 1<br>
+                            <strong>Result: (0.101)_2</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <p class="text-sm font-semibold mb-2">Matlab Commands:</p>
+                    <div class="code-block text-sm">
+                        >> dec2bin(197)
+                        ans = 11000101
+                        >> bin2dec('11000101')
+                        ans = 197
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold text-red-600">The Problem with Precision</h2>
+            </div>
+
+            <p class="mb-4">Not all numbers terminate neatly. Consider $\frac{1}{5} = 0.2$ in decimal. In binary, it
+                requires an infinite number of digits.</p>
+
+            <div class="font-mono text-center bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-lg mb-6">
+                0.2 $\rightarrow$ 0.0011 0011 0011 ...
+            </div>
+
+            <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border-l-4 border-red-500 mb-8">
+                <h3 class="font-bold text-red-700 dark:text-red-300">⚠️ Roundoff Error</h3>
+                <p class="text-sm mt-1">This is roundoff error in its basic form. 0.2 is stored fine in base-10, but is
+                    an infinite repeating fraction in base-2, meaning computers cannot store it exactly.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="font-bold mb-4">Case Study: Intel Pentium FDIV Bug (1994)</h3>
+                    <p class="text-sm mb-4">A hardware bug in the floating point unit caused errors in division for
+                        specific numbers.</p>
+                    <ul class="text-xs space-y-2 list-disc pl-4 text-gray-600 dark:text-gray-400">
+                        <li><strong>Discovery:</strong> Dr. Thomas Nicely (Lynchburg College) noticed computations were
+                            wrong.</li>
+                        <li><strong>Example:</strong> $1/824633702441.0$ was calculated incorrectly beyond the 8th
+                            digit.</li>
+                        <li><strong>Impact:</strong> Intel initially denied importance, stock fell, IBM halted
+                            shipments.</li>
+                        <li><strong>Cost:</strong> Intel set aside <strong>$420 Million</strong> to fix.</li>
+                    </ul>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="bg-gray-800 p-4 rounded-xl text-white text-xs font-mono">
+                        TO: Whom it may concern<br>
+                        RE: Bug in the Pentium FPU<br>
+                        DATE: 30 October 1994<br><br>
+                        It appears that there is a bug in the floating point unit... The Pentium FPU is returning
+                        erroneous values for certain division operations.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">Rounding vs. Truncation</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg mb-2 text-indigo-600">Roundoff Error</h3>
+                    <p class="text-sm">Occurs when digits are lost due to a limit on memory (e.g., storing 1/3 as
+                        0.3333).</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg mb-2 text-pink-600">Truncation Error</h3>
+                    <p class="text-sm">Occurs when discrete values are used to approximate a mathematical expression
+                        (e.g., stopping a Taylor series at $n=10$).</p>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                <h4 class="font-bold mb-2">Conditioning</h4>
+                <ul class="text-sm space-y-2">
+                    <li><strong>Well-conditioned:</strong> Numerical results are insensitive to small variations in
+                        input.</li>
+                    <li><strong>Ill-conditioned:</strong> Small variations lead to drastically different results.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Floating Point Representation</h2>
+            </div>
+
+            <p class="mb-4">Real numbers are stored in <strong>Normalized Floating-Point Form</strong>:</p>
+            <div class="text-center font-mono bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner mb-6">
+                $x = \pm(0.d_1d_2d_3\dots d_m)_{\beta} \times \beta^{e}$
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold mb-4">Toy Example: 3-bit Mantissa</h3>
+                <p class="text-sm mb-4">Suppose we have 3 bits for mantissa and 1 bit exponent ($2^{-1}, 2^0, 2^1$).</p>
+
+                <div class="overflow-x-auto">
+                    <div class="flex gap-1 min-w-max pb-4">
+                        <!-- Visualization of number line gaps -->
+                        <div class="h-12 w-1 bg-gray-400"></div>
+                        <div class="h-12 w-8 bg-gray-200 flex items-center justify-center text-xs">...</div>
+                        <div class="h-12 w-1 bg-gray-400"></div>
+                        <div class="h-12 w-16 bg-blue-100 flex items-center justify-center text-xs"> Gap </div>
+                        <div class="h-12 w-1 bg-gray-400"></div>
+                        <div class="h-12 w-24 bg-blue-200 flex items-center justify-center text-xs"> Valid Numbers
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mt-4 text-sm">
+                    <div>
+                        <strong>Underflow:</strong> Computations too close to zero. Can often fall back to 0.
+                    </div>
+                    <div>
+                        <strong>Overflow:</strong> Computations too large. Considered more severe.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-amber-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-amber-100 text-amber-600 px-2 py-1 rounded-full">+10 XP</span></h3>
+            </div>
+            <p class="mb-4">Which type of error occurred in the 1994 Intel Pentium FDIV bug?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Truncation
+                    Error</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Roundoff
+                    / Floating Point Error</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Overflow
+                    Error</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff. Based on slides by L. Olson.</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
