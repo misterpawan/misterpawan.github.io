@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 6: Gaussian Elimination</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["{\\|#1\\|}", 1],
+                    matdim: ["{#1\\times#2}", 2],
+                    rank: ["\\mathrm{rank}(#1)", 1],
+                    epsm: "\\varepsilon_m"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue
+                        secondary: '#8b5cf6', // Violet
+                        accent: '#f59e0b', // Amber
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .dark .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            background-color: #e0f2fe;
+            border-color: #3b82f6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-blue-500 to-violet-600 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="linear-algebra-recall.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-blue-600 transition">
+                <span>←</span> Lecture 5b
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 6</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full dark:bg-blue-900/30 dark:text-blue-300">
+                System Solving
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-violet-600">
+                Gaussian Elimination
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                The general method for solving square systems of linear equations.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Solving Triangular Systems</h2>
+            </div>
+
+            <p class="mb-4 text-gray-700 dark:text-gray-300">
+                Before tackling general systems, we first look at systems that are already in a "nice" form: Triangular
+                Matrices.
+            </p>
+
+
+            <div class="grid md:grid-cols-2 gap-8 my-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-blue-500 shadow-sm">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">Lower Triangular ($L$)</h3>
+                    <p class="text-sm text-gray-500 mb-4">All non-zero elements are on or below the diagonal.</p>
+                    <div class="overflow-x-auto font-mono text-xs">
+                        \[ L = \begin{bmatrix} l_{11} & 0 & \dots \\ l_{21} & l_{22} & 0 \\ \vdots & & \ddots
+                        \end{bmatrix} \]
+                    </div>
+                    <p class="mt-4 text-sm font-semibold">Method: Forward Substitution</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-violet-500 shadow-sm">
+                    <h3 class="font-bold text-lg mb-2 text-violet-600">Upper Triangular ($U$)</h3>
+                    <p class="text-sm text-gray-500 mb-4">All non-zero elements are on or above the diagonal.</p>
+                    <div class="overflow-x-auto font-mono text-xs">
+                        \[ U = \begin{bmatrix} u_{11} & u_{12} & \dots \\ 0 & u_{22} & \dots \\ 0 & 0 & \ddots
+                        \end{bmatrix} \]
+                    </div>
+                    <p class="mt-4 text-sm font-semibold">Method: Backward Substitution</p>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-2xl">
+                <h3 class="font-bold mb-4">Algorithm: Backward Substitution</h3>
+                <div class="code-block text-sm">
+                    x(n) = b(n) / A(n,n)
+                    for i = n-1 down to 1
+                    s = b(i)
+                    for j = i+1 to n
+                    s = s - A(i,j) * x(j)
+                    end
+                    x(i) = s / A(i,i)
+                    end
+                </div>
+                <div
+                    class="mt-4 p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg text-sm font-bold text-center">
+                    Cost: $\mathcal{O}(n^2)$ FLOPS (Cheap!)
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">Gaussian Elimination</h2>
+            </div>
+
+            <p class="mb-4">
+                Our goal is to transform an arbitrary square system $Ax=b$ into an equivalent upper triangular system
+                $Ux=c$, which we can then solve easily.
+            </p>
+
+
+            <div class="my-8 space-y-4">
+                <h3 class="font-bold text-lg">Hand Calculation Example</h3>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner">
+                        <p class="text-sm text-gray-500 mb-2">Original System</p>
+                        <div class="font-mono text-sm">
+                            $x_1 + 3x_2 = 5$ <br>
+                            $2x_1 + 4x_2 = 6$
+                        </div>
+                    </div>
+                    <div class="flex justify-center text-2xl text-gray-400">
+                        ➜
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner">
+                        <p class="text-sm text-gray-500 mb-2">Elimination ($R_2 \leftarrow R_2 - 2R_1$)</p>
+                        <div class="font-mono text-sm">
+                            $x_1 + 3x_2 = 5$ <br>
+                            $0 - 2x_2 = -4$
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-center mt-2 italic text-gray-500">
+                    Solve $x_2 = 2$, then substitute back to get $x_1 = -1$.
+                </p>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-2xl border border-blue-100 dark:border-blue-800">
+                <h3 class="font-bold text-blue-700 dark:text-blue-300 mb-4">The "Cartoon" View</h3>
+                <p class="text-sm mb-4">Visualizing how zeros propagate through the matrix.</p>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 text-xs font-mono">
+                    <div class="text-center">
+                        <div class="mb-2 bg-white dark:bg-gray-900 p-2 rounded">
+                            [ x x x ]<br>
+                            [ x x x ]<br>
+                            [ x x x ]
+                        </div>
+                        Start
+                    </div>
+                    <span>→</span>
+                    <div class="text-center">
+                        <div class="mb-2 bg-white dark:bg-gray-900 p-2 rounded">
+                            [ x x x ]<br>
+                            [ 0 x x ]<br>
+                            [ 0 x x ]
+                        </div>
+                        Col 1 Eliminated
+                    </div>
+                    <span>→</span>
+                    <div class="text-center">
+                        <div class="mb-2 bg-white dark:bg-gray-900 p-2 rounded">
+                            [ x x x ]<br>
+                            [ 0 x x ]<br>
+                            [ 0 0 x ]
+                        </div>
+                        Col 2 Eliminated
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">The Algorithm & Cost</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold mb-4">Forward Elimination Code</h3>
+                    <div class="code-block text-xs">
+                        for k = 1 to n-1 % Pivot row
+                        for i = k+1 to n % Target row
+                        xmult = A(i,k) / A(k,k)
+                        A(i,k) = xmult % Store multiplier
+                        for j = k+1 to n % Columns
+                        A(i,j) = A(i,j) - xmult * A(k,j)
+                        end
+                        b(i) = b(i) - xmult * b(k)
+                        end
+                        end
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">Computational Cost</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                            <span>Forward Elimination</span>
+                            <span class="font-mono font-bold text-red-500">~ 2/3 n³</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                            <span>Back Substitution</span>
+                            <span class="font-mono font-bold text-green-500">~ n²</span>
+                        </div>
+                        <div class="mt-4 p-4 border-l-4 border-red-500 bg-red-50 dark:bg-red-900/10">
+                            <p class="font-bold text-red-700 dark:text-red-300">Total Cost: $\mathcal{O}(n^3)$</p>
+                            <p class="text-xs mt-1">Doubling $n$ increases cost by factor of 8.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Elementary Elimination Matrices</h2>
+            </div>
+
+            <p class="mb-4">
+                We can represent the row operations as matrix multiplications. To eliminate entries below the $k$-th
+                diagonal, we use matrix $M_k$.
+            </p>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl mb-6 text-center">
+                <div class="overflow-x-auto text-sm">
+                    \[ M_k = I - m_k e_k^T = \begin{bmatrix} 1 & & & \\ & 1 & & \\ & -m_{k+1} & 1 & \\ & \vdots & &
+                    \ddots \end{bmatrix} \]
+                </div>
+                <p class="text-sm mt-4 text-gray-500">
+                    Where $m_i = a_i / a_k$ are the multipliers.
+                </p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border-l-4 border-green-500 shadow-sm">
+                <h3 class="font-bold text-lg mb-2 text-green-600">The Inverse: $L_k$</h3>
+                <p class="text-sm mb-2">The inverse of an elimination matrix is incredibly simple. Just flip the sign of
+                    the multipliers!</p>
+                <div class="text-center font-mono text-sm py-2">
+                    $L_k = M_k^{-1} = I + m_k e_k^T$
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    5</div>
+                <h2 class="text-2xl font-bold">LU Factorization</h2>
+            </div>
+
+
+
+            <div class="prose dark:prose-invert max-w-none">
+                <p>
+                    We transform $A$ to upper triangular $U$ by applying a sequence of matrices:
+                    \[ (M_{n-1} \dots M_2 M_1) A = U \]
+                </p>
+                <p>
+                    Inverting the $M$'s moves them to the other side:
+                    \[ A = (M_1^{-1} M_2^{-1} \dots M_{n-1}^{-1}) U \]
+                </p>
+                <p>
+                    The product of the inverses is a lower triangular matrix $L$. Thus:
+                </p>
+                <div class="text-center text-3xl font-bold text-blue-600 my-6">
+                    $A = L U$
+                </div>
+                <p class="text-sm text-gray-500 text-center">
+                    This factors matrix $A$ into a Lower triangular matrix $L$ and an Upper triangular matrix $U$.
+                </p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">6
+                </div>
+                <h2 class="text-2xl font-bold text-red-600">Why "Naive"?</h2>
+            </div>
+
+            <p class="mb-4">The algorithm described is called "Naive" because it assumes we can always divide by the
+                pivot $A(k,k)$.</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-200 dark:border-red-800">
+                    <h4 class="font-bold text-red-700 dark:text-red-300 mb-2">Zero Pivot</h4>
+                    <div class="font-mono text-sm bg-white dark:bg-gray-900 p-2 rounded">
+                        A = [ 0 2 3 ]<br>
+                        [ 4 5 6 ]<br>
+                        [ 7 8 9 ]
+                    </div>
+                    <p class="text-xs mt-2">Division by zero error immediately!</p>
+                </div>
+                <div
+                    class="bg-orange-50 dark:bg-orange-900/10 p-4 rounded-xl border border-orange-200 dark:border-orange-800">
+                    <h4 class="font-bold text-orange-700 dark:text-orange-300 mb-2">Small Pivot</h4>
+                    <div class="font-mono text-sm bg-white dark:bg-gray-900 p-2 rounded">
+                        A = [ 1e-10 2 3 ]<br>
+                        [ 4 5 6 ]<br>
+                        [ 7 8 9 ]
+                    </div>
+                    <p class="text-xs mt-2">Leads to massive roundoff error (Loss of Significance).</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-indigo-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">What is the structure of the matrix $M_k$ used to eliminate elements in the $k$-th column?
+            </p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Upper
+                    Triangular with multipliers above the diagonal.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Unit
+                    Lower Triangular (Identity with multipliers in the $k$-th column below the diagonal).</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">A
+                    diagonal matrix containing the pivots.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
