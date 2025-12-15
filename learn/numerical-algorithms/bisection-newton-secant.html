@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 12: Rootfinding</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["{\\|#1\\|}", 1],
+                    matdim: ["{#1\\times#2}", 2],
+                    rank: ["\\mathrm{rank}(#1)", 1],
+                    epsm: "\\varepsilon_m"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue
+                        secondary: '#ef4444', // Red
+                        accent: '#8b5cf6', // Violet
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .dark .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            background-color: #e0f2fe;
+            border-color: #3b82f6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-red-500 w-0 transition-all duration-300">
+        </div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="rootfinding.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-blue-600 transition">
+                <span>←</span> Lecture 11
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 12</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full dark:bg-blue-900/30 dark:text-blue-300">
+                Nonlinear Equations
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-red-600">
+                Bisection & Newton's Method
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Algorithms for finding roots of functions.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">The Bisection Method</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Concept</h3>
+                    <p class="text-sm mb-4">
+                        Given a bracketed root (interval $[a,b]$ where $f(a)$ and $f(b)$ have opposite signs), split the
+                        bracket in half. Select the sub-bracket that contains the root. Repeat.
+                    </p>
+                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
+                        <img src="figs/bisection.png" alt="Bisection Diagram" class="max-h-32 inline-block">
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Algorithm</h3>
+                    <div class="code-block text-xs">
+                        % Bisection
+                        initialize a, b
+                        for k = 1, 2, ...
+                        x_m = a + (b - a) / 2
+                        if sign(f(x_m)) == sign(f(a))
+                        a = x_m
+                        else
+                        b = x_m
+                        end
+                        if converged, stop
+                        end
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-2xl border-l-4 border-blue-500">
+                <h3 class="font-bold text-blue-700 dark:text-blue-300 mb-2">Analysis</h3>
+                <p class="text-sm">Interval size reduces by half each step: $\delta_n = 2^{-n} \delta_0$.</p>
+                <p class="text-sm mt-2"><strong>Linear Convergence:</strong> $n = \log_2(\frac{\delta_n}{\delta_0})$. To
+                    reduce error by $10^{-3}$, need $\approx 10$ steps.</p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h3 class="text-xl font-bold mb-4">Bisection Example</h3>
+            <p class="mb-4 text-sm">Solve $x - x^{1/3} - 2 = 0$. Initial bracket $[3, 4]$.</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-center border-collapse">
+                    <thead class="bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                            <th class="p-2 border">k</th>
+                            <th class="p-2 border">a</th>
+                            <th class="p-2 border">b</th>
+                            <th class="p-2 border">$x_{mid}$</th>
+                            <th class="p-2 border">$f(x_{mid})$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>3.5</td>
+                            <td>-0.018</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>3.5</td>
+                            <td>4</td>
+                            <td>3.75</td>
+                            <td>0.196</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>3.5</td>
+                            <td>3.75</td>
+                            <td>3.625</td>
+                            <td>0.089</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">Convergence Criteria</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-2">Check Step Size ($x$)</h4>
+                    <p class="text-sm font-mono mb-2">$|x_k - x_{k-1}| < \delta_x</p>
+                            <div class="text-center mt-4">
+                                <img src="figs/rootTolerance_dxbest.png" alt="dx Tolerance"
+                                    class="h-20 inline-block bg-white p-1 rounded">
+                                <p class="text-xs text-gray-500 mt-1">Best when $f'(x)$ is large.</p>
+                            </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-2">Check Function Value ($f(x)$)</h4>
+                    <p class="text-sm font-mono mb-2">$|f(x_k)| < \delta_f$</p>
+                            <div class="text-center mt-4">
+                                <img src="figs/rootTolerance_dfbest.png" alt="df Tolerance"
+                                    class="h-20 inline-block bg-white p-1 rounded">
+                                <p class="text-xs text-gray-500 mt-1">Best when $f'(x)$ is small.</p>
+                            </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">3
+                </div>
+                <h2 class="text-2xl font-bold">Newton's Method</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-sm mb-4">
+                        Use the slope $f'(x_k)$ to predict where the function crosses zero. Derived from Taylor Series.
+                    </p>
+                    <div
+                        class="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl text-center border border-red-200 dark:border-red-800">
+                        <p class="font-mono text-xl font-bold text-red-600 dark:text-red-400">
+                            $x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}$
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="figs/Newton.png" alt="Newton Diagram" class="max-h-40 rounded bg-white p-2">
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="font-bold text-lg">Example Comparison</h3>
+                <p class="text-sm">Solve $x - x^{1/3} - 2 = 0$.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-center border-collapse">
+                        <thead class="bg-gray-100 dark:bg-gray-800">
+                            <tr>
+                                <th class="p-2 border">k</th>
+                                <th class="p-2 border">$x_k$</th>
+                                <th class="p-2 border">$f(x_k)$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0</td>
+                                <td>3</td>
+                                <td>-0.442</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>3.5266</td>
+                                <td>0.0045</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>3.5213</td>
+                                <td>$3.7 \times 10^{-7}$</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>3.5213</td>
+                                <td>$2.6 \times 10^{-15}$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-sm font-bold text-green-600">Converged in 3 steps! (vs ~50 for bisection)</p>
+            </div>
+
+            <div class="mt-8 bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl">
+                <h3 class="font-bold text-red-600 mb-2">When Newton Fails</h3>
+                <p class="text-sm mb-4">If $f'(x_k) \approx 0$, the next guess shoots off to infinity.</p>
+                <div class="flex justify-center">
+                    <img src="figs/NewtonFails.png" alt="Newton Divergence" class="h-32 rounded bg-white p-2">
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Secant Method</h2>
+            </div>
+
+            <p class="mb-4">
+                What if we don't know $f'(x)$? Approximate it using the last two points.
+            </p>
+            <div
+                class="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-xl text-center border border-purple-200 dark:border-purple-800 mb-6">
+                <p class="font-mono text-sm">
+                    $x_{k+1} = x_k - f(x_k) \frac{x_k - x_{k-1}}{f(x_k) - f(x_{k-1})}$
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold mb-2">Pros</h4>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li>No derivative needed.</li>
+                        <li>Fast convergence ($r \approx 1.62$).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-2">Cons</h4>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li>Needs two initial guesses.</li>
+                        <li>Not guaranteed to bracket.</li>
+                        <li>Can diverge.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <img src="figs/secant.png" alt="Secant Method Diagram" class="h-32 rounded bg-white p-2">
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
+                    5</div>
+                <h2 class="text-2xl font-bold">Summary & MATLAB's fzero</h2>
+            </div>
+
+            <div class="space-y-4 text-sm">
+                <div class="p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                    <strong>Bisection:</strong> Robust, slow, needs bracket.
+                </div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                    <strong>Newton:</strong> Fast (Quadratic), needs derivative, can diverge.
+                </div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                    <strong>Secant:</strong> Fast (Superlinear), no derivative, needs 2 guesses.
+                </div>
+            </div>
+
+            <div class="mt-8 bg-gray-50 dark:bg-gray-900 p-6 rounded-xl">
+                <h3 class="font-bold mb-2 text-green-600">MATLAB: fzero</h3>
+                <p class="text-sm mb-4">Hybrid method! Combines Bisection, Secant, and Inverse Quadratic Interpolation.
+                </p>
+                <div class="code-block text-xs">
+                    options = optimset('Display','iter');
+                    x = fzero(@(x) x^10 - 1, 0.5, options);
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Which method would you choose if you need guaranteed convergence and have a valid bracket,
+                even if it's slow?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Newton's
+                    Method.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Bisection
+                    Method.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Secant
+                    Method.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
