@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 25: Randomness | CS 357</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vb: "{\\mathbf{b}}",
+                    ve: "{\\mathbf{e}}",
+                    vx: "{\\mathbf{x}}",
+                    vA: "{\\mathbf{A}}",
+                    mO: "{\\mathcal{O}}",
+                    norm: ["\\left\\lVert#1\\right\\rVert", 1]
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #1e293b;
+            /* slate-800 */
+            color: #e2e8f0;
+            /* slate-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            border-color: #f97316;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased" data-aos-easing="ease"
+    data-aos-duration="400">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+                <span class="text-orange-600">CS 357</span> Lecture 25
+            </div>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <h1
+                class="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Randomness
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Probability, Monte Carlo, and Random Number Generators
+            </p>
+            <p class="text-sm text-gray-500 mt-2">L. Olson • University of Illinois at Urbana-Champaign • December 1,
+                2008</p>
+        </header>
+
+        <div class="flex items-center gap-4 mb-6">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 1: Probability Basics</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Expected Value and Variance</h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Expected Value</h3>
+                    <p>Average value of the variable:</p>
+                    $$ E[x] = \sum_{j=1}^{n}x_j p_j $$
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Variance</h3>
+                    <p>Variation from the average:</p>
+                    $$ \sigma^2[x] = E[(x-E[x])^2] = E[x^2] - E[x]^2 $$
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl mt-6 border-l-4 border-blue-500">
+                <h3 class="font-bold mb-2">Example: Throwing a Die</h3>
+                <p><strong>Expected value:</strong> $E[x] = (1+2+\dots+6)/6 = 3.5$</p>
+                <p><strong>Variance:</strong> $\sigma^2[x] = 2.916$</p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Estimation</h2>
+            <p>To estimate the expected value, choose a set of random values based on the probability and average the
+                results:</p>
+            $$ E[x] = \frac{1}{N} \sum_{j=1}^{N} x_i $$
+            <p class="mt-2 text-sm text-gray-500">Note: Bigger $N$ gives better estimates.</p>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-xl my-4">
+                <h3 class="font-bold mb-2">Die Example:</h3>
+                <ul class="list-disc list-inside">
+                    <li>3 rolls: $3, 1, 6 \rightarrow E[x] \approx (3+1+6)/3 = 3.33$</li>
+                    <li>9 rolls: $3, 1, 6, 2, 5, 3, 4, 6, 2 \rightarrow E[x] \approx 3.51$</li>
+                </ul>
+            </div>
+
+            <h3 class="font-bold text-lg mt-8 mb-4">Law of Large Numbers</h3>
+            <p>By taking $N$ to $\infty$, the error between the estimate and the expected value is statistically zero.
+                That is, the estimate will converge to the correct value.</p>
+            <div class="overflow-x-auto text-center py-4">
+                $$ P\left(E[x] = \lim_{N\rightarrow\infty} \frac{1}{N} \sum_{i=1}^{N} x_i\right) = 1 $$
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Continuous Extensions</h2>
+
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                    <span class="font-bold">Expected Value</span>
+                    <span>$E[x] = \int_a^b x\rho(x)\,dx$</span>
+                </div>
+                <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                    <span class="font-bold">Function E.V.</span>
+                    <span>$E[g(x)] = \int_a^b g(x)\rho(x)\,dx$</span>
+                </div>
+                <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                    <span class="font-bold">Variance</span>
+                    <span>$\sigma^2[x] = \int_a^b (x-E[x])^2\rho(x)\,dx$</span>
+                </div>
+                <div class="flex items-center justify-between p-4">
+                    <span class="font-bold text-blue-600">Estimate</span>
+                    <span class="text-blue-600 font-bold">$E[g(x)] \approx \frac{1}{N} \sum_{i=1}^{N} g(x_i)$</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Quick Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">What happens to the error of the sample mean as $N \to \infty$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    increases.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    converges to zero.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    stays constant.</button>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 mb-6 mt-12">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 2: Monte Carlo
+                Integration</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">2D Example: Computing $\pi$</h2>
+            <p>Use the unit square $[0,1]^2$ with a quarter-circle.</p>
+
+            <div class="my-4 text-center">
+                $$ f(x,y) = \begin{cases} 1 & \quad (x,y)\in \, circle\\ 0 & else \end{cases} $$
+                $$ A_{quarter-circle} = \int_0^1\int_0^1 f(x,y)\,dxdy = \frac{\pi}{4} $$
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 my-6">
+                <div class="flex justify-center items-center bg-white dark:bg-gray-800 rounded-xl p-4">
+
+                </div>
+                <div class="flex justify-center items-center bg-white dark:bg-gray-800 rounded-xl p-4">
+
+                </div>
+            </div>
+
+            <p>Estimate the area by randomly evaluating $f(x,y)$:</p>
+            $$ A_{quarter-circle} \approx \frac{1}{N}\sum_{i=1}^{N}f(x_i,y_i) $$
+            <p class="mt-4 text-center font-bold">Therefore: $\pi \approx \frac{4}{N} \sum_{i=1}^{N}f(x_i,y_i)$</p>
+
+            <div class="code-block mt-6">
+                input N
+                call rand in 2d
+                for i=1:N
+                sum = sum + f(x_i,y_i)
+                end
+                sum = 4*sum/N
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mt-6 border-l-4 border-yellow-500">
+                <p>The expected value of the error is $\mO(\frac{1}{\sqrt{N}})$.</p>
+                <ul class="list-disc list-inside mt-2 text-sm">
+                    <li>Convergence does not depend on dimension.</li>
+                    <li>Deterministic integration (e.g., Trapezoid $\mO(1/N^{2/d})$) is very hard in higher dimensions.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Central Limit Theorem (CLT)</h2>
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl mb-4 italic">
+                The distribution of an average is close to being normal, even when the distribution from which the
+                average is computed is not normal.
+            </div>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Let $x_1,\dots,x_n$ be some independent random variables from any PDF.</li>
+                <li>Consider sum $S_n = x_1 + \dots + x_n$.</li>
+                <li>Expected value is $n\mu$, Standard Deviation is $\sigma \sqrt{n}$.</li>
+                <li>$\frac{S_n - n\mu}{\sigma\sqrt{n}}$ approaches the normal distribution.</li>
+                <li><strong>Result:</strong> The sample mean has an error of $\sigma/\sqrt{n}$.</li>
+            </ul>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Stochastic Simulation</h2>
+            <p class="text-sm text-gray-500 mb-4">From M. Heath, Scientific Computing</p>
+
+            <p>Also known as Monte Carlo methods. Useful for:</p>
+            <ul class="list-disc list-inside mb-4">
+                <li>Nondeterministic processes.</li>
+                <li>Deterministic models too complicated to model.</li>
+                <li>Deterministic models with high dimensionality.</li>
+            </ul>
+
+            <h3 class="font-bold mt-4">Requirements:</h3>
+            <ol class="list-decimal list-inside space-y-1">
+                <li>Knowing which probability distributions are needed.</li>
+                <li>Generating sufficient random numbers.</li>
+            </ol>
+        </section>
+
+        <div class="flex items-center gap-4 mb-6 mt-12">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 3: Random Number
+                Generators</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Randomness & Repeatability</h2>
+            <p><strong>Randomness $\approx$ Unpredictability.</strong> Physical processes (coins, dice) are technically
+                deterministic but practically unpredictable.</p>
+
+            <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg my-4 border-l-4 border-red-500">
+                <p><strong>Alert:</strong> Computer algorithms for random number generation are deterministic.</p>
+            </div>
+
+            <p>These are called <strong>Pseudorandom</strong>. They are predictable and reproducible (which is good for
+                debugging!).</p>
+
+            <div class="code-block mt-4">
+                >> rand('seed', 1234)
+                >> rand(10, 1) % Generates same sequence every time
+            </div>
+
+            <h3 class="font-bold text-lg mt-6">Properties of a Good RNG</h3>
+            <ul class="list-disc list-inside space-y-1">
+                <li><strong>Random pattern:</strong> Passes statistical tests.</li>
+                <li><strong>Long period:</strong> Long time before repeating.</li>
+                <li><strong>Efficiency:</strong> Fast execution, low storage.</li>
+                <li><strong>Repeatability:</strong> Same sequence from same seed.</li>
+                <li><strong>Portability:</strong> Same sequence on different architectures.</li>
+            </ul>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Linear Congruential Generators (LCG)</h2>
+            <p>Congruential generators are of the form:</p>
+            <div class="text-center text-xl font-bold my-4">
+                $$ x_k = (a x_{k-1} + c) \pmod M $$
+            </div>
+            <ul class="list-disc list-inside mb-4">
+                <li>$x_0$: Seed.</li>
+                <li>$M$: Modulus (e.g., $2^{31}-1$).</li>
+                <li>$a, c$: Multiplier and increment.</li>
+            </ul>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                <p class="font-bold">Example:</p>
+                <p>Let $a=13, c=0, m=31, x_0=1$.</p>
+                <p>Sequence: $1, 13, 14, 27, 10, 6, \dots$</p>
+                <p class="text-sm italic mt-2">This is a permutation of integers $1 \dots 30$, so period is $m-1$.</p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">History & Modern Methods</h2>
+
+            <h3 class="font-bold">IBM SSP (1960s)</h3>
+            <p>Used $a=65539, c=0, m=2^{31}$. Resulted in strong correlation among three successive integers.</p>
+            $$ x_{k+2} = 6x_{k+1} - 9x_k \pmod m $$
+
+            <h3 class="font-bold mt-4">Modern Methods</h3>
+            <ol class="list-decimal list-inside space-y-4 mt-2">
+                <li>
+                    <strong>Method of Marsaglia</strong> (Period $\approx 2^{1430}$).
+                    <div class="code-block text-xs">
+                        Initialize x_0...x_3 and c
+                        s = 2111111111*x_{n-4} + 1492*x_{n-3} + 1776*x_{n-2} + 5115*x_{n-1} + c
+                        x_n = s mod 2^32
+                        c = floor(s/2^32)
+                    </div>
+                </li>
+                <li>
+                    <strong>Unix rand()</strong>: uses $a=1103515245, c=12345, m=2^{31}$.
+                </li>
+            </ol>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Typical LCG Values</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-300 dark:border-gray-600">
+                            <th class="p-3 font-bold">Source</th>
+                            <th class="p-3 font-bold">m</th>
+                            <th class="p-3 font-bold">a</th>
+                            <th class="p-3 font-bold">c</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr
+                            class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="p-3">Numerical Recipes</td>
+                            <td class="p-3">$2^{32}$</td>
+                            <td class="p-3">1664525</td>
+                            <td class="p-3">1013904223</td>
+                        </tr>
+                        <tr
+                            class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="p-3">Borland C/C++</td>
+                            <td class="p-3">$2^{32}$</td>
+                            <td class="p-3">22695477</td>
+                            <td class="p-3">1</td>
+                        </tr>
+                        <tr
+                            class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="p-3">glibc (GCC)</td>
+                            <td class="p-3">$2^{32}$</td>
+                            <td class="p-3">1103515245</td>
+                            <td class="p-3">12345</td>
+                        </tr>
+                        <tr
+                            class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="p-3">MS Visual C++</td>
+                            <td class="p-3">$2^{32}$</td>
+                            <td class="p-3">214013</td>
+                            <td class="p-3">2531011</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="p-3">Apple CarbonLib</td>
+                            <td class="p-3">$2^{31}-1$</td>
+                            <td class="p-3">16807</td>
+                            <td class="p-3">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Advanced Generators</h2>
+
+            <h3 class="font-bold text-lg">Fibonacci (Subtractive) Generator</h3>
+            <p>Produce floating-point random numbers directly using differences.</p>
+            $$ x_k = x_{k-17} - x_5 $$
+            <ul class="list-disc list-inside mb-4 text-sm">
+                <li>Lags (17, 5) must be chosen carefully.</li>
+                <li>Long periods. No division needed.</li>
+            </ul>
+
+            <h3 class="font-bold text-lg mt-6">Non-Uniform Distributions</h3>
+            <p>If cumulative distribution function is invertible, we can map uniform $x_k$ to non-uniform $y_k$.</p>
+            <p>Example (Exponential): $f(t) = \lambda e^{-\lambda t}$</p>
+            $$ y_k = -\frac{\log(1-x_k)}{\lambda} $$
+
+            <h3 class="font-bold text-lg mt-6">Quasi-Random Sequences</h3>
+            <p>True random samples exhibit clumping. Quasi-random sequences attempt randomness while maintaining better
+                uniform coverage (points avoid each other).</p>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">Why are Linear Congruential Generators (LCG) sensitive to the choice of 'a' and 'c'?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Poor
+                    choices can lead to short periods or obvious patterns.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    increase the storage requirements.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    make the generator non-deterministic.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Materials. Original slides by L. Olson.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardSpan = parent.parentElement.querySelector('span');
+                const reward = rewardSpan && rewardSpan.innerText.includes('$20') ? 20 : 10;
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) b.classList.add('correct-answer');
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '🎉';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+    </script>
+</body>
+
+</html>
