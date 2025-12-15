@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 5b: Linear Algebra Recall</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\mathbf{b}}",
+                    ve: "{\\mathbf{e}}",
+                    vg: "{\\mathbf{g}}",
+                    vp: "{\\mathbf{p}}",
+                    vr: "{\\mathbf{r}}",
+                    vu: "{\\mathbf{u}}",
+                    vx: "{\\mathbf{x}}",
+                    vz: "{\\mathbf{z}}",
+                    vA: "{\\mathbf{A}}",
+                    vU: "{\\mathbf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["{\\|#1\\|}", 1],
+                    matdim: ["{#1\\times#2}", 2],
+                    rank: ["\\mathrm{rank}(#1)", 1],
+                    epsm: "\\varepsilon_m"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#6366f1', // Indigo
+                        secondary: '#ec4899', // Pink
+                        accent: '#8b5cf6', // Violet
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #6366f1;
+        }
+
+        .dark .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            background-color: #e0e7ff;
+            border-color: #6366f1;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #1e1b4b;
+            border-color: #6366f1;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-indigo-500 to-purple-600 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="matrix-vector-operations.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-indigo-600 transition">
+                <span>←</span> Lecture 5
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 5b</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-indigo-600 uppercase bg-indigo-100 rounded-full dark:bg-indigo-900/30 dark:text-indigo-300">
+                Linear Algebra
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
+                Linear Algebra Recall
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Vectors, Norms, Matrix Views, and Special Matrices. A deep dive into the building blocks.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <span class="text-indigo-600">1</span> Vector Operations
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Basic Arithmetic</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Operations are element-by-element.</p>
+                    <ul class="space-y-4 text-sm font-mono bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                        <li>
+                            <strong class="text-indigo-600">Addition:</strong><br>
+                            $c = a + b \iff c_i = a_i + b_i$
+                        </li>
+                        <li>
+                            <strong class="text-indigo-600">Scaling:</strong><br>
+                            $b = \sigma a \iff b_i = \sigma a_i$
+                        </li>
+                        <li>
+                            <strong class="text-indigo-600">Transpose:</strong><br>
+                            $u = [1, 2, 3] \implies u^T = \begin{bmatrix}1\\2\\3\end{bmatrix}$
+                        </li>
+                        <li>
+                            <strong class="text-indigo-600">Linear Combination:</strong><br>
+                            $z = \alpha u + \beta v$
+                        </li>
+                    </ul>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-2xl border-l-4 border-indigo-500 mb-4">
+                        <h4 class="font-bold text-indigo-800 dark:text-indigo-200 mb-2">Inner Product ($u \cdot v$)</h4>
+                        <p class="text-sm mb-2">Scalar result. Geometric interpretation:</p>
+                        <p class="text-center font-bold text-lg py-2">$u^T v = \sum u_i v_i = \|u\|_2 \|v\|_2
+                            \cos\theta$</p>
+                        <p class="text-xs text-gray-500">Commutative: $u^T v = v^T u$.</p>
+                    </div>
+                    <div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-2xl border-l-4 border-purple-500">
+                        <h4 class="font-bold text-purple-800 dark:text-purple-200 mb-2">Outer Product ($u v^T$)</h4>
+                        <p class="text-sm mb-2">Matrix result (Rank-1). Element $A_{ij} = u_i v_j$.</p>
+                        <div class="text-center font-mono text-xs overflow-x-auto py-2">
+                            $\begin{bmatrix}u_1\\u_2\end{bmatrix} \begin{bmatrix}v_1 & v_2\end{bmatrix} =
+                            \begin{bmatrix}u_1v_1 & u_1v_2 \\ u_2v_1 & u_2v_2\end{bmatrix}$
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                <h4 class="font-bold mb-2">Matlab Implementation</h4>
+                <div class="code-block text-sm">
+                    >> u = [0; 1; 2; 3]; v = [3; 2; 1; 0];
+                    >> dot_prod = u' * v % Inner Product (Scalar)
+                    ans = 4
+
+                    >> out_prod = u * v' % Outer Product (Matrix)
+                    ans =
+                    0 0 0 0
+                    3 2 1 0
+                    6 4 2 0
+                    9 6 3 0
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <span class="text-indigo-600">2</span> Vector Norms
+            </h2>
+
+            <p class="mb-6">Norms allow us to compare the "size" or "magnitude" of vectors, similar to absolute value
+                for scalars.</p>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border-t-4 border-blue-500">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">$L_1$ Norm</h3>
+                    <p class="text-xs uppercase font-bold text-gray-400 mb-2">Manhattan Distance</p>
+                    <div class="text-center py-4 text-xl">
+                        $\|x\|_1 = \sum |x_i|$
+                    </div>
+                    <p class="text-sm text-gray-500">Sum of absolute values.</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border-t-4 border-green-500">
+                    <h3 class="font-bold text-lg mb-2 text-green-600">$L_2$ Norm</h3>
+                    <p class="text-xs uppercase font-bold text-gray-400 mb-2">Euclidean Distance</p>
+                    <div class="text-center py-4 text-xl">
+                        $\|x\|_2 = \sqrt{\sum x_i^2}$
+                    </div>
+                    <p class="text-sm text-gray-500">Standard geometric length. $\sqrt{x^T x}$.</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border-t-4 border-red-500">
+                    <h3 class="font-bold text-lg mb-2 text-red-600">$L_\infty$ Norm</h3>
+                    <p class="text-xs uppercase font-bold text-gray-400 mb-2">Max Norm</p>
+                    <div class="text-center py-4 text-xl">
+                        $\|x\|_\infty = \max |x_i|$
+                    </div>
+                    <p class="text-sm text-gray-500">Magnitude of the largest element.</p>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl flex items-center justify-between">
+                <div>
+                    <h4 class="font-bold text-indigo-900 dark:text-indigo-200">Comparing Vectors</h4>
+                    <p class="text-sm">To check if $y \approx z$, we use the relative error with norms:</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 px-6 py-3 rounded-lg font-mono font-bold shadow-sm">
+                    $\frac{\|y - z\|}{\|z\|} < \delta$ </div>
+                </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <span class="text-indigo-600">3</span> Matrix Views
+            </h2>
+
+            <p class="mb-6">Understanding matrix-vector multiplication $Ax=b$ in different ways is crucial for
+                intuition.</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Column View -->
+                <div
+                    class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/40 dark:to-blue-800/40 p-6">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-9xl font-extrabold rotate-12">C</div>
+                    <h3 class="text-xl font-bold text-blue-800 dark:text-blue-200 mb-4">Column View</h3>
+                    <p class="text-sm mb-4 font-semibold">"Linear Combination of Columns"</p>
+                    <div class="bg-white/60 dark:bg-black/20 p-4 rounded-xl font-mono text-sm">
+                        $b = x_1 \mathbf{a_1} + x_2 \mathbf{a_2} + \dots + x_n \mathbf{a_n}$
+                    </div>
+                    <p class="text-xs mt-4 text-blue-700 dark:text-blue-300">
+                        The vector $b$ is constructed by scaling and adding the columns of $A$. This reveals the
+                        <strong>Range</strong>.
+                    </p>
+                </div>
+
+                <!-- Row View -->
+                <div
+                    class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/40 dark:to-purple-800/40 p-6">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-9xl font-extrabold rotate-12">R</div>
+                    <h3 class="text-xl font-bold text-purple-800 dark:text-purple-200 mb-4">Row View</h3>
+                    <p class="text-sm mb-4 font-semibold">"Dot Product with Rows"</p>
+                    <div class="bg-white/60 dark:bg-black/20 p-4 rounded-xl font-mono text-sm">
+                        $b_i = \mathbf{row_i}(A) \cdot x$
+                    </div>
+                    <p class="text-xs mt-4 text-purple-700 dark:text-purple-300">
+                        Each element $b_i$ is the projection of $x$ onto the $i$-th row of $A$. Good for hand
+                        calculations.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center text-sm text-gray-500 italic">
+                Also: The <strong>Vector View</strong> sees $A$ as a function that stretches and rotates the vector $x$.
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <span class="text-indigo-600">4</span> Independence & Rank
+            </h2>
+
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border-l-4 border-orange-500 shadow-sm">
+                    <h3 class="font-bold text-lg mb-2">Linear Independence</h3>
+                    <p class="text-sm mb-2">A set of vectors $\{v_1, \dots, v_n\}$ is linearly independent if the only
+                        solution to:</p>
+                    <div class="text-center font-mono py-2 bg-gray-50 dark:bg-gray-900 rounded">
+                        $\alpha_1 v_1 + \dots + \alpha_n v_n = 0$
+                    </div>
+                    <p class="text-sm mt-2">is the trivial solution $\alpha_1 = \dots = \alpha_n = 0$.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Matrix Rank</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">The rank of matrix $A$ is the number of
+                            linearly independent columns (or rows). It measures the "dimension" of the output space.</p>
+                        <ul class="list-disc pl-5 mt-4 space-y-1 text-sm">
+                            <li>$\rank{A} \le \min(m, n)$.</li>
+                            <li>Full Rank: Maximum possible rank.</li>
+                            <li>Rank Deficient: Columns are dependent.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                        <h4 class="font-bold text-sm mb-2 text-red-500">Numerical Rank is Tricky!</h4>
+                        <div class="code-block text-xs">
+                            >> A = [1 0 0; 0 1 0; 0 0 1e-15];
+                            >> rank(A) % Might be 3
+
+                            >> A(3,3) = 0;
+                            >> rank(A) % Is 2
+                        </div>
+                        <p class="text-xs mt-2 text-gray-500">Tiny computer errors can make a singular matrix appear
+                            non-singular.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <span class="text-indigo-600">5</span> Special Matrices
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Identity -->
+                <div
+                    class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition duration-300">
+                    <h3 class="font-bold text-indigo-600 mb-2">Identity ($I$)</h3>
+                    <div class="font-mono text-xs text-center bg-gray-50 dark:bg-gray-900 p-2 rounded mb-2">
+                        [1 0 0; 0 1 0; 0 0 1]
+                    </div>
+                    <p class="text-xs text-gray-500">Like multiplying by 1. $AI = A$. Created with `eye(n)`.</p>
+                </div>
+
+                <!-- Diagonal -->
+                <div
+                    class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition duration-300">
+                    <h3 class="font-bold text-indigo-600 mb-2">Diagonal</h3>
+                    <div class="font-mono text-xs text-center bg-gray-50 dark:bg-gray-900 p-2 rounded mb-2">
+                        [d1 0 0; 0 d2 0; 0 0 d3]
+                    </div>
+                    <p class="text-xs text-gray-500">Non-zeros only on main diagonal. Created with `diag(v)`.</p>
+                </div>
+
+                <!-- Symmetric -->
+                <div
+                    class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition duration-300">
+                    <h3 class="font-bold text-indigo-600 mb-2">Symmetric</h3>
+                    <div class="font-mono text-xs text-center bg-gray-50 dark:bg-gray-900 p-2 rounded mb-2">
+                        $A = A^T$
+                    </div>
+                    <p class="text-xs text-gray-500">Mirror image across diagonal. $A^TA$ is always symmetric.</p>
+                </div>
+
+                <!-- Orthogonal -->
+                <div
+                    class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition duration-300">
+                    <h3 class="font-bold text-indigo-600 mb-2">Orthogonal ($Q$)</h3>
+                    <div class="font-mono text-xs text-center bg-gray-50 dark:bg-gray-900 p-2 rounded mb-2">
+                        $Q^T Q = I$
+                    </div>
+                    <p class="text-xs text-gray-500">Columns are orthonormal. Preserves norms: $\|Qx\|_2 = \|x\|_2$.</p>
+                </div>
+
+                <!-- Tridiagonal -->
+                <div
+                    class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:translate-y-[-4px] transition duration-300 col-span-1 md:col-span-2 lg:col-span-1">
+                    <h3 class="font-bold text-indigo-600 mb-2">Tridiagonal</h3>
+                    <div class="font-mono text-xs text-center bg-gray-50 dark:bg-gray-900 p-2 rounded mb-2">
+                        Non-zeros on main, super, sub diagonals.
+                    </div>
+                    <p class="text-xs text-gray-500">Common in 1D Finite Difference problems. Sparse storage.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-indigo-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Which of the following statements about Matrix-Matrix multiplication $C=AB$ is
+                <strong>FALSE</strong>?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
+                    Inner dimensions must agree (Cols of A = Rows of B).</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    is commutative, meaning $AB = BA$ is always true.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Row
+                    $i$ of $C$ is a linear combination of the rows of $B$.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
