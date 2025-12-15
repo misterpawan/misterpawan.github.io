@@ -461,6 +461,33 @@
                 <p class="text-sm mb-4 text-gray-600 dark:text-gray-300">
                     Run the exact MATLAB code from the lecture. This connects to a live Octave session.
                 </p>
+                <div class="mb-4">
+                    <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Copy & Paste into Terminal:</p>
+                    <div class="group relative">
+                        <pre
+                            class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-xs font-mono overflow-x-auto border border-gray-200 dark:border-gray-700">
+% Power Method Implementation
+A = [2 1; 1 2];     % Define matrix
+x = rand(2,1);      % Random vector
+max_iter = 20;
+
+for k = 1:max_iter
+    y = A * x;
+    lambda = norm(y);   % Approximate eigenvalue
+    x = y / lambda;     % Normalize eigenvector
+end
+
+disp('Dominant Eigenvalue:');
+disp(lambda);
+disp('Eigenvector:');
+disp(x);</pre>
+                        <button
+                            onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);"
+                            class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                            Copy
+                        </button>
+                    </div>
+                </div>
                 <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md h-[500px]">
                     <iframe src="https://octave-online.net" style="width:100%; height:100%; border:none;"></iframe>
                 </div>
