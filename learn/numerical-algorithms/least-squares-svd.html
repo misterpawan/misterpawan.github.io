@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 23: Least Squares and SVD | CS 357</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vb: "{\\mathbf{b}}",
+                    ve: "{\\mathbf{e}}",
+                    vx: "{\\mathbf{x}}",
+                    vA: "{\\mathbf{A}}",
+                    norm: ["\\left\\lVert#1\\right\\rVert", 1]
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #1e293b;
+            /* slate-800 */
+            color: #e2e8f0;
+            /* slate-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option:hover {
+            background-color: #fff7ed;
+            border-color: #f97316;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #f97316;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased" data-aos-easing="ease"
+    data-aos-duration="400">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+                <span class="text-orange-600">CS 357</span> Lecture 23
+            </div>
+            <div class="flex items-center gap-4">
+                <div
+                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1">
+                    💰 <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <h1
+                class="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Least Squares and SVD
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Curve Fitting, Normal Equations, QR, and SVD</p>
+            <p class="text-sm text-gray-500 mt-2">L. Olson • University of Illinois at Urbana-Champaign • November 17,
+                2009</p>
+        </header>
+
+        <div class="flex items-center gap-4 mb-6">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 1: The Problem</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Polling Data & Curve Fitting</h2>
+            <p>Recall in interpolation we wanted to find a curve that went through <em>all</em> of the data points.</p>
+            <p>Suppose we are given the data $\{(x_1,y_1), ..., (x_n, y_n)\}$ and we want to find a curve that <em>best
+                    fits</em> the data.</p>
+
+            <div class="flex justify-center my-6">
+
+            </div>
+
+            <h3 class="font-bold text-lg mt-8">Fitting Curves</h3>
+            <div class="flex justify-center my-6">
+
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Fitting a Line</h2>
+            <p>Given $n$ data points $\{(x_1,y_i),...,(x_n,y_n)\}$, we want to find $a$ and $b$ such that:</p>
+            <div class="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg my-4 text-center">
+                $$ y_i = ax_i - b \quad \forall i \in [1,n] $$
+            </div>
+
+            <p>In matrix form, we want to find $a$ and $b$ that solves:</p>
+            $$ \begin{bmatrix}x_1 & 1 \\ \vdots & \vdots \\x_n & 1 \end{bmatrix} \begin{bmatrix}a \\ b \end{bmatrix} =
+            \begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix} $$
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mt-6 border-l-4 border-yellow-500">
+                <p><strong>Note:</strong> Systems with more equations than unknowns are called
+                    <strong>overdetermined</strong>.</p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Overdetermined Systems</h2>
+            <p>If $A$ is an $m\times n$ matrix, then in general, an $m \times 1$ vector $b$ may not lie in the column
+                space of $A$. Hence $Ax=b$ may not have an exact solution.</p>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-xl my-4">
+                <p class="font-bold mb-2">Definition: Residual Vector</p>
+                $$ r = b - Ax $$
+            </div>
+
+            <p>The <strong>least squares</strong> solution is given by minimizing the square of the residual in the
+                2-norm.</p>
+        </section>
+
+        <div class="flex items-center gap-4 mb-6 mt-12">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 2: Normal Equations</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">The Normal Equations</h2>
+            <p>Writing $r = (b-Ax)$ and substituting, we want to find an $x$ that minimizes the following function:</p>
+
+            <div class="overflow-x-auto my-4">
+                $$ \phi(x) = \norm{r}^2_2 = r^Tr = (b-Ax)^T(b-Ax) = b^Tb - 2x^TA^Tb + x^TA^TAx $$
+            </div>
+
+            <p>From calculus, the minimizer occurs where $\nabla\phi(x)=0$. The derivative is given by:</p>
+            $$ \nabla\phi(x) = -2A^Tb + 2A^TAx = 0 $$
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl my-4 border-l-4 border-blue-500">
+                <p class="font-bold mb-2">Definition: Normal Equations</p>
+                $$ A^TAx = A^Tb $$
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Solving Normal Equations</h2>
+            <p>Since the normal equations form a symmetric system, we can solve by computing the Cholesky factorization:
+            </p>
+            $$ A^TA = LL^T $$
+            <p>And solving $Ly = A^Tb$ and $L^Tx = y$.</p>
+
+            <h3 class="font-bold text-lg mt-6">Example: Conditioning Issue</h3>
+            <p>Consider the matrix where $0 < \epsilon < \sqrt{\epsilon_{mach}}$:</p>
+                    $$ A = \begin{bmatrix} 1 & 1 \\ \epsilon & 0 \\ 0 & \epsilon \end{bmatrix} $$
+
+                    <p>The normal equations for this system are given by:</p>
+                    $$ A^TA = \begin{bmatrix} 1+\epsilon^2 & 1 \\ 1 & 1+\epsilon^2 \end{bmatrix} \approx \begin{bmatrix}
+                    1 & 1 \\ 1 & 1 \end{bmatrix} $$
+                    <p class="text-sm text-red-500 mt-2">Note: For small $\epsilon$, computer arithmetic might lose the
+                        $\epsilon^2$ term, making the matrix singular!</p>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Conditioning Theorem</h2>
+            <p>The normal equations tend to worsen the condition of the matrix.</p>
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center my-4 font-bold">
+                $$ \text{cond}(A^TA) = (\text{cond}(A))^2 $$
+            </div>
+
+            <div class="code-block">
+                >> A = rand(10,10);
+                >> cond(A)
+                43.4237
+                >> cond(A'*A)
+                1.8856e+03
+            </div>
+
+            <p class="mt-4 italic">How can we solve the least squares problem without squaring the condition of the
+                matrix?</p>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Quick Check <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $10</span></h3>
+            </div>
+            <p class="mb-4">If the condition number of A is $10^3$, what is the condition number of the normal equations
+                matrix $A^TA$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$10^3$</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$10^6$</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$2
+                    \cdot 10^3$</button>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 mb-6 mt-12">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 3: QR & SVD Approaches</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Other Approaches</h2>
+
+            <div class="space-y-6">
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                    <h3 class="font-bold text-lg mb-2">1. QR Factorization</h3>
+                    <p>For $A \in \mathbb{R}^{m\times n}$, factor $A = QR$ where:</p>
+                    <ul class="list-disc list-inside ml-4 text-sm mt-2">
+                        <li>$Q$ is an $m\times m$ orthogonal matrix.</li>
+                        <li>$R$ is an $m\times n$ upper triangular matrix.</li>
+                    </ul>
+                    <p class="text-sm ml-4 mt-1">We can write $R = \begin{bmatrix} R' \\ 0 \end{bmatrix}$ where $R'$ is
+                        $n \times n$ upper triangular.</p>
+                </div>
+
+                <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                    <h3 class="font-bold text-lg mb-2">2. Singular Value Decomposition (SVD)</h3>
+                    <p>For $A \in \mathbb{R}^{m\times n}$, factor $A = USV^T$ where:</p>
+                    <ul class="list-disc list-inside ml-4 text-sm mt-2">
+                        <li>$U$ is an $m\times m$ orthogonal matrix.</li>
+                        <li>$V$ is an $n\times n$ orthogonal matrix.</li>
+                        <li>$S$ is an $m\times n$ diagonal matrix (singular values).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Orthogonal Matrices</h2>
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                <p class="font-bold">Definition</p>
+                <p>A matrix $Q$ is orthogonal if $Q^TQ = QQ^T = I$.</p>
+            </div>
+            <p>Orthogonal matrices preserve the Euclidean norm of any vector $v$:</p>
+            $$ \norm{Qv}^2_2 = (Qv)^T(Qv) = v^TQ^TQv = v^Tv = \norm{v}^2_2 $$
+
+            <h3 class="font-bold text-lg mt-8 mb-4">Using QR for Least Squares</h3>
+            <p>We apply orthogonal matrices to the residual vector without changing the norm:</p>
+            <div class="overflow-x-auto my-4">
+                $$ \norm{r}^2_2 = \norm{b-Ax}^2_2 = \left\|b-Q \begin{bmatrix} R \\ 0 \end{bmatrix}x\right\|^2_2 =
+                \left\|Q^Tb - \begin{bmatrix} R \\ 0 \end{bmatrix}x \right\|^2_2 $$
+            </div>
+
+            <p>If $Q^Tb = \begin{bmatrix} c_1 \\ c_2 \end{bmatrix}$ and $x = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}$
+                (assuming $n=m$ for simplicity in notation here, usually $x$ is just $n \times 1$), then:</p>
+
+            $$ \left\|Q^Tb-\begin{bmatrix}R\\0\end{bmatrix}\right\|^2_2 = \left\|\begin{bmatrix} c_1-Rx_1 \\ c_2
+            \end{bmatrix}\right\|^2_2 = \norm{c_1 - Rx_1}^2_2 + \norm{c_2}^2_2 $$
+
+            <p class="mt-4"><strong>Solution:</strong> Solve $Rx_1 = c_1$ by back substitution. The residual is
+                $\norm{r}_2 = \norm{c_2}_2$.</p>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Gram-Schmidt Orthogonalization</h2>
+            <p>One way to obtain the $QR$ factorization is by Gram-Schmidt.</p>
+            <p class="mt-2"><strong>Idea:</strong> For each column of $A$, subtract out its component in the other
+                columns.</p>
+
+            <h3 class="font-bold text-lg mt-6">Simple Case (2 vectors)</h3>
+            <p>For $\{a_1, a_2\}$:</p>
+            <ol class="list-decimal list-inside space-y-2 mt-2">
+                <li>Normalize $a_1$: $$ q_1 = \frac{a_1}{\norm{a_1}} $$</li>
+                <li>Subtract components from $a_2$: $$ a_2' = a_2 - (q_1^Ta_2)q_1 $$</li>
+                <li>Normalize $a_2'$: $$ q_2 = \frac{a_2'}{\norm{a_2'}} $$</li>
+            </ol>
+
+            <h3 class="font-bold text-lg mt-6">Matrix Relation</h3>
+            <p>Since $R$ is upper triangular and $A=QR$:</p>
+            <div class="overflow-x-auto">
+                $$
+                \begin{align*}
+                a_1 &= q_1r_{11} \\
+                a_2 &= q_1r_{12} + q_2r_{22} \\
+                \vdots &= \quad \vdots \\
+                a_n &= q_1r_{1n} + q_2r_{2n} + ... + q_nr_{nn}
+                \end{align*}
+                $$
+            </div>
+            <p>From this, we see that $r_{ij} = q_i^T a_j$ for $j > i$.</p>
+
+            <div class="code-block">
+                <span class="text-gray-500">% MATLAB: Gram-Schmidt QR</span>
+                function [Q,R] = gs_qr (A)
+
+                m = size(A,1);
+                n = size(A,2);
+
+                for i = 1:n
+                R(i,i) = norm(A(:,i),2);
+                Q(:,i) = A(:,i)./R(i,i);
+                for j = i+1:n
+                R(i,j) = Q(:,i)' * A(:,j);
+                A(:,j) = A(:,j) - R(i,j)*Q(:,i);
+                end
+                end
+
+                end
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Using SVD for Least Squares</h2>
+            <p>Recall the Singular Value Decomposition $A = USV^T$:</p>
+            <div class="overflow-x-auto my-4 text-sm">
+                $$
+                A =
+                \begin{bmatrix}
+                \vdots & \vdots & \vdots\\
+                u_1 & \dots & u_m \\
+                \vdots & \vdots & \vdots
+                \end{bmatrix}
+                \begin{bmatrix}
+                \sigma_1 & & & &\\
+                & \ddots & & & \\
+                & & \sigma_r & & \\
+                & & & \ddots & \\
+                & & & & 0
+                \end{bmatrix}
+                \begin{bmatrix}
+                \dots & v_1^T & \dots\\
+                \dots & \vdots & \dots\\
+                \dots & v_n^T & \dots
+                \end{bmatrix}
+                $$
+            </div>
+
+            <h3 class="font-bold text-lg mt-6">Minimization using SVD</h3>
+            <p>Assume $A$ has rank $k$. Substitute SVD into the residual norm:</p>
+            $$ \norm{r}^2_2 = \norm{b-Ax}^2_2 = \norm{b-USV^Tx}^2_2 $$
+
+            <p>Since $U$ is orthogonal, we can multiply by $U^T$ without changing the norm:</p>
+            $$ \norm{U^Tb - U^TUSV^Tx}^2_2 = \norm{U^Tb - SV^Tx}^2_2 $$
+
+            <p class="mt-4">Let $c = U^Tb$ and $y = V^Tx$ (so $x=Vy$). We now have:</p>
+            $$ \norm{r}^2_2 = \norm{c - Sy}^2_2 $$
+
+            <p>Since $S$ is diagonal with only $k$ nonzeros:</p>
+            $$ \norm{r}^2_2 = \sum_{i=1}^k (c_i - \sigma_i y_i)^2 + \sum_{i=k+1}^n c_i^2 $$
+
+            <p>This is minimized when $y_i = \frac{c_i}{\sigma_i}$ for $1 \leq i \leq k$.</p>
+
+            <div class="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border-l-4 border-green-500 mt-6">
+                <p class="font-bold mb-2">Theorem</p>
+                <p>Let $A$ be an $m \times n$ matrix of rank $r$ with SVD $A = USV^T$. The least squares solution of
+                    $Ax=b$ is:</p>
+                $$ x = \sum_{i=1}^r (\sigma^{-1}_i c_i) v_i $$
+                <p>where $c_i = u_i^T b$.</p>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-orange-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Win $20</span></h3>
+            </div>
+            <p class="mb-4">Why might we prefer SVD or QR over Normal Equations for least squares?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    are faster to compute.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    avoid squaring the condition number.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    work only for square matrices.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Materials. Original slides by L. Olson.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+            el.parentElement.classList.add('scale-110');
+            setTimeout(() => el.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardSpan = parent.parentElement.querySelector('span');
+                const reward = rewardSpan && rewardSpan.innerText.includes('$20') ? 20 : 10;
+                updateWallet(reward);
+                createConfetti(btn);
+            } else {
+                btn.classList.add('wrong-answer');
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) b.classList.add('correct-answer');
+                });
+            }
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.innerText = '🎉';
+                el.style.position = 'fixed';
+                el.style.left = rect.left + rect.width / 2 + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.fontSize = '20px';
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'all 1s ease-out';
+                document.body.appendChild(el);
+
+                setTimeout(() => {
+                    el.style.transform = `translate(${Math.random() * 100 - 50}px, -${Math.random() * 100 + 50}px) rotate(${Math.random() * 360}deg)`;
+                    el.style.opacity = '0';
+                }, 10);
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+    </script>
+</body>
+
+</html>
