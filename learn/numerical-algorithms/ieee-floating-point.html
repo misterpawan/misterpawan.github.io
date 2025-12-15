@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 4: IEEE Floating Point</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#6366f1',
+                        accent: '#f59e0b',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f3f4f6;
+            /* mygray approximation */
+            color: black;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .dark .code-block {
+            background-color: #1f2937;
+            color: #e5e7eb;
+        }
+
+        /* Syntax highlighting simulation based on latex listing */
+        .code-keyword {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        /* blue */
+        .code-comment {
+            color: #22c55e;
+            font-style: italic;
+        }
+
+        /* green */
+        .code-string {
+            color: #ef4444;
+        }
+
+        /* red */
+
+        .quiz-option:hover {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e5e7eb;
+        }
+
+        .dark .timeline-line {
+            background-color: #374151;
+        }
+
+        /* Bit box styling */
+        .bit-box {
+            border: 1px solid #cbd5e1;
+            text-align: center;
+            padding: 0.5rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        .bit-box.sign {
+            background-color: #fee2e2;
+            border-color: #f87171;
+            color: #991b1b;
+        }
+
+        .bit-box.exponent {
+            background-color: #dbeafe;
+            border-color: #60a5fa;
+            color: #1e40af;
+        }
+
+        .bit-box.mantissa {
+            background-color: #dcfce7;
+            border-color: #4ade80;
+            color: #166534;
+        }
+
+        .dark .bit-box.sign {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+            color: #fecaca;
+        }
+
+        .dark .bit-box.exponent {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+            color: #bfdbfe;
+        }
+
+        .dark .bit-box.mantissa {
+            background-color: #14532d;
+            border-color: #22c55e;
+            color: #bbf7d0;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="numerical-representation.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-blue-600 transition">
+                <span>←</span> Lecture 3
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 4</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full dark:bg-blue-900/30 dark:text-blue-300">
+                Numerical Representation
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                IEEE Floating Point Standard
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Precision, loss of significance, and the hidden dangers of computer arithmetic.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                        <span class="text-blue-600">🎯</span> Lecture Goals
+                    </h2>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-blue-100 text-blue-800 p-1 rounded text-xs mt-1 font-bold">1</span>
+                            <span>Highlight the <strong>IEEE-754</strong> standard.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-blue-100 text-blue-800 p-1 rounded text-xs mt-1 font-bold">2</span>
+                            <span>Understand <strong>precision</strong>.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-blue-100 text-blue-800 p-1 rounded text-xs mt-1 font-bold">3</span>
+                            <span>Explore <strong>loss of significance</strong>.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-blue-100 text-blue-800 p-1 rounded text-xs mt-1 font-bold">4</span>
+                            <span>Analyze <strong>cancellation</strong> errors.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-2xl border-l-4 border-indigo-500">
+                    <h3 class="font-bold text-lg mb-2 text-indigo-700 dark:text-indigo-300">Why this matters</h3>
+                    <ul class="text-sm list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+                        <li><strong>IEEE-754</strong> is the universal standard for hardware/software floating point
+                            arithmetic.</li>
+                        <li>Floating point arithmetic appears in nearly every piece of code.</li>
+                        <li>Even modest operations can yield <strong>loss of significant bits</strong>.</li>
+                        <li>We must avoid pitfalls in common mathematical expressions.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Floating Point Representation</h2>
+            </div>
+
+            <div class="prose dark:prose-invert max-w-none">
+                <div
+                    class="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl mb-8 text-center border border-gray-200 dark:border-gray-700">
+                    <h3 class="font-bold mb-2">Normalized Floating-Point Form</h3>
+                    <div class="text-xl overflow-x-auto py-2">
+                        \[ x = \pm(d_0.d_1d_2d_3\dots d_m)_{\beta} \times \beta^{e} \]
+                    </div>
+                    <ul class="text-sm text-gray-500 mt-2 list-none space-y-1">
+                        <li>$d_1d_2\dots d_m$ is the <strong>mantissa</strong>.</li>
+                        <li>$e$ is the <strong>exponent</strong> (negative, positive, or zero).</li>
+                        <li>In normalized form, we assume $d_0 = 1$ (and often do not store this bit).</li>
+                    </ul>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h4 class="font-bold mb-2">Base 10 Example</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-sm">
+                            <li>$1000.12345 \rightarrow (0.100012345)_{10} \times 10^4$</li>
+                            <li>$0.000812345 \rightarrow (0.812345)_{10} \times 10^{-3}$</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-xl">
+                        <h4 class="font-bold mb-2 text-blue-700 dark:text-blue-300">A Toy Model: 3-bit Mantissa</h4>
+                        <p class="text-sm mb-2">Suppose we have 3 bits for a mantissa and 2 bits for an exponent:</p>
+
+                        <div class="flex justify-center my-4 font-mono text-xs">
+                            <div class="flex">
+                                <div class="bit-box exponent rounded-l-lg border-r-0">e1</div>
+                                <div class="bit-box exponent border-r-0">e2</div>
+                                <div class="bit-box mantissa border-r-0">.d1</div>
+                                <div class="bit-box mantissa border-r-0">d2</div>
+                                <div class="bit-box mantissa rounded-r-lg">d3</div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 text-center">
+                            Produces discrete values: $0, \frac{1}{16}, \frac{2}{16}, \dots, \frac{7}{8}$.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div
+                        class="bg-gray-200 dark:bg-gray-800 rounded-lg h-48 flex flex-col items-center justify-center text-gray-500 text-sm p-4 text-center">
+                        <span class="text-2xl mb-2">📊</span>
+                        [Image: figs/fp4bit - Discrete Points on Real Line]
+                        <p class="text-xs mt-2">Visualizing gaps between representable numbers.</p>
+                    </div>
+                    <div
+                        class="bg-gray-200 dark:bg-gray-800 rounded-lg h-48 flex flex-col items-center justify-center text-gray-500 text-sm p-4 text-center">
+                        <span class="text-2xl mb-2">📉</span>
+                        [Image: figs/fp4bitnormalized - Normalized Gaps]
+                        <p class="text-xs mt-2">Effect of normalization on representable range.</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid md:grid-cols-2 gap-6">
+                    <div class="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200">
+                        <h4 class="font-bold text-orange-700 dark:text-orange-300">Underflow</h4>
+                        <p class="text-sm">Computations too close to zero. Often fall back to 0.</p>
+                    </div>
+                    <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200">
+                        <h4 class="font-bold text-red-700 dark:text-red-300">Overflow</h4>
+                        <p class="text-sm">Computations too large to represent. Considered a severe error.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">IEEE Floating Point (v. 754)</h2>
+            </div>
+
+            <p class="mb-6">Typical word lengths are 32-bit (Single) and 64-bit (Double). The goal is to use these bits
+                to best represent the normalized number $x = \pm q \times 2^m$.</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-t-4 border-blue-500">
+                    <h3 class="font-bold text-lg mb-2">Single Precision (32-bit)</h3>
+                    <div class="flex mb-4 font-mono text-xs w-full">
+                        <div class="bit-box sign w-1/12 rounded-l">1</div>
+                        <div class="bit-box exponent w-3/12">8</div>
+                        <div class="bit-box mantissa w-8/12 rounded-r">23</div>
+                    </div>
+                    <ul class="text-sm list-disc pl-5 space-y-1">
+                        <li><strong>Sign:</strong> 1 bit</li>
+                        <li><strong>Exponent:</strong> 8 bits ($|m|$). Bias = 127.</li>
+                        <li><strong>Mantissa:</strong> 23 bits ($q$). Hidden leading bit ($1.f$).</li>
+                        <li><strong>Precision:</strong> ~6 decimal digits.</li>
+                        <li><strong>Range:</strong> $\approx 10^{-38}$ to $10^{38}$.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-t-4 border-purple-500">
+                    <h3 class="font-bold text-lg mb-2">Double Precision (64-bit)</h3>
+
+                    <div class="flex mb-4 font-mono text-xs w-full">
+                        <div class="bit-box sign w-1/12 rounded-l">1</div>
+                        <div class="bit-box exponent w-3/12">11</div>
+                        <div class="bit-box mantissa w-8/12 rounded-r">52</div>
+                    </div>
+                    <ul class="text-sm list-disc pl-5 space-y-1">
+                        <li><strong>Sign:</strong> 1 bit</li>
+                        <li><strong>Exponent:</strong> 11 bits. Bias = 1023.</li>
+                        <li><strong>Mantissa:</strong> 52 bits.</li>
+                        <li><strong>Precision:</strong> ~15 decimal digits.</li>
+                        <li><strong>Range:</strong> $\approx 10^{-308}$ to $10^{308}$.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-gray-50 dark:bg-gray-800 p-6 rounded-xl">
+                <h4 class="font-bold mb-2">Example: Converting $x = -52.125$ to Single Precision</h4>
+                <ol class="list-decimal pl-5 space-y-2 text-sm">
+                    <li>Convert to binary: $52 = 110100_2$, $0.125 = 0.001_2$. So $x = -(110100.001)_2$.</li>
+                    <li>Normalize ($1.f$ form): $x = -1.10100001 \times 2^5$.</li>
+                    <li>Exponent: $5 + 127 (\text{bias}) = 132 = (10000100)_2$.</li>
+                    <li>Mantissa: $10100001000\dots0$ (drop leading 1).</li>
+                </ol>
+                <div class="flex justify-center mt-4 font-mono text-sm">
+                    <span class="text-red-500 font-bold px-1">1</span>
+                    <span class="text-blue-500 font-bold px-1">10000100</span>
+                    <span class="text-green-600 font-bold px-1">10100001000000000000000</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">Machine Epsilon ($\epsilon_m$)</h2>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-2xl border-l-4 border-yellow-500 mb-6">
+                <p class="font-serif italic text-lg">
+                    The machine epsilon $\epsilon_m$ is the smallest number such that $fl(1+\epsilon_m) \neq 1$.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold mb-2">Key Values</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><strong>Double Precision:</strong> $\approx 2^{-52} \approx 2.22 \times 10^{-16}$</li>
+                        <li><strong>Single Precision:</strong> $\approx 2^{-23} \approx 1.19 \times 10^{-7}$</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-2">Matlab Check</h4>
+                    <div class="code-block text-sm">
+                        >> eps
+                        ans = 2.2204e-16
+
+                        >> eps('single')
+                        ans = 1.1921e-07
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <h4 class="font-bold mb-2">Rounding Modes</h4>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                    <div class="p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">To
+                        Nearest (Default)</div>
+                    <div class="p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                        Toward 0</div>
+                    <div class="p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                        Toward $+\infty$ (Up)</div>
+                    <div class="p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+                        Toward $-\infty$ (Down)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Floating Point Arithmetic</h2>
+            </div>
+
+            <p class="mb-4">The set of representable machine numbers is FINITE. Basic algebra breaks down:</p>
+            <div class="text-center text-xl font-mono text-red-500 mb-6 font-bold">
+                $a + (b + c) \neq (a + b) + c$
+            </div>
+
+            <h3 class="font-bold text-lg mb-4">Arithmetic Rules with Error</h3>
+            <div class="space-y-4">
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg font-mono text-sm">
+                    <strong>Rule 1:</strong> $fl(x) = x(1 + \epsilon), \quad |\epsilon| \le \epsilon_m$
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg font-mono text-sm">
+                    <strong>Rule 2:</strong> $fl(x \odot y) = (x \odot y)(1 + \epsilon_\odot), \quad |\epsilon_\odot|
+                    \le \epsilon_m$
+                </div>
+            </div>
+
+            <div class="mt-8 bg-blue-50 dark:bg-blue-900/10 p-6 rounded-xl">
+                <h3 class="font-bold text-blue-800 dark:text-blue-200 mb-2">Insight: Order of Summation</h3>
+                <p class="text-sm mb-2">Errors amplify based on the magnitude of intermediate sums. To sum $n$ numbers
+                    more accurately:</p>
+                <p class="text-center font-bold text-green-600 dark:text-green-400">Start with the small numbers first!
+                </p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">5
+                </div>
+                <h2 class="text-2xl font-bold text-red-600">Catastrophic Cancellation</h2>
+            </div>
+
+            <p class="mb-4">One of the most serious problems. It occurs when two large and close-by numbers are
+                subtracted. The result carries very few accurate digits.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 my-6">
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-red-100 dark:border-red-900">
+                    <h3 class="font-bold text-red-600 mb-2">The Problem</h3>
+                    <p class="font-mono text-sm mb-2">
+                        $a = x.xxxx1\dots$<br>
+                        $b = x.xxxx0\dots$<br>
+                        $a - b = 0.00001\dots$
+                    </p>
+                    <p class="text-sm">The leading significant digits cancel out, leaving only the "garbage" digits at
+                        the end.</p>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-green-100 dark:border-green-900">
+                    <h3 class="font-bold text-green-600 mb-2">Example: Quadratic Formula</h3>
+                    <p class="text-sm mb-2">To find the root of $x^2 + 2px - q = 0$ with smallest absolute value:</p>
+                    <p class="font-mono text-xs text-red-500 mb-1">Bad: $y = -p + \sqrt{p^2 + q}$</p>
+                    <p class="font-mono text-xs text-green-500">Good: $y = \frac{q}{p + \sqrt{p^2 + q}}$</p>
+                    <p class="text-xs mt-2 text-gray-500">The "Good" version avoids subtracting two large numbers.</p>
+                </div>
+            </div>
+
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+                <h4 class="font-bold mb-2">Loss of Precision Theorem</h4>
+                <p class="text-sm italic">If $2^{-p} \le 1 - y/x \le 2^{-q}$, then the significant binary digits lost in
+                    calculating $x-y$ is between $q$ and $p$.</p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                    6</div>
+                <h2 class="text-2xl font-bold">Case Study: Intel Pentium Bug</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div
+                    class="bg-gray-200 dark:bg-gray-800 rounded-lg h-40 flex items-center justify-center text-gray-500">
+                    [Image: figs/intel1]
+                </div>
+                <div
+                    class="bg-gray-200 dark:bg-gray-800 rounded-lg h-40 flex items-center justify-center text-gray-500">
+                    [Image: figs/intel2]
+                </div>
+            </div>
+
+            <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 space-y-8">
+                <div class="relative">
+                    <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-500"></div>
+                    <h4 class="font-bold">June 1994</h4>
+                    <p class="text-sm">Intel engineers discover division error. Managers keep it internal.</p>
+                </div>
+                <div class="relative">
+                    <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-500"></div>
+                    <h4 class="font-bold">Oct 1994</h4>
+                    <p class="text-sm">Dr. Thomas Nicely (Lynchburg College) discovers the bug while calculating prime
+                        reciprocals.</p>
+                </div>
+                <div class="relative">
+                    <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-red-500"></div>
+                    <h4 class="font-bold">Oct 30, 1994</h4>
+                    <p class="text-sm">Nicely sends an email detailing the error: <code>0001/824633702441.0</code> is
+                        calculated incorrectly.</p>
+                    <div
+                        class="mt-2 p-3 bg-gray-100 dark:bg-gray-800 rounded font-mono text-xs border-l-4 border-red-400">
+                        "It appears that there is a bug in the floating point unit... of many, and perhaps all, Pentium
+                        processors."
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-green-500"></div>
+                    <h4 class="font-bold">Dec 20, 1994</h4>
+                    <p class="text-sm">Intel admits fault. Sets aside <strong>$420 million</strong> to fix it.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-indigo-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Why is calculating $y = -p + \sqrt{p^2 + q}$ problematic when $p \gg q$ and $p > 0$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    causes an overflow error because $p^2$ is too large.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    causes catastrophic cancellation because $\sqrt{p^2+q} \approx p$, leading to the subtraction of two
+                    nearly equal numbers.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    creates an imaginary number because the discriminant is negative.</button>
+            </div>
+        </div>
+
+        <section class="mt-12 text-center text-gray-600 dark:text-gray-400 text-sm">
+            <p class="mb-2"><strong>Next Time:</strong> Polynomial evaluation, Matlab.</p>
+            <p class="text-xs text-gray-400">© 2009-2014 Luke Olson. CS 357 UIUC.</p>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
