@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 17: Integration - Newton Cotes</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["{\\|#1\\|}", 1],
+                    matdim: ["{#1\\times#2}", 2],
+                    rank: ["\\mathrm{rank}(#1)", 1],
+                    epsm: "\\varepsilon_m"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue
+                        secondary: '#f59e0b', // Amber
+                        accent: '#ec4899', // Pink
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .dark .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            background-color: #fffbeb;
+            border-color: #f59e0b;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #78350f;
+            border-color: #f59e0b;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-amber-400 to-pink-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="splines-bezier.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-amber-600 transition">
+                <span>←</span> Lecture 16
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 17</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-amber-600 uppercase bg-amber-100 rounded-full dark:bg-amber-900/30 dark:text-amber-300">
+                Integration
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-pink-600">
+                Newton-Cotes Integration
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Approximating integrals when antiderivatives are unknown.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Introduction</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Why Numerical Integration?</h3>
+                    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <li>Often $f(x)$ is only known at discrete points (data).</li>
+                        <li>The antiderivative $F(x)$ may not exist in closed form (e.g., $e^{-x^2}$).</li>
+                        <li>We need to compute integrals quickly for real-time applications.</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-center">
+                    <img src="figs/integral.png" alt="Integral Area" class="h-32 inline-block">
+                    <p class="text-xs text-gray-500 mt-2">Area under the curve.</p>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-blue-50 dark:bg-blue-900/10 p-6 rounded-2xl border-l-4 border-blue-500">
+                <h3 class="font-bold text-blue-700 dark:text-blue-300 mb-2">Riemann Sums Recap</h3>
+                <div class="flex flex-col md:flex-row gap-4 justify-around text-center text-sm">
+                    <div>
+                        <img src="figs/lowersum.png" alt="Lower Sum" class="h-20 mx-auto mb-2 bg-white rounded">
+                        <p>Lower Sum ($m_i$)</p>
+                    </div>
+                    <div>
+                        <img src="figs/uppersum.png" alt="Upper Sum" class="h-20 mx-auto mb-2 bg-white rounded">
+                        <p>Upper Sum ($M_i$)</p>
+                    </div>
+                </div>
+                <p class="text-xs text-center mt-4">
+                    $L(f;P) \leq \int_{a}^{b} f(x)\,dx \leq U(f;P)$
+                </p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">The Trapezoid Rule</h2>
+            </div>
+
+            <p class="mb-4">Instead of rectangles (constant approximation), let's use a <strong>linear
+                    approximation</strong> (Trapezoids).</p>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm mb-6">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center">
+                        <img src="figs/basictrapezoid1.png" alt="Basic Trapezoid"
+                            class="h-32 inline-block bg-gray-100 rounded p-1">
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2">Basic Formula</h4>
+                        <div class="font-mono text-sm bg-gray-50 dark:bg-gray-900 p-3 rounded mb-2">
+                            $\int_a^b f(x) \,dx \approx \frac{b-a}{2}(f(a)+f(b))$
+                        </div>
+                        <p class="text-xs text-gray-500">Area of a trapezoid: avg height $\times$ width.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-t-4 border-amber-500">
+                <h3 class="font-bold text-lg mb-4 text-amber-600">Composite Trapezoid Rule</h3>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="text-sm mb-4">Break the interval $[a,b]$ into $n$ sub-intervals of width $h =
+                            (b-a)/n$. Apply the trapezoid rule to each.</p>
+                        <div class="font-mono text-xs bg-gray-50 dark:bg-gray-900 p-3 rounded">
+                            $T(f;P) = \frac{h}{2} \left[ f(x_0) + 2\sum_{i=1}^{n-1} f(x_i) + f(x_n) \right]$
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <img src="figs/comptrapezoid1.png" alt="Composite Trapezoid"
+                            class="h-32 inline-block bg-gray-100 rounded p-1">
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-200 dark:border-red-800">
+                    <h4 class="font-bold text-red-700 dark:text-red-300 text-sm mb-1">Error Analysis</h4>
+                    <p class="text-xs font-mono">Error = $-\frac{(b-a) h^2}{12} f''(\eta) = \mathcal{O}(h^2)$</p>
+                    <p class="text-xs mt-1">Convergence is quadratic. Halving $h$ reduces error by 4.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">Simpson's Rule</h2>
+            </div>
+
+            <p class="mb-4">Can we do better? Yes, use a <strong>Quadratic Approximation</strong> (Parabola) over pairs
+                of intervals.</p>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm mb-6">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center">
+                        <img src="figs/basicsimpson1.png" alt="Basic Simpson"
+                            class="h-32 inline-block bg-gray-100 rounded p-1">
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2">Basic Formula (1/3 Rule)</h4>
+                        <div class="font-mono text-sm bg-gray-50 dark:bg-gray-900 p-3 rounded mb-2">
+                            $\int_a^b f(x)\,dx \approx \frac{h}{3}\left[f(a) + 4f(\frac{a+b}{2}) + f(b)\right]$
+                        </div>
+                        <p class="text-xs text-gray-500">Requires 3 points (2 intervals of width $h$).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-t-4 border-pink-500">
+                <h3 class="font-bold text-lg mb-4 text-pink-600">Composite Simpson's Rule</h3>
+                <p class="text-sm mb-4">Sum over $n/2$ pairs of intervals.</p>
+                <div class="font-mono text-xs bg-gray-50 dark:bg-gray-900 p-3 rounded mb-4 overflow-x-auto">
+                    $\int_a^b f(x) \approx \frac{h}{3} \left[ f(a) + f(b) + 4\sum_{\text{odd } i} f(x_i) +
+                    2\sum_{\text{even } i} f(x_i) \right]$
+                </div>
+
+                <div
+                    class="bg-green-50 dark:bg-green-900/10 p-4 rounded-xl border border-green-200 dark:border-green-800">
+                    <h4 class="font-bold text-green-700 dark:text-green-300 text-sm mb-1">Error Analysis</h4>
+                    <p class="text-xs font-mono">Error = $-\frac{(b-a) h^4}{180} f^{(4)}(\xi) = \mathcal{O}(h^4)$</p>
+                    <p class="text-xs mt-1"><strong>Huge Win:</strong> Two orders of magnitude better than Trapezoid!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Newton-Cotes Summary</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th class="px-6 py-3">Rule</th>
+                            <th class="px-6 py-3">Points ($n$)</th>
+                            <th class="px-6 py-3">Formula</th>
+                            <th class="px-6 py-3">Error Order</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-amber-600">Trapezoid</td>
+                            <td class="px-6 py-4">2</td>
+                            <td class="px-6 py-4">$\frac{h}{2}(f_0 + f_1)$</td>
+                            <td class="px-6 py-4">$\mathcal{O}(h^2)$</td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-pink-600">Simpson's 1/3</td>
+                            <td class="px-6 py-4">3</td>
+                            <td class="px-6 py-4">$\frac{h}{3}(f_0 + 4f_1 + f_2)$</td>
+                            <td class="px-6 py-4">$\mathcal{O}(h^4)$</td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-600">Simpson's 3/8</td>
+                            <td class="px-6 py-4">4</td>
+                            <td class="px-6 py-4">$\frac{3h}{8}(f_0 + 3f_1 + 3f_2 + f_3)$</td>
+                            <td class="px-6 py-4">$\mathcal{O}(h^4)$</td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-purple-600">Boole's</td>
+                            <td class="px-6 py-4">5</td>
+                            <td class="px-6 py-4">$\frac{2h}{45}(7f_0 + 32f_1 + 12f_2 + 32f_3 + 7f_4)$</td>
+                            <td class="px-6 py-4">$\mathcal{O}(h^6)$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-amber-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-amber-100 text-amber-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Why does Simpson's Rule generally provide a much better approximation than the Trapezoid
+                Rule for the same step size $h$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    uses more function evaluations per step.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    approximates the function with a quadratic (parabola) rather than a line, resulting in
+                    $\mathcal{O}(h^4)$ error vs $\mathcal{O}(h^2)$.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    integrates the function exactly regardless of the function type.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
