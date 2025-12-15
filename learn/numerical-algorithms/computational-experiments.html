@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 2: Computational Experiments & Randomness</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        accent: '#8b5cf6' // Violet accent
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .quiz-option:hover {
+            background-color: #f3f4f6;
+            border-color: #8b5cf6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #374151;
+            border-color: #8b5cf6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-blue-500 to-violet-600 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="intro-to-numerical-methods.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-blue-600 transition">
+                <span>←</span> Lecture 1
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">CS 357</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-violet-600 uppercase bg-violet-100 rounded-full dark:bg-violet-900/30 dark:text-violet-300">
+                Lecture 2
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600">
+                Experiments, Matlab & Randomness
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Understanding numerical environments, testing methods, and the nature of unpredictability.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-4">Today's Agenda</h2>
+            <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                    <span class="bg-blue-100 text-blue-800 p-1 rounded">💻</span>
+                    <span>Get introduced to the basics of <strong>Matlab</strong>.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="bg-green-100 text-green-800 p-1 rounded">🧪</span>
+                    <span>Learn how to <strong>test</strong> numerical methods, not just run them.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="bg-purple-100 text-purple-800 p-1 rounded">🎲</span>
+                    <span>Investigate <strong>randomness</strong> and pseudorandom numbers.</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">The MATLAB Environment</h2>
+            </div>
+
+            <p class="mb-4 text-gray-600 dark:text-gray-400">
+                <strong>MAT</strong>rix <strong>LAB</strong>oratory is both a computing environment and a language.
+                Initially an interface to LAPACK (Linear Algebra Package), it is written in C and optimized for matrix
+                computations.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6 my-8">
+                <div
+                    class="p-5 rounded-2xl bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800">
+                    <h3 class="font-bold text-green-700 dark:text-green-400 mb-2">The Good</h3>
+                    <ul class="text-sm list-disc pl-4 space-y-1">
+                        <li>Fast development times</li>
+                        <li>No compiling (easy debugging)</li>
+                        <li>Accessible syntax</li>
+                        <li>Built-in visualization</li>
+                        <li>Extensive toolboxes</li>
+                    </ul>
+                </div>
+                <div
+                    class="p-5 rounded-2xl bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-800">
+                    <h3 class="font-bold text-yellow-700 dark:text-yellow-400 mb-2">The Bad</h3>
+                    <ul class="text-sm list-disc pl-4 space-y-1">
+                        <li>Coding mistakes cause slow performance</li>
+                        <li>Loops are computationally intensive</li>
+                        <li>Limited language features (no templates/classes)</li>
+                    </ul>
+                </div>
+                <div class="p-5 rounded-2xl bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800">
+                    <h3 class="font-bold text-red-700 dark:text-red-400 mb-2">The Ugly</h3>
+                    <ul class="text-sm list-disc pl-4 space-y-1">
+                        <li>Proprietary and expensive</li>
+                        <li>Octave (open source alternative) is not 100% compatible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="font-bold text-lg mb-4">Interpreter vs. Scripts vs. Functions</h3>
+
+                <div
+                    class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 mb-6 text-center text-gray-500 text-sm h-64 flex items-center justify-center">
+                    <div class="flex flex-col items-center">
+                        <img src="figs/scriptvsfunc.png" alt="Interpreter vs Scripts vs Functions Diagram"
+                            class="max-h-56 object-contain">
+                        <span class="mt-2 text-xs italic"></span>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                        <strong class="text-blue-600 block mb-1">Interpreter</strong>
+                        <p>Quick access, good for ideas and accessing workspace data. Poor performance and debugging.
+                        </p>
+                    </div>
+                    <div>
+                        <strong class="text-blue-600 block mb-1">Script</strong>
+                        <p>Good test bed (all info in workspace), fast and linear. Poor profiling/optimization.</p>
+                    </div>
+                    <div>
+                        <strong class="text-blue-600 block mb-1">Functions</strong>
+                        <p>Optimized/cached, reusable. Does not clutter workspace. <strong>Pass by value
+                                (ouch!)</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-indigo-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                        class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">+10 XP</span></h3>
+            </div>
+            <p class="mb-4">Which of the following is a characteristic of MATLAB functions?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    share all variables directly with the global workspace.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    use pass-by-value, meaning data is copied when passed in.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    are generally slower than scripts because they cannot be optimized.</button>
+            </div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">Computational Experiments: Taylor Series</h2>
+            </div>
+
+            <p class="mb-4">How do we evaluate $f(x) = \frac{1}{1-x}$ computationally? We use the Taylor Series
+                Expansion.</p>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border-l-4 border-violet-500 mb-6">
+                <h3 class="font-bold text-violet-700 dark:text-violet-300 mb-2">Taylor Approximation Error</h3>
+                <p class="mb-2">We truncate the infinite series to a polynomial $p_n(x)$:</p>
+                <p class="text-center font-mono text-sm py-2">
+                    \[ f(x) = p_n(x) + E_n(x) \]
+                </p>
+                <p>The error term $E_n(x)$ is given by:</p>
+                <p class="text-center font-mono text-sm py-2">
+                    \[ E_n(x) = \frac{(x-c)^{n+1}}{(n+1)!}f^{(n+1)}(\xi) = \mO(h^{n+1}) \]
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="font-bold mb-2">Example Calculation</h4>
+                <p>How many terms ($n$) do we need to ensure error $< 2 \times 10^{-8}$ for $x=1/2$?</p>
+                        <div class="overflow-x-auto my-4">
+                            \[ e_{x=1/2} = \sum_{k=n+1}^{\infty} \left(\frac{1}{2}\right)^k = \frac{(1/2)^{n+1}}{1-1/2}
+                            = 2\cdot(1/2)^{n+1} \]
+                        </div>
+                        <p>Solving for $n$: $n+1 > \frac{-8}{\log_{10}(1/2)} \approx 26.6 \implies n > 26$.</p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">Measuring Cost: Big-O</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border-t-4 border-orange-400">
+                    <h3 class="font-bold text-lg mb-2">Big-O ($\mO$)</h3>
+                    <p class="text-xs text-orange-600 font-bold uppercase mb-2">Asymptotic Upper Bound</p>
+                    <p class="text-sm mb-4">$\mO(g(n))$: $f(n) \leq c g(n)$ for large $n$.</p>
+                    <div class="h-32 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                        <img src="figs/bigo_1.png" alt="Graph of Big-O"
+                            class="max-h-full mix-blend-multiply dark:mix-blend-normal">
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border-t-4 border-blue-400">
+                    <h3 class="font-bold text-lg mb-2">Big-Omega ($\Omega$)</h3>
+                    <p class="text-xs text-blue-600 font-bold uppercase mb-2">Asymptotic Lower Bound</p>
+                    <p class="text-sm mb-4">$\Omega(g(n))$: $c g(n) \leq f(n)$ for large $n$.</p>
+                    <div class="h-32 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                        <img src="figs/bigo_2.png" alt="Graph of Big-Omega"
+                            class="max-h-full mix-blend-multiply dark:mix-blend-normal">
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border-t-4 border-green-400">
+                    <h3 class="font-bold text-lg mb-2">Big-Theta ($\Theta$)</h3>
+                    <p class="text-xs text-green-600 font-bold uppercase mb-2">Asymptotic Tight Bound</p>
+                    <p class="text-sm mb-4">$\Theta(g(n)) = \mO(g(n)) \cap \Omega(g(n))$.</p>
+                    <div class="h-32 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                        <img src="figs/bigo_3.png" alt="Graph of Big-Theta"
+                            class="max-h-full mix-blend-multiply dark:mix-blend-normal">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Convergence Rates</h2>
+
+            <div class="space-y-6">
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg text-blue-600">Algebraic Convergence</h3>
+                        <p class="text-sm mt-2">$a_n \sim \mO(1/n^\alpha)$. The sequence converges relatively slowly.
+                        </p>
+                    </div>
+                    <div class="w-full md:w-1/3">
+                        <img src="figs/conv1.png" alt="Algebraic Convergence Graph"
+                            class="rounded-lg shadow bg-white p-2">
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gray-200 dark:bg-gray-700"></div>
+
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg text-violet-600">Exponential Convergence</h3>
+                        <p class="text-sm mt-2">$a_n \sim \mO(e^{-q n^\beta})$. Also known as spectral convergence. Much
+                            faster.</p>
+                        <ul class="text-xs list-disc pl-4 mt-2 text-gray-500">
+                            <li>Supergeometric: $\beta > 1$</li>
+                            <li>Geometric: $\beta = 1$</li>
+                            <li>Subgeometric: $\beta < 1$</li>
+                        </ul>
+                    </div>
+                    <div class="w-full md:w-1/3 grid grid-cols-2 gap-2">
+                        <img src="figs/conv2.png" alt="Exponential Convergence Graph 1"
+                            class="rounded-lg shadow bg-white p-2">
+                        <img src="figs/conv3.png" alt="Exponential Convergence Graph 2"
+                            class="rounded-lg shadow bg-white p-2">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Algorithmic Efficiency</h2>
+            </div>
+
+            <p class="mb-4">
+                Evaluating polynomials efficiently. Consider $f(x) = 5x^3 + 3x^2 + 10x + 8$.
+                <br>Standard evaluation: <strong>6 multiplications, 3 additions</strong>.
+            </p>
+
+            <div class="bg-gray-800 text-white p-6 rounded-2xl mb-6">
+                <h3 class="text-lg font-bold mb-4 text-green-400">Nested Multiplication (Horner's Method)</h3>
+                <p class="mb-4">Rewrite as: $f(x) = 8 + x(10 + x(3 + x(5)))$</p>
+                <p class="mb-4 text-sm text-gray-300">Result: <strong>3 multiplications, 3 additions</strong>.</p>
+
+                <div class="code-block text-sm">
+                    <span class="text-pink-400">p</span> = <span class="text-blue-300">a_n</span>
+                    <span class="text-violet-400">for</span> <span class="text-blue-300">i</span> = <span
+                        class="text-blue-300">n-1</span> to <span class="text-blue-300">0</span> step <span
+                        class="text-blue-300">-1</span>
+                    <span class="text-pink-400">p</span> = <span class="text-blue-300">a_i</span> + <span
+                        class="text-pink-400">x</span>*<span class="text-pink-400">p</span>
+                    <span class="text-violet-400">end</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    5</div>
+                <h2 class="text-2xl font-bold">Randomness</h2>
+            </div>
+
+            <div class="prose dark:prose-invert max-w-none">
+                <p>Randomness $\approx$ unpredictability. Computer algorithms are deterministic, so we generate
+                    <strong>Pseudorandom Numbers</strong>.</p>
+
+                <div class="my-6 border-l-4 border-red-500 pl-4 bg-red-50 dark:bg-red-900/10 p-4 rounded-r-lg">
+                    <h4 class="font-bold text-red-700 dark:text-red-300">Case Study: Debian OpenSSL (2008)</h4>
+                    <p class="text-sm">A vulnerability in the random number generator meant there were only 32,767
+                        possible keys. All SSL/SSH keys generated over a 2-year period were compromised.</p>
+                </div>
+
+                <h3 class="font-bold text-lg mt-8 mb-4">Linear Congruential Generators (LCG)</h3>
+                <p>The standard for many years. Fast, but sensitive to parameters.</p>
+                <div class="text-center my-4 font-mono bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner">
+                    \[ x_k = (a x_{k-1} + c) \pmod M \]
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                        <h4 class="font-bold mb-2">Properties of Good Generators</h4>
+                        <ul class="text-sm space-y-1 list-disc pl-5">
+                            <li>Pass statistical tests of randomness</li>
+                            <li>Long period (time before repeating)</li>
+                            <li>Efficiency (speed/memory)</li>
+                            <li>Repeatability (for debugging)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                        <h4 class="font-bold mb-2">Modern Methods</h4>
+                        <ul class="text-sm space-y-1">
+                            <li><strong>Mersenne Twister:</strong> (Matlab default) Long period.</li>
+                            <li><strong>Method of Marsaglia:</strong> Period $\approx 2^{1430}$.</li>
+                            <li><strong>Fibonacci:</strong> Uses differences/sums, very good statistical properties.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="font-bold text-lg mt-8 mb-2">Quasi-Random Sequences</h3>
+                <p class="text-sm mb-4">Sometimes "true" randomness clumps together. Quasi-random sequences are designed
+                    to avoid clumping for better coverage of the sample space.</p>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-violet-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-violet-100 text-violet-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Why is <strong>Repeatability</strong> considered a desirable property for a Random Number
+                Generator in scientific computing?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    ensures the random numbers are truly unpredictable and secure.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    allows for debugging and verifying results by regenerating the same sequence using the same
+                    seed.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    guarantees that the period of the generator is infinite.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff. Based on slides by L. Olson.</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                const rewardText = parent.parentElement.querySelector('span').innerText;
+                const reward = rewardText.includes('+20') ? 20 : 10;
+                updateWallet(reward);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
