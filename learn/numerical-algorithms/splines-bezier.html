@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 16: Splines & Bézier Curves</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vP: "{\\bf{P}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["{\\|#1\\|}", 1],
+                    matdim: ["{#1\\times#2}", 2],
+                    rank: ["\\mathrm{rank}(#1)", 1],
+                    epsm: "\\varepsilon_m"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue
+                        secondary: '#8b5cf6', // Violet
+                        accent: '#ec4899', // Pink
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .dark .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            background-color: #ede9fe;
+            border-color: #8b5cf6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #4c1d95;
+            border-color: #8b5cf6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-violet-400 to-pink-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="interpolation-splines.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-violet-600 transition">
+                <span>←</span> Lecture 15
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 16</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-violet-600 uppercase bg-violet-100 rounded-full dark:bg-violet-900/30 dark:text-violet-300">
+                Curves & Surfaces
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-pink-600">
+                Splines & Bézier Curves
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                From interpolation to approximation: Creating smooth curves for graphics and data.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Splines: A Quick Review</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">Linear Spline (Degree 1)</h3>
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="flex-1">
+                            <p class="text-sm mb-2">Simply connect the dots.</p>
+                            <div class="font-mono text-xs bg-gray-50 dark:bg-gray-900 p-2 rounded">
+                                $S_i(x) = y_i + \frac{y_{i+1}-y_i}{t_{i+1}-t_i}(x-t_i)$
+                            </div>
+                            <p class="text-xs mt-2 text-gray-500">Continuity: $C^0$ (Value only).</p>
+                        </div>
+                        <img src="figs/spline3.png" alt="Linear Spline" class="h-16 bg-gray-100 rounded p-1">
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-purple-500">
+                    <h3 class="font-bold text-lg mb-2 text-purple-600">Quadratic Spline (Degree 2)</h3>
+                    <p class="text-sm mb-2">Parabolas. Requires $S'(x)$ continuity ($C^1$).</p>
+                    <p class="text-xs text-gray-500">One extra constraint needed (e.g., $S'(t_0)$).</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-pink-500">
+                    <h3 class="font-bold text-lg mb-2 text-pink-600">Cubic Spline (Degree 3)</h3>
+                    <p class="text-sm mb-2">The standard for smoothness. Requires $C^0, C^1, C^2$ continuity.</p>
+                    <div class="font-mono text-xs bg-gray-50 dark:bg-gray-900 p-2 rounded mb-2">
+                        $S_i(x) = a_{0,i} + a_{1,i}x + a_{2,i}x^2 + a_{3,i}x^3$
+                    </div>
+                    <p class="text-xs text-gray-500">Two extra degrees of freedom. Options: Natural ($S''=0$), Clamped
+                        ($S'$ fixed), Not-a-knot.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">Natural Cubic Spline Derivation</h2>
+            </div>
+
+            <p class="mb-4">How do we actually find the coefficients? We solve for the curvatures $z_i = S''(t_i)$.</p>
+
+            <div class="space-y-4 text-sm">
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <strong class="text-blue-600">Step 1:</strong> Assume we know $z_i$. Since $S_i(x)$ is cubic,
+                    $S''_i(x)$ is linear.
+                    <div class="font-mono text-xs mt-1">$S''_i(x) = \frac{z_i}{h_i}(t_{i+1}-x) +
+                        \frac{z_{i+1}}{h_i}(x-t_i)$</div>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <strong class="text-blue-600">Step 2:</strong> Integrate twice to get $S_i(x)$. Use interpolation
+                    conditions ($S(t_i)=y_i$) to find constants.
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <strong class="text-blue-600">Step 3:</strong> Enforce slope continuity: $S'_i(t_i) =
+                    S'_{i-1}(t_i)$.
+                </div>
+            </div>
+
+            <div
+                class="mt-6 bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 text-center">
+                <h4 class="font-bold mb-2">The Tridiagonal System</h4>
+                <div class="font-mono text-xs overflow-x-auto">
+                    \[ h_{i-1}z_{i-1} + 2(h_i+h_{i-1})z_i + h_{i}z_{i+1} = 6(b_i-b_{i-1}) \]
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Where $b_i = \frac{1}{h_i}(y_{i+1}-y_i)$. Solve for $z$ using
+                    $\mathcal{O}(n)$ algorithm!</p>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">Bézier Curves</h2>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center mb-8">
+                <div class="flex-1">
+                    <p class="text-sm mb-4">
+                        Unlike splines which <strong>interpolate</strong> (pass through) points, Bézier curves
+                        <strong>approximate</strong> using control points.
+                    </p>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li>Used in Fonts (TrueType, PostScript).</li>
+                        <li>Vector Graphics (SVG, Illustrator).</li>
+                        <li>Curve stays within the <strong>convex hull</strong> of control points.</li>
+                    </ul>
+                </div>
+                <div class="flex-1 text-center">
+                    <img src="figs/randpts.png" alt="Control Points Hull"
+                        class="h-32 inline-block bg-white p-2 rounded shadow">
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 text-center">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <img src="figs/Bezier_2_big.png" alt="Quadratic Bezier" class="h-20 mx-auto mb-2">
+                    <p class="text-xs font-bold">Quadratic (3 Points)</p>
+                    <p class="text-[10px] text-gray-500">1 Control Point</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <img src="figs/Bezier_3_big.png" alt="Cubic Bezier" class="h-20 mx-auto mb-2">
+                    <p class="text-xs font-bold">Cubic (4 Points)</p>
+                    <p class="text-[10px] text-gray-500">2 Control Points</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <img src="figs/Bezier_4_big.png" alt="Higher Order" class="h-20 mx-auto mb-2">
+                    <p class="text-xs font-bold">Convex Hull Property</p>
+                    <p class="text-[10px] text-gray-500">Curve stays inside.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Bernstein Polynomials</h2>
+            </div>
+
+            <p class="mb-4">
+                Bézier curves are defined parametrically using Bernstein basis polynomials:
+            </p>
+            <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-2xl mb-6 text-center">
+                <div class="font-mono text-sm overflow-x-auto">
+                    \[ P(t) = \sum_{i=0}^n \binom{n}{i} (1-t)^{n-i} t^i P_i \]
+                </div>
+                <p class="text-xs text-gray-500 mt-2">$t$ goes from 0 to 1.</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border-l-4 border-purple-500 shadow-sm">
+                <h3 class="font-bold text-lg mb-2 text-purple-600">Cubic Bézier ($n=3$)</h3>
+                <p class="text-sm mb-4">Uses 4 points: $P_0, P_1, P_2, P_3$.</p>
+                <div class="font-mono text-xs mb-4">
+                    $x(t) = (1-t)^3 x_0 + 3(1-t)^2 t x_1 + 3(1-t)t^2 x_2 + t^3 x_3$ <br>
+                    $y(t) = (1-t)^3 y_0 + 3(1-t)^2 t y_1 + 3(1-t)t^2 y_2 + t^3 y_3$
+                </div>
+                <h4 class="font-bold text-sm mb-1">Key Properties:</h4>
+                <ul class="list-disc pl-5 text-xs space-y-1">
+                    <li>Interpolates endpoints: $P(0)=P_0$, $P(1)=P_3$.</li>
+                    <li>Tangent at start ($t=0$) is along line $P_0 \to P_1$.</li>
+                    <li>Tangent at end ($t=1$) is along line $P_2 \to P_3$.</li>
+                </ul>
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <img src="figs/bezier1.png" alt="Cubic Bezier Properties" class="h-32 bg-white rounded p-2 shadow-sm">
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-pink-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-pink-100 text-pink-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Which of the following is TRUE about a Cubic Bézier curve defined by points $P_0, P_1, P_2,
+                P_3$?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    passes through all four points.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    passes through $P_0$ and $P_3$, but only approximates $P_1$ and $P_2$.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">It
+                    passes through $P_1$ and $P_2$, but starts and ends elsewhere.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
