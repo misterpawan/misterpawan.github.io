@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 1: Introduction to Numerical Methods</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue theme to match "Boadilla" ish
+                        secondary: '#1d4ed8',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .latex-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quiz-option:hover {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .dark pre {
+            background-color: #374151;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="index.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-blue-600 transition">
+                <span>←</span> Course Hub
+            </a>
+            <div class="flex items-center gap-4">
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    🎓 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full dark:bg-blue-900/30 dark:text-blue-300">
+                Lecture 1
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                Introduction to Numerical Methods
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Department of Computer Science<br>
+                University of Illinois at Urbana-Champaign
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Numerical vs. Symbolic Calculation</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-lg mb-3 text-blue-600">Numerical Calculation</h3>
+                    <p class="text-sm text-gray-500 mb-4">Involves numbers directly. Manipulates numbers to produce a
+                        <strong>numerical</strong> result.
+                    </p>
+                    <div class="text-center font-mono bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+                        \[ \frac{(17.36)^2 - 1}{17.36 + 1} = 16.36 \]
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-lg mb-3 text-indigo-600">Symbolic Calculation</h3>
+                    <p class="text-sm text-gray-500 mb-4">Symbols represent numbers. Manipulates symbols according to
+                        mathematical rules to produce a <strong>symbolic</strong> result.</p>
+                    <div class="text-center font-mono bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+                        \[ \frac{x^2 - 1}{x + 1} = x-1 \]
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 grid md:grid-cols-2 gap-8">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-2xl">
+                    <h3 class="font-bold text-lg mb-3">Analytic Solution</h3>
+                    <p class="text-sm mb-2">The exact numerical or symbolic representation of the solution. May use
+                        special characters such as $\pi$, $e$, or $\tan(83)$.</p>
+                    <div class="grid grid-cols-2 gap-2 text-center font-mono text-sm mt-4">
+                        <div class="bg-white/50 p-2 rounded">$\frac{1}{4}$</div>
+                        <div class="bg-white/50 p-2 rounded">$\pi$</div>
+                        <div class="bg-white/50 p-2 rounded">$\frac{1}{3}$</div>
+                        <div class="bg-white/50 p-2 rounded">$\tan(83)$</div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-2xl">
+                    <h3 class="font-bold text-lg mb-3">Numerical Solution</h3>
+                    <p class="text-sm mb-2">The computational representation of the solution. Entirely numerical.</p>
+                    <div class="grid grid-cols-2 gap-2 text-center font-mono text-sm mt-4">
+                        <div class="bg-white/50 p-2 rounded">$0.25$</div>
+                        <div class="bg-white/50 p-2 rounded">$3.14159\dots(?)$</div>
+                        <div class="bg-white/50 p-2 rounded">$0.33333\dots(?)$</div>
+                        <div class="bg-white/50 p-2 rounded">$0.88472\dots(?)$</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">Core Concepts</h2>
+            </div>
+
+            <div class="prose dark:prose-invert max-w-none">
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold mb-4">Method vs. Algorithm vs. Implementation</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span
+                                class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold mt-1">METHOD</span>
+                            <span>A general (mathematical) framework describing the solution process. <em
+                                    class="text-gray-500">Is it a "good" method?</em></span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span
+                                class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold mt-1">ALGORITHM</span>
+                            <span>A detailed description of executing the method. <em class="text-gray-500">Is it a
+                                    robust algorithm?</em></span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span
+                                class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-bold mt-1">IMPLEMENTATION</span>
+                            <span>A particular instantiation of the algorithm. <em class="text-gray-500">Is it a fast
+                                    implementation?</em></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl text-center">
+                    <h3 class="text-xl font-bold mb-6">The Big Theme: Trade-offs</h3>
+                    <div class="grid md:grid-cols-2 gap-8 items-center justify-center">
+                        <div class="flex flex-col items-center">
+                            <img src="pull1.png" alt="Figure showing pull towards Accuracy"
+                                class="h-32 mb-4 mix-blend-multiply dark:mix-blend-normal dark:invert">
+                            <span class="font-bold text-blue-600">Accuracy</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div
+                                class="h-32 w-32 flex items-center justify-center bg-gray-200 rounded-full mb-4 text-4xl">
+                                💰</div>
+                            <span class="font-bold text-red-600">Cost</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">History of Numerical Algorithms</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <img src="rhind.jpg" alt="Rhind Papyrus" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <h3 class="font-bold text-lg">Rhind Papyrus (1650 BC)</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Ancient Egypt. Contains 85 problems.
+                        Approximates $\pi$ with $(8/9)^2 * 4 \approx 3.1605$.</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <img src="archimedes.png" alt="Archimedes"
+                        class="w-full h-48 object-contain rounded-lg mb-4 bg-gray-100">
+                    <h3 class="font-bold text-lg">Archimedes (287-212 BC)</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">"Method of Exhaustion". Determined
+                        $\frac{223}{71} < \pi < \frac{22}{7}$ (3.1408 < $\pi$ < 3.1429).</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <div
+                        class="w-full h-48 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg mb-4 flex items-center justify-center text-4xl">
+                        ∑</div>
+                    <h3 class="font-bold text-lg">John Machin (1700)</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        $\pi = 16 \arctan(\frac{1}{5}) - 4\arctan(\frac{1}{239})$.<br>
+                        Calculated first 100 digits of $\pi$.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600">Numerical Analysis</h2>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-xl mb-8">
+                <p class="font-serif italic text-lg">"Study of algorithms for the problems of continuous mathematics"
+                </p>
+                <p class="text-right text-sm font-bold mt-2">— Trefethen</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold mb-4">The Big Questions</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            How algorithms work and how they fail
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            Why algorithms work and why they fail
+                        </li>
+                    </ul>
+
+                    <h3 class="font-bold mt-6 mb-4">Numerical Focus</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div
+                            class="bg-white dark:bg-gray-800 p-3 rounded-lg text-sm border border-gray-200 dark:border-gray-700">
+                            <strong>Approximation</strong><br>How close is the solution?
+                        </div>
+                        <div
+                            class="bg-white dark:bg-gray-800 p-3 rounded-lg text-sm border border-gray-200 dark:border-gray-700">
+                            <strong>Efficiency</strong><br>How fast and cheap?
+                        </div>
+                        <div
+                            class="bg-white dark:bg-gray-800 p-3 rounded-lg text-sm border border-gray-200 dark:border-gray-700">
+                            <strong>Stability</strong><br>Sensitivity to small variations?
+                        </div>
+                        <div
+                            class="bg-white dark:bg-gray-800 p-3 rounded-lg text-sm border border-gray-200 dark:border-gray-700">
+                            <strong>Error</strong><br>Role of finite precision?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border border-red-100 dark:border-red-900">
+                    <h3 class="font-bold text-red-700 dark:text-red-300 mb-4">⚠️ Real World Impact: Failures</h3>
+                    <ul class="space-y-4 text-sm">
+                        <li>
+                            <strong>Patriot Missile (1991):</strong>
+                            Rounding errors resulted in failure to intercept, 28 deaths.
+                        </li>
+                        <li>
+                            <strong>Ariane 5 Rocket (1996):</strong>
+                            Integer overflow caused explosion just after lift-off.
+                        </li>
+                        <li>
+                            <strong>Sleipner A Platform (1991):</strong>
+                            Inaccurate finite element analysis caused sinking ($1 Billion loss).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-l-4 border-purple-500 bg-purple-50/50 dark:bg-purple-900/10 aos-init"
+            data-aos="fade-up">
+            <div class="flex items-start gap-4">
+                <div class="text-3xl">💻</div>
+                <div>
+                    <h3 class="font-bold text-purple-700 dark:text-purple-300 mb-2">CS Connections</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span
+                            class="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs border border-purple-200 dark:border-purple-800">AI
+                            (Transitions, Patterns)</span>
+                        <span
+                            class="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs border border-purple-200 dark:border-purple-800">Informatics
+                            (Google Matrix)</span>
+                        <span
+                            class="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs border border-purple-200 dark:border-purple-800">Graphics
+                            (Compression, Lighting)</span>
+                        <span
+                            class="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs border border-purple-200 dark:border-purple-800">Security
+                            (Random Numbers)</span>
+                        <span
+                            class="px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs border border-purple-200 dark:border-purple-800">Finance
+                            (Monte Carlo)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6">Course Information</h2>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="flex-1">
+                    <h3 class="font-bold mb-2">Textbook</h3>
+                    <p class="text-sm mb-4">Numerical Mathematics and Computing, 6th Edition by Cheney and Kincaid.</p>
+                    <h3 class="font-bold mb-2">Assessment</h3>
+                    <ul class="text-sm space-y-1 mb-4">
+                        <li>Homework: 25%</li>
+                        <li>Midterm Exam 1: 25%</li>
+                        <li>Midterm Exam 2: 25%</li>
+                        <li>Final Exam: 25%</li>
+                    </ul>
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded text-xs border border-yellow-200">
+                        <strong>Note:</strong> Homework must achieve 50% to pass the course. Collaborate, but do not
+                        copy!
+                    </div>
+                </div>
+                <div class="w-48 shrink-0">
+                    <img src="nmc.jpg" alt="Textbook Cover" class="w-full rounded shadow-md">
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Taylor Series Approximation</h2>
+            </div>
+
+            <p class="mb-4">Computers can only add and multiply. They can't directly evaluate $e^x$, $\cos(x)$, or
+                $\sqrt{x}$. We use Taylor Series approximations.</p>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl mb-6">
+                <h3 class="font-bold text-center mb-4">The Taylor Series</h3>
+                <div class="overflow-x-auto text-center">
+                    \[ f(x) = \sum_{k=0}^{\infty} \frac{(x-c)^{k}}{k!} f^{(k)}(c) \]
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold mb-2">Example: $e^x$ (at $c=0$)</h4>
+                    <p class="mb-4">
+                        \[ e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots \]
+                    </p>
+                    <p class="text-sm">We can't evaluate infinite terms, so we truncate to a polynomial $p_n(x)$.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-2">Error Analysis</h4>
+                    <p class="mb-2">
+                        \[ f(x) = p_n(x) + E_n(x) \]
+                    </p>
+                    <p class="text-sm">Where the error term is:</p>
+                    <p>
+                        \[ E_n(x) = \frac{(x-c)^{n+1}}{(n+1)!}f^{(n+1)}(\xi) = \mO(h^{n+1}) \]
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">assuming $h = x-c$</p>
+                </div>
+            </div>
+
+            <div class="mt-8 glass p-6 rounded-2xl border-2 border-blue-100 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold flex items-center gap-2">🧠 Knowledge Check <span
+                            class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">+10 XP</span></h3>
+                </div>
+                <p class="mb-4">If we approximate $e^x$ using the first 3 terms ($1 + x + x^2/2$), what is the order of
+                    the error term?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button onclick="checkAnswer(this, false)"
+                        class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$\mO(h^2)$</button>
+                    <button onclick="checkAnswer(this, true)"
+                        class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$\mO(h^3)$</button>
+                    <button onclick="checkAnswer(this, false)"
+                        class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">$\mO(h^4)$</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6">Process Implementation</h2>
+            <p class="mb-4">Typical process to find $f'(x)$ using definition: $f'(x) = \lim_{h\rightarrow 0}
+                \frac{f(x+h) - f(x)}{h}$</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-bold text-sm text-gray-500 mb-2 uppercase tracking-wide">Pseudo Code</h3>
+                    <pre class="text-sm font-mono text-gray-800 dark:text-gray-200">
+h = 1
+x = 1
+for i = 1 to 20 do
+  h = h / 2
+  y = (f(x+h) - f(x)) / h
+  err = |f'(x) - y|
+end</pre>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-gray-500 mb-2 uppercase tracking-wide">Matlab</h3>
+                    <pre class="text-sm font-mono text-gray-800 dark:text-gray-200">
+f = inline('exp(x)');
+h = 1;
+x = 1;
+for i = 1:20
+  h = h / 2;
+  y = (f(x+h) - f(x)) / h;
+  err(i) = abs(f(x) - y);
+end</pre>
+                </div>
+            </div>
+
+            <div
+                class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700">
+                <h4 class="font-bold mb-2">Types of Error</h4>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <strong>Absolute Error:</strong><br>
+                        $|x_{true} - x_{approx}|$
+                    </div>
+                    <div>
+                        <strong>Relative Error:</strong><br>
+                        $\left|\frac{x_{true} - x_{approx}}{x_{true}}\right|$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
