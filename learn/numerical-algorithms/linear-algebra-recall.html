@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
         window.MathJax = {
@@ -81,6 +82,7 @@
             border-radius: 0.5rem;
             overflow-x: auto;
             border-left: 4px solid #6366f1;
+            white-space: pre-wrap;
         }
 
         .dark .code-block {
@@ -412,7 +414,8 @@
                         class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">+20 XP</span></h3>
             </div>
             <p class="mb-4">Which of the following statements about Matrix-Matrix multiplication $C=AB$ is
-                <strong>FALSE</strong>?</p>
+                <strong>FALSE</strong>?
+            </p>
             <div class="grid grid-cols-1 gap-3">
                 <button onclick="checkAnswer(this, false)"
                     class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">The
@@ -427,6 +430,123 @@
         </div>
 
     </main>
+
+    <!-- Interactive Computing Section -->
+    <div class="flex items-center gap-4 mb-6 mt-12 max-w-5xl mx-auto px-4">
+        <div class="h-px bg-gray-300 flex-1"></div>
+        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Interactive Computing</span>
+        <div class="h-px bg-gray-300 flex-1"></div>
+    </div>
+
+    <section class="glass p-8 rounded-3xl shadow-sm aos-init max-w-5xl mx-auto px-4 mb-12" data-aos="fade-up">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">6
+            </div>
+            <h2 class="text-2xl font-bold">Interactive Playground</h2>
+        </div>
+
+        <p class="mb-4">Explore vector products and norms. You can run MATLAB code via Octave Online or Python code
+            directly in your browser.</p>
+
+        <!-- Octave Online Section -->
+        <div class="mb-10">
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Gnu-octave-logo.svg" class="w-6 h-6"
+                    alt="Octave">
+                MATLAB / Octave (Online)
+            </h3>
+            <div class="mb-4">
+                <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Copy & Paste into Terminal:</p>
+                <div class="group relative">
+                    <pre
+                        class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-xs font-mono overflow-x-auto border border-gray-200 dark:border-gray-700">
+% Inner vs Outer Product
+u = [0; 1; 2; 3]; 
+v = [3; 2; 1; 0];
+
+disp('Vectors u and v:');
+disp([u v]);
+
+inner = u' * v;
+disp('Inner Product (u'' * v):');
+disp(inner);
+
+outer = u * v';
+disp('Outer Product (u * v''):');
+disp(outer);
+
+% Norms
+disp('Norms of u:');
+disp(['L1: ' num2str(norm(u, 1))]);
+disp(['L2: ' num2str(norm(u))]);
+disp(['Inf: ' num2str(norm(u, inf))]);</pre>
+                    <button
+                        onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);"
+                        class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md h-[500px]">
+                <iframe src="https://octave-online.net" style="width:100%; height:100%; border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- Python Section -->
+        <div>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" class="w-6 h-6"
+                    alt="Python">
+                Python (Client-Side)
+            </h3>
+
+            <div class="grid lg:grid-cols-2 gap-4">
+                <div class="relative group">
+                    <div class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
+                        main.py</div>
+                    <textarea id="python-code"
+                        class="w-full h-64 p-4 rounded-xl font-mono text-sm bg-gray-900 text-gray-100 border border-gray-700 focus:ring-2 focus:ring-green-500 outline-none"
+                        spellcheck="false">
+import numpy as np
+
+def analyze_vectors(u, v):
+    print(f"u = {u}")
+    print(f"v = {v}")
+    
+    # Inner Product
+    inner = np.dot(u, v)
+    print(f"\nInner Product (u . v): {inner}")
+    
+    # Outer Product
+    outer = np.outer(u, v)
+    print("\nOuter Product (u * v^T):")
+    print(outer)
+    
+    # Norms
+    print("\nNorms of u:")
+    print(f"L1 (Manhattan): {np.linalg.norm(u, 1)}")
+    print(f"L2 (Euclidean): {np.linalg.norm(u, 2):.4f}")
+    print(f"Inf (Max):      {np.linalg.norm(u, np.inf)}")
+
+u = np.array([0, 1, 2, 3])
+v = np.array([3, 2, 1, 0])
+
+analyze_vectors(u, v)</textarea>
+                    <button onclick="runPython()" id="run-btn"
+                        class="absolute bottom-4 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition flex items-center gap-2">
+                        <span>▶ Run Code</span>
+                    </button>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
+                        Output</div>
+                    <pre id="python-output"
+                        class="w-full h-64 p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer class="text-center py-8 text-gray-500 text-sm">
         <p>© 2025 CS 357 Course Staff</p>
@@ -472,6 +592,47 @@
                         b.classList.add('correct-answer');
                     }
                 });
+            }
+        }
+
+        // Pyodide Setup
+        async function main() {
+            try {
+                let pyodide = await loadPyodide();
+                await pyodide.loadPackage("numpy");
+                window.pyodide = pyodide;
+                document.getElementById("python-output").innerText = "Python & NumPy loaded! Ready to run.";
+            } catch (err) {
+                document.getElementById("python-output").innerText = "Failed to load Python: " + err;
+            }
+        }
+        main();
+
+        async function runPython() {
+            const btn = document.getElementById("run-btn");
+            const output = document.getElementById("python-output");
+            const code = document.getElementById("python-code").value;
+
+            if (!window.pyodide) {
+                output.innerText = "Python is still loading... please wait.";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.classList.add("opacity-50", "cursor-not-allowed");
+            output.innerText = "Running...";
+
+            try {
+                // Redirect stdout
+                window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
+
+                output.innerText = ""; // Clear previous
+                await window.pyodide.runPythonAsync(code);
+            } catch (err) {
+                output.innerText = "Error:\n" + err;
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove("opacity-50", "cursor-not-allowed");
             }
         }
 

@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
         window.MathJax = {
@@ -81,6 +82,7 @@
             border-radius: 0.5rem;
             overflow-x: auto;
             border-left: 4px solid #3b82f6;
+            white-space: pre-wrap;
         }
 
         .dark .code-block {
@@ -417,6 +419,135 @@
 
     </main>
 
+    <!-- Interactive Computing Section -->
+    <div class="flex items-center gap-4 mb-6 mt-12 max-w-5xl mx-auto px-4">
+        <div class="h-px bg-gray-300 flex-1"></div>
+        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Interactive Computing</span>
+        <div class="h-px bg-gray-300 flex-1"></div>
+    </div>
+
+    <section class="glass p-8 rounded-3xl shadow-sm aos-init max-w-5xl mx-auto px-4 mb-12" data-aos="fade-up">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">7
+            </div>
+            <h2 class="text-2xl font-bold">Interactive Playground</h2>
+        </div>
+
+        <p class="mb-4">Compare LU Decomposition to Cholesky Factorization. You can run MATLAB code via Octave Online or
+            Python code directly in your browser.</p>
+
+        <!-- Octave Online Section -->
+        <div class="mb-10">
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Gnu-octave-logo.svg" class="w-6 h-6"
+                    alt="Octave">
+                MATLAB / Octave (Online)
+            </h3>
+            <div class="mb-4">
+                <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Copy & Paste into Terminal:</p>
+                <div class="group relative">
+                    <pre
+                        class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-xs font-mono overflow-x-auto border border-gray-200 dark:border-gray-700">
+% LU vs Cholesky
+% Create a Symmetric Positive Definite (SPD) Matrix
+A = [4 1 2; 1 5 3; 2 3 6];
+
+disp('Matrix A (SPD):');
+disp(A);
+
+% LU Decomposition
+[L, U] = lu(A);
+disp('LU Decomposition (A = L*U):');
+disp('L:'); disp(L);
+disp('U:'); disp(U);
+disp('Check LU:'); disp(L*U);
+
+% Cholesky Factorization
+R = chol(A); % Returns Upper Triangular so A = R'*R
+disp('Cholesky Factorization (A = R''*R):');
+disp('R (Upper):'); disp(R);
+disp('Check R''*R:'); disp(R'*R);
+
+% Lower Triangular Cholesky
+L_chol = R';
+disp('L (Lower Cholesky):'); disp(L_chol);</pre>
+                    <button
+                        onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);"
+                        class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div class="rounded-xl overflow-hidden border border-gray-300 shadow-md h-[500px]">
+                <iframe src="https://octave-online.net" style="width:100%; height:100%; border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- Python Section -->
+        <div>
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" class="w-6 h-6"
+                    alt="Python">
+                Python (Client-Side)
+            </h3>
+
+            <div class="grid lg:grid-cols-2 gap-4">
+                <div class="relative group">
+                    <div class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
+                        main.py</div>
+                    <textarea id="python-code"
+                        class="w-full h-64 p-4 rounded-xl font-mono text-sm bg-gray-900 text-gray-100 border border-gray-700 focus:ring-2 focus:ring-green-500 outline-none"
+                        spellcheck="false">
+import numpy as np
+import scipy.linalg
+
+def factorization_comparison():
+    # Symmetric Positive Definite Matrix
+    A = np.array([[4, 1, 2], 
+                  [1, 5, 3], 
+                  [2, 3, 6]], dtype=float)
+    
+    print("Matrix A (SPD):")
+    print(A)
+    print("-" * 20)
+    
+    # LU Decomposition (Using Scipy for P*L*U)
+    P, L, U = scipy.linalg.lu(A)
+    print("LU Decomposition:")
+    print("L:\n", L)
+    print("U:\n", U)
+    print("Verification (P*L*U):\n", P @ L @ U)
+    print("-" * 20)
+    
+    # Cholesky Factorization
+    # Numpy returns Lower triangular by default if using cholesky
+    # But usually text refers to A = L L^T
+    try:
+        L_chol = np.linalg.cholesky(A)
+        print("Cholesky Factorization (L):")
+        print(L_chol)
+        print("Verification (L @ L.T):")
+        print(L_chol @ L_chol.T)
+    except np.linalg.LinAlgError:
+        print("Matrix is not positive definite!")
+
+factorization_comparison()</textarea>
+                    <button onclick="runPython()" id="run-btn"
+                        class="absolute bottom-4 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition flex items-center gap-2">
+                        <span>▶ Run Code</span>
+                    </button>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
+                        Output</div>
+                    <pre id="python-output"
+                        class="w-full h-64 p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="text-center py-8 text-gray-500 text-sm">
         <p>© 2025 CS 357 Course Staff</p>
     </footer>
@@ -462,6 +593,48 @@
                         b.classList.add('correct-answer');
                     }
                 });
+            }
+        }
+
+        // Pyodide Setup
+        async function main() {
+            try {
+                let pyodide = await loadPyodide();
+                await pyodide.loadPackage("numpy");
+                await pyodide.loadPackage("scipy");
+                window.pyodide = pyodide;
+                document.getElementById("python-output").innerText = "Python (NumPy + SciPy) loaded! Ready to run.";
+            } catch (err) {
+                document.getElementById("python-output").innerText = "Failed to load Python: " + err;
+            }
+        }
+        main();
+
+        async function runPython() {
+            const btn = document.getElementById("run-btn");
+            const output = document.getElementById("python-output");
+            const code = document.getElementById("python-code").value;
+
+            if (!window.pyodide) {
+                output.innerText = "Python is still loading... please wait.";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.classList.add("opacity-50", "cursor-not-allowed");
+            output.innerText = "Running...";
+
+            try {
+                // Redirect stdout
+                window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
+
+                output.innerText = ""; // Clear previous
+                await window.pyodide.runPythonAsync(code);
+            } catch (err) {
+                output.innerText = "Error:\n" + err;
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove("opacity-50", "cursor-not-allowed");
             }
         }
 
