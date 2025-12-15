@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 20: Iterative Methods</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["{\\|#1\\|}", 1],
+                    matdim: ["{#1\\times#2}", 2],
+                    rank: ["\\mathrm{rank}(#1)", 1],
+                    epsm: "\\varepsilon_m"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue
+                        secondary: '#8b5cf6', // Violet
+                        accent: '#ec4899', // Pink
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .dark .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            background-color: #ede9fe;
+            border-color: #8b5cf6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #4c1d95;
+            border-color: #8b5cf6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-blue-500 to-pink-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="numerical-differentiation.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-blue-600 transition">
+                <span>←</span> Lecture 19
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 20</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full dark:bg-blue-900/30 dark:text-blue-300">
+                Linear Solvers
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-pink-600">
+                Iterative Methods
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Solving $Ax=b$ by successive approximation: Jacobi, Gauss-Seidel, and Conjugate Gradients.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Direct Solvers: Complexity Recap</h2>
+            </div>
+
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-300">Before diving into iterative methods, let's review
+                the cost of direct methods for $Ax=b$.</p>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th class="px-6 py-3">System Type</th>
+                            <th class="px-6 py-3">Complexity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-green-600">Diagonal</td>
+                            <td class="px-6 py-4">$\mathcal{O}(n)$</td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-green-600">Tridiagonal</td>
+                            <td class="px-6 py-4">$\mathcal{O}(n)$</td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-600">Triangular (Forward/Back Sub)</td>
+                            <td class="px-6 py-4">$\mathcal{O}(n^2)$</td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-600">Banded ($m$-band)</td>
+                            <td class="px-6 py-4">$\mathcal{O}(m^2 n)$</td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-red-600">Full System (GE / LU)</td>
+                            <td class="px-6 py-4">$\mathcal{O}(n^3)$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <img src="figs/solvers.png" alt="Solver Complexity Hierarchy"
+                    class="h-48 rounded shadow-lg bg-white p-2">
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    2</div>
+                <h2 class="text-2xl font-bold">Approximate Solutions</h2>
+            </div>
+
+            <p class="mb-4">
+                What if we don't need the exact solution $x^*$? We seek an approximation $\hat{x}$ such that $\|\hat{x}
+                - x^*\| \le \epsilon$.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl">
+                    <h3 class="font-bold text-lg mb-2">The Residual</h3>
+                    <p class="text-sm">We can't calculate the error $e = x^* - \hat{x}$ directly (since we don't know
+                        $x^*$). Instead, we use the <strong>residual</strong>:</p>
+                    <div class="font-mono text-center text-lg my-4 text-purple-600 font-bold">
+                        $\hat{r} = b - A\hat{x}$
+                    </div>
+                    <p class="text-xs text-gray-500">Note: $\hat{r} = A e$.</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl">
+                    <h3 class="font-bold text-lg mb-2">Measuring Size</h3>
+                    <p class="text-sm">How "big" is the residual? Use norms:</p>
+                    <ul class="list-disc pl-5 mt-2 text-xs font-mono space-y-1">
+                        <li>$\|r\|_1 = \sum |r_i|$</li>
+                        <li>$\|r\|_2 = \sqrt{\sum r_i^2}$</li>
+                        <li>$\|r\|_\infty = \max |r_i|$</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">Iterative Strategy</h2>
+            </div>
+
+            <p class="mb-4">Given a guess $x^{(0)}$, how do we improve it?</p>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border-l-4 border-pink-500 shadow-sm mb-6">
+                <p class="text-sm">Ideally: $x^{(1)} = x^{(0)} + A^{-1}r^{(0)}$. But computing $A^{-1}$ is too
+                    expensive.</p>
+                <p class="text-sm mt-2"><strong>Strategy:</strong> Approximate $A^{-1}$ with a matrix $Q^{-1}$ that is
+                    cheap to compute.</p>
+                <div class="text-center font-bold text-lg mt-4">
+                    $x^{(k)} = x^{(k-1)} + Q^{-1}r^{(k-1)}$
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold mb-2 text-blue-600">Jacobi Method</h3>
+                    <p class="text-sm mb-2">Approximates $A$ with its diagonal $D$.</p>
+                    <div class="code-block text-xs">
+                        Q = diag(A)
+                        for k = 1:max_iter
+                        r = b - A*x
+                        if norm(r) < tol, break x=x + r ./ diag(A) end </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2 text-violet-600">Gauss-Seidel Method</h3>
+                        <p class="text-sm mb-2">Approximates $A$ with its lower triangle ($D-L$). Uses updated values
+                            immediately.</p>
+                        <div class="code-block text-xs">
+                            Q = tril(A) % Lower triangular
+                            for k = 1:max_iter
+                            r = b - A*x
+                            if norm(r) < tol, break % Solve Q*delta=r efficiently x=x + forward_sub(Q, r) end </div>
+                        </div>
+                    </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Convergence</h2>
+            </div>
+
+            <p class="mb-4">When do these methods work? Let's look at the error propagation.</p>
+            <div class="text-center font-mono text-sm bg-gray-100 dark:bg-gray-800 p-4 rounded-xl mb-6">
+                $e^{(k)} = (I - Q^{-1}A) e^{(k-1)}$
+            </div>
+
+            <div class="bg-green-50 dark:bg-green-900/10 p-6 rounded-2xl border border-green-200 dark:border-green-800">
+                <h3 class="font-bold text-green-700 dark:text-green-300 mb-2">Condition for Convergence</h3>
+                <p class="text-sm">The iteration converges if the spectral radius of the iteration matrix is less than
+                    1:</p>
+                <div class="text-center font-bold mt-2">$\| I - Q^{-1}A \| < 1$</div>
+                </div>
+
+                <div
+                    class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700">
+                    <h4 class="font-bold text-yellow-800 dark:text-yellow-200 text-sm mb-2">Sufficient Condition</h4>
+                    <p class="text-sm">
+                        If $A$ is <strong>Diagonally Dominant</strong> ($|a_{ii}| > \sum_{j \ne i} |a_{ij}|$), then
+                        Jacobi and Gauss-Seidel <strong>guaranteed</strong> to converge.
+                    </p>
+                </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
+                    5</div>
+                <h2 class="text-2xl font-bold">Conjugate Gradients (CG)</h2>
+            </div>
+
+            <p class="mb-4">
+                For Symmetric Positive Definite (SPD) matrices, we can view solving $Ax=b$ as minimizing the quadratic
+                function:
+                \[ \phi(x) = \frac{1}{2} x^T A x - x^T b \]
+            </p>
+
+            <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-2xl mb-6">
+                <h3 class="font-bold mb-2">The Idea</h3>
+                <p class="text-sm mb-4">Instead of going down the steepest gradient (which zig-zags), we search in
+                    <strong>conjugate directions</strong>. This guarantees convergence in at most $n$ steps (in exact
+                    arithmetic).</p>
+                <div class="code-block text-xs">
+                    % Conjugate Gradient Algorithm
+                    x = x0
+                    r = b - A*x
+                    s = r
+                    for k = 1:n
+                    alpha = (r'*r) / (s'*A*s)
+                    x = x + alpha * s
+                    r_new = r - alpha * A * s
+                    beta = (r_new'*r_new) / (r'*r)
+                    s = r_new + beta * s
+                    r = r_new
+                    end
+                </div>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-pink-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-pink-100 text-pink-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Which method updates the solution vector using the most recent values available within the
+                same iteration step?</p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Jacobi
+                    Method.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Gauss-Seidel
+                    Method.</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">Conjugate
+                    Gradient Method.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
