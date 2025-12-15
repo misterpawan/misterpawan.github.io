@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 15: Interpolation & Splines</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    vb: "{\\bf{b}}",
+                    ve: "{\\bf{e}}",
+                    vg: "{\\bf{g}}",
+                    vp: "{\\bf{p}}",
+                    vr: "{\\bf{r}}",
+                    vu: "{\\bf{u}}",
+                    vx: "{\\bf{x}}",
+                    vz: "{\\bf{z}}",
+                    vA: "{\\bf{A}}",
+                    vU: "{\\bf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["{\\|#1\\|}", 1],
+                    matdim: ["{#1\\times#2}", 2],
+                    rank: ["\\mathrm{rank}(#1)", 1],
+                    epsm: "\\varepsilon_m"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue
+                        secondary: '#8b5cf6', // Violet
+                        accent: '#ec4899', // Pink
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .dark .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            background-color: #ede9fe;
+            border-color: #8b5cf6;
+        }
+
+        .dark .quiz-option:hover {
+            background-color: #4c1d95;
+            border-color: #8b5cf6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-900 dark:bg-slate-900 dark:text-gray-100 font-sans antialiased">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar"
+            class="h-full bg-gradient-to-r from-violet-400 to-pink-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-6xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <a href="roots-interpolation.html"
+                class="flex items-center gap-2 font-bold text-sm sm:text-base hover:text-violet-600 transition">
+                <span>←</span> Lecture 14
+            </a>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-gray-500">Lecture 15</span>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 transition-transform"
+                    id="wallet-container">
+                    💰 XP: <span id="wallet-balance">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-violet-600 uppercase bg-violet-100 rounded-full dark:bg-violet-900/30 dark:text-violet-300">
+                Approximation
+            </div>
+            <h1
+                class="text-4xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-pink-600">
+                Interpolation & Splines
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                From high-degree polynomial oscillations to smooth, piecewise curves.
+            </p>
+        </header>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 font-bold">
+                    1</div>
+                <h2 class="text-2xl font-bold">Polynomial Interpolation Recap</h2>
+            </div>
+
+            <p class="mb-4">Given $n+1$ points $(x_i, y_i)$, there exists a <strong>unique</strong> polynomial $p(x)$ of
+                degree $n$ passing through them.</p>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8 text-sm">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <strong class="text-violet-600 block mb-2">Monomial Basis</strong>
+                    $p(x) = \sum a_i x^i$
+                    <p class="text-xs text-red-500 mt-2">Vandermonde Matrix is ill-conditioned. Expensive.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <strong class="text-violet-600 block mb-2">Lagrange Basis</strong>
+                    $p(x) = \sum y_i \ell_i(x)$
+                    <p class="text-xs text-orange-500 mt-2">Stable, but expensive to evaluate ($\mathcal{O}(n^2)$).</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <strong class="text-violet-600 block mb-2">Newton Basis</strong>
+                    $p(x) = a_0 + a_1(x-x_0) + \dots$
+                    <p class="text-xs text-green-500 mt-2">Efficient evaluation (Nested Form).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">2
+                </div>
+                <h2 class="text-2xl font-bold">The Problem: Runge's Phenomenon</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="text-sm mb-4">
+                        High-degree polynomial interpolation on equispaced points can oscillate wildly near the
+                        boundaries. This is known as <strong>Runge's Phenomenon</strong>.
+                    </p>
+                    <div class="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border-l-4 border-red-500">
+                        <h4 class="font-bold text-red-700 dark:text-red-300 text-sm mb-2">Error Bound</h4>
+                        <p class="text-xs font-mono">
+                            $|f(x) - p_n(x)| \leq \frac{M h^{n+1}}{4(n+1)}$
+                        </p>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <img src="figs/runge.png" alt="Runge's Phenomenon Graph" class="h-40 rounded shadow bg-white p-2">
+                </div>
+            </div>
+
+            <div class="mt-8 grid md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-2">Solution 1: Move Nodes</h4>
+                    <p class="text-sm">Use <strong>Chebyshev Nodes</strong> (clustered near ends). Minimizes the max
+                        error.</p>
+                    <div class="mt-2 text-center">
+                        <img src="figs/chebychev.png" alt="Chebyshev Nodes"
+                            class="h-16 inline-block bg-white p-1 rounded">
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-2">Solution 2: Piecewise</h4>
+                    <p class="text-sm">Don't use one high-degree polynomial. Use many low-degree polynomials connected
+                        together (<strong>Splines</strong>).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
+                    3</div>
+                <h2 class="text-2xl font-bold">Piecewise Polynomials (Splines)</h2>
+            </div>
+
+            <p class="mb-4">
+                We want curves that are smooth and pass through data points. Used extensively in computer graphics
+                (Fonts, CAD).
+            </p>
+            <div class="flex justify-center gap-4 mb-6">
+                <img src="figs/truetype_3.png" alt="Font Splines" class="h-20 bg-white rounded p-1">
+                <img src="figs/utah_teapot.png" alt="Utah Teapot" class="h-20 bg-white rounded p-1">
+                <img src="figs/spline1.png" alt="Spline Curve" class="h-20 bg-white rounded p-1">
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">Linear Spline (Degree 1)</h3>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1">
+                            <p class="text-sm">Connect points with straight lines.</p>
+                            <ul class="list-disc pl-5 mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li>Continuous ($C^0$).</li>
+                                <li>Not smooth (derivative jumps at knots).</li>
+                                <li>Simple: $S_i(x) = y_i + m_i(x-t_i)$.</li>
+                            </ul>
+                        </div>
+                        <div class="flex-none">
+                            <img src="figs/spline3.png" alt="Linear Spline" class="h-24 bg-gray-100 rounded">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-lg mb-2 text-purple-600">Quadratic Spline (Degree 2)</h3>
+                    <p class="text-sm">Parabolas on each interval.</p>
+                    <ul class="list-disc pl-5 mt-2 text-sm text-gray-600 dark:text-gray-400">
+                        <li>Continuous value ($C^0$).</li>
+                        <li>Continuous derivative ($C^1$).</li>
+                        <li>3 unknowns per interval.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <div class="flex items-center gap-3 mb-6">
+                <div
+                    class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
+                    4</div>
+                <h2 class="text-2xl font-bold">Cubic Splines (Degree 3)</h2>
+            </div>
+
+            <p class="mb-4">The gold standard for smoothness. Cubic polynomial $S_i(x) = a x^3 + b x^2 + c x + d$ on
+                each interval.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+                    <h4 class="font-bold mb-2">Continuity Requirements</h4>
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        <li><strong>Value ($C^0$):</strong> Curves meet at knots.</li>
+                        <li><strong>Slope ($C^1$):</strong> No sharp corners ($S'$ continuous).</li>
+                        <li><strong>Curvature ($C^2$):</strong> Smooth bending ($S''$ continuous).</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+                    <h4 class="font-bold mb-2">Degrees of Freedom</h4>
+                    <p class="text-sm">
+                        $4n$ unknowns. Constraints leave 2 free parameters.
+                    </p>
+                    <p class="text-xs text-gray-500 mt-2">
+                        Common choices: Natural ($S''=0$ at ends), Clamped ($S'$ fixed at ends).
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border-l-4 border-pink-500 shadow-sm">
+                <h3 class="font-bold text-lg mb-4 text-pink-600">Solving for Coefficients</h3>
+                <p class="text-sm mb-4">
+                    The problem reduces to solving a <strong>Tridiagonal System</strong> for the curvatures $z_i =
+                    S''(t_i)$.
+                </p>
+                <div class="font-mono text-xs overflow-x-auto text-center bg-gray-100 dark:bg-gray-900 p-4 rounded-xl">
+                    \[ h_{i-1}z_{i-1} + 2(h_i+h_{i-1})z_i + h_{i}z_{i+1} = 6(b_i-b_{i-1}) \]
+                </div>
+                <p class="text-xs text-center mt-2 text-gray-500">
+                    This system can be solved in $\mathcal{O}(n)$ time!
+                </p>
+            </div>
+        </section>
+
+        <div class="glass p-6 rounded-2xl border-2 border-pink-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">🧠 Final Challenge <span
+                        class="text-xs bg-pink-100 text-pink-600 px-2 py-1 rounded-full">+20 XP</span></h3>
+            </div>
+            <p class="mb-4">Why are Chebyshev nodes preferred over equispaced nodes for global polynomial interpolation?
+            </p>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    make the Vandermonde matrix diagonal.</button>
+                <button onclick="checkAnswer(this, true)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    cluster near the interval boundaries to minimize oscillation (Runge's phenomenon).</button>
+                <button onclick="checkAnswer(this, false)"
+                    class="quiz-option p-3 rounded-xl border border-gray-200 dark:border-gray-600 transition text-left">They
+                    ensure the resulting polynomial is always linear.</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Staff</p>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
+        // Wallet Logic
+        let wallet = 0;
+        function updateWallet(amount) {
+            wallet += amount;
+            const el = document.getElementById('wallet-balance');
+            el.innerText = wallet;
+
+            // Animation effect
+            const container = document.getElementById('wallet-container');
+            container.classList.add('scale-125', 'bg-green-200');
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-green-200');
+            }, 300);
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+
+            // Disable all buttons in this quiz
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct-answer');
+                updateWallet(10);
+            } else {
+                btn.classList.add('wrong-answer');
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.onclick.toString().includes('true')) {
+                        b.classList.add('correct-answer');
+                    }
+                });
+            }
+        }
+
+        // Scroll Progress
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
