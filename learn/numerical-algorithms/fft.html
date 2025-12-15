@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 26: Fast Fourier Transform (FFT) | CS 357</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    RR: "{\\mathbb{R}}",
+                    vb: "{\\mathbf{b}}",
+                    ve: "{\\mathbf{e}}",
+                    vg: "{\\mathbf{g}}",
+                    vp: "{\\mathbf{p}}",
+                    vr: "{\\mathbf{r}}",
+                    vu: "{\\mathbf{u}}",
+                    vx: "{\\mathbf{x}}",
+                    vz: "{\\mathbf{z}}",
+                    vA: "{\\mathbf{A}}",
+                    vU: "{\\mathbf{U}}",
+                    mO: "{\\mathcal{O}}",
+                    mF: "{\\mathcal{F}}",
+                    norm: ["\\left\\lVert#1\\right\\rVert", 1]
+                }
+            }
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f97316',
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            background-color: #1e293b;
+            /* slate-800 */
+            color: #e2e8f0;
+            /* slate-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased" data-aos-easing="ease"
+    data-aos-duration="400">
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+    </div>
+
+    <nav class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mb-8 pt-4">
+        <div class="glass rounded-2xl shadow-lg p-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+                <span class="text-orange-600">CS 357</span> Lecture 26
+            </div>
+            <div class="text-sm text-gray-500">
+                L. Olson (Dec 3, 2009)
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 pb-32 space-y-12">
+
+        <header class="text-center py-10 aos-init" data-aos="fade-down">
+            <h1
+                class="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                Fast Fourier Transform (FFT)
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Signal Processing, Frequency Domains, and Efficient
+                Algorithms</p>
+        </header>
+
+        <div class="flex items-center gap-4 mb-6">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 1: The Problem of Noisy
+                Data</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Analyzing Data</h2>
+            <p class="mb-4">Given some data, we often need to ask:</p>
+            <ul class="list-disc list-inside space-y-2 mb-6">
+                <li>What is the nature of the data?</li>
+                <li>What is the period?</li>
+                <li>Can we rid the data of noise?</li>
+            </ul>
+
+            <div class="space-y-6">
+                <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl">
+
+                </div>
+                <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl">
+
+                </div>
+                <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl">
+
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Real-World Examples</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+                    <h3 class="font-bold text-lg mb-2">Signal Processing</h3>
+                    <p>Remove (high-frequency) noise in an input signal.</p>
+                </div>
+                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+                    <h3 class="font-bold text-lg mb-2">Weather Data</h3>
+                    <p>Data often contains different cycles:</p>
+                    <ul class="list-disc list-inside text-sm">
+                        <li>Daily data</li>
+                        <li>Yearly data</li>
+                        <li>Goal: Isolate one of these.</li>
+                    </ul>
+                </div>
+                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+                    <h3 class="font-bold text-lg mb-2">Economics</h3>
+                    <p>Seasonal adjustment: remove unwanted periodicities to reveal "secular" trends.</p>
+                </div>
+                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+                    <h3 class="font-bold text-lg mb-2">Audio</h3>
+                    <p>Digital filtering in audio.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Convolution & Correlation</h2>
+            <p><strong>Discrete convolution</strong> of two sequences of data $u$ and $v$ of length $n$:</p>
+            <div class="overflow-x-auto my-4 text-center">
+                $$ \{u \star v\}_m = \sum_{k=0}^{n-1} v_k u_{m-k},\quad m = 0,1,\dots,n-1 $$
+            </div>
+            <p class="mb-4">This relates to <strong>cross correlation</strong> of two sequences or
+                <strong>autocorrelation</strong> with self.</p>
+
+            <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl mb-6">
+
+            </div>
+
+            <h3 class="font-bold text-lg mt-6 mb-2">Image Registration</h3>
+            <p>Aligning a sub-image with another image.</p>
+            <div class="flex justify-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl mt-4">
+
+
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Other Applications</h2>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+                <li>Spectral Analysis</li>
+                <li>Data compression</li>
+                <li>Partial Differential Equations</li>
+                <li>Multiplication of polynomials</li>
+            </ul>
+        </section>
+
+        <div class="flex items-center gap-4 mb-6 mt-12">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 2: Fourier Series</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Interpolation by Trigonometry</h2>
+            <ul class="list-disc list-inside space-y-4">
+                <li>When we have periodic data, use periodic interpolating functions: sines, cosines, etc.</li>
+                <li>Decompose a function into a combination of sines and cosines (as we did with polynomial basis
+                    functions).</li>
+                <li>Decomposing into (co)sines of different "frequencies" naturally orders the data.</li>
+                <li class="font-semibold text-blue-600">The gist: working in a frequency (transformed) space is easier
+                    (faster) than the time domain.</li>
+            </ul>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Recall Fourier Series</h2>
+            <p>Suppose $f(x)$ is periodic on $[-\pi,\pi]$. The Fourier Series for $f(x)$ is:</p>
+            $$ f(x) \approx \frac{a_0}{2} + \sum_{n=1}^{\infty} a_n \cos(nx) + b_n \sin(nx) $$
+            <p>with coefficients:</p>
+            $$ a_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos(nx)\, dx \quad b_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)
+            \sin(nx)\, dx $$
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mt-6">
+                <h3 class="font-bold mb-2">Example: Sawtooth Wave</h3>
+                <p>$f(x) = x$ on $[-\pi,\pi]$.</p>
+                <p>Then $a_n = 0$ (odd function) and $b_n = 2 \frac{(-1)^{n+1}}{n}$.</p>
+                $$ f(x) = 2\sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n} \sin(nx) $$
+            </div>
+
+            <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl mt-6">
+
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">General Fourier Notation</h2>
+            <p>Use complex exponential notation using <strong>Euler's Identity</strong>:</p>
+            <div class="text-center font-bold text-xl my-4">
+                $$ e^{i x} = \cos(x) + i \sin(x),\qquad i = \sqrt{-1} $$
+            </div>
+            <p>Pure cosine and sine can be written as:</p>
+            $$ \cos(x) = \frac{e^{i x} + e^{-ix}}{2},\quad \sin(x) = \frac{e^{i x} - e^{-ix}}{2i} $$
+
+            <p class="mt-4">Then a Fourier Series on interval $[a,b]$ with period $\tau$ is:</p>
+            $$ g(x) = \sum_{n=-\infty}^{\infty} G_n e^{i 2 \pi n x / \tau} $$
+            <p>with:</p>
+            $$ G_n = \frac{1}{\tau} \int_{a}^{b} g(x) e^{-i 2\pi n x / \tau}\, dx $$
+        </section>
+
+        <div class="flex items-center gap-4 mb-6 mt-12">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 3: Discrete Fourier Transform
+                (DFT)</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Roots of Unity</h2>
+            <p>A primitive $n^{th}$ root of unity for integer $n$ is given by:</p>
+            <div
+                class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl text-center my-4 border-l-4 border-yellow-500">
+                $$ \omega_n = \cos\left(\frac{2\pi}{n}\right) - i \sin\left(\frac{2\pi}{n}\right) = e^{-\frac{2\pi
+                i}{n}} $$
+            </div>
+            <p>The $n^{th}$ roots of unity are called <strong>twiddle factors</strong> here and are given by
+                $\omega_n^k$ or $\omega_n^{-k}$, $k=0,\dots,n-1$.</p>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">The Discrete Fourier Transform</h2>
+            <p>The DFT of sequence $x = [x_0,\dots,x_{n-1}]^T$ is a sequence $y = [y_0,\dots,y_{n-1}]^T$ given by:</p>
+            $$ y_m = \sum_{k=0}^{n-1} x_k \omega_n^{mk}, \quad m=0,1,\dots,n-1 $$
+
+            <p class="mt-4">In matrix notation this is:</p>
+            $$ y = F_n x,\qquad \{F_n\}_{mk} = \omega_n^{mk} $$
+
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl mt-4">
+                <h3 class="font-bold mb-2">Example with $n=4$:</h3>
+                <div class="overflow-x-auto">
+                    $$ F_4 =
+                    \begin{bmatrix}
+                    1 & 1 & 1 & 1\\
+                    1 & \omega^1 & \omega^2 & \omega^3\\
+                    1 & \omega^2 & \omega^4 & \omega^6\\
+                    1 & \omega^3 & \omega^6 & \omega^9\\
+                    \end{bmatrix}
+                    =
+                    \begin{bmatrix}
+                    1 & 1 & 1 & 1\\
+                    1 & -i & -1 & i\\
+                    1 & -1 & 1 & -1\\
+                    1 & i & -1 & -i\\
+                    \end{bmatrix} $$
+                </div>
+            </div>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Inverse DFT</h2>
+            <p>Note that $F_4 \cdot F_4^*$ (conjugate transpose) yields a scaled identity. Specifically:</p>
+            $$ F_n^{-1} = \frac{1}{n} F_n^{*} $$
+
+            <p>Thus the Inverse DFT is:</p>
+            $$ x_k = \frac{1}{n} \sum_{m=0}^{n-1} y_m \omega_n^{-mk}, \quad k=0,1,\dots,n-1 $$
+
+            <p class="mt-4 font-semibold">Result: DFT and IDFT give trigonometric interpolation using only a mat-vec
+                operation $\mO(n^2)$.</p>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">DFT Properties</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>The DFT $y$ of a real sequence $x$ is generally complex.</li>
+                <li>Components of $y$ are <strong>conjugate symmetric</strong>: $y_k = \bar{y}_{n-k}$ for $k=1,\dots,
+                    (n/2)-1$.</li>
+                <li><strong>Special Components:</strong>
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li>$y_0$: Sum of components (Zero frequency / DC component).</li>
+                        <li>$y_{n/2}$: Highest representable frequency (Nyquist frequency).</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">DFT Examples</h2>
+
+            <div class="mb-8">
+                <h3 class="font-bold text-lg">Random Sequence</h3>
+                <p>For $x = [4, 0, 3, 6, 2, 9, 6, 5]^T$, $y = F_8 x$:</p>
+                <div class="text-sm font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded mt-2">
+                    y = [35.0, -5.1+8.7i, -3.0+2.0i, 9.1+2.7i, -5.0, 9.1-2.7i, -3.0-2.0i, -5.1-8.7i]^T
+                </div>
+                <p class="text-sm mt-2 text-gray-600">Note: $y_0$ is real (sum), $y_4$ is real. $y_5, y_6, y_7$ are
+                    conjugates of $y_3, y_2, y_1$.</p>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg">Cyclic Sequence</h3>
+                <p>For $x = [1, -1, 1, -1, 1, -1, 1, -1]^T$:</p>
+                <div class="text-sm font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded mt-2">
+                    y = [0, 0, 0, 0, 8, 0, 0, 0]^T
+                </div>
+                <p class="text-sm mt-2 text-gray-600">Sequence $x$ has the highest oscillation rate. $y$ has only a
+                    nonzero component at the <strong>Nyquist frequency</strong> ($y_4$).</p>
+            </div>
+        </section>
+
+        <div class="flex items-center gap-4 mb-6 mt-12">
+            <div class="h-px bg-gray-300 flex-1"></div>
+            <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Part 4: The Fast Fourier Transform
+                (FFT)</span>
+            <div class="h-px bg-gray-300 flex-1"></div>
+        </div>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Goal: Efficiency</h2>
+            <p>We want to take advantage of symmetries. Consider $n=4$:</p>
+            $$ y_m = \sum_{k=0}^3 x_k \omega_n^{mk} $$
+            <p>Using properties like $\omega_n^0 = 1, \omega_n^2 = -1$, we can simplify:</p>
+
+            <div class="overflow-x-auto text-sm">
+                \begin{align*}
+                y_0 & = (x_0 + x_2) + \omega_n^0 (x_1 + x_3)\\
+                y_1 & = (x_0 - x_2) + \omega_n^1 (x_1 - x_3)\\
+                y_2 & = (x_0 + x_2) + \omega_n^2 (x_1 + x_3)\\
+                y_3 & = (x_0 - x_2) + \omega_n^3 (x_1 - x_3)\\
+                \end{align*}
+            </div>
+
+            <p class="mt-4">This reduces operations from 12 adds/16 mults to 8 adds/6 mults.</p>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">Recursive Structure</h2>
+            <p>Computing the 4-point DFT reduced to computing the DFT of its two 2-point even and odd subsequences.</p>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg my-4 border-l-4 border-blue-500">
+                <p class="font-bold">Key Insight:</p>
+                <p>The DFT of an $n$-point sequence can be computed by two $n/2$-point DFTs ($n$ even).</p>
+            </div>
+
+            <p>Let $P_4$ be a permutation matrix that groups even then odd columns. Then:</p>
+            $$ F_4 P_4 = \begin{bmatrix} F_2 & D_2 F_2 \\ F_2 & -D_2 F_2 \end{bmatrix} $$
+            <p>where $D_2 = \text{diag}(1, \omega_4 = -i)$.</p>
+        </section>
+
+        <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
+            <h2 class="text-2xl font-bold mb-6 text-orange-600">The FFT Algorithm</h2>
+            <p>This holds for any even $n$. In general:</p>
+            <ol class="list-decimal list-inside space-y-2 mb-4">
+                <li>$P_n$ groups even then odd numbered columns.</li>
+                <li>$D_{n/2} = \text{diag}(1, \omega_n, \dots, \omega_n^{(n/2)-1})$.</li>
+                <li>To apply $F_n$, apply $F_{n/2}$ to even/odd subsequences.</li>
+                <li>Scale results by $\pm D_{n/2}$.</li>
+            </ol>
+
+            <p>This recursive DFT is called the <strong>Fast Fourier Transform (FFT)</strong>.</p>
+
+            <div class="flex justify-center bg-white dark:bg-gray-800 p-6 rounded-xl my-6">
+
+            </div>
+
+            <h3 class="font-bold text-lg mt-4">Complexity & Features</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li><strong>Cost:</strong> $\log_2 n$ levels of recursion, with $\mO(n)$ operations each. Total: $\mO(n
+                    \log n)$.</li>
+                <li>Often computed in-place.</li>
+                <li>More reductions if $x$ is real.</li>
+                <li>Can be written iteratively.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>© 2025 CS 357 Course Materials. Original slides by L. Olson & M. Heath.</p>
+    </footer>
+
+    <script>
+        AOS.init();
+
+        // Scroll Progress Bar
+        window.onscroll = function () {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+
+</html>
