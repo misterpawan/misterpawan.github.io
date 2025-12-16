@@ -66,7 +66,8 @@
         .CodeMirror {
             border-radius: 0.75rem;
             border: 1px solid #e5e7eb;
-            height: 16rem !important;
+            height: auto !important;
+            /* Auto height */
             font-size: 0.875rem;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
@@ -616,10 +617,10 @@ end</textarea>
                     Python (Client-Side)
                 </h3>
 
-                <div class="grid lg:grid-cols-2 gap-4">
-                    <div class="relative group">
+                <div class="flex flex-col gap-6">
+                    <div class="relative group" id="python-editor-section">
                         <div
-                            class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
+                            class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500 z-10">
                             main.py</div>
                         <textarea id="python-code">
 import numpy as np
@@ -640,20 +641,26 @@ def derivative_approx(x, h_start, iterations):
         print(f"{h:10.6f} | {approx:10.6f} | {error:10.6e}")
 
 # Run approximation at x = 1
-derivative_approx(x=1.0, h_start=1.0, iterations=10)
-</textarea>
+derivative_approx(x=1.0, h_start=1.0, iterations=10)</textarea>
                         <button onclick="runPython()" id="run-btn"
-                            class="absolute bottom-4 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition flex items-center gap-2">
+                            class="absolute bottom-4 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition flex items-center gap-2 z-10">
                             <span>▶ Run Code</span>
                         </button>
                     </div>
 
-                    <div class="relative">
+                    <div class="relative" id="python-output-section">
                         <div
                             class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
                             Output</div>
                         <pre id="python-output"
-                            class="w-full h-64 p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
+                            class="w-full min-h-[16rem] p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
+
+                        <!-- Show Code Button -->
+                        <button
+                            onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
+                            class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition text-gray-600 dark:text-gray-300">
+                            ↑ Show Code
+                        </button>
                     </div>
                 </div>
             </div>
@@ -709,11 +716,13 @@ derivative_approx(x=1.0, h_start=1.0, iterations=10)
             }
         }
 
+        // CodeMirror Setup
         var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
             mode: "python",
             theme: "default",
             lineNumbers: true,
-            indentUnit: 4
+            indentUnit: 4,
+            viewportMargin: Infinity // Auto resize
         });
 
         // CodeMirror Setup - Octave
@@ -722,7 +731,8 @@ derivative_approx(x=1.0, h_start=1.0, iterations=10)
             theme: "default",
             lineNumbers: true,
             indentUnit: 4,
-            readOnly: false
+            readOnly: false,
+            viewportMargin: Infinity // Auto resize
         });
 
         // Pyodide Setup
@@ -757,6 +767,10 @@ derivative_approx(x=1.0, h_start=1.0, iterations=10)
                 window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
 
                 output.innerText = ""; // Clear previous
+
+                // Scroll to output
+                document.getElementById("python-output-section").scrollIntoView({ behavior: "smooth" });
+
                 await window.pyodide.runPythonAsync(code);
             } catch (err) {
                 output.innerText = "Error:\n" + err;
