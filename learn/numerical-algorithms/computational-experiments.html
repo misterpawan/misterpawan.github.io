@@ -57,7 +57,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    
+
     <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
@@ -68,7 +68,8 @@
         .CodeMirror {
             border-radius: 0.75rem;
             border: 1px solid #e5e7eb;
-            height: auto !important; /* Auto height */
+            height: auto !important;
+            /* Auto height */
             font-size: 0.875rem;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
@@ -247,6 +248,18 @@
                     </div>
                 </div>
             </div>
+
+            <div class="mt-8 bg-blue-50 dark:bg-blue-900/10 p-6 rounded-2xl border-l-4 border-blue-500">
+                <h3 class="font-bold text-blue-700 dark:text-blue-300 mb-2">MATLAB Function Basics</h3>
+                <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 dark:text-gray-300">
+                    <li>Save in a file named <code>functionname.m</code>.</li>
+                    <li>Can accept 0, $n$, or a variable number of inputs/outputs.</li>
+                    <li>Variables are <strong>local</strong> by default (scope is limited to the function).</li>
+                    <li>Use <code>global varname</code> to make a variable visible across all functions (use
+                        sparingly!).</li>
+                    <li>Use <code>return</code> to exit a function early.</li>
+                </ul>
+            </div>
         </section>
 
         <div class="glass p-6 rounded-2xl border-2 border-indigo-100 dark:border-gray-700 aos-init" data-aos="zoom-in">
@@ -401,14 +414,14 @@
                 <p class="mb-4 text-sm text-gray-300">Result: <strong>3 multiplications, 3 additions</strong>.</p>
 
                 <div class="code-block text-sm">
-<span class="text-pink-400">p</span> = <span class="text-blue-300">a_n</span>
-<span class="text-violet-400">for</span> <span class="text-blue-300">i</span> = <span
-class="text-blue-300">n-1</span> to <span class="text-blue-300">0</span> step <span
-class="text-blue-300">-1</span>
-<span class="text-pink-400">p</span> = <span class="text-blue-300">a_i</span> + <span
-class="text-pink-400">x</span>*<span class="text-pink-400">p</span>
-<span class="text-violet-400">end</span>
-</div>
+                    <span class="text-pink-400">p</span> = <span class="text-blue-300">a_n</span>
+                    <span class="text-violet-400">for</span> <span class="text-blue-300">i</span> = <span
+                        class="text-blue-300">n-1</span> to <span class="text-blue-300">0</span> step <span
+                        class="text-blue-300">-1</span>
+                    <span class="text-pink-400">p</span> = <span class="text-blue-300">a_i</span> + <span
+                        class="text-pink-400">x</span>*<span class="text-pink-400">p</span>
+                    <span class="text-violet-400">end</span>
+                </div>
             </div>
         </section>
 
@@ -437,30 +450,54 @@ class="text-pink-400">x</span>*<span class="text-pink-400">p</span>
                     \[ x_k = (a x_{k-1} + c) \pmod M \]
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
-                        <h4 class="font-bold mb-2">Properties of Good Generators</h4>
-                        <ul class="text-sm space-y-1 list-disc pl-5">
-                            <li>Pass statistical tests of randomness</li>
-                            <li>Long period (time before repeating)</li>
-                            <li>Efficiency (speed/memory)</li>
-                            <li>Repeatability (for debugging)</li>
-                        </ul>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
-                        <h4 class="font-bold mb-2">Modern Methods</h4>
-                        <ul class="text-sm space-y-1">
-                            <li><strong>Mersenne Twister:</strong> (Matlab default) Long period.</li>
-                            <li><strong>Method of Marsaglia:</strong> Period $\approx 2^{1430}$.</li>
-                            <li><strong>Fibonacci:</strong> Uses differences/sums, very good statistical properties.
-                            </li>
-                        </ul>
+            </div>
+
+            <h3 class="font-bold text-lg mt-8 mb-2">Sampling Techniques</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold text-sm mb-2 text-violet-600">Uniform Interval $[a, b)$</h4>
+                    <p class="text-sm mb-2">To transform a standard uniform sample $x_k \in [0, 1)$ to a generic
+                        interval:</p>
+                    <div
+                        class="font-mono text-xs bg-white dark:bg-gray-800 p-2 rounded border border-gray-100 dark:border-gray-700">
+                        \[ r_k = (b-a)x_k + a \]
                     </div>
                 </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-2 text-violet-600">Non-Uniform (Inversion Method)</h4>
+                    <p class="text-sm mb-2">If CDF is invertible, we can map uniform samples. E.g., for exponential
+                        distribution $f(t) = \lambda e^{-\lambda t}$:</p>
+                    <div
+                        class="font-mono text-xs bg-white dark:bg-gray-800 p-2 rounded border border-gray-100 dark:border-gray-700">
+                        \[ y_k = -\frac{\log(1-x_k)}{\lambda} \]
+                    </div>
+                </div>
+            </div>
 
-                <h3 class="font-bold text-lg mt-8 mb-2">Quasi-Random Sequences</h3>
-                <p class="text-sm mb-4">Sometimes "true" randomness clumps together. Quasi-random sequences are designed
-                    to avoid clumping for better coverage of the sample space.</p>
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-2">Properties of Good Generators</h4>
+                    <ul class="text-sm space-y-1 list-disc pl-5">
+                        <li>Pass statistical tests of randomness</li>
+                        <li>Long period (time before repeating)</li>
+                        <li>Efficiency (speed/memory)</li>
+                        <li>Repeatability (for debugging)</li>
+                    </ul>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h4 class="font-bold mb-2">Modern Methods</h4>
+                    <ul class="text-sm space-y-1">
+                        <li><strong>Mersenne Twister:</strong> (Matlab default) Long period.</li>
+                        <li><strong>Method of Marsaglia:</strong> Period $\approx 2^{1430}$.</li>
+                        <li><strong>Fibonacci:</strong> Uses differences/sums, very good statistical properties.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="font-bold text-lg mt-8 mb-2">Quasi-Random Sequences</h3>
+            <p class="text-sm mb-4">Sometimes "true" randomness clumps together. Quasi-random sequences are designed
+                to avoid clumping for better coverage of the sample space.</p>
             </div>
         </section>
 
@@ -544,11 +581,11 @@ legend('Inside', 'Outside');</textarea>
                     </div>
                 </div>
                 <div class="mt-4">
-    <a href="https://octave-online.net" target="_blank" rel="noopener noreferrer" 
-       class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition font-semibold border border-gray-300">
-       <span class="text-xl">🚀</span> Open Octave Online
-    </a>
-</div>
+                    <a href="https://octave-online.net" target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition font-semibold border border-gray-300">
+                        <span class="text-xl">🚀</span> Open Octave Online
+                    </a>
+                </div>
             </div>
 
             <!-- Python Section -->
@@ -601,9 +638,10 @@ monte_carlo_pi(100000)
                             Output</div>
                         <pre id="python-output"
                             class="w-full min-h-[16rem] p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
-                        
+
                         <!-- Show Code Button -->
-                        <button onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
+                        <button
+                            onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
                             class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition text-gray-600 dark:text-gray-300">
                             ↑ Show Code
                         </button>
@@ -616,7 +654,7 @@ monte_carlo_pi(100000)
     </main>
 
     <footer class="text-center py-8 text-gray-500 text-sm">
-        <p> 2025  </p>
+        <p> 2025 </p>
     </footer>
 
     <script>
@@ -665,7 +703,7 @@ monte_carlo_pi(100000)
             }
         }
 
-        
+
         // CodeMirror Setup
         var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
             mode: "python",
@@ -684,7 +722,7 @@ monte_carlo_pi(100000)
             readOnly: false,
             viewportMargin: Infinity // Auto resize
         });
-    
+
 
         // Pyodide Setup
         async function main() {
@@ -718,7 +756,7 @@ monte_carlo_pi(100000)
                 window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
 
                 output.innerText = ""; // Clear previous
-                
+
                 // Scroll to output
                 document.getElementById("python-output-section").scrollIntoView({ behavior: "smooth" });
                 await window.pyodide.runPythonAsync(code);
