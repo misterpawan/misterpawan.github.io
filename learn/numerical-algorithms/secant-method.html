@@ -225,13 +225,13 @@
                 <div>
                     <h3 class="font-bold mb-4">Secant Algorithm</h3>
                     <div class="code-block text-xs">
-                        initialize x1, x2
-                        for k = 2, 3, ...
-                        f_k = f(x_k)
-                        f_km1 = f(x_{k-1})
-
-                        if abs(f_k) < tol, stop % Calculate update slope=(f_k - f_km1) / (x_k - x_{k-1}) x_{k+1}=x_k -
-                            f_k / slope end </div>
+initialize x1, x2
+for k = 2, 3, ...
+    f_k = f(x_k)
+    f_km1 = f(x_{k-1})
+    if abs(f_k) < tol, stop % Calculate update slope=(f_k - f_km1) / (x_k - x_{k-1}) x_{k+1}=x_k -
+        f_k / slope end
+</div>
                     </div>
                     <div>
                         <h3 class="font-bold mb-4">Convergence Comparison</h3>
@@ -347,10 +347,10 @@
             <div class="mt-8">
                 <h3 class="font-bold mb-2">Usage Example</h3>
                 <div class="code-block text-xs">
-                    options = optimset('Display','iter');
-                    f = @(x) x.^10 - 1;
-                    [x, fx] = fzero(f, 0.5, options);
-                </div>
+options = optimset('Display','iter');
+f = @(x) x.^10 - 1;
+[x, fx] = fzero(f, 0.5, options);
+</div>
             </div>
         </section>
 

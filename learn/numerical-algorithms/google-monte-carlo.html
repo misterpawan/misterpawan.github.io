@@ -151,17 +151,16 @@
                     \begin{bmatrix}2\\-8\end{bmatrix}, \quad c = 0$</p>
 
                 <div class="code-block text-xs md:text-sm">
-                    <span class="text-gray-400">% MATLAB Visualization</span>
-                    syms x y
-                    X = [x;y];
-                    A = [3 2; 2 6]; b= [2; -8];
-                    f = (1/2) * transpose(X) * A * X - transpose(b) * X;
-
-                    ezsurfc(f)
-                    hold on;
-                    ezplot('(1/2) * (2 - 3*x)');
-                    ezplot('(1/6) * (-8 - 2*x)');
-                </div>
+<span class="text-gray-400">% MATLAB Visualization</span>
+syms x y
+X = [x;y];
+A = [3 2; 2 6]; b= [2; -8];
+f = (1/2) * transpose(X) * A * X - transpose(b) * X;
+ezsurfc(f)
+hold on;
+ezplot('(1/2) * (2 - 3*x)');
+ezplot('(1/6) * (-8 - 2*x)');
+</div>
 
                 <h3 class="font-bold text-lg mt-4">Gradient & Minima</h3>
                 <p>The gradient $\nabla f(x)$ points uphill. The derivation of the $i^{th}$ component yields:</p>
@@ -205,19 +204,18 @@
                 converges in at most $n$ steps.</p>
 
             <div class="code-block">
-                <span class="text-gray-500">// Conjugate Gradient Algorithm</span>
-                $x_0 = $ initial guess
-                $r_0 = b - Ax_0$
-                $s_0 = r_0$
-
-                <span class="text-blue-400">for</span> $k = 0, 1, 2, \dots$
-                $\alpha_k = \frac{r_k^T r_k}{s_k^T A s_k}$ <span class="text-green-500">% Step size</span>
-                $x_{k+1} = x_k + \alpha_k s_k$ <span class="text-green-500">% Update x</span>
-                $r_{k+1} = r_k - \alpha_k A s_k$ <span class="text-green-500">% Update residual</span>
-                $\beta_{k+1} = \frac{r_{k+1}^T r_{k+1}}{r_k^T r_k}$ <span class="text-green-500">% Gram-Schmidt-like
-                    correction</span>
-                $s_{k+1} = r_{k+1} + \beta_{k+1} s_k$ <span class="text-green-500">% New conjugate direction</span>
-            </div>
+<span class="text-gray-500">// Conjugate Gradient Algorithm</span>
+$x_0 = $ initial guess
+$r_0 = b - Ax_0$
+$s_0 = r_0$
+<span class="text-blue-400">for</span> $k = 0, 1, 2, \dots$
+$\alpha_k = \frac{r_k^T r_k}{s_k^T A s_k}$ <span class="text-green-500">% Step size</span>
+$x_{k+1} = x_k + \alpha_k s_k$ <span class="text-green-500">% Update x</span>
+$r_{k+1} = r_k - \alpha_k A s_k$ <span class="text-green-500">% Update residual</span>
+$\beta_{k+1} = \frac{r_{k+1}^T r_{k+1}}{r_k^T r_k}$ <span class="text-green-500">% Gram-Schmidt-like
+correction</span>
+$s_{k+1} = r_{k+1} + \beta_{k+1} s_k$ <span class="text-green-500">% New conjugate direction</span>
+</div>
         </section>
 
         <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
@@ -338,11 +336,11 @@
             </div>
 
             <div class="code-block mt-4">
-                <span class="text-gray-400">% MATLAB: Moler's Surfer</span>
-                [U,G] = surfer('http://www.uiuc.edu', 20);
-                spy(G); <span class="text-green-500">% View sparsity structure</span>
-                pagerank(U,G);
-            </div>
+<span class="text-gray-400">% MATLAB: Moler's Surfer</span>
+[U,G] = surfer('http://www.uiuc.edu', 20);
+spy(G); <span class="text-green-500">% View sparsity structure</span>
+pagerank(U,G);
+</div>
         </section>
 
         <div class="flex items-center gap-4 mb-6 mt-12">

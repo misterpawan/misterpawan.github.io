@@ -235,12 +235,12 @@
             </div>
 
             <div class="code-block">
-                >> A = rand(10,10);
-                >> cond(A)
-                43.4237
-                >> cond(A'*A)
-                1.8856e+03
-            </div>
+>> A = rand(10,10);
+>> cond(A)
+43.4237
+>> cond(A'*A)
+1.8856e+03
+</div>
 
             <p class="mt-4 italic">How can we solve the least squares problem without squaring the condition of the
                 matrix?</p>
@@ -352,23 +352,20 @@
             <p>From this, we see that $r_{ij} = q_i^T a_j$ for $j > i$.</p>
 
             <div class="code-block">
-                <span class="text-gray-500">% MATLAB: Gram-Schmidt QR</span>
-                function [Q,R] = gs_qr (A)
-
-                m = size(A,1);
-                n = size(A,2);
-
-                for i = 1:n
-                R(i,i) = norm(A(:,i),2);
-                Q(:,i) = A(:,i)./R(i,i);
-                for j = i+1:n
-                R(i,j) = Q(:,i)' * A(:,j);
-                A(:,j) = A(:,j) - R(i,j)*Q(:,i);
-                end
-                end
-
-                end
-            </div>
+<span class="text-gray-500">% MATLAB: Gram-Schmidt QR</span>
+function [Q,R] = gs_qr (A)
+    m = size(A,1);
+    n = size(A,2);
+    for i = 1:n
+        R(i,i) = norm(A(:,i),2);
+        Q(:,i) = A(:,i)./R(i,i);
+        for j = i+1:n
+            R(i,j) = Q(:,i)' * A(:,j);
+            A(:,j) = A(:,j) - R(i,j)*Q(:,i);
+        end
+    end
+end
+</div>
         </section>
 
         <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">

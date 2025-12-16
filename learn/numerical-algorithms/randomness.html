@@ -257,13 +257,13 @@
             <p class="mt-4 text-center font-bold">Therefore: $\pi \approx \frac{4}{N} \sum_{i=1}^{N}f(x_i,y_i)$</p>
 
             <div class="code-block mt-6">
-                input N
-                call rand in 2d
-                for i=1:N
-                sum = sum + f(x_i,y_i)
-                end
-                sum = 4*sum/N
-            </div>
+input N
+call rand in 2d
+for i=1:N
+    sum = sum + f(x_i,y_i)
+end
+sum = 4*sum/N
+</div>
 
             <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mt-6 border-l-4 border-yellow-500">
                 <p>The expected value of the error is $\mO(\frac{1}{\sqrt{N}})$.</p>
@@ -328,9 +328,9 @@
                 debugging!).</p>
 
             <div class="code-block mt-4">
-                >> rand('seed', 1234)
-                >> rand(10, 1) % Generates same sequence every time
-            </div>
+>> rand('seed', 1234)
+>> rand(10, 1) % Generates same sequence every time
+</div>
 
             <h3 class="font-bold text-lg mt-6">Properties of a Good RNG</h3>
             <ul class="list-disc list-inside space-y-1">
@@ -374,11 +374,11 @@
                 <li>
                     <strong>Method of Marsaglia</strong> (Period $\approx 2^{1430}$).
                     <div class="code-block text-xs">
-                        Initialize x_0...x_3 and c
-                        s = 2111111111*x_{n-4} + 1492*x_{n-3} + 1776*x_{n-2} + 5115*x_{n-1} + c
-                        x_n = s mod 2^32
-                        c = floor(s/2^32)
-                    </div>
+Initialize x_0...x_3 and c
+s = 2111111111*x_{n-4} + 1492*x_{n-3} + 1776*x_{n-2} + 5115*x_{n-1} + c
+x_n = s mod 2^32
+c = floor(s/2^32)
+</div>
                 </li>
                 <li>
                     <strong>Unix rand()</strong>: uses $a=1103515245, c=12345, m=2^{31}$.

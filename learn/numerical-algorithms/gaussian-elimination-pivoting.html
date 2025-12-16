@@ -314,22 +314,19 @@
                 </div>
                 <div>
                     <div class="code-block text-xs">
-                        % Scaled Partial Pivoting (Forward)
-                        L = 1:n;
-                        s = max(abs(A), [], 2);
-
-                        for k = 1:n-1
-                        [~, j] = max(abs(A(L(k:n), k)) ./ s(L(k:n)));
-                        j = j + k - 1; % Adjust index
-
-                        L([k j]) = L([j k]); % Swap indices
-
-                        for i = k+1:n
-                        mult = A(L(i),k) / A(L(k),k);
-                        A(L(i), k:n) = A(L(i), k:n) - mult * A(L(k), k:n);
-                        end
-                        end
-                    </div>
+% Scaled Partial Pivoting (Forward)
+L = 1:n;
+s = max(abs(A), [], 2);
+for k = 1:n-1
+    [~, j] = max(abs(A(L(k:n), k)) ./ s(L(k:n)));
+    j = j + k - 1; % Adjust index
+    L([k j]) = L([j k]); % Swap indices
+    for i = k+1:n
+        mult = A(L(i),k) / A(L(k),k);
+        A(L(i), k:n) = A(L(i), k:n) - mult * A(L(k), k:n);
+    end
+end
+</div>
                 </div>
             </div>
         </section>

@@ -171,18 +171,18 @@
                 <div>
                     <h3 class="font-bold text-lg mb-2">Algorithm</h3>
                     <div class="code-block text-xs">
-                        % Bisection
-                        initialize a, b
-                        for k = 1, 2, ...
-                        x_m = a + (b - a) / 2
-                        if sign(f(x_m)) == sign(f(a))
-                        a = x_m
-                        else
-                        b = x_m
-                        end
-                        if converged, stop
-                        end
-                    </div>
+% Bisection
+initialize a, b
+for k = 1, 2, ...
+    x_m = a + (b - a) / 2
+    if sign(f(x_m)) == sign(f(a))
+        a = x_m
+    else
+        b = x_m
+    end
+    if converged, stop
+    end
+</div>
                 </div>
             </div>
 
@@ -410,9 +410,9 @@
                 <p class="text-sm mb-4">Hybrid method! Combines Bisection, Secant, and Inverse Quadratic Interpolation.
                 </p>
                 <div class="code-block text-xs">
-                    options = optimset('Display','iter');
-                    x = fzero(@(x) x^10 - 1, 0.5, options);
-                </div>
+options = optimset('Display','iter');
+x = fzero(@(x) x^10 - 1, 0.5, options);
+</div>
             </div>
         </section>
 

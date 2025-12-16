@@ -259,20 +259,22 @@
                     <h3 class="font-bold mb-2 text-blue-600">Jacobi Method</h3>
                     <p class="text-sm mb-2">Approximates $A$ with its diagonal $D$.</p>
                     <div class="code-block text-xs">
-                        Q = diag(A)
-                        for k = 1:max_iter
-                        r = b - A*x
-                        if norm(r) < tol, break x=x + r ./ diag(A) end </div>
+Q = diag(A)
+for k = 1:max_iter
+    r = b - A*x
+    if norm(r) < tol, break x=x + r ./ diag(A) end
+</div>
                     </div>
                     <div>
                         <h3 class="font-bold mb-2 text-violet-600">Gauss-Seidel Method</h3>
                         <p class="text-sm mb-2">Approximates $A$ with its lower triangle ($D-L$). Uses updated values
                             immediately.</p>
                         <div class="code-block text-xs">
-                            Q = tril(A) % Lower triangular
-                            for k = 1:max_iter
-                            r = b - A*x
-                            if norm(r) < tol, break % Solve Q*delta=r efficiently x=x + forward_sub(Q, r) end </div>
+Q = tril(A) % Lower triangular
+for k = 1:max_iter
+    r = b - A*x
+    if norm(r) < tol, break % Solve Q*delta=r efficiently x=x + forward_sub(Q, r) end
+</div>
                         </div>
                     </div>
         </section>
@@ -327,19 +329,19 @@
                     <strong>conjugate directions</strong>. This guarantees convergence in at most $n$ steps (in exact
                     arithmetic).</p>
                 <div class="code-block text-xs">
-                    % Conjugate Gradient Algorithm
-                    x = x0
-                    r = b - A*x
-                    s = r
-                    for k = 1:n
-                    alpha = (r'*r) / (s'*A*s)
-                    x = x + alpha * s
-                    r_new = r - alpha * A * s
-                    beta = (r_new'*r_new) / (r'*r)
-                    s = r_new + beta * s
-                    r = r_new
-                    end
-                </div>
+% Conjugate Gradient Algorithm
+x = x0
+r = b - A*x
+s = r
+for k = 1:n
+    alpha = (r'*r) / (s'*A*s)
+    x = x + alpha * s
+    r_new = r - alpha * A * s
+    beta = (r_new'*r_new) / (r'*r)
+    s = r_new + beta * s
+    r = r_new
+end
+</div>
             </div>
         </section>
 

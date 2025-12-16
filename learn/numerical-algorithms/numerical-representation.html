@@ -305,12 +305,11 @@
                 </div>
                 <p class="mb-4">Use Matlab commands to check conversions:</p>
                 <div class="code-block mb-4">
-                    >> dec2bin(197)
-                    ans = 11000101
-
-                    >> bin2dec('11000101')
-                    ans = 197
-                </div>
+>> dec2bin(197)
+ans = 11000101
+>> bin2dec('11000101')
+ans = 197
+</div>
                 <p class="mb-2">What is the binary representation of $(5)_{10}$?</p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button onclick="checkAnswer(this, false)"
@@ -334,16 +333,16 @@
             <p class="mb-4">Converting fractions doesn't always end cleanly. Consider the algorithm:</p>
 
             <div class="code-block text-sm mb-6">
-                <span class="code-keyword">r_0</span> = x
-                <span class="code-keyword">for</span> k = 1, 2, ..., m
-                <span class="code-keyword">if</span> r_{k-1} >= 2^{-k}
-                b_k = 1
-                r_k = r_{k-1} - 2^{-k}
-                <span class="code-keyword">else</span>
-                b_k = 0
-                <span class="code-keyword">end</span>
-                <span class="code-keyword">end</span>
-            </div>
+<span class="code-keyword">r_0</span> = x
+<span class="code-keyword">for</span> k = 1, 2, ..., m
+<span class="code-keyword">if</span> r_{k-1} >= 2^{-k}
+b_k = 1
+r_k = r_{k-1} - 2^{-k}
+<span class="code-keyword">else</span>
+b_k = 0
+<span class="code-keyword">end</span>
+<span class="code-keyword">end</span>
+</div>
 
             <div class="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border-l-4 border-red-500">
                 <h3 class="font-bold text-red-700 dark:text-red-300 mb-2">The Infinite Series</h3>

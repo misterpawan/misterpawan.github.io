@@ -216,17 +216,16 @@
             <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
                 <h4 class="font-bold mb-2">Matlab Implementation</h4>
                 <div class="code-block text-sm">
-                    >> u = [0; 1; 2; 3]; v = [3; 2; 1; 0];
-                    >> dot_prod = u' * v % Inner Product (Scalar)
-                    ans = 4
-
-                    >> out_prod = u * v' % Outer Product (Matrix)
-                    ans =
-                    0 0 0 0
-                    3 2 1 0
-                    6 4 2 0
-                    9 6 3 0
-                </div>
+>> u = [0; 1; 2; 3]; v = [3; 2; 1; 0];
+>> dot_prod = u' * v % Inner Product (Scalar)
+ans = 4
+>> out_prod = u * v' % Outer Product (Matrix)
+ans =
+0 0 0 0
+3 2 1 0
+6 4 2 0
+9 6 3 0
+</div>
             </div>
         </section>
 
@@ -352,12 +351,11 @@
                     <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
                         <h4 class="font-bold text-sm mb-2 text-red-500">Numerical Rank is Tricky!</h4>
                         <div class="code-block text-xs">
-                            >> A = [1 0 0; 0 1 0; 0 0 1e-15];
-                            >> rank(A) % Might be 3
-
-                            >> A(3,3) = 0;
-                            >> rank(A) % Is 2
-                        </div>
+>> A = [1 0 0; 0 1 0; 0 0 1e-15];
+>> rank(A) % Might be 3
+>> A(3,3) = 0;
+>> rank(A) % Is 2
+</div>
                         <p class="text-xs mt-2 text-gray-500">Tiny computer errors can make a singular matrix appear
                             non-singular.</p>
                     </div>

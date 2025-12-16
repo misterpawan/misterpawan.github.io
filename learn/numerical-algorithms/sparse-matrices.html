@@ -344,29 +344,29 @@
                 <div>
                     <h3 class="font-bold mb-2">Matrix-Vector ($z = Ax$)</h3>
                     <div class="code-block text-xs">
-                        % General Logic
-                        z = 0
-                        for i = 1 to m
-                        for col in A(i,:)
-                        z(i) += A(i,col) * x(col)
-                        end
-                        end
-                    </div>
+% General Logic
+z = 0
+for i = 1 to m
+    for col in A(i,:)
+        z(i) += A(i,col) * x(col)
+    end
+end
+</div>
                     <p class="text-xs mt-2 text-gray-500">Cost: $\mathcal{O}(nnz)$</p>
                 </div>
                 <div>
                     <h3 class="font-bold mb-2">Matrix-Matrix ($Z = AB$)</h3>
                     <div class="code-block text-xs">
-                        % Row-wise logic
-                        Z = 0
-                        for i = 1 to m
-                        for colA in A(i,:)
-                        for colB in B(colA,:)
-                        Z(i,colB) += A(i,colA) * B(colA,colB)
-                        end
-                        end
-                        end
-                    </div>
+% Row-wise logic
+Z = 0
+for i = 1 to m
+    for colA in A(i,:)
+        for colB in B(colA,:)
+            Z(i,colB) += A(i,colA) * B(colA,colB)
+        end
+    end
+end
+</div>
                     <p class="text-xs mt-2 text-gray-500">Problem: $Z$ is sparse but structure is unknown beforehand.
                     </p>
                 </div>

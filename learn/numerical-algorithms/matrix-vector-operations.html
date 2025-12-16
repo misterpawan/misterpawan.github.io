@@ -514,26 +514,26 @@
                 <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                     <h4 class="font-bold mb-2">Matrix-Vector Multiplication Algorithm</h4>
                     <div class="code-block text-sm">
-                        for i = 1...n
-                        for j = 1...n
-                        v(i) = a(i,j)*u(j) + v(i)
-                        end
-                        end
-                    </div>
+for i = 1...n
+    for j = 1...n
+        v(i) = a(i,j)*u(j) + v(i)
+    end
+end
+</div>
                     <p class="text-xs text-right mt-2 text-gray-500">$n^2$ multiplies, $n^2$ additions $\rightarrow
                         \mO(n^2)$</p>
                 </div>
                 <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                     <h4 class="font-bold mb-2">Matrix-Matrix Multiplication Algorithm</h4>
                     <div class="code-block text-sm">
-                        for j = 1...n
-                        for i = 1...n
-                        for k = 1...n
-                        C(k,j) = A(k,i)*B(i,j) + C(k,j)
-                        end
-                        end
-                        end
-                    </div>
+for j = 1...n
+    for i = 1...n
+        for k = 1...n
+            C(k,j) = A(k,i)*B(i,j) + C(k,j)
+        end
+    end
+end
+</div>
                     <p class="text-xs text-right mt-2 text-gray-500">$n^3$ multiplies, $n^3$ additions $\rightarrow
                         \mO(n^3)$</p>
                 </div>
@@ -558,10 +558,10 @@
                         <p class="mt-4 text-sm"><strong>Cost:</strong> $\mO(n)$ FLOPS (Cheap!)</p>
                     </div>
                     <div class="code-block text-sm">
-                        <span class="text-gray-500">% Matlab</span>
-                        A = ... % Diagonal Matrix
-                        x = b ./ diag(A)
-                    </div>
+<span class="text-gray-500">% Matlab</span>
+A = ... % Diagonal Matrix
+x = b ./ diag(A)
+</div>
                 </div>
             </div>
 
@@ -581,15 +581,15 @@
                     <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
                         <h4 class="font-bold mb-2">Forward Substitution Algo</h4>
                         <div class="code-block text-xs">
-                            x(1) = b(1)/L(1,1)
-                            for i = 2...n
-                            s = b(i)
-                            for j = 1...i-1
-                            s = s - L(i,j)*x(j)
-                            end
-                            x(i) = s/L(i,i)
-                            end
-                        </div>
+x(1) = b(1)/L(1,1)
+for i = 2...n
+    s = b(i)
+    for j = 1...i-1
+        s = s - L(i,j)*x(j)
+    end
+    x(i) = s/L(i,i)
+end
+</div>
                     </div>
                 </div>
                 <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border-l-4 border-yellow-500">

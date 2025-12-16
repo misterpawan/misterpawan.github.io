@@ -356,11 +356,11 @@
                 $$ \int_0^1 f(x)\,dx \approx \frac{1}{n} \sum_{i=1}^{n} f(x_i) $$
 
                 <div class="code-block">
-                    n = 100;
-                    x = rand(n, 1);
-                    a = f(x);
-                    s = sum(a) / n;
-                </div>
+n = 100;
+x = rand(n, 1);
+a = f(x);
+s = sum(a) / n;
+</div>
             </div>
         </section>
 
@@ -385,13 +385,13 @@
             $$ \pi \approx \frac{4}{N} \sum_{i=1}^{N}f(x_i,y_i) $$
 
             <div class="code-block mt-4">
-                input N
-                call rand in 2d
-                for i = 1:N
-                sum = sum + f(x_i, y_i)
-                end
-                sum = 4 * sum / N
-            </div>
+input N
+call rand in 2d
+for i = 1:N
+    sum = sum + f(x_i, y_i)
+end
+sum = 4 * sum / N
+</div>
         </section>
 
         <section class="glass p-8 rounded-3xl shadow-sm aos-init" data-aos="fade-up">
@@ -441,13 +441,13 @@
 
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="code-block">
-                    // C Output
-                    ... estimate of pi is 3.14155
-                </div>
+// C Output
+... estimate of pi is 3.14155
+</div>
                 <div class="code-block">
-                    % MATLAB Output
-                    ... estimate of pi is 3.141597
-                </div>
+% MATLAB Output
+... estimate of pi is 3.141597
+</div>
             </div>
 
             <div

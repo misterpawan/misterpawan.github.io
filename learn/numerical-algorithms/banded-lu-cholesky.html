@@ -216,12 +216,12 @@
                 <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
                     <h3 class="font-bold mb-2 text-blue-600">Elimination Algorithm</h3>
                     <div class="code-block text-xs">
-                        for i = 2:n
-                        xmult = a(i-1) / d(i-1)
-                        d(i) = d(i) - xmult * c(i-1)
-                        b(i) = b(i) - xmult * b(i-1)
-                        end
-                    </div>
+for i = 2:n
+    xmult = a(i-1) / d(i-1)
+    d(i) = d(i) - xmult * c(i-1)
+    b(i) = b(i) - xmult * b(i-1)
+end
+</div>
                     <p class="text-xs text-right mt-2 text-gray-500 font-bold">Cost: $\mathcal{O}(n)$</p>
                 </div>
             </div>
@@ -366,13 +366,13 @@
                 <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
                     <h3 class="font-bold mb-2">Algorithm</h3>
                     <div class="code-block text-xs">
-                        for k = 1:n
-                        L(k,k) = sqrt(A(k,k) - sum(L(k, 1:k-1).^2));
-                        for j = k+1:n
-                        L(j,k) = (A(j,k) - sum(L(j,1:k-1).*L(k,1:k-1))) / L(k,k);
-                        end
-                        end
-                    </div>
+for k = 1:n
+    L(k,k) = sqrt(A(k,k) - sum(L(k, 1:k-1).^2));
+    for j = k+1:n
+        L(j,k) = (A(j,k) - sum(L(j,1:k-1).*L(k,1:k-1))) / L(k,k);
+    end
+end
+</div>
                 </div>
             </div>
         </section>

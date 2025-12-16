@@ -205,15 +205,15 @@
             <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-2xl">
                 <h3 class="font-bold mb-4">Algorithm: Backward Substitution</h3>
                 <div class="code-block text-sm">
-                    x(n) = b(n) / A(n,n)
-                    for i = n-1 down to 1
-                    s = b(i)
-                    for j = i+1 to n
-                    s = s - A(i,j) * x(j)
-                    end
-                    x(i) = s / A(i,i)
-                    end
-                </div>
+x(n) = b(n) / A(n,n)
+for i = n-1 down to 1
+    s = b(i)
+    for j = i+1 to n
+        s = s - A(i,j) * x(j)
+    end
+    x(i) = s / A(i,i)
+end
+</div>
                 <div
                     class="mt-4 p-3 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg text-sm font-bold text-center">
                     Cost: $\mathcal{O}(n^2)$ FLOPS (Cheap!)
@@ -307,17 +307,17 @@
                 <div>
                     <h3 class="font-bold mb-4">Forward Elimination Code</h3>
                     <div class="code-block text-xs">
-                        for k = 1 to n-1 % Pivot row
-                        for i = k+1 to n % Target row
-                        xmult = A(i,k) / A(k,k)
-                        A(i,k) = xmult % Store multiplier
-                        for j = k+1 to n % Columns
-                        A(i,j) = A(i,j) - xmult * A(k,j)
-                        end
-                        b(i) = b(i) - xmult * b(k)
-                        end
-                        end
-                    </div>
+for k = 1 to n-1 % Pivot row
+    for i = k+1 to n % Target row
+        xmult = A(i,k) / A(k,k)
+        A(i,k) = xmult % Store multiplier
+        for j = k+1 to n % Columns
+            A(i,j) = A(i,j) - xmult * A(k,j)
+        end
+        b(i) = b(i) - xmult * b(k)
+    end
+end
+</div>
                 </div>
                 <div>
                     <h3 class="font-bold mb-4">Computational Cost</h3>

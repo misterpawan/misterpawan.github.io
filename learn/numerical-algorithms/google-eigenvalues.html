@@ -267,10 +267,10 @@
                     URL and crawls to build the matrix.
                 </p>
                 <div class="code-block text-xs mb-4">
-                    [U, G] = surfer('http://www.uiuc.edu', n);
-                    spy(G); % Visualize the sparsity structure
-                    pagerank(U, G); % Compute the PageRank vector
-                </div>
+[U, G] = surfer('http://www.uiuc.edu', n);
+spy(G); % Visualize the sparsity structure
+pagerank(U, G); % Compute the PageRank vector
+</div>
                 <p class="text-xs text-gray-600 dark:text-gray-400">
                     <strong>G</strong> is the sparse $n \times n$ connectivity matrix ($G_{ji}=1$ if link $j \to
                     i$).<br>
@@ -310,13 +310,13 @@
                 <div>
                     <h3 class="font-bold text-lg mb-2">The Algorithm</h3>
                     <div class="code-block text-xs">
-                        x = random_vector()
-                        for k = 1:max_iter
-                        y = A * x
-                        lambda = norm(y)
-                        x = y / lambda
-                        end
-                    </div>
+x = random_vector()
+for k = 1:max_iter
+    y = A * x
+    lambda = norm(y)
+    x = y / lambda
+end
+</div>
                 </div>
                 <div>
                     <h3 class="font-bold text-lg mb-2">Why it works</h3>
