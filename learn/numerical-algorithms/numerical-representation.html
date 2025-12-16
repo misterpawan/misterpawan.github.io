@@ -57,7 +57,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    
+
     <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
@@ -68,7 +68,8 @@
         .CodeMirror {
             border-radius: 0.75rem;
             border: 1px solid #e5e7eb;
-            height: auto !important; /* Auto height */
+            height: auto !important;
+            /* Auto height */
             font-size: 0.875rem;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
@@ -305,11 +306,11 @@
                 </div>
                 <p class="mb-4">Use Matlab commands to check conversions:</p>
                 <div class="code-block mb-4">
->> dec2bin(197)
-ans = 11000101
->> bin2dec('11000101')
-ans = 197
-</div>
+                    >> dec2bin(197)
+                    ans = 11000101
+                    >> bin2dec('11000101')
+                    ans = 197
+                </div>
                 <p class="mb-2">What is the binary representation of $(5)_{10}$?</p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button onclick="checkAnswer(this, false)"
@@ -333,16 +334,16 @@ ans = 197
             <p class="mb-4">Converting fractions doesn't always end cleanly. Consider the algorithm:</p>
 
             <div class="code-block text-sm mb-6">
-<span class="code-keyword">r_0</span> = x
-<span class="code-keyword">for</span> k = 1, 2, ..., m
-<span class="code-keyword">if</span> r_{k-1} >= 2^{-k}
-b_k = 1
-r_k = r_{k-1} - 2^{-k}
-<span class="code-keyword">else</span>
-b_k = 0
-<span class="code-keyword">end</span>
-<span class="code-keyword">end</span>
-</div>
+                <span class="code-keyword">r_0</span> = x
+                <span class="code-keyword">for</span> k = 1, 2, ..., m
+                <span class="code-keyword">if</span> r_{k-1} >= 2^{-k}
+                b_k = 1
+                r_k = r_{k-1} - 2^{-k}
+                <span class="code-keyword">else</span>
+                b_k = 0
+                <span class="code-keyword">end</span>
+                <span class="code-keyword">end</span>
+            </div>
 
             <div class="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border-l-4 border-red-500">
                 <h3 class="font-bold text-red-700 dark:text-red-300 mb-2">The Infinite Series</h3>
@@ -400,10 +401,41 @@ b_k = 0
                         is in the processor. He contacts Intel (Oct 24), but after no action, sends a public email (Oct
                         30).</p>
                     <div
-                        class="mt-3 bg-gray-100 dark:bg-gray-800 p-3 rounded text-xs font-mono border-l-2 border-orange-400">
-                        "In short, the Pentium FPU is returning erroneous values for certain division operations. For
-                        example, 1/824633702441.0 is calculated incorrectly..."
-                    </div>
+                        class="mt-3 bg-gray-100 dark:bg-gray-800 p-4 rounded text-xs font-mono border-l-2 border-orange-400 overflow-x-auto whitespace-pre">
+                        FROM: Dr. Thomas R. Nicely
+                        Professor of Mathematics
+                        Lynchburg College
+                        1501 Lakeside Drive
+                        Lynchburg, Virginia 24501-3199
+
+                        Phone: 804-522-8374
+                        Fax: 804-522-8499
+                        Internet: nicely@acavax.lynchburg.edu
+
+                        TO: Whom it may concern
+
+                        RE: Bug in the Pentium FPU
+
+                        DATE: 30 October 1994
+
+                        It appears that there is a bug in the floating point unit
+                        (numeric coprocessor) of many, and perhaps all, Pentium
+                        processors.
+
+                        In short, the Pentium FPU is returning erroneous values
+                        for certain division operations. For example,
+                        0001/824633702441.0
+                        is calculated incorrectly (all digits beyond the eighth
+                        significant digit are in error). This can be verified in
+                        compiled code, an ordinary spreadsheet such as Quattro Pro
+                        or Excel, or even the Windows calculator (use the
+                        scientific mode), by computing
+                        (824633702441.0)*(1/824633702441.0),
+                        which should equal 1 exactly (within some extremely small
+                        rounding error; in general, coprocessor results should
+                        contain 19 significant decimal digits). However, the
+                        Pentiums tested return
+                        0.999999996274709702</div>
                 </div>
 
                 <div class="mb-8 relative">
@@ -411,8 +443,18 @@ b_k = 0
                         class="absolute -left-[29px] top-1 w-5 h-5 rounded-full bg-blue-500 border-4 border-white dark:border-gray-900">
                     </div>
                     <h4 class="font-bold text-lg">November 1994</h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Email goes global. Intel denies severity. Stock
-                        falls. MathWorks develops a software fix.</p>
+                    <ul
+                        class="text-sm space-y-2 mt-2 text-gray-600 dark:text-gray-400 border-l border-gray-200 dark:border-gray-700 pl-4 ml-1">
+                        <li><strong>Nov 1:</strong> Phar Lap Software receives Nicely's email and alerts Microsoft,
+                            Borland, Watcom.</li>
+                        <li><strong>Nov 2:</strong> Email goes global.</li>
+                        <li><strong>Nov 15:</strong> USC reverse-engineers the chip to expose the problem. Intel denies
+                            severity. Stock falls.</li>
+                        <li><strong>Nov 22:</strong> CNN <em>Moneyline</em> interviews Intel; they claim the problem is
+                            minor.</li>
+                        <li><strong>Nov 23:</strong> The MathWorks develops a software fix.</li>
+                        <li><strong>Nov 24:</strong> NYT story. Intel still sending flawed chips.</li>
+                    </ul>
                 </div>
 
                 <div class="relative">
@@ -675,9 +717,10 @@ float_to_bin_print(0.1, places=20)</textarea>
                             Output</div>
                         <pre id="python-output"
                             class="w-full min-h-[16rem] p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
-                        
+
                         <!-- Show Code Button -->
-                        <button onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
+                        <button
+                            onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
                             class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition text-gray-600 dark:text-gray-300">
                             ↑ Show Code
                         </button>
@@ -689,7 +732,7 @@ float_to_bin_print(0.1, places=20)</textarea>
     </main>
 
     <footer class="text-center py-8 text-gray-500 text-sm">
-        
+
     </footer>
 
     <script>
@@ -736,7 +779,7 @@ float_to_bin_print(0.1, places=20)</textarea>
             }
         }
 
-        
+
         // CodeMirror Setup
         var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
             mode: "python",
@@ -755,7 +798,7 @@ float_to_bin_print(0.1, places=20)</textarea>
             readOnly: false,
             viewportMargin: Infinity // Auto resize
         });
-    
+
 
         // Pyodide Setup
         async function main() {
@@ -789,7 +832,7 @@ float_to_bin_print(0.1, places=20)</textarea>
                 window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
 
                 output.innerText = ""; // Clear previous
-                
+
                 // Scroll to output
                 document.getElementById("python-output-section").scrollIntoView({ behavior: "smooth" });
                 await window.pyodide.runPythonAsync(code);
