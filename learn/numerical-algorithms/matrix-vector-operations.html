@@ -61,7 +61,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    
+
     <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
@@ -72,13 +72,12 @@
         .CodeMirror {
             border-radius: 0.75rem;
             border: 1px solid #e5e7eb;
-            height: auto !important; /* Auto height */
+            height: auto !important;
+            /* Auto height */
             font-size: 0.875rem;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
-
-    <style>
-        .glass {
+.glass {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -427,7 +426,7 @@
                     </div>
                     <div
                         class="bg-gray-100 dark:bg-gray-800 rounded-lg h-24 flex items-center justify-center text-xs text-gray-500">
-                        <img src="figs/app_foot.png" alt="Foot Simulation" class="max-h-full">
+                        <img src="figs/app_foot.jpg" alt="Foot Simulation" class="max-h-full">
                     </div>
                     <div
                         class="bg-gray-100 dark:bg-gray-800 rounded-lg h-24 flex items-center justify-center text-xs text-gray-500">
@@ -435,7 +434,7 @@
                     </div>
                     <div
                         class="bg-gray-100 dark:bg-gray-800 rounded-lg h-24 flex items-center justify-center text-xs text-gray-500">
-                        <img src="figs/app_cfd.png" alt="CFD Simulation" class="max-h-full">
+                        <img src="figs/app_cfd.jpg" alt="CFD Simulation" class="max-h-full">
                     </div>
                 </div>
             </div>
@@ -677,11 +676,11 @@ disp(['Solve time (Gaussian Elim): ' num2str(solve_time) ' seconds']);</textarea
                     </div>
                 </div>
                 <div class="mt-4">
-    <a href="https://octave-online.net" target="_blank" rel="noopener noreferrer" 
-       class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition font-semibold border border-gray-300">
-       <span class="text-xl">🚀</span> Open Octave Online
-    </a>
-</div>
+                    <a href="https://octave-online.net" target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition font-semibold border border-gray-300">
+                        <span class="text-xl">🚀</span> Open Octave Online
+                    </a>
+                </div>
             </div>
 
             <!-- Python Section -->
@@ -740,9 +739,10 @@ print(f"Residual: {np.linalg.norm(np.dot(A,x)-b):.6e}")</textarea>
                             Output</div>
                         <pre id="python-output"
                             class="w-full min-h-[16rem] p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
-                        
+
                         <!-- Show Code Button -->
-                        <button onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
+                        <button
+                            onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
                             class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition text-gray-600 dark:text-gray-300">
                             ↑ Show Code
                         </button>
@@ -801,7 +801,7 @@ print(f"Residual: {np.linalg.norm(np.dot(A,x)-b):.6e}")</textarea>
             }
         }
 
-        
+
         // CodeMirror Setup
         var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
             mode: "python",
@@ -820,7 +820,7 @@ print(f"Residual: {np.linalg.norm(np.dot(A,x)-b):.6e}")</textarea>
             readOnly: false,
             viewportMargin: Infinity // Auto resize
         });
-    
+
 
         // Pyodide Setup
         async function main() {
@@ -854,7 +854,7 @@ print(f"Residual: {np.linalg.norm(np.dot(A,x)-b):.6e}")</textarea>
                 window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
 
                 output.innerText = ""; // Clear previous
-                
+
                 // Scroll to output
                 document.getElementById("python-output-section").scrollIntoView({ behavior: "smooth" });
                 await window.pyodide.runPythonAsync(code);
