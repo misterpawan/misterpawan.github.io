@@ -61,6 +61,22 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+    
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/octave/octave.min.js"></script>
+
+    <style>
+        .CodeMirror {
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            height: auto !important; /* Auto height */
+            font-size: 0.875rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
     <style>
         .glass {
             background: rgba(255, 255, 255, 0.9);
@@ -430,8 +446,7 @@
             <div class="mb-4">
                 <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Copy & Paste into Terminal:</p>
                 <div class="group relative">
-                    <pre
-                        class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-xs font-mono overflow-x-auto border border-gray-200 dark:border-gray-700">
+                        <textarea id="octave-code">
 % Sparse Matrix Comparison
 n = 1000;
 dist = 3; % distance of off-diagonal from main
@@ -458,13 +473,13 @@ fprintf('Ratio: %.4f\n', sparse_mem/full_mem);
 x = ones(n, 1);
 y = S * x;
 disp('First 5 elements of y:');
-disp(y(1:5));</pre>
-                    <button
-                        onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);"
-                        class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
-                        Copy
-                    </button>
-                </div>
+disp(y(1:5));</textarea>
+                        <button
+                            onclick="navigator.clipboard.writeText(octaveEditor.getValue()); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);"
+                            class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition z-10">
+                            Copy
+                        </button>
+                    </div>
             </div>
             <div class="mt-4">
     <a href="https://octave-online.net" target="_blank" rel="noopener noreferrer" 
@@ -482,13 +497,9 @@ disp(y(1:5));</pre>
                 Python (Client-Side)
             </h3>
 
-            <div class="grid lg:grid-cols-2 gap-4">
-                <div class="relative group">
-                    <div class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
-                        main.py</div>
-                    <textarea id="python-code"
-                        class="w-full h-64 p-4 rounded-xl font-mono text-sm bg-gray-900 text-gray-100 border border-gray-700 focus:ring-2 focus:ring-green-500 outline-none"
-                        spellcheck="false">
+            <div class="flex flex-col gap-6">
+                    <div class="relative group" id="python-editor-section">
+                        <textarea id="python-code">
 import numpy as np
 import scipy.sparse
 import sys
@@ -521,19 +532,26 @@ def sparse_demo():
     print(y[:5])
 
 sparse_demo()</textarea>
-                    <button onclick="runPython()" id="run-btn"
-                        class="absolute bottom-4 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition flex items-center gap-2">
-                        <span>▶ Run Code</span>
-                    </button>
-                </div>
+                        <button onclick="runPython()" id="run-btn"
+                            class="absolute bottom-4 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition flex items-center gap-2 z-10">
+                            <span>▶ Run Code</span>
+                        </button>
+                    </div>
 
-                <div class="relative">
-                    <div class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
-                        Output</div>
-                    <pre id="python-output"
-                        class="w-full h-64 p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
+                    <div class="relative" id="python-output-section">
+                        <div
+                            class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
+                            Output</div>
+                        <pre id="python-output"
+                            class="w-full min-h-[16rem] p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
+                        
+                        <!-- Show Code Button -->
+                        <button onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
+                            class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition text-gray-600 dark:text-gray-300">
+                            ↑ Show Code
+                        </button>
+                    </div>
                 </div>
-            </div>
         </div>
     </section>
 
@@ -585,6 +603,27 @@ sparse_demo()</textarea>
             }
         }
 
+        
+        // CodeMirror Setup
+        var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
+            mode: "python",
+            theme: "default",
+            lineNumbers: true,
+            indentUnit: 4,
+            viewportMargin: Infinity // Auto resize
+        });
+
+        // CodeMirror Setup - Octave
+        var octaveEditor = CodeMirror.fromTextArea(document.getElementById("octave-code"), {
+            mode: "octave",
+            theme: "default",
+            lineNumbers: true,
+            indentUnit: 4,
+            readOnly: false,
+            viewportMargin: Infinity // Auto resize
+        });
+    
+
         // Pyodide Setup
         async function main() {
             try {
@@ -602,7 +641,7 @@ sparse_demo()</textarea>
         async function runPython() {
             const btn = document.getElementById("run-btn");
             const output = document.getElementById("python-output");
-            const code = document.getElementById("python-code").value;
+            const code = editor.getValue();
 
             if (!window.pyodide) {
                 output.innerText = "Python is still loading... please wait.";
@@ -618,6 +657,9 @@ sparse_demo()</textarea>
                 window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
 
                 output.innerText = ""; // Clear previous
+                
+                // Scroll to output
+                document.getElementById("python-output-section").scrollIntoView({ behavior: "smooth" });
                 await window.pyodide.runPythonAsync(code);
             } catch (err) {
                 output.innerText = "Error:\n" + err;
