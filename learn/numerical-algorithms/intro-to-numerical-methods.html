@@ -56,7 +56,20 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+
     <style>
+        .CodeMirror {
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            height: 16rem !important;
+            font-size: 0.875rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
         .glass {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -608,9 +621,7 @@ end</pre>
                         <div
                             class="absolute -top-3 left-4 bg-white dark:bg-gray-800 px-2 text-xs font-bold text-gray-500">
                             main.py</div>
-                        <textarea id="python-code"
-                            class="w-full h-64 p-4 rounded-xl font-mono text-sm bg-gray-900 text-gray-100 border border-gray-700 focus:ring-2 focus:ring-green-500 outline-none"
-                            spellcheck="false">
+                        <textarea id="python-code">
 import numpy as np
 
 def derivative_approx(x, h_start, iterations):
@@ -698,6 +709,14 @@ derivative_approx(x=1.0, h_start=1.0, iterations=10)
             }
         }
 
+        // CodeMirror Setup
+        var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
+            mode: "python",
+            theme: "default",
+            lineNumbers: true,
+            indentUnit: 4
+        });
+
         // Pyodide Setup
         async function main() {
             try {
@@ -714,7 +733,7 @@ derivative_approx(x=1.0, h_start=1.0, iterations=10)
         async function runPython() {
             const btn = document.getElementById("run-btn");
             const output = document.getElementById("python-output");
-            const code = document.getElementById("python-code").value;
+            const code = editor.getValue();
 
             if (!window.pyodide) {
                 output.innerText = "Python is still loading... please wait.";
