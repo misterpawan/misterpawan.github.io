@@ -57,7 +57,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    
+
     <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
@@ -68,7 +68,8 @@
         .CodeMirror {
             border-radius: 0.75rem;
             border: 1px solid #e5e7eb;
-            height: auto !important; /* Auto height */
+            height: auto !important;
+            /* Auto height */
             font-size: 0.875rem;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
@@ -441,11 +442,11 @@
                 <div>
                     <h4 class="font-bold mb-2">Matlab Check</h4>
                     <div class="code-block text-sm">
->> eps
-ans = 2.2204e-16
->> eps('single')
-ans = 1.1921e-07
-</div>
+                        >> eps
+                        ans = 2.2204e-16
+                        >> eps('single')
+                        ans = 1.1921e-07
+                    </div>
                 </div>
             </div>
 
@@ -528,6 +529,21 @@ ans = 1.1921e-07
                     <p class="font-mono text-xs text-green-500">Good: $y = \frac{q}{p + \sqrt{p^2 + q}}$</p>
                     <p class="text-xs mt-2 text-gray-500">The "Good" version avoids subtracting two large numbers.</p>
                 </div>
+            </div>
+            </div>
+
+            <div
+                class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-blue-100 dark:border-blue-900 mb-6">
+                <h3 class="font-bold text-blue-600 mb-2">Example: Function Rearrangement</h3>
+                <p class="text-sm mb-2">Consider $f(x) = \sqrt{x^2 + 1} - 1$. For $x \approx 0$, this subtracts two
+                    nearly equal numbers ($\approx 1 - 1$).</p>
+                <p class="text-sm mb-2"><strong>Fix:</strong> Multiply by the conjugate:</p>
+                <div class="overflow-x-auto py-2">
+                    \[ f(x) = (\sqrt{x^2 + 1} - 1) \cdot \frac{\sqrt{x^2+1}+1}{\sqrt{x^2+1}+1} =
+                    \frac{x^2}{\sqrt{x^2+1}+1} \]
+                </div>
+                <p class="text-sm">The result involves <strong>addition</strong> in the denominator, which is safe from
+                    cancellation.</p>
             </div>
 
 
@@ -729,9 +745,10 @@ print(f"Difference:   {abs(x1_bad - x1_good)}")</textarea>
                             Output</div>
                         <pre id="python-output"
                             class="w-full min-h-[16rem] p-4 rounded-xl font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 overflow-auto">Loading Python environment...</pre>
-                        
+
                         <!-- Show Code Button -->
-                        <button onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
+                        <button
+                            onclick="document.getElementById('python-editor-section').scrollIntoView({behavior: 'smooth'})"
                             class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition text-gray-600 dark:text-gray-300">
                             ↑ Show Code
                         </button>
@@ -743,7 +760,7 @@ print(f"Difference:   {abs(x1_bad - x1_good)}")</textarea>
     </main>
 
     <footer class="text-center py-8 text-gray-500 text-sm">
-        
+
     </footer>
 
     <script>
@@ -790,7 +807,7 @@ print(f"Difference:   {abs(x1_bad - x1_good)}")</textarea>
             }
         }
 
-        
+
         // CodeMirror Setup
         var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
             mode: "python",
@@ -809,7 +826,7 @@ print(f"Difference:   {abs(x1_bad - x1_good)}")</textarea>
             readOnly: false,
             viewportMargin: Infinity // Auto resize
         });
-    
+
 
         // Pyodide Setup
         async function main() {
@@ -843,7 +860,7 @@ print(f"Difference:   {abs(x1_bad - x1_good)}")</textarea>
                 window.pyodide.setStdout({ batched: (msg) => output.innerText += msg + "\n" });
 
                 output.innerText = ""; // Clear previous
-                
+
                 // Scroll to output
                 document.getElementById("python-output-section").scrollIntoView({ behavior: "smooth" });
                 await window.pyodide.runPythonAsync(code);
