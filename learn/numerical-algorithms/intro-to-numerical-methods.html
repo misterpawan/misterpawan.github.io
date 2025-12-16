@@ -60,6 +60,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/octave/octave.min.js"></script>
 
     <style>
         .CodeMirror {
@@ -578,8 +579,7 @@ end</pre>
                 <div class="mb-4">
                     <p class="text-xs font-bold text-gray-500 mb-2 uppercase">Copy & Paste into Terminal:</p>
                     <div class="group relative">
-                        <pre
-                            class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-xs font-mono overflow-x-auto border border-gray-200 dark:border-gray-700">
+                        <textarea id="octave-code">
 % Finite Difference Approximation of Derivative
 f = @(x) exp(x);     % Function f(x) = e^x
 x = 1;               % Point of evaluation
@@ -592,10 +592,10 @@ for i = 1:10
     approx = (f(x+h) - f(x)) / h;
     err = abs(true_val - approx);
     fprintf('%10.6f | %10.6f | %10.6e\n', h, approx, err);
-end</pre>
+end</textarea>
                         <button
-                            onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);"
-                            class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                            onclick="navigator.clipboard.writeText(octaveEditor.getValue()); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);"
+                            class="absolute top-2 right-2 bg-white dark:bg-gray-700 text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition z-10">
                             Copy
                         </button>
                     </div>
@@ -709,12 +709,20 @@ derivative_approx(x=1.0, h_start=1.0, iterations=10)
             }
         }
 
-        // CodeMirror Setup
         var editor = CodeMirror.fromTextArea(document.getElementById("python-code"), {
             mode: "python",
             theme: "default",
             lineNumbers: true,
             indentUnit: 4
+        });
+
+        // CodeMirror Setup - Octave
+        var octaveEditor = CodeMirror.fromTextArea(document.getElementById("octave-code"), {
+            mode: "octave",
+            theme: "default",
+            lineNumbers: true,
+            indentUnit: 4,
+            readOnly: false
         });
 
         // Pyodide Setup
