@@ -133,13 +133,13 @@
 
             <div class="space-y-6">
                 <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl">
-
+                    <img src="figs/noisydata1.png" alt="Noisy Data 1" class="max-h-64 rounded">
                 </div>
                 <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl">
-
+                    <img src="figs/noisydata2.png" alt="Noisy Data 2" class="max-h-64 rounded">
                 </div>
                 <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl">
-
+                    <img src="figs/noisydata3.png" alt="Noisy Data 3" class="max-h-64 rounded">
                 </div>
             </div>
         </section>
@@ -182,15 +182,20 @@
                 <strong>autocorrelation</strong> with self.
             </p>
 
-            <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl mb-6">
-
+            <div class="grid md:grid-cols-2 gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl mb-6">
+                <div class="flex justify-center">
+                    <img src="figs/noisydata4.png" alt="Convolution Example 1" class="max-h-48 rounded">
+                </div>
+                <div class="flex justify-center">
+                    <img src="figs/noisydata5.png" alt="Convolution Example 2" class="max-h-48 rounded">
+                </div>
             </div>
 
             <h3 class="font-bold text-lg mt-6 mb-2">Image Registration</h3>
             <p>Aligning a sub-image with another image.</p>
-            <div class="flex justify-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl mt-4">
-
-
+            <div class="flex justify-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl mt-4 flex-wrap">
+                <img src="figs/image_corr2.png" alt="Image Correlation 1" class="max-h-48 rounded">
+                <img src="figs/image_corr1.png" alt="Image Correlation 2" class="max-h-48 rounded">
             </div>
         </section>
 
@@ -238,7 +243,7 @@
             </div>
 
             <div class="flex justify-center bg-white dark:bg-gray-800 p-4 rounded-xl mt-6">
-
+                <img src="figs/sawtooth.png" alt="Sawtooth Fourier Approximation" class="max-h-64 rounded">
             </div>
         </section>
 
@@ -390,7 +395,7 @@
                 <p>The DFT of an $n$-point sequence can be computed by two $n/2$-point DFTs ($n$ even).</p>
             </div>
 
-            <p>Let $P_4$ be a permutation matrix that groups even then odd columns. Then:</p>
+            <p>Let $P_n$ be a permutation matrix that groups even then odd columns. Then:</p>
             $$ F_4 P_4 = \begin{bmatrix} F_2 & D_2 F_2 \\ F_2 & -D_2 F_2 \end{bmatrix} $$
             <p>where $D_2 = \text{diag}(1, \omega_4 = -i)$.</p>
         </section>
@@ -408,7 +413,7 @@
             <p>This recursive DFT is called the <strong>Fast Fourier Transform (FFT)</strong>.</p>
 
             <div class="flex justify-center bg-white dark:bg-gray-800 p-6 rounded-xl my-6">
-
+                <img src="figs/fft_alg.png" alt="FFT Algorithm Diagram" class="max-h-96 rounded">
             </div>
 
             <h3 class="font-bold text-lg mt-4">Complexity & Features</h3>
@@ -424,7 +429,7 @@
     </main>
 
     <footer class="text-center py-8 text-gray-500 text-sm">
-        <p> 2025 Course Materials. & M. Heath.</p>
+        <p> Course Materials. & M. Heath.</p>
     </footer>
 
     <script>
