@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 2-1: The Art of Numerical Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+        .card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .math-font { font-family: "Cambria Math", "Times New Roman", serif; }
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .analyzing { animation: pulse-slow 2s infinite; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans">
+
+    <!-- Header -->
+    <header class="py-12 px-6 text-center border-b border-slate-800 gradient-bg">
+        <div class="max-w-4xl mx-auto">
+            <p class="text-blue-400 font-bold tracking-widest uppercase mb-2 text-sm">National Taiwan University | 2020</p>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4">The Art of Numerical Analysis</h1>
+            <p class="text-xl text-slate-400">Lecture 2-1: Kai-Feng Chen</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 space-y-24">
+
+        <!-- Introduction Section -->
+        <section class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i data-lucide="info"></i> What is it?
+                </h2>
+                <div class="space-y-4 text-lg text-slate-300">
+                    <p>Numerical analysis is the study of algorithms that use <span class="text-pink-500 font-semibold italic">numerical approximation</span> rather than symbolic manipulations.</p>
+                    <div class="p-4 border-l-4 border-blue-500 bg-blue-500/10 italic">
+                        "Sometimes the key point is to solve problems with a (relatively) quick-and-dirty way, comparing to a full analytical solution."
+                    </div>
+                </div>
+            </div>
+            <div class="card p-6 rounded-2xl text-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/YBC_7289_facing_on_black_background.png" alt="Babylonian Tablet" class="rounded-lg mb-4 mx-auto w-64 border border-slate-700">
+                <p class="text-sm text-slate-400">Babylonian Tablet (1800-1600 BC). <br>Approximating √2 to 6 decimal figures.</p>
+            </div>
+        </section>
+
+        <!-- Interactive Demo: Audio to Sheet Music -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <h2 class="text-4xl font-extrabold text-white mb-2">The Fun: From Sound to Score</h2>
+                <p class="text-slate-400">Using Fourier Transformation to "catch the pitch"</p>
+            </div>
+
+            <div class="card p-8 rounded-3xl grid md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <label class="block text-sm font-medium mb-2">Upload or Play the Lecture Wave</label>
+                        <!-- Assuming the file is named audio.wav as provided -->
+                        <audio id="audioElement" controls class="w-full">
+                            <source src="audio.wav" type="audio/wav">
+                        </audio>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <h4 class="font-bold text-blue-400">Processing Steps:</h4>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i> Load wave into NumPy array</li>
+                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i> Perform Fourier Transform (SciPy)</li>
+                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i> Identify peak amplitudes (Pitch)</li>
+                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i> Convert frequency to MIDI</li>
+                        </ul>
+                    </div>
+                    <button id="analyzeBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition-all flex justify-center items-center gap-2">
+                        <i data-lucide="activity"></i> Run Pitch Analysis
+                    </button>
+                </div>
+
+                <div class="bg-black rounded-xl p-4 flex flex-col justify-center items-center relative overflow-hidden h-64 border border-slate-800">
+                    <canvas id="visualizer" class="w-full h-full"></canvas>
+                    <div id="statusText" class="absolute bottom-4 left-4 text-blue-400 font-mono text-xs uppercase tracking-tighter">System Idle</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Types of Errors -->
+        <section>
+            <h2 class="text-3xl font-bold text-center mb-12">The Taxonomy of Errors</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="card p-6 rounded-xl border-t-4 border-red-500">
+                    <i data-lucide="bug" class="text-red-500 mb-4"></i>
+                    <h3 class="font-bold mb-2">Blunders</h3>
+                    <p class="text-sm text-slate-400">Human errors, typos, running the wrong program.</p>
+                </div>
+                <div class="card p-6 rounded-xl border-t-4 border-yellow-500">
+                    <i data-lucide="zap" class="text-yellow-500 mb-4"></i>
+                    <h3 class="font-bold mb-2">Random</h3>
+                    <p class="text-sm text-slate-400">Hardware instability, cosmic rays hitting memory.</p>
+                </div>
+                <div class="card p-6 rounded-xl border-t-4 border-blue-500">
+                    <i data-lucide="scissors" class="text-blue-500 mb-4"></i>
+                    <h3 class="font-bold mb-2">Approximation</h3>
+                    <p class="text-sm text-slate-400">Errors due to the algorithm (truncating Taylor series).</p>
+                </div>
+                <div class="card p-6 rounded-xl border-t-4 border-pink-500">
+                    <i data-lucide="binary" class="text-pink-500 mb-4"></i>
+                    <h3 class="font-bold mb-2">Roundoff</h3>
+                    <p class="text-sm text-slate-400">Finite precision of floating point numbers (64-bit).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Floating Point Reality -->
+        <section class="card p-8 rounded-3xl bg-slate-900">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6">"0.1 is not 1/10"</h2>
+                <p class="mb-6 text-slate-400">In binary floating point, 0.1 is actually:</p>
+                <div class="bg-black p-4 rounded-lg font-mono text-xs text-green-400 break-all mb-6">
+                    0.1000000000000000055511151231257827021181583404541015625
+                </div>
+                <div class="grid grid-cols-2 gap-8 text-sm">
+                    <div class="p-4 bg-slate-800 rounded-lg">
+                        <span class="text-blue-400 block font-bold">Largest Number</span>
+                        1.79... x 10<sup>308</sup>
+                    </div>
+                    <div class="p-4 bg-slate-800 rounded-lg">
+                        <span class="text-pink-400 block font-bold">Machine Epsilon</span>
+                        ~2.22 x 10<sup>-16</sup>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The PI Lab -->
+        <section id="pi-lab" class="space-y-12">
+            <div class="text-center">
+                <h2 class="text-4xl font-extrabold text-white">Interactive Lab: Calculating π</h2>
+                <p class="text-slate-400">Compare the Liu Hui (Geometric) method vs. Leibniz (Series) method.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Liu Hui Simulation -->
+                <div class="card p-6 rounded-2xl space-y-4">
+                    <h3 class="text-xl font-bold flex justify-between">
+                        Liu Hui Method 
+                        <span class="text-sm font-normal text-slate-500">Approximating Circle with Polygons</span>
+                    </h3>
+                    <div class="h-48 bg-black/50 rounded-xl relative flex items-center justify-center border border-slate-800">
+                        <svg id="polygonSvg" viewBox="0 0 100 100" class="w-40 h-40">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#334155" stroke-width="0.5" />
+                            <polygon id="polyShape" points="" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6" stroke-width="1" />
+                        </svg>
+                    </div>
+                    <div class="space-y-4">
+                        <label class="block text-sm">Number of iterations ($N$ sides increases):</label>
+                        <input type="range" id="liuHuiRange" min="1" max="25" value="1" class="w-full">
+                        <div class="bg-black p-4 rounded font-mono text-sm space-y-1">
+                            <div class="flex justify-between"><span>Sides:</span> <span id="sidesVal" class="text-blue-400">6</span></div>
+                            <div class="flex justify-between"><span>π calc:</span> <span id="piCalcVal" class="text-green-400">3.0000...</span></div>
+                            <div class="flex justify-between"><span>Error:</span> <span id="errorVal" class="text-red-400">0.1415...</span></div>
+                        </div>
+                        <p class="text-xs text-red-500 italic" id="roundoffWarning" style="display:none;">⚠️ Warning: Roundoff error detected!</p>
+                    </div>
+                </div>
+
+                <!-- Python Sandbox Mock -->
+                <div class="card p-6 rounded-2xl space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <i data-lucide="terminal" class="text-green-500"></i> Python Implementation
+                    </h3>
+                    <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 h-64 overflow-y-auto border border-slate-700">
+<pre id="codeSnippet">
+import math
+# Step 0: Hexagon
+nsides = 6
+length = 1.0
+
+for i in range(iterations):
+    # Geometric recursive formula
+    length = (2. - (4. - length**2)**0.5)**0.5
+    nsides *= 2
+    pi = length * nsides / 2.0
+    print(f"Polygon {nsides}: {pi}")
+</pre>
+                    </div>
+                    <div class="text-sm text-slate-400 p-3 bg-blue-500/5 rounded border border-blue-500/20">
+                        <strong>Insight:</strong> In the Python code, as <code class="text-blue-400">length</code> becomes extremely small, subtracting <code class="text-blue-400">length**2</code> from <code class="text-blue-400">4.</code> hits the limit of floating-point precision.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-8">Knowledge Check</h2>
+            <div id="quiz" class="card p-8 rounded-3xl border border-blue-500/30">
+                <p class="text-xl mb-6" id="question">What happens to the total error as you increase iterations ($N$) in a typical numerical algorithm?</p>
+                <div class="grid gap-4">
+                    <button class="quiz-opt w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700 transition" data-correct="false">A) The error always decreases to zero.</button>
+                    <button class="quiz-opt w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700 transition" data-correct="false">B) Approximation error increases while Roundoff decreases.</button>
+                    <button class="quiz-opt w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700 transition" data-correct="true">C) Approximation error decreases, but Roundoff error eventually accumulates.</button>
+                </div>
+                <div id="quizFeedback" class="mt-6 hidden p-4 rounded-xl text-center font-bold"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-12 px-6 text-center border-t border-slate-800 text-slate-500 text-sm">
+        <p>&copy; 2020 Kai-Feng Chen | Interactive Design 2024</p>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Audio Visualizer Logic
+        const audio = document.getElementById('audioElement');
+        const canvas = document.getElementById('visualizer');
+        const ctx = canvas.getContext('2d');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const statusText = document.getElementById('statusText');
+
+        let audioContext, analyzer, dataArray, bufferLength;
+
+        analyzeBtn.addEventListener('click', () => {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createMediaElementSource(audio);
+                analyzer = audioContext.createAnalyser();
+                source.connect(analyzer);
+                analyzer.connect(audioContext.destination);
+                analyzer.fftSize = 256;
+                bufferLength = analyzer.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+            }
+            audio.play();
+            statusText.innerText = "Analyzing Fourier Frequencies...";
+            statusText.classList.add('analyzing');
+            draw();
+        });
+
+        function draw() {
+            requestAnimationFrame(draw);
+            analyzer.getByteFrequencyData(dataArray);
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let x = 0;
+            for (let i = 0; i < bufferLength; i++) {
+                const barHeight = dataArray[i] / 2;
+                ctx.fillStyle = `rgb(50, 100, ${dataArray[i] + 100})`;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        // Liu Hui Calculation & SVG Logic
+        const liuSlider = document.getElementById('liuHuiRange');
+        const polyShape = document.getElementById('polyShape');
+        const sidesVal = document.getElementById('sidesVal');
+        const piValText = document.getElementById('piCalcVal');
+        const errorText = document.getElementById('errorVal');
+        const roundoffWarning = document.getElementById('roundoffWarning');
+
+        function updateLiuHui() {
+            let iterations = parseInt(liuSlider.value);
+            let n = 6 * Math.pow(2, iterations - 1);
+            let s = 1.0; // side length for hexagon
+
+            // Recursive calculation to mimic the Python script
+            let currentS = 1.0;
+            let currentN = 6;
+            for (let i = 1; i < iterations; i++) {
+                currentS = Math.sqrt(2 - Math.sqrt(4 - Math.pow(currentS, 2)));
+                currentN *= 2;
+            }
+
+            let calculatedPi = (currentS * currentN) / 2;
+            let realPi = Math.PI;
+
+            // Update UI
+            sidesVal.innerText = currentN.toLocaleString();
+            piValText.innerText = calculatedPi.toFixed(15);
+            errorText.innerText = Math.abs(realPi - calculatedPi).toFixed(15);
+
+            // Mocking the round-off behavior after certain iterations
+            roundoffWarning.style.display = (iterations > 18) ? 'block' : 'none';
+
+            // Update SVG Polygon
+            const points = [];
+            const radius = 45;
+            const centerX = 50;
+            const centerY = 50;
+            for (let i = 0; i < currentN; i++) {
+                const angle = (i / currentN) * 2 * Math.PI;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                points.push(`${x},${y}`);
+            }
+            polyShape.setAttribute('points', points.join(' '));
+        }
+
+        liuSlider.addEventListener('input', updateLiuHui);
+        updateLiuHui();
+
+        // Simple Quiz Logic
+        document.querySelectorAll('.quiz-opt').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const isCorrect = e.target.getAttribute('data-correct') === 'true';
+                const feedback = document.getElementById('quizFeedback');
+                feedback.classList.remove('hidden', 'bg-red-500/20', 'bg-green-500/20', 'text-red-400', 'text-green-400');
+                
+                if (isCorrect) {
+                    feedback.innerText = "Correct! As iterations grow, roundoff error eventually dominates approximation error.";
+                    feedback.classList.add('bg-green-500/20', 'text-green-400');
+                } else {
+                    feedback.innerText = "Not quite. Remember that roundoff error accumulates as more operations are performed.";
+                    feedback.classList.add('bg-red-500/20', 'text-red-400');
+                }
+                feedback.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
