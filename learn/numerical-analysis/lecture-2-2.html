@@ -705,6 +705,7 @@ print(f"Numerical: {quad} +- {quaderr}")
             const [a, setA] = useState(0);
             const [b, setB] = useState(Math.PI);
             const [n, setN] = useState(4);
+            const containerRef = React.useRef(null);
 
             const currentFunc = FUNCTIONS[selectedFunc];
             const h = (b - a) / n;
@@ -789,7 +790,7 @@ print(f"Numerical: {quad} +- {quaderr}")
                     <path
                         key={`err-${i}`}
                         d={errPath}
-                        fill="rgba(239, 68, 68, 0.6)" // Red with opacity
+                        fill="rgba(239, 68, 68, 0.6)"
                         stroke="none"
                     />
                 );
@@ -802,8 +803,20 @@ print(f"Numerical: {quad} +- {quaderr}")
                 setB(FUNCTIONS[key].defaultRange[1]);
             };
 
+            // Re-run MathJax/KaTeX when content updates
+            useEffect(() => {
+                if (window.renderMathInElement && containerRef.current) {
+                    window.renderMathInElement(containerRef.current, {
+                        delimiters: [
+                            { left: "$$", right: "$$", display: true },
+                            { left: "$", right: "$", display: false }
+                        ]
+                    });
+                }
+            }, [selectedFunc, n, a, b]);
+
             return (
-                <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div ref={containerRef} className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 border border-gray-200">
                     <h1 className="text-xl font-bold text-slate-800 mb-2">Trapezoidal Rule Visualization</h1>
                     <p className="text-sm text-slate-600 mb-6">
                         Explore how the step size ($h$) affects the approximation error.
