@@ -165,8 +165,8 @@
 
     <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <span class="font-bold text-xl text-slate-800">CS 450: <span
-                    class="text-illini-orange">Interpolation</span></span>
+            <span class="font-bold text-xl text-slate-800">Numerical Analysis <span
+                    class="text-illini-orange">2-2</span></span>
             <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
                 <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
                 <a href="#monomial" class="px-3 py-1 hover:bg-gray-100 rounded">Monomial</a>
@@ -186,11 +186,7 @@
             The art of reading between the lines (literally). 📈
         </p>
         <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
-            <span>Chapter 7</span>
-            <span>•</span>
-            <span>Prof. Michael T. Heath</span>
-            <span>•</span>
-            <span>UIUC</span>
+            <span>Lecture 2-2</span>
         </div>
     </header>
 
@@ -220,10 +216,9 @@
                     <h4 class="font-bold text-illini-blue mb-2">Why do we do this? 🤔</h4>
                     <ul class="list-disc ml-5 space-y-2 text-sm text-slate-700">
                         <li><strong>Plotting:</strong> Smooth curves through discrete dots.</li>
-                        [cite_start]<li><strong>Analysis:</strong> Differentiating or integrating tabulated data. [cite:
-                            4952]</li>
-                        [cite_start]<li><strong>Evaluation:</strong> Replacing a complex function (expensive) with a
-                            simple one (cheap). [cite: 4954]</li>
+                        <li><strong>Analysis:</strong> Differentiating or integrating tabulated data.</li>
+                        <li><strong>Evaluation:</strong> Replacing a complex function (expensive) with a
+                            simple one (cheap).</li>
                     </ul>
                 </div>
             </div>
@@ -231,9 +226,9 @@
             <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
                 <h4 class="font-bold text-yellow-800">⚠️ Interpolation vs. Approximation</h4>
                 <p class="text-sm text-yellow-900">
-                    [cite_start]<strong>Interpolation:</strong> Must hit every single point exactly. [cite: 4957]<br>
-                    <strong>Approximation (e.g., Least Squares):</strong> Gets "close" to points. [cite_start]Better for
-                    noisy data. [cite: 4959]
+                    <strong>Interpolation:</strong> Must hit every single point exactly.<br>
+                    <strong>Approximation (e.g., Least Squares):</strong> Gets "close" to points. Better for
+                    noisy data.
                 </p>
             </div>
 
@@ -247,8 +242,9 @@
                     11-18</span>
             </div>
 
-            <p class="mb-4">The simplest choice is a polynomial. [cite_start]For $n$ data points, there is a
-                <strong>unique</strong> polynomial of degree at most $n-1$. [cite: 5008]</p>
+            <p class="mb-4">The simplest choice is a polynomial. For $n$ data points, there is a
+                <strong>unique</strong> polynomial of degree at most $n-1$.
+            </p>
 
             <h3 class="font-bold text-lg mb-2 text-indigo-600">Monomial Basis</h3>
             <div class="math-box text-sm">
@@ -273,7 +269,7 @@
             <div class="bg-red-50 p-4 rounded border border-red-100 mb-6">
                 <p class="font-bold text-red-800">The Problem:</p>
                 <p class="text-sm text-red-700">The Vandermonde matrix becomes <strong>ill-conditioned</strong> very
-                    quickly as degree increases. [cite_start]Solving it requires $O(n^3)$ work. [cite: 5042-5044]</p>
+                    quickly as degree increases. Solving it requires $O(n^3)$ work.</p>
             </div>
 
             <div class="mb-6">
@@ -317,7 +313,8 @@ print(f"Polynomial: {x[0]} + {x[1]}t + {x[2]}t^2")</code></pre>
             </div>
 
             <p class="mb-4">Instead of solving a linear system, we can write the polynomial directly using
-                <strong>Lagrange Basis Functions</strong>.</p>
+                <strong>Lagrange Basis Functions</strong>.
+            </p>
 
             <div class="math-box text-center">
                 $$ p_{n-1}(t) = \sum_{j=1}^n y_j \ell_j(t) $$
@@ -337,9 +334,9 @@ print(f"Polynomial: {x[0]} + {x[1]}t + {x[2]}t^2")</code></pre>
                 <div class="bg-gray-50 p-4 rounded text-sm">
                     <h4 class="font-bold text-slate-700">Cons</h4>
                     <ul class="list-disc ml-5">
-                        [cite_start]<li>Evaluating at a new point is expensive $O(n^2)$ (naively) or $O(n)$
-                            (barycentric). [cite: 5087]</li>
-                        [cite_start]<li>Hard to add a new data point (must recompute everything). [cite: 5089]</li>
+                        <li>Evaluating at a new point is expensive $O(n^2)$ (naively) or $O(n)$
+                            (barycentric).</li>
+                        <li>Hard to add a new data point (must recompute everything).</li>
                     </ul>
                 </div>
             </div>
@@ -372,7 +369,8 @@ print(poly)
             </div>
 
             <p class="mb-4">Newton's form allows us to build the polynomial incrementally. It uses a
-                <strong>triangular</strong> basis matrix.</p>
+                <strong>triangular</strong> basis matrix.
+            </p>
 
             <div class="math-box text-sm">
                 $$ p_j(t) = p_{j-1}(t) + x_{j+1} \prod_{k=1}^j (t - t_k) $$
@@ -385,7 +383,7 @@ print(poly)
                     \dots, t_k]$.
                     <br>
                     <strong>Cost:</strong> $O(n^2)$ to compute coeffs, $O(n)$ to evaluate (Horner's-like).
-                    [cite_start]Adding a point is cheap! [cite: 5171]
+                    Adding a point is cheap!
                 </p>
             </div>
 
@@ -418,10 +416,9 @@ print(poly)
                         connected together.</p>
                     <ul class="list-disc ml-5 text-sm">
                         <li><strong>Piecewise Linear:</strong> Connect dots with lines (not smooth).</li>
-                        <li><strong>Cubic Spline:</strong> Piecewise cubic. [cite_start]Smooth ($C^2$ continuous).
-                            [cite: 5333]</li>
+                        <li><strong>Cubic Spline:</strong> Piecewise cubic. Smooth ($C^2$ continuous).</li>
                         <li><strong>Hermite Cubic:</strong> Matches value and derivative. ($C^1$
-                            continuous)[cite_start]. [cite: 5324]</li>
+                            continuous).</li>
                     </ul>
                 </div>
             </div>
@@ -451,9 +448,9 @@ print(poly)
                     <h4 class="font-bold text-blue-700 mb-2">Key Properties</h4>
                     <ul class="list-decimal ml-5 text-sm space-y-1">
                         <li><strong>Local Support:</strong> Zero everywhere except a small interval.
-                            [cite_start]Changing one point only affects a local area. [cite: 5464]</li>
+                            Changing one point only affects a local area.</li>
                         <li><strong>Positivity:</strong> $B_i^k(t) > 0$ inside support.</li>
-                        [cite_start]<li><strong>Partition of Unity:</strong> $\sum B_i^k(t) = 1$. [cite: 5459]</li>
+                        <li><strong>Partition of Unity:</strong> $\sum B_i^k(t) = 1$.</li>
                     </ul>
                 </div>
                 <div>
@@ -468,7 +465,7 @@ print(poly)
     </main>
 
     <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
-        <p>CS 450 Numerical Analysis • Michael T. Heath • UIUC</p>
+        <p>Numerical Analysis Lecture 2-2</p>
     </footer>
 
     <script type="text/babel">

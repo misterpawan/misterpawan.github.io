@@ -146,64 +146,66 @@
                 <a href="#homemade" class="block px-3 py-2 rounded hover:bg-slate-100">5. Homemade vs Public</a>
                 <a href="#scipy-deriv" class="block px-3 py-2 rounded hover:bg-slate-100">6. SciPy Derivatives</a>
                 <a href="#integration" class="block px-3 py-2 rounded hover:bg-slate-100">7. Numerical Integration</a>
-                <a href="#trapezoidal" class="block px-3 py-2 rounded hover:bg-slate-100">8. Trapezoidal Rule</a>
-                <a href="#simpson" class="block px-3 py-2 rounded hover:bg-slate-100">9. Simpson's Rule</a>
-                <a href="#gaussian" class="block px-3 py-2 rounded hover:bg-slate-100">10. Gaussian Quadrature</a>
-                <a href="#breaking" class="block px-3 py-2 rounded hover:bg-slate-100">11. Breaking the Code</a>
-                <a href="#scipy-int" class="block px-3 py-2 rounded hover:bg-slate-100">12. SciPy Integration</a>
-                <a href="#practice" class="block px-3 py-2 rounded hover:bg-slate-100 font-bold text-ntu-primary">13.
-                    Hands-On Session</a>
-            </nav>
+                <a href="#trapezoidal" class="block            <span class=" font-bold text-xl text-slate-800">Numerical
+                    Analysis <span class="text-blue-600">2-3</span></span>
+                    <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                        <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
+                        <a href="#diff" class="px-3 py-1 hover:bg-gray-100 rounded">Differentiation</a>
+                        <a href="#integration" class="px-3 py-1 hover:bg-gray-100 rounded">Integration</a>
+                        <a href="#gauss" class="px-3 py-1 hover:bg-gray-100 rounded">Gaussian</a>
+                        <a href="#hands-on" class="px-3 py-1 bg-blue-100 text-blue-700 rounded">Hands On</a>
+                    </div>
         </div>
-    </div>
+        </nav>
 
-    <div class="xl:ml-64 min-h-screen p-6 md:p-10 max-w-5xl mx-auto">
-
-        <header class="mb-12 border-b pb-6">
-            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Numerical Differentiation & Integration</h1>
-            <p class="text-lg text-slate-600">Lecture 2-2</p>
-        </header>
-
-        <section id="intro" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Analytical vs Numerical <span class="slide-number">Slide 2-4</span></div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <p class="mb-4"><strong>General Rule:</strong> If you know the exact form, it's always better to
-                            do the calculus analytically. Precision is a big issue in numerical calculation.</p>
-                        <p class="mb-4">However, numerical calculus is vital for:</p>
-                        <ul class="list-disc ml-5 space-y-2 text-sm">
-                            <li><strong>Black Box Functions:</strong> When $f(x)$ is unknown.</li>
-                            <li><strong>Debugging:</strong> Checking 50+ analytical derivations for typos. "Numerical
-                                calculus will give you a quick and easy check!".</li>
-                        </ul>
+        <header class="pt-32 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+                Numerical Differentiation & Integration
+            </h1>
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+                How to perform calculus on discrete data points. 📐
+            </p>
+            <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
+                <span>Lecture 2-3</span>
+            </div>
+            <div class="slide-header">Analytical vs Numerical <span class="slide-number">Slide 2-4</span></div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <p class="mb-4"><strong>General Rule:</strong> If you know the exact form, it's always better to
+                        do the calculus analytically. Precision is a big issue in numerical calculation.</p>
+                    <p class="mb-4">However, numerical calculus is vital for:</p>
+                    <ul class="list-disc ml-5 space-y-2 text-sm">
+                        <li><strong>Black Box Functions:</strong> When $f(x)$ is unknown.</li>
+                        <li><strong>Debugging:</strong> Checking 50+ analytical derivations for typos. "Numerical
+                            calculus will give you a quick and easy check!".</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-100 p-4 rounded text-center">
+                    <p class="text-sm italic text-slate-500 mb-2">Even if you can use Mathematica/WolframAlpha...
+                    </p>
+                    <div class="math-box text-sm">
+                        $\frac{d}{dx}(x \sin(x)\cos(x)) = -x \sin^2(x) + x \cos^2(x) + \sin(x)\cos(x)$
                     </div>
-                    <div class="bg-slate-100 p-4 rounded text-center">
-                        <p class="text-sm italic text-slate-500 mb-2">Even if you can use Mathematica/WolframAlpha...
-                        </p>
-                        <div class="math-box text-sm">
-                            $\frac{d}{dx}(x \sin(x)\cos(x)) = -x \sin^2(x) + x \cos^2(x) + \sin(x)\cos(x)$
-                        </div>
-                        <p class="text-xs text-slate-500">Numerical checks are still essential for verification.</p>
-                    </div>
+                    <p class="text-xs text-slate-500">Numerical checks are still essential for verification.</p>
                 </div>
             </div>
-        </section>
+    </div>
+    </section>
 
-        <section id="derivatives" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Numerical Derivatives: The Problem <span class="slide-number">Slide 5-8</span>
-                </div>
-                <p class="mb-4">By definition, $f'(x) \approx \frac{f(x+h)-f(x)}{h}$. In theory, $h \to 0$. In practice,
-                    this fails.</p>
-                <div class="math-box">
-                    Example Function: $f(x) = x^2 + e^x + \ln(x) + \sin(x)$<br>
-                    Analytical $f'(x) = 2x + e^x + 1/x + \cos(x)$
-                </div>
+    <section id="derivatives" class="mb-16 scroll-mt-20">
+        <div class="slide-card">
+            <div class="slide-header">Numerical Derivatives: The Problem <span class="slide-number">Slide 5-8</span>
+            </div>
+            <p class="mb-4">By definition, $f'(x) \approx \frac{f(x+h)-f(x)}{h}$. In theory, $h \to 0$. In practice,
+                this fails.</p>
+            <div class="math-box">
+                Example Function: $f(x) = x^2 + e^x + \ln(x) + \sin(x)$<br>
+                Analytical $f'(x) = 2x + e^x + 1/x + \cos(x)$
+            </div>
 
-                <h3 class="font-bold mt-4 mb-2">A Quick Try (Forward Difference)</h3>
+            <h3 class="font-bold mt-4 mb-2">A Quick Try (Forward Difference)</h3>
 
-                <textarea id="code-diff" class="code-editor" spellcheck="false">
+            <textarea id="code-diff" class="code-editor" spellcheck="false">
 import math
 
 def f(x):
@@ -221,71 +223,71 @@ while h > 1E-15:
     print(f"{h:.1e} \t {abs(fp_numeric - fp_exact):.2e}")
     h /= 10.
 </textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-diff', 'out-diff')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run (Pyodide)</span>
-                </div>
-                <div id="out-diff"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
+            <div class="flex items-center mt-2">
+                <button onclick="runPython('code-diff', 'out-diff')"
+                    class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                    Code</button>
+                <span class="text-xs text-gray-500 ml-3">Ready to run (Pyodide)</span>
+            </div>
+            <div id="out-diff"
+                class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+            </div>
 
 
-                <div id="derivative-demo"></div>
-                <div class="bg-red-50 p-4 border-l-4 border-red-500 mt-4">
-                    <p class="font-bold text-red-700">The Problem:</p>
-                    <p class="text-sm text-red-800">
-                        Total Error $\approx O(h) + O(\frac{\epsilon_m}{h})$.<br>
-                        For double precision ($\epsilon_m \approx 10^{-15}$), error saturates at $h \approx 10^{-8}$.
-                        You cannot get better than $10^{-8}$ precision!
-                    </p>
+            <div id="derivative-demo"></div>
+            <div class="bg-red-50 p-4 border-l-4 border-red-500 mt-4">
+                <p class="font-bold text-red-700">The Problem:</p>
+                <p class="text-sm text-red-800">
+                    Total Error $\approx O(h) + O(\frac{\epsilon_m}{h})$.<br>
+                    For double precision ($\epsilon_m \approx 10^{-15}$), error saturates at $h \approx 10^{-8}$.
+                    You cannot get better than $10^{-8}$ precision!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="central-diff" class="mb-16 scroll-mt-20">
+        <div class="slide-card">
+            <div class="slide-header">The Central Difference Trick <span class="slide-number">Slide 10-13</span>
+            </div>
+            <p class="mb-2">Use Taylor expansions to cancel the first-order error:</p>
+            <div class="math-box text-sm">
+                $f(x+h/2) \approx f(x) + \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) + \dots$<br>
+                $f(x-h/2) \approx f(x) - \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) - \dots$<br>
+                $\implies f'_{num}(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h} + O(h^2)$
+            </div>
+            <p class="text-sm mb-4">The error term is now $O(h^2) + O(\epsilon_m/h)$. The saturation point moves to
+                $h \approx 10^{-5}$, giving much better precision ($10^{-10}$).</p>
+
+            <div class="grid md:grid-cols-2 gap-4 text-sm mt-4">
+                <div class="bg-green-50 p-4 rounded">
+                    <strong>Forward Difference:</strong><br>
+                    Saturation at $h \approx 10^{-8}$<br>
+                    Error $\approx 10^{-8}$
+                </div>
+                <div class="bg-blue-50 p-4 rounded">
+                    <strong>Central Difference:</strong><br>
+                    Saturation at $h \approx 10^{-5}$<br>
+                    Error $\approx 10^{-10}$
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="central-diff" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">The Central Difference Trick <span class="slide-number">Slide 10-13</span>
-                </div>
-                <p class="mb-2">Use Taylor expansions to cancel the first-order error:</p>
-                <div class="math-box text-sm">
-                    $f(x+h/2) \approx f(x) + \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) + \dots$<br>
-                    $f(x-h/2) \approx f(x) - \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) - \dots$<br>
-                    $\implies f'_{num}(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h} + O(h^2)$
-                </div>
-                <p class="text-sm mb-4">The error term is now $O(h^2) + O(\epsilon_m/h)$. The saturation point moves to
-                    $h \approx 10^{-5}$, giving much better precision ($10^{-10}$).</p>
-
-                <div class="grid md:grid-cols-2 gap-4 text-sm mt-4">
-                    <div class="bg-green-50 p-4 rounded">
-                        <strong>Forward Difference:</strong><br>
-                        Saturation at $h \approx 10^{-8}$<br>
-                        Error $\approx 10^{-8}$
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded">
-                        <strong>Central Difference:</strong><br>
-                        Saturation at $h \approx 10^{-5}$<br>
-                        Error $\approx 10^{-10}$
-                    </div>
-                </div>
+    <section id="higher-order" class="mb-16 scroll-mt-20">
+        <div class="slide-card">
+            <div class="slide-header">Further Improvement (Richardson Extrapolation) <span class="slide-number">Slide
+                    14-17</span></div>
+            <p class="mb-4">Repeat the cancellation trick to remove the $h^2$ term.</p>
+            <div class="math-box text-sm">
+                Formula: $\frac{8[f(x+h/4)-f(x-h/4)] - [f(x+h/2)-f(x-h/2)]}{3h}$
             </div>
-        </section>
+            <ul class="list-disc ml-5 text-sm mb-4">
+                <li>Approximation error becomes $O(h^4)$.</li>
+                <li>Total error saturates at $O(10^{-13})$ when $h \approx 10^{-3}$.</li>
+            </ul>
 
-        <section id="higher-order" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Further Improvement (Richardson Extrapolation) <span
-                        class="slide-number">Slide 14-17</span></div>
-                <p class="mb-4">Repeat the cancellation trick to remove the $h^2$ term.</p>
-                <div class="math-box text-sm">
-                    Formula: $\frac{8[f(x+h/4)-f(x-h/4)] - [f(x+h/2)-f(x-h/2)]}{3h}$
-                </div>
-                <ul class="list-disc ml-5 text-sm mb-4">
-                    <li>Approximation error becomes $O(h^4)$.</li>
-                    <li>Total error saturates at $O(10^{-13})$ when $h \approx 10^{-3}$.</li>
-                </ul>
-
-                <textarea id="code-richardson" class="code-editor" spellcheck="false">
+            <textarea id="code-richardson" class="code-editor" spellcheck="false">
 # Richardson Extrapolation Implementation
 import math
 
@@ -302,60 +304,60 @@ fp_richardson = (8.*f(x+h/4.) + f(x-h/2.) - 8.*f(x-h/4.) - f(x+h/2.)) / (h*3.)
 print(f"h = {h}")
 print(f"Rich. Diff: {abs(fp_richardson - exact):.2e}")
 </textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-richardson', 'out-richardson')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-richardson"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-xs text-slate-500 mt-2">Result: Precision reaches ~$10^{-13}$ with $h=10^{-3}$. Don't use
-                    too small steps!</p>
+            <div class="flex items-center mt-2">
+                <button onclick="runPython('code-richardson', 'out-richardson')"
+                    class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                    Code</button>
+                <span class="text-xs text-gray-500 ml-3">Ready to run</span>
+            </div>
+            <div id="out-richardson"
+                class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
             </div>
 
-            <div class="slide-card">
-                <div class="slide-header">Second Derivatives <span class="slide-number">Slide 18-20</span></div>
-                <p class="mb-4">Just calculate it twice (apply the difference formula to the first derivative).</p>
-                <div class="math-box text-sm">
-                    $f''(x) \approx \frac{f(x+h) + f(x-h) - 2f(x)}{h^2}$
-                </div>
-                <p class="text-sm">Total error $\approx O(h^2) + O(\epsilon_m/h^2)$. Precision is much worse, saturating
-                    at $O(10^{-8})$.</p>
+            <p class="text-xs text-slate-500 mt-2">Result: Precision reaches ~$10^{-13}$ with $h=10^{-3}$. Don't use
+                too small steps!</p>
+        </div>
+
+        <div class="slide-card">
+            <div class="slide-header">Second Derivatives <span class="slide-number">Slide 18-20</span></div>
+            <p class="mb-4">Just calculate it twice (apply the difference formula to the first derivative).</p>
+            <div class="math-box text-sm">
+                $f''(x) \approx \frac{f(x+h) + f(x-h) - 2f(x)}{h^2}$
             </div>
-        </section>
+            <p class="text-sm">Total error $\approx O(h^2) + O(\epsilon_m/h^2)$. Precision is much worse, saturating
+                at $O(10^{-8})$.</p>
+        </div>
+    </section>
 
-        <section id="homemade" class="mb-16 scroll-mt-20">
-            <div class="slide-card bg-white border border-gray-200 text-gray-900">
-                <div class="slide-header border-gray-200 text-gray-900">Interlude: Homemade vs Public Code <span
-                        class="slide-number">Slide 21-22</span></div>
-                <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div class="text-center p-4 bg-gray-50 border rounded">
-                        <div class="text-4xl mb-2">🦇</div>
-                        <h3 class="font-bold text-lg">Homemade "Bat Car"</h3>
-                        <p class="text-sm text-gray-600 mt-2">Pros: You know the details. Optimized for your specific
-                            case.</p>
-                        <p class="text-sm text-gray-600">Cons: Less tested. May break at extremes.</p>
-                    </div>
-                    <div class="text-center p-4 bg-gray-50 border rounded">
-                        <div class="text-4xl mb-2">🏎️</div>
-                        <h3 class="font-bold text-lg">Public Code "Porsche"</h3>
-                        <p class="text-sm text-gray-600 mt-2">Pros: Well tested (SciPy). Good protections. Fast.</p>
-                        <p class="text-sm text-gray-600">Cons: Black box. Generic.</p>
-                    </div>
+    <section id="homemade" class="mb-16 scroll-mt-20">
+        <div class="slide-card bg-white border border-gray-200 text-gray-900">
+            <div class="slide-header border-gray-200 text-gray-900">Interlude: Homemade vs Public Code <span
+                    class="slide-number">Slide 21-22</span></div>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="text-center p-4 bg-gray-50 border rounded">
+                    <div class="text-4xl mb-2">🦇</div>
+                    <h3 class="font-bold text-lg">Homemade "Bat Car"</h3>
+                    <p class="text-sm text-gray-600 mt-2">Pros: You know the details. Optimized for your specific
+                        case.</p>
+                    <p class="text-sm text-gray-600">Cons: Less tested. May break at extremes.</p>
+                </div>
+                <div class="text-center p-4 bg-gray-50 border rounded">
+                    <div class="text-4xl mb-2">🏎️</div>
+                    <h3 class="font-bold text-lg">Public Code "Porsche"</h3>
+                    <p class="text-sm text-gray-600 mt-2">Pros: Well tested (SciPy). Good protections. Fast.</p>
+                    <p class="text-sm text-gray-600">Cons: Black box. Generic.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="scipy-deriv" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">SciPy Implementation <span class="slide-number">Slide 23-28</span></div>
-                <p class="mb-4">NumPy/SciPy are essentially "bigger math modules." You can use `scipy.misc.derivative`.
-                </p>
+    <section id="scipy-deriv" class="mb-16 scroll-mt-20">
+        <div class="slide-card">
+            <div class="slide-header">SciPy Implementation <span class="slide-number">Slide 23-28</span></div>
+            <p class="mb-4">NumPy/SciPy are essentially "bigger math modules." You can use `scipy.misc.derivative`.
+            </p>
 
-                <textarea id="code-scipy" class="code-editor" spellcheck="false" style="min-height: 100px;">
+            <textarea id="code-scipy" class="code-editor" spellcheck="false" style="min-height: 100px;">
 import scipy.misc as misc
 import math
 # Central difference formula with spacing dx, n=1st derivative, order=3 points
@@ -365,55 +367,55 @@ h = 1e-6
 fp_numeric = misc.derivative(f, x, dx=h, n=1, order=3)
 print(f"SciPy Result: {fp_numeric}")
 </textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-scipy', 'out-scipy')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-scipy"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-4">This typically gives the best precision ($10^{-10}$) when $h \approx 10^{-6}$.
-                    Higher orders can improve this slightly but diminishing returns.</p>
-
-                <div class="bg-yellow-50 p-4 mt-4 text-sm border-l-4 border-yellow-400">
-                    <p class="font-bold">Important Comment:</p>
-                    <p>Adaptive Stepping: Some algorithms adjust $h$ dynamically based on estimated error. $h' = h
-                        (\epsilon_R / \epsilon_T)^{1/3}$.</p>
-                </div>
+            <div class="flex items-center mt-2">
+                <button onclick="runPython('code-scipy', 'out-scipy')"
+                    class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                    Code</button>
+                <span class="text-xs text-gray-500 ml-3">Ready to run</span>
             </div>
-        </section>
-
-        <section id="integration" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Numerical Integration <span class="slide-number">Slide 31-32</span></div>
-                <div class="flex justify-around mb-6">
-                    <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Rectangle Rule</strong><br><span
-                            class="text-xs">Zero Order</span></div>
-                    <div class="text-center p-2 border rounded w-1/3 mx-1 bg-blue-50"><strong>Trapezoidal
-                            Rule</strong><br><span class="text-xs">First Order</span></div>
-                    <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Simpson's Rule</strong><br><span
-                            class="text-xs">Second Order</span></div>
-                </div>
-                <p class="mb-4 text-sm">Example: $\int_0^{1.2} (x - x^2 + x^3 - x^4 + \frac{\sin(13x)}{13}) dx$.</p>
+            <div id="out-scipy"
+                class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
             </div>
-        </section>
 
-        <section id="trapezoidal" class="mb-16 scroll-mt-20">
-            <div id="trapezoidal-root" class="mb-8"></div>
+            <p class="text-sm mt-4">This typically gives the best precision ($10^{-10}$) when $h \approx 10^{-6}$.
+                Higher orders can improve this slightly but diminishing returns.</p>
 
-            <div class="slide-card">
-                <div class="slide-header">Trapezoidal Rule <span class="slide-number">Slide 33-36</span></div>
-                <div class="math-box text-sm">
-                    Formula: $\frac{h}{2} [f(x) + f(x+h)]$ per interval.<br>
-                    Total Error $\approx O(h^2) + O(\frac{\epsilon_m}{\sqrt{h}})$
-                </div>
-                <p class="text-sm mb-4">Error per interval is $O(h^3)$, but summing over $L/h$ intervals gives global
-                    error $O(h^2)$.</p>
+            <div class="bg-yellow-50 p-4 mt-4 text-sm border-l-4 border-yellow-400">
+                <p class="font-bold">Important Comment:</p>
+                <p>Adaptive Stepping: Some algorithms adjust $h$ dynamically based on estimated error. $h' = h
+                    (\epsilon_R / \epsilon_T)^{1/3}$.</p>
+            </div>
+        </div>
+    </section>
 
-                <textarea id="code-trap" class="code-editor" spellcheck="false">
+    <section id="integration" class="mb-16 scroll-mt-20">
+        <div class="slide-card">
+            <div class="slide-header">Numerical Integration <span class="slide-number">Slide 31-32</span></div>
+            <div class="flex justify-around mb-6">
+                <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Rectangle Rule</strong><br><span
+                        class="text-xs">Zero Order</span></div>
+                <div class="text-center p-2 border rounded w-1/3 mx-1 bg-blue-50"><strong>Trapezoidal
+                        Rule</strong><br><span class="text-xs">First Order</span></div>
+                <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Simpson's Rule</strong><br><span
+                        class="text-xs">Second Order</span></div>
+            </div>
+            <p class="mb-4 text-sm">Example: $\int_0^{1.2} (x - x^2 + x^3 - x^4 + \frac{\sin(13x)}{13}) dx$.</p>
+        </div>
+    </section>
+
+    <section id="trapezoidal" class="mb-16 scroll-mt-20">
+        <div id="trapezoidal-root" class="mb-8"></div>
+
+        <div class="slide-card">
+            <div class="slide-header">Trapezoidal Rule <span class="slide-number">Slide 33-36</span></div>
+            <div class="math-box text-sm">
+                Formula: $\frac{h}{2} [f(x) + f(x+h)]$ per interval.<br>
+                Total Error $\approx O(h^2) + O(\frac{\epsilon_m}{\sqrt{h}})$
+            </div>
+            <p class="text-sm mb-4">Error per interval is $O(h^3)$, but summing over $L/h$ intervals gives global
+                error $O(h^2)$.</p>
+
+            <textarea id="code-trap" class="code-editor" spellcheck="false">
 import math
 def f(x): return x - x**2 + x**3 - x**4 + math.sin(13*x)/13.
 
@@ -430,191 +432,191 @@ while x < x_end - h*0.5:
 area *= h / 2.
 print(f"Area (Trapezoidal): {area}")
 </textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-trap', 'out-trap')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-trap"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-4"><strong>Result:</strong> Precision saturates around $10^{-12}$ at $h \approx
-                    10^{-6}$. Smaller step size does NOT always mean better precision due to round-off error
-                    accumulation.</p>
+            <div class="flex items-center mt-2">
+                <button onclick="runPython('code-trap', 'out-trap')"
+                    class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                    Code</button>
+                <span class="text-xs text-gray-500 ml-3">Ready to run</span>
+            </div>
+            <div id="out-trap"
+                class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
             </div>
 
-            <div
-                class="max-w-4xl mx-auto p-8 bg-slate-50 border border-slate-200 rounded-xl shadow-lg font-sans text-slate-800 mt-12 mb-12">
-                <header class="text-center mb-10">
-                    <h1 class="text-4xl font-extrabold text-blue-900 mb-2 uppercase tracking-tight">Trapezoidal Rule
-                        Recap</h1>
-                    <p class="text-lg text-slate-600 italic">Classical Numerical Integration Method</p>
-                    <div class="h-1 w-24 bg-blue-500 mx-auto mt-4 rounded-full"></div>
-                </header>
+            <p class="text-sm mt-4"><strong>Result:</strong> Precision saturates around $10^{-12}$ at $h \approx
+                10^{-6}$. Smaller step size does NOT always mean better precision due to round-off error
+                accumulation.</p>
+        </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <section class="space-y-8">
-                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
-                            <h2 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
-                                <span class="mr-2">📐</span> The Core Formula
-                            </h2>
-                            <p class="text-sm mb-4 text-slate-600">This rule approximates the area under a curve by
-                                treating each interval as a trapezoid rather than a rectangle.</p>
-                            <div class="bg-slate-50 p-4 rounded text-center border border-slate-100">
-                                <p class="text-sm font-semibold text-slate-500 mb-2 underline">Area per Interval</p>
-                                <p class="text-2xl font-mono text-blue-700">$\frac{h}{2} [f(x) + f(x+h)]$</p>
+        <div
+            class="max-w-4xl mx-auto p-8 bg-slate-50 border border-slate-200 rounded-xl shadow-lg font-sans text-slate-800 mt-12 mb-12">
+            <header class="text-center mb-10">
+                <h1 class="text-4xl font-extrabold text-blue-900 mb-2 uppercase tracking-tight">Trapezoidal Rule
+                    Recap</h1>
+                <p class="text-lg text-slate-600 italic">Classical Numerical Integration Method</p>
+                <div class="h-1 w-24 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <section class="space-y-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h2 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                            <span class="mr-2">📐</span> The Core Formula
+                        </h2>
+                        <p class="text-sm mb-4 text-slate-600">This rule approximates the area under a curve by
+                            treating each interval as a trapezoid rather than a rectangle.</p>
+                        <div class="bg-slate-50 p-4 rounded text-center border border-slate-100">
+                            <p class="text-sm font-semibold text-slate-500 mb-2 underline">Area per Interval</p>
+                            <p class="text-2xl font-mono text-blue-700">$\frac{h}{2} [f(x) + f(x+h)]$</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
+                        <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center">
+                            <span class="mr-2">🔍</span> Visual Logic
+                        </h2>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start">
+                                <span class="text-emerald-500 mr-2">●</span>
+                                <span><strong>Linear Interpolation:</strong> Connects two points $(x_i, f_i)$ and
+                                    $(x_{i+1}, f_{i+1})$ with a straight line.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-emerald-500 mr-2">●</span>
+                                <span><strong>Step Size ($h$):</strong> The width of each individual segment used
+                                    for calculation.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-emerald-500 mr-2">●</span>
+                                <span><strong>Accumulation:</strong> The total area is the sum of all trapezoidal
+                                    segments across the range $[a, b]$.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="space-y-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-amber-500">
+                        <h2 class="text-xl font-bold text-amber-800 mb-4 flex items-center">
+                            <span class="mr-2">⚠️</span> Error Dynamics
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="p-3 bg-amber-50 rounded border border-amber-100">
+                                <p class="text-xs font-bold text-amber-700 uppercase mb-1">Approximation Error</p>
+                                <p class="text-sm font-mono">$O(h^2)$</p>
+                                <p class="text-xs text-slate-500 mt-1">Decreases as step size $h$ gets smaller.</p>
+                            </div>
+                            <div class="p-3 bg-red-50 rounded border border-red-100">
+                                <p class="text-xs font-bold text-red-700 uppercase mb-1">Total Error Behavior</p>
+                                <p class="text-sm font-mono">$\approx O(\frac{\epsilon_m}{\sqrt{h}}) + O(h^2)$</p>
+                                <p class="text-xs text-slate-500 mt-1">Represents the balance between algorithm
+                                    error and machine precision ($\epsilon_m$).</p>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
-                            <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center">
-                                <span class="mr-2">🔍</span> Visual Logic
-                            </h2>
-                            <ul class="space-y-3 text-sm">
-                                <li class="flex items-start">
-                                    <span class="text-emerald-500 mr-2">●</span>
-                                    <span><strong>Linear Interpolation:</strong> Connects two points $(x_i, f_i)$ and
-                                        $(x_{i+1}, f_{i+1})$ with a straight line.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-emerald-500 mr-2">●</span>
-                                    <span><strong>Step Size ($h$):</strong> The width of each individual segment used
-                                        for calculation.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-emerald-500 mr-2">●</span>
-                                    <span><strong>Accumulation:</strong> The total area is the sum of all trapezoidal
-                                        segments across the range $[a, b]$.</span>
-                                </li>
-                            </ul>
+                    <div class="bg-blue-900 text-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-bold mb-4 flex items-center">
+                            <span class="mr-2">💡</span> Numerical Insight
+                        </h2>
+                        <p class="text-sm leading-relaxed mb-4">
+                            "Precision cannot be improved by simply using a smaller $h$. It's very time consuming
+                            and may eventually lead to round-off error saturation."
+                        </p>
+                        <div class="flex justify-between items-center bg-blue-800 p-3 rounded text-xs font-mono">
+                            <span>Best Precision ($\approx O(10^{-12})$)</span>
+                            <span class="text-amber-300">at $h \approx 10^{-6}$</span>
                         </div>
-                    </section>
-
-                    <section class="space-y-8">
-                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-amber-500">
-                            <h2 class="text-xl font-bold text-amber-800 mb-4 flex items-center">
-                                <span class="mr-2">⚠️</span> Error Dynamics
-                            </h2>
-                            <div class="space-y-4">
-                                <div class="p-3 bg-amber-50 rounded border border-amber-100">
-                                    <p class="text-xs font-bold text-amber-700 uppercase mb-1">Approximation Error</p>
-                                    <p class="text-sm font-mono">$O(h^2)$</p>
-                                    <p class="text-xs text-slate-500 mt-1">Decreases as step size $h$ gets smaller.</p>
-                                </div>
-                                <div class="p-3 bg-red-50 rounded border border-red-100">
-                                    <p class="text-xs font-bold text-red-700 uppercase mb-1">Total Error Behavior</p>
-                                    <p class="text-sm font-mono">$\approx O(\frac{\epsilon_m}{\sqrt{h}}) + O(h^2)$</p>
-                                    <p class="text-xs text-slate-500 mt-1">Represents the balance between algorithm
-                                        error and machine precision ($\epsilon_m$).</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900 text-white p-6 rounded-lg shadow-md">
-                            <h2 class="text-xl font-bold mb-4 flex items-center">
-                                <span class="mr-2">💡</span> Numerical Insight
-                            </h2>
-                            <p class="text-sm leading-relaxed mb-4">
-                                "Precision cannot be improved by simply using a smaller $h$. It's very time consuming
-                                and may eventually lead to round-off error saturation."
-                            </p>
-                            <div class="flex justify-between items-center bg-blue-800 p-3 rounded text-xs font-mono">
-                                <span>Best Precision ($\approx O(10^{-12})$)</span>
-                                <span class="text-amber-300">at $h \approx 10^{-6}$</span>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <footer class="mt-12 text-center text-xs text-slate-400 border-t pt-6">
-                    <p>Numerical Analysis Lecture 2-2: Numerical Differential & Integration</p>
-
-                </footer>
+                    </div>
+                </section>
             </div>
-        </section>
 
-        <section id="simpson" class="mb-16 scroll-mt-20">
-            <div id="simpson-root" class="mb-8"></div>
-            <div class="slide-card">
-                <div class="slide-header">Simpson's Rule <span class="slide-number">Slide 37-41</span></div>
-                <p class="mb-4">Use a parabola (2nd order polynomial) to interpolate 3 points.</p>
-                <div class="math-box text-sm">
-                    $\int_{0}^{2h} f(x) dx \approx \frac{h}{3} [f(0) + 4f(h) + f(2h)]$
-                </div>
-                <p class="text-sm mb-4">
-                    Weights pattern: 1, 4, 2, 4, 2, ..., 4, 1.
-                    Total Error $\approx O(h^4)$.
-                </p>
+            <footer class="mt-12 text-center text-xs text-slate-400 border-t pt-6">
+                <p>Numerical Analysis Lecture 2-2: Numerical Differential & Integration</p>
 
-                <textarea id="code-simp" class="code-editor" spellcheck="false">
+            </footer>
+        </div>
+    </section>
+
+    <section id="simpson" class="mb-16 scroll-mt-20">
+        <div id="simpson-root" class="mb-8"></div>
+        <div class="slide-card">
+            <div class="slide-header">Simpson's Rule <span class="slide-number">Slide 37-41</span></div>
+            <p class="mb-4">Use a parabola (2nd order polynomial) to interpolate 3 points.</p>
+            <div class="math-box text-sm">
+                $\int_{0}^{2h} f(x) dx \approx \frac{h}{3} [f(0) + 4f(h) + f(2h)]$
+            </div>
+            <p class="text-sm mb-4">
+                Weights pattern: 1, 4, 2, 4, 2, ..., 4, 1.
+                Total Error $\approx O(h^4)$.
+            </p>
+
+            <textarea id="code-simp" class="code-editor" spellcheck="false">
 # Simpson's Rule Snippet (Core Calculation)
 # Assuming 'area' initialized and loop setup
 # area += f0 + f1*4. + f2
 # area *= h / 3.
 print("See Hands-On for implementation!")
 </textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-simp', 'out-simp')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                </div>
-                <div id="out-simp"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-xs text-slate-500 mt-2">Best precision $O(10^{-14})$ when $h \approx 10^{-4}$.</p>
+            <div class="flex items-center mt-2">
+                <button onclick="runPython('code-simp', 'out-simp')"
+                    class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                    Code</button>
             </div>
-        </section>
+            <div id="out-simp"
+                class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+            </div>
 
-        <section id="gaussian" class="mb-16 scroll-mt-20">
-            <div id="gaussian-root" class="mb-8"></div>
-            <div class="slide-card">
-                <div class="slide-header">Gaussian Quadrature <span class="slide-number">Slide 43-49</span></div>
-                <p class="mb-4"><strong>The Trick:</strong> Instead of fixed spacing, can we optimize the locations of
-                    points ($x_i$) and weights ($w_i$) to get *exact* integration for polynomials?</p>
+            <p class="text-xs text-slate-500 mt-2">Best precision $O(10^{-14})$ when $h \approx 10^{-4}$.</p>
+        </div>
+    </section>
 
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="font-bold mb-2">2-Point Gauss-Legendre</h4>
-                        <ul class="list-disc ml-5 text-sm">
-                            <li>Solves exact integration for polynomials up to $x^3$.</li>
-                            <li>Points: $\pm 1/\sqrt{3}$</li>
-                            <li>Weights: 1, 1</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-bold mb-2">3-Point Gauss-Legendre</h4>
-                        <ul class="list-disc ml-5 text-sm">
-                            <li>Solves exact integration for polynomials up to $x^5$.</li>
-                            <li>Points: $0, \pm \sqrt{3/5}$</li>
-                            <li>Weights: $8/9, 5/9, 5/9$</li>
-                        </ul>
-                    </div>
+    <section id="gaussian" class="mb-16 scroll-mt-20">
+        <div id="gaussian-root" class="mb-8"></div>
+        <div class="slide-card">
+            <div class="slide-header">Gaussian Quadrature <span class="slide-number">Slide 43-49</span></div>
+            <p class="mb-4"><strong>The Trick:</strong> Instead of fixed spacing, can we optimize the locations of
+                points ($x_i$) and weights ($w_i$) to get *exact* integration for polynomials?</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold mb-2">2-Point Gauss-Legendre</h4>
+                    <ul class="list-disc ml-5 text-sm">
+                        <li>Solves exact integration for polynomials up to $x^3$.</li>
+                        <li>Points: $\pm 1/\sqrt{3}$</li>
+                        <li>Weights: 1, 1</li>
+                    </ul>
                 </div>
-                <p class="text-sm mt-4 bg-slate-100 p-2 rounded">
-                    General Rule: $n$ points give exact integration up to $x^{2n-1}$.
-                </p>
-
-                <h4 class="font-bold mt-6 mb-2">Coordinate Transformation</h4>
-                <p class="text-sm mb-2">Gaussian quadrature is defined for $[-1, 1]$. For a general interval $[a, b]$,
-                    we use the transformation:</p>
-                <div class="math-box text-sm">
-                    $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f\left(\frac{b-a}{2}x + \frac{a+b}{2}\right) dx$
-                </div>
-                <div class="math-box text-xs">
-                    $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f(\frac{b-a}{2}x + \frac{a+b}{2}) dx$
+                <div>
+                    <h4 class="font-bold mb-2">3-Point Gauss-Legendre</h4>
+                    <ul class="list-disc ml-5 text-sm">
+                        <li>Solves exact integration for polynomials up to $x^5$.</li>
+                        <li>Points: $0, \pm \sqrt{3/5}$</li>
+                        <li>Weights: $8/9, 5/9, 5/9$</li>
+                    </ul>
                 </div>
             </div>
-        </section>
+            <p class="text-sm mt-4 bg-slate-100 p-2 rounded">
+                General Rule: $n$ points give exact integration up to $x^{2n-1}$.
+            </p>
 
-        <section id="breaking" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">When does it break? <span class="slide-number">Slide 52-54</span></div>
-                <p class="mb-4">Testing a 5-point Gauss-Legendre rule (should be exact up to $x^9$).</p>
+            <h4 class="font-bold mt-6 mb-2">Coordinate Transformation</h4>
+            <p class="text-sm mb-2">Gaussian quadrature is defined for $[-1, 1]$. For a general interval $[a, b]$,
+                we use the transformation:</p>
+            <div class="math-box text-sm">
+                $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f\left(\frac{b-a}{2}x + \frac{a+b}{2}\right) dx$
+            </div>
+            <div class="math-box text-xs">
+                $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f(\frac{b-a}{2}x + \frac{a+b}{2}) dx$
+            </div>
+        </div>
+    </section>
 
-                <textarea id="code-break" class="code-editor" spellcheck="false">
+    <section id="breaking" class="mb-16 scroll-mt-20">
+        <div class="slide-card">
+            <div class="slide-header">When does it break? <span class="slide-number">Slide 52-54</span></div>
+            <p class="mb-4">Testing a 5-point Gauss-Legendre rule (should be exact up to $x^9$).</p>
+
+            <textarea id="code-break" class="code-editor" spellcheck="false">
 def f(x, n):
     # Polynomial 1 + x + ... + x^n
     val = 0.
@@ -624,27 +626,27 @@ def f(x, n):
 print("Power 9: Diff = 0.00000000 (Exact)")
 print("Power 10: Diff = 0.00000143 (Breaks!)")
 </textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-break', 'out-break')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-break"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-2">The 5-point rule fails exactly at $x^{10}$, as predicted ($2n-1 = 9$).</p>
+            <div class="flex items-center mt-2">
+                <button onclick="runPython('code-break', 'out-break')"
+                    class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                    Code</button>
+                <span class="text-xs text-gray-500 ml-3">Ready to run</span>
             </div>
-        </section>
+            <div id="out-break"
+                class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+            </div>
 
-        <section id="scipy-int" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">SciPy Integration <span class="slide-number">Slide 55-57</span></div>
-                <p class="mb-4">Use `scipy.integrate.quad` (uses QUADPACK, Fortran-based, adaptive Gaussian quadrature).
-                </p>
+            <p class="text-sm mt-2">The 5-point rule fails exactly at $x^{10}$, as predicted ($2n-1 = 9$).</p>
+        </div>
+    </section>
 
-                <textarea id="code-sint" class="code-editor" spellcheck="false" style="min-height: 100px;">
+    <section id="scipy-int" class="mb-16 scroll-mt-20">
+        <div class="slide-card">
+            <div class="slide-header">SciPy Integration <span class="slide-number">Slide 55-57</span></div>
+            <p class="mb-4">Use `scipy.integrate.quad` (uses QUADPACK, Fortran-based, adaptive Gaussian quadrature).
+            </p>
+
+            <textarea id="code-sint" class="code-editor" spellcheck="false" style="min-height: 100px;">
 import scipy.integrate as integrate
 import math
 
@@ -653,48 +655,48 @@ def f(x): return x - x**2 + x**3 - x**4 + math.sin(13*x)/13.
 quad, quaderr = integrate.quad(f, 0., 1.2)
 print(f"Numerical: {quad} +- {quaderr}")
 </textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-sint', 'out-sint')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-sint"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-4">Result: Precision $10^{-16}$. Extremely precise and fast.</p>
+            <div class="flex items-center mt-2">
+                <button onclick="runPython('code-sint', 'out-sint')"
+                    class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                    Code</button>
+                <span class="text-xs text-gray-500 ml-3">Ready to run</span>
             </div>
-        </section>
-
-        <section id="practice" class="mb-16 scroll-mt-20">
-            <div class="slide-card border-ntu-primary border-l-8">
-                <div class="slide-header text-ntu-primary">Hands-On Session <span class="slide-number">Slide
-                        58-59</span></div>
-
-                <div class="mb-6">
-                    <h3 class="font-bold text-lg mb-2">Practice 1: The 3/8 Rule</h3>
-                    <p class="text-sm mb-2">Implement the 3rd order Newton-Cotes formula:</p>
-                    <div class="math-box text-sm">
-                        $\int_0^{3h} f(x) dx \approx \frac{3h}{8} [f(0) + 3f(h) + 3f(2h) + f(3h)]$
-                    </div>
-                    <p class="text-sm">Modify the Simpson's rule code to implement this and check precision.</p>
-                </div>
-
-                <div>
-                    <h3 class="font-bold text-lg mb-2">Practice 2: Integrating Oscillations</h3>
-                    <p class="text-sm mb-2">Use `quad()` to integrate $\cos(x)$ over large intervals:</p>
-                    <ul class="list-disc ml-5 text-sm font-mono">
-                        <li>[0, π]</li>
-                        <li>[0, 100π]</li>
-                        <li>[0, 1000π]</li>
-                        <li>[0, 1000.5π]</li>
-                    </ul>
-                    <p class="text-sm mt-2"><strong>Question:</strong> Is it always very precise? (Hint: Rapid
-                        oscillations can fool adaptive algorithms if not careful).</p>
-                </div>
+            <div id="out-sint"
+                class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
             </div>
-        </section>
+
+            <p class="text-sm mt-4">Result: Precision $10^{-16}$. Extremely precise and fast.</p>
+        </div>
+    </section>
+
+    <section id="practice" class="mb-16 scroll-mt-20">
+        <div class="slide-card border-ntu-primary border-l-8">
+            <div class="slide-header text-ntu-primary">Hands-On Session <span class="slide-number">Slide
+                    58-59</span></div>
+
+            <div class="mb-6">
+                <h3 class="font-bold text-lg mb-2">Practice 1: The 3/8 Rule</h3>
+                <p class="text-sm mb-2">Implement the 3rd order Newton-Cotes formula:</p>
+                <div class="math-box text-sm">
+                    $\int_0^{3h} f(x) dx \approx \frac{3h}{8} [f(0) + 3f(h) + 3f(2h) + f(3h)]$
+                </div>
+                <p class="text-sm">Modify the Simpson's rule code to implement this and check precision.</p>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg mb-2">Practice 2: Integrating Oscillations</h3>
+                <p class="text-sm mb-2">Use `quad()` to integrate $\cos(x)$ over large intervals:</p>
+                <ul class="list-disc ml-5 text-sm font-mono">
+                    <li>[0, π]</li>
+                    <li>[0, 100π]</li>
+                    <li>[0, 1000π]</li>
+                    <li>[0, 1000.5π]</li>
+                </ul>
+                <p class="text-sm mt-2"><strong>Question:</strong> Is it always very precise? (Hint: Rapid
+                    oscillations can fool adaptive algorithms if not careful).</p>
+            </div>
+        </div>
+    </section>
 
     </div>
 
@@ -1469,8 +1471,8 @@ print(f"Numerical: {quad} +- {quaderr}")
                                             key={num}
                                             onClick={() => setPointsN(num)}
                                             className={`flex-1 py-2 rounded font-bold transition-all ${pointsN === num
-                                                    ? 'bg-emerald-600 text-white shadow-lg transform scale-105'
-                                                    : 'bg-white text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+                                                ? 'bg-emerald-600 text-white shadow-lg transform scale-105'
+                                                : 'bg-white text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
                                                 }`}
                                         >
                                             {num} Points
@@ -1494,8 +1496,8 @@ print(f"Numerical: {quad} +- {quaderr}")
                                                 setB(obj.defaultRange[1]);
                                             }}
                                             className={`w-full text-left px-3 py-2 rounded text-sm border transition-all ${selectedFunc === key
-                                                    ? 'bg-white border-emerald-500 ring-2 ring-emerald-200'
-                                                    : 'bg-white border-emerald-100 hover:bg-emerald-100'
+                                                ? 'bg-white border-emerald-500 ring-2 ring-emerald-200'
+                                                : 'bg-white border-emerald-100 hover:bg-emerald-100'
                                                 }`}
                                         >
                                             <div className="font-bold text-slate-700">{obj.label}</div>
