@@ -607,7 +607,7 @@ intf_rand = val.sum() / nsamples
                 data.push(seed / M);
             }
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-pm', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Uniform Distribution', height: 250 });
+            Plotly.newPlot('plot-pm', [trace], { margin: { t: 40, b: 20, l: 30, r: 10 }, title: 'Uniform Distribution', height: 250 });
         }
 
         // --- 4. XORSHIFT ---
@@ -655,7 +655,7 @@ intf_rand = val.sum() / nsamples
         function runWrong() {
             const data = Array.from({ length: 10000 }, () => Math.random());
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-wrong', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Result (Flat)', height: 250 });
+            Plotly.newPlot('plot-wrong', [trace], { margin: { t: 40, b: 20, l: 30, r: 10 }, title: 'Result (Flat)', height: 250 });
         }
 
         // --- 8. Hit or Miss ---
@@ -668,7 +668,7 @@ intf_rand = val.sum() / nsamples
                 if (y < f(x)) data.push(x);
             }
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-hitmiss', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Rejection Sampling', height: 250 });
+            Plotly.newPlot('plot-hitmiss', [trace], { margin: { t: 40, b: 20, l: 30, r: 10 }, title: 'Rejection Sampling', height: 250 });
         }
 
         // --- 9. Inverse Transform ---
@@ -681,7 +681,7 @@ intf_rand = val.sum() / nsamples
                 data.push(-Math.log(1 - r + r / e));
             }
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-inverse', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Exponential Dist.', height: 250 });
+            Plotly.newPlot('plot-inverse', [trace], { margin: { t: 40, b: 20, l: 30, r: 10 }, title: 'Exponential Dist.', height: 250 });
         }
 
         // --- 10. Box Muller ---
@@ -696,7 +696,7 @@ intf_rand = val.sum() / nsamples
             Plotly.newPlot('plot-gauss', [
                 { x: x, type: 'histogram', opacity: 0.5, name: 'X', marker: { color: 'gold' } },
                 { x: y, type: 'histogram', opacity: 0.5, name: 'Y', marker: { color: 'cyan' } }
-            ], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Gaussian X & Y', height: 250, barmode: 'overlay' });
+            ], { margin: { t: 40, b: 20, l: 30, r: 10 }, title: 'Gaussian X & Y', height: 250, barmode: 'overlay' });
         }
 
         // --- 11. CLT ---
@@ -706,7 +706,7 @@ intf_rand = val.sum() / nsamples
                 for (let i = 0; i < 10000; i++) data[i] += Math.random();
             }
             Plotly.newPlot('plot-clt', [{ x: data, type: 'histogram', marker: { color: '#eab308' } }], {
-                margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'CLT Summation', height: 250
+                margin: { t: 40, b: 20, l: 30, r: 10 }, title: 'CLT Summation', height: 250
             });
         }
 
