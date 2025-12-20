@@ -222,10 +222,19 @@
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
                                 <h5 class="font-bold text-sm">Loading the Wave</h5>
-                                <div class="code-block">
+                                <div class="code-block" style="background-color: #f8fafc; color: #1f2937;">
+                                    import scipy
                                     import scipy.io.wavfile as wavfile
+                                    import matplotlib.pyplot as plt
+
                                     rate, data = wavfile.read('Sine_wave_440.wav')
-                                    [cite_start]# [cite: 97-99]
+                                    t = scipy.linspace(0., 1., rate, endpoint=False)
+
+                                    plt.figure(figsize=(8,6), dpi=80)
+                                    plt.plot(t[:rate//100], data[:rate//100])
+                                    plt.xlabel('Time [sec]')
+                                    plt.ylabel('Amplitude')
+                                    plt.show()
                                 </div>
                             </div>
                             <div>
