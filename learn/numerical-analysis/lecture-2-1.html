@@ -1,390 +1,567 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture 2-1: The Art of Numerical Analysis</title>
+    <title>Lecture 2-1: The Art of Numerical Analysis - Complete Course Material</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        ntu: {
+                            blue: '#1e40af',
+                            light: '#dbeafe',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
 
-        .math-font {
-            font-family: "Cambria Math", "Times New Roman", serif;
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
         }
 
-        @keyframes pulse-slow {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
 
-        .analyzing {
-            animation: pulse-slow 2s infinite;
+        .slide-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
+        }
+
+        .slide-number {
+            float: right;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .code-block {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1rem 0;
         }
     </style>
 </head>
 
-<body class="bg-white text-slate-800 font-sans">
+<body class="bg-gray-50 text-gray-800 antialiased">
 
-    <!-- Header -->
-    <header class="py-12 px-6 text-center border-b border-slate-200 gradient-bg">
-        <div class="max-w-4xl mx-auto">
-
-            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-4">The Art of Numerical Analysis</h1>
-            <p class="text-xl text-slate-600">Lecture 2-1</p>
+    <div class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 hidden lg:block overflow-y-auto z-50">
+        <div class="p-6">
+            <h2 class="font-bold text-ntu-blue text-xl mb-6">Course Outline</h2>
+            <nav class="space-y-1">
+                <a href="#intro" class="block px-3 py-2 text-sm font-medium rounded hover:bg-ntu-light text-gray-700">1.
+                    Introduction</a>
+                <a href="#music" class="block px-3 py-2 text-sm font-medium rounded hover:bg-ntu-light text-gray-700">2.
+                    The Art of Music</a>
+                <a href="#tech-music"
+                    class="block px-3 py-2 text-sm font-medium rounded hover:bg-ntu-light text-gray-700">↳ Technical
+                    Implementation</a>
+                <a href="#errors"
+                    class="block px-3 py-2 text-sm font-medium rounded hover:bg-ntu-light text-gray-700">3. Errors in
+                    Computation</a>
+                <a href="#floating-point"
+                    class="block px-3 py-2 text-sm font-medium rounded hover:bg-ntu-light text-gray-700">4. Floating
+                    Point Arithmetic</a>
+                <a href="#calc-pi"
+                    class="block px-3 py-2 text-sm font-medium rounded hover:bg-ntu-light text-gray-700">5. Calculating
+                    Pi</a>
+                <a href="#hands-on"
+                    class="block px-3 py-2 text-sm font-medium rounded hover:bg-ntu-light text-gray-700">6. Hands-On
+                    Session</a>
+            </nav>
         </div>
-    </header>
+    </div>
 
-    <main class="max-w-5xl mx-auto px-6 py-12 space-y-24">
+    <div class="lg:ml-64 min-h-screen">
 
-        <!-- Introduction Section -->
-        <section class="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                    <i data-lucide="info"></i> What is it?
-                </h2>
-                <div class="space-y-4 text-lg text-slate-600">
-                    <p>Numerical analysis is the study of algorithms that use <span
-                            class="text-pink-600 font-semibold italic">numerical approximation</span> rather than
-                        symbolic manipulations.</p>
-                    <div class="p-4 border-l-4 border-blue-500 bg-blue-50 italic text-slate-700">
-                        "Sometimes the key point is to solve problems with a (relatively) quick-and-dirty way, comparing
-                        to a full analytical solution."
-                    </div>
-                </div>
+        <header class="bg-white border-b border-gray-200 py-12 px-8">
+            <div class="max-w-4xl mx-auto">
+                [cite_start]<p class="text-sm font-bold text-ntu-blue tracking-wider uppercase mb-2">Lecture 2-1 [cite:
+                    4]</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">The Art of Numerical Analysis</h1>
+                [cite_start]<p class="text-lg text-gray-600">Kai-Feng Chen, National Taiwan University [cite: 6-7]</p>
             </div>
-            <div class="card p-6 rounded-2xl text-center">
-                <img src="assets/baby.png" alt="Babylonian Tablet"
-                    class="rounded-lg mb-4 mx-auto w-64 border border-slate-200 shadow-md">
-                <p class="text-sm text-slate-500">Babylonian Tablet (1800-1600 BC). <br>Approximating √2 to 6 decimal
-                    figures.</p>
-            </div>
-        </section>
+        </header>
 
-        <!-- Interactive Demo: Audio to Sheet Music -->
-        <section class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-4xl font-extrabold text-slate-900 mb-2">The Fun: From Sound to Score</h2>
-                <p class="text-slate-500">Using Fourier Transformation to "catch the pitch"</p>
-            </div>
+        <main class="max-w-4xl mx-auto px-6 py-10">
 
-            <div class="card p-8 rounded-3xl grid md:grid-cols-2 gap-8 bg-slate-50">
-                <div class="space-y-6">
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                        <label class="block text-sm font-medium mb-2 text-slate-700">Upload or Play the Lecture
-                            Wave</label>
-                        <!-- Updated source path to audio folder -->
-                        <audio id="audioElement" controls class="w-full">
-                            <source src="../../audio/test1.wav" type="audio/wav">
-                        </audio>
+            <section id="intro" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Introduction</h2>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 2-3</span>
+                    <h3 class="text-xl font-bold mb-4">What is Numerical Analysis?</h3>
+                    <p class="mb-4 text-gray-700">
+                        [cite_start]Numerical analysis is the study of algorithms that use numerical approximation (as
+                        opposed to general symbolic manipulations) for problems of mathematical analysis[cite: 10].
+                    </p>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                        <p class="italic text-yellow-800">
+                            [cite_start]"This does not require a very precise calculation. Sometimes the key point is to
+                            solve the problems with a (relatively) quick-and-dirty way, comparing to a full analytical
+                            solution." [cite: 11]
+                        </p>
                     </div>
 
-                    <div class="space-y-2">
-                        <h4 class="font-bold text-blue-600">Processing Steps:</h4>
-                        <ul class="text-sm space-y-2 text-slate-600">
-                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i> Load
-                                wave into NumPy array</li>
-                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i>
-                                Perform Fourier Transform (SciPy)</li>
-                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i>
-                                Identify peak amplitudes (Pitch)</li>
-                            <li class="flex gap-2"><i data-lucide="check-circle-2" class="text-green-500 w-4"></i>
-                                Convert frequency to MIDI</li>
-                        </ul>
-                    </div>
-                    <button id="analyzeBtn"
-                        class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all flex justify-center items-center gap-2 shadow-lg shadow-blue-200">
-                        <i data-lucide="activity"></i> Run Pitch Analysis
-                    </button>
-                </div>
-
-                <div
-                    class="bg-slate-900 rounded-xl p-4 flex flex-col justify-center items-center relative overflow-hidden h-64 border border-slate-800 shadow-inner">
-                    <canvas id="visualizer" class="w-full h-full"></canvas>
-                    <div id="statusText"
-                        class="absolute bottom-4 left-4 text-blue-400 font-mono text-xs uppercase tracking-tighter">
-                        System Idle</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Types of Errors -->
-        <section>
-            <h2 class="text-3xl font-bold text-center mb-12 text-slate-900">The Taxonomy of Errors</h2>
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="card p-6 rounded-xl border-t-4 border-red-500 bg-white">
-                    <i data-lucide="bug" class="text-red-500 mb-4"></i>
-                    <h3 class="font-bold mb-2 text-slate-800">Blunders</h3>
-                    <p class="text-sm text-slate-500">Human errors, typos, running the wrong program.</p>
-                </div>
-                <div class="card p-6 rounded-xl border-t-4 border-yellow-500 bg-white">
-                    <i data-lucide="zap" class="text-yellow-500 mb-4"></i>
-                    <h3 class="font-bold mb-2 text-slate-800">Random</h3>
-                    <p class="text-sm text-slate-500">Hardware instability, cosmic rays hitting memory.</p>
-                </div>
-                <div class="card p-6 rounded-xl border-t-4 border-blue-500 bg-white">
-                    <i data-lucide="scissors" class="text-blue-500 mb-4"></i>
-                    <h3 class="font-bold mb-2 text-slate-800">Approximation</h3>
-                    <p class="text-sm text-slate-500">Errors due to the algorithm (truncating Taylor series).</p>
-                </div>
-                <div class="card p-6 rounded-xl border-t-4 border-pink-500 bg-white">
-                    <i data-lucide="binary" class="text-pink-500 mb-4"></i>
-                    <h3 class="font-bold mb-2 text-slate-800">Roundoff</h3>
-                    <p class="text-sm text-slate-500">Finite precision of floating point numbers (64-bit).</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Floating Point Reality -->
-        <section class="card p-8 rounded-3xl bg-slate-50 border border-slate-200">
-            <div class="max-w-3xl mx-auto">
-                <h2 class="text-3xl font-bold mb-6 text-slate-900">"0.1 is not 1/10"</h2>
-                <p class="mb-6 text-slate-600">In binary floating point, 0.1 is actually:</p>
-                <div class="bg-slate-900 p-4 rounded-lg font-mono text-xs text-green-400 break-all mb-6 shadow-md">
-                    0.1000000000000000055511151231257827021181583404541015625
-                </div>
-                <div class="grid grid-cols-2 gap-8 text-sm">
-                    <div class="p-4 bg-white rounded-lg border border-slate-200">
-                        <span class="text-blue-600 block font-bold">Largest Number</span>
-                        1.79... x 10<sup>308</sup>
-                    </div>
-                    <div class="p-4 bg-white rounded-lg border border-slate-200">
-                        <span class="text-pink-600 block font-bold">Machine Epsilon</span>
-                        ~2.22 x 10<sup>-16</sup>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- The PI Lab -->
-        <section id="pi-lab" class="space-y-12">
-            <div class="text-center">
-                <h2 class="text-4xl font-extrabold text-slate-900">Interactive Lab: Calculating π</h2>
-                <p class="text-slate-500">Compare the Liu Hui (Geometric) method vs. Leibniz (Series) method.</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Liu Hui Simulation -->
-                <div class="card p-6 rounded-2xl space-y-4 bg-white">
-                    <h3 class="text-xl font-bold flex justify-between text-slate-800">
-                        Liu Hui Method
-                        <span class="text-sm font-normal text-slate-500">Approximating Circle with Polygons</span>
-                    </h3>
-                    <div
-                        class="h-48 bg-slate-50 rounded-xl relative flex items-center justify-center border border-slate-200">
-                        <svg id="polygonSvg" viewBox="0 0 100 100" class="w-40 h-40">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="#94a3b8" stroke-width="0.5" />
-                            <polygon id="polyShape" points="" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6"
-                                stroke-width="1" />
-                        </svg>
-                    </div>
-                    <div class="space-y-4">
-                        <label class="block text-sm text-slate-600">Number of iterations ($N$ sides increases):</label>
-                        <input type="range" id="liuHuiRange" min="1" max="25" value="1" class="w-full accent-blue-600">
-                        <div class="bg-slate-900 p-4 rounded font-mono text-sm space-y-1 text-slate-200">
-                            <div class="flex justify-between"><span>Sides:</span> <span id="sidesVal"
-                                    class="text-blue-400">6</span></div>
-                            <div class="flex justify-between"><span>π calc:</span> <span id="piCalcVal"
-                                    class="text-green-400">3.0000...</span></div>
-                            <div class="flex justify-between"><span>Error:</span> <span id="errorVal"
-                                    class="text-red-400">0.1415...</span></div>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-gray-100 p-4 rounded">
+                            <h4 class="font-bold mb-2">Historical Example: Babylonian Tablet</h4>
+                            <p class="text-sm mb-2">Dated 1800-1600 BC. Approximation of $\sqrt{2}$:</p>
+                            <p class="font-mono text-center my-2 text-blue-700">$$1 + 24/60 + 51/60^2 + 10/60^3$$</p>
+                            <p class="text-center font-bold">$= 1.41421296...$</p>
+                            [cite_start]<p class="text-xs text-gray-500 mt-2 text-center">(Accurate to 6 decimal
+                                figures) [cite: 12-13]</p>
                         </div>
-                        <p class="text-xs text-red-600 italic" id="roundoffWarning" style="display:none;">⚠️ Warning:
-                            Roundoff error detected!</p>
+                        <div class="bg-gray-100 p-4 rounded">
+                            <h4 class="font-bold mb-2">Modern Context</h4>
+                            <p class="text-sm">
+                                "The real speciality of computers is repetition." Your computer can perform boring
+                                calculations millions of times. [cite_start]A smarter way provides quick and precise
+                                results; a stupid way produces nothing [cite: 24-27].
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Python Sandbox Mock -->
-                <div class="card p-6 rounded-2xl space-y-4 bg-white">
-                    <h3 class="text-xl font-bold flex items-center gap-2 text-slate-800">
-                        <i data-lucide="terminal" class="text-green-600"></i> Python Implementation
-                    </h3>
+                <div class="slide-card">
+                    <span class="slide-number">Slide 4-5</span>
+                    <h3 class="text-xl font-bold mb-4">The Goal: Have Fun!</h3>
+                    <p class="mb-4">
+                        Numerical analysis can be entertaining. [cite_start]Sometimes you can do extremely
+                        difficult/fancy things with little effort [cite: 31-32].
+                    </p>
+                    [cite_start]<p class="font-semibold text-ntu-blue">Example Question: Have you ever thought of
+                        converting a nice piece of tune to sheet music? [cite: 37]</p>
+                </div>
+            </section>
+
+            <section id="music" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">The Art of Music</h2>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 6-8</span>
+                    <h3 class="text-xl font-bold mb-4">Converting Audio to Sheet Music</h3>
+                    <p class="mb-4">Usually a tough job for musicians. [cite_start]Technically speaking, if you can
+                        analyze a CD (Rip wave -> Analyze -> MIDI -> Sheet), you can automate it [cite: 53-57].</p>
+
+                    <div class="bg-blue-50 p-4 rounded mb-4">
+                        <h4 class="font-bold text-blue-900">The Secret: Catch the Pitch</h4>
+                        <p class="text-blue-800">
+                            [cite_start]"Find the key of a tune is nothing magical but a Fourier transformation,
+                            right?"[cite: 63].
+                            [cite_start]If one can scan over all possible pitches and find the ones with highest
+                            amplitudes, you can perform wave-to-midi conversion[cite: 66].
+                        </p>
+                    </div>
+                </div>
+
+                <section id="tech-music">
+                    <div class="slide-card">
+                        <span class="slide-number">Slide 9</span>
+                        <h3 class="text-xl font-bold mb-4">Implementation with Python + SciPy</h3>
+                        [cite_start]<p class="mb-2">It is not difficult to use Python to do this job[cite: 68]. The
+                            workflow:</p>
+                        <ol class="list-decimal ml-6 space-y-1 text-sm font-mono text-gray-700">
+                            [cite_start]<li>Prepare source wave file[cite: 70].</li>
+                            [cite_start]<li>Read wave as NumPy array[cite: 71].</li>
+                            [cite_start]<li>For each time interval, perform Fourier transformation (SciPy) for target
+                                frequencies[cite: 72].</li>
+                            [cite_start]<li>Record amplitudes as a function of pitch and time[cite: 73].</li>
+                            [cite_start]<li>Clean up (remove noise/harmonics)[cite: 74].</li>
+                            [cite_start]<li>Write to MIDI using MidiUtil package[cite: 74].</li>
+                        </ol>
+                    </div>
+
+                    <div class="slide-card">
+                        <span class="slide-number">Slide 10-12</span>
+                        <h3 class="text-xl font-bold mb-4">Conceptual Example: A440</h3>
+                        [cite_start]<p class="mb-4">Using the standard pitch A440 (440 Hz)[cite: 80].</p>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-bold text-sm">Loading the Wave</h5>
+                                <div class="code-block">
+                                    import scipy.io.wavfile as wavfile
+                                    rate, data = wavfile.read('Sine_wave_440.wav')
+                                    [cite_start]# [cite: 97-99]
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-sm">Fourier Transform</h5>
+                                <div class="code-block">
+                                    import scipy.fftpack as fftpack
+                                    fft = abs(scipy.fft(data[:rate]))
+                                    freqs = fftpack.fftfreq(rate, 1./rate)
+                                    [cite_start]# [cite: 131-132]
+                                </div>
+                            </div>
+                        </div>
+                        [cite_start]<p class="text-sm mt-2 text-green-600 font-bold">Result: A sharp peak at 440 Hz!
+                            [cite: 144]</p>
+                    </div>
+
+                    <div class="slide-card">
+                        <span class="slide-number">Slide 14</span>
+                        <h3 class="text-xl font-bold mb-4">Music Theory: Frequencies</h3>
+                        <p class="mb-4">We need to know which frequencies to analyze. We use the MIDI number formula:
+                        </p>
+                        <div class="bg-gray-100 p-4 rounded text-center mb-4">
+                            $$f_{m} = 2^{\frac{m-69}{12}} \times 440 \text{ Hz}$$
+                        </div>
+                        [cite_start]<p class="text-sm text-gray-600 text-center">We consider range $21 \le m \le 108$
+                            (88 keys) [cite: 179-180].</p>
+                    </div>
+
+                    <div class="slide-card">
+                        <span class="slide-number">Slide 15-17</span>
+                        <h3 class="text-xl font-bold mb-4">Processing the Data</h3>
+                        <p class="mb-2 font-bold">1. Spectrogram</p>
+                        <p class="mb-4 text-sm">Create a 2D array of amplitudes per key per time step (e.g., 1/16 second
+                            intervals). [cite_start]This generates a lot of noise and harmonics [cite: 275-276].</p>
+
+                        <p class="mb-2 font-bold">2. Filtering (The "Magic" Step)</p>
+                        <ul class="list-disc ml-6 mb-4 text-sm text-gray-700">
+                            <li>Sort keys by amplitude for each time interval.</li>
+                            <li>Calculate "pedestal" (average of lower-amplitude keys) and subtract it.</li>
+                            <li>Apply threshold cut (e.g., 2.50).</li>
+                            [cite_start]<li>Remove isolated notes and nearby harmonics [cite: 309-316].</li>
+                        </ul>
+
+                        <p class="mb-2 font-bold">3. Output</p>
+                        <p class="text-sm">Join the blocks and write to MIDI. [cite_start]Convert MIDI to Sheet Music
+                            using software [cite: 348-349].</p>
+                    </div>
+
+                    <div class="slide-card">
+                        <span class="slide-number">Slide 18-22</span>
+                        <h3 class="text-xl font-bold mb-4">Performance Tests</h3>
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-green-500 pl-4">
+                                <h4 class="font-bold">Test 1: Simple Scales</h4>
+                                <p class="text-sm">8 single notes, C4 to C5. [cite_start]Code works perfectly[cite:
+                                    382].</p>
+                            </div>
+                            <div class="border-l-4 border-green-500 pl-4">
+                                <h4 class="font-bold">Test 2: Chords</h4>
+                                [cite_start]<p class="text-sm">C4+E4+G4, etc. Code handles multiple sine waves
+                                    successfully[cite: 409].</p>
+                            </div>
+                            <div class="border-l-4 border-yellow-500 pl-4">
+                                <h4 class="font-bold">Test 3: Real Song (Dvořák: Humoresque)</h4>
+                                <p class="text-sm">Analyzed recording of Yo-Yo Ma + Itzhak Perlman. Result is "not so
+                                    trivial." Code captures the main idea but real audio is messy. [cite_start]Analyzing
+                                    a wave and catching the right pitch is a research-level topic[cite: 439, 469].</p>
+                            </div>
+                        </div>
+                        [cite_start]<p class="mt-4 text-sm font-semibold">"All the work done here is already a nice demo
+                            of numerical analysis (and it is FUN!)." [cite: 474]</p>
+                    </div>
+                </section>
+            </section>
+
+            <section id="errors" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Errors in Computation
+                </h2>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 24</span>
+                    <h3 class="text-xl font-bold mb-4">The Calculator Experiment</h3>
+                    <p class="mb-4">
+                        If you pick a calculator, insert a number, and press $\sqrt{}$ many times, you reach "1".
+                        [cite_start]This is the simplest show of computation uncertainty [cite: 506-508].
+                    </p>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 25-26</span>
+                    <h3 class="text-xl font-bold mb-4">Types of Errors</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-red-50 p-4 rounded border border-red-100">
+                            <h4 class="font-bold text-red-900">1. Blunders / Bugs</h4>
+                            <p class="text-sm text-red-800">The #1 cause. [cite_start]Typographical errors, wrong data
+                                files, human error[cite: 511].</p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded border border-orange-100">
+                            <h4 class="font-bold text-orange-900">2. Random Errors</h4>
+                            <p class="text-sm text-orange-800">Rare but possible. [cite_start]Unstable power, noise,
+                                cosmic rays flipping bits [cite: 514-516].</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded border border-blue-100">
+                            <h4 class="font-bold text-blue-900">3. Approximation Errors</h4>
+                            [cite_start]<p class="text-sm text-blue-800">Due to the selected algorithm (e.g., truncating
+                                higher order terms in a Taylor series) [cite: 520-522].</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded border border-purple-100">
+                            <h4 class="font-bold text-purple-900">4. Roundoff Errors</h4>
+                            <p class="text-sm text-purple-800">Floating point numbers have finite precision.
+                                [cite_start]Errors occur at the end of digits [cite: 523-525].</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="floating-point" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Floating Point
+                    Arithmetic</h2>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 27-28</span>
+                    <h3 class="text-xl font-bold mb-4">Bits, Bytes, and IEEE 754</h3>
+                    <ul class="list-disc ml-6 mb-4 text-sm">
+                        [cite_start]<li><strong>Integers:</strong> In Python, integers have unlimited precision (long
+                            types)[cite: 534].</li>
+                        <li><strong>Floats:</strong> Implemented as C doubles (64 bits). [cite_start]Follows IEEE 754
+                            binary64 standard[cite: 541].</li>
+                    </ul>
+
+                    <div class="bg-gray-800 text-white p-4 rounded font-mono text-sm text-center">
+                        $$(-1)^{\text{sign}} \times 2^{\text{exponent}-1023} \times (1 + \sum_{i=1}^{52} b_{52-i}
+                        2^{-i})$$
+                        <div class="mt-2 text-xs text-gray-400">Sign: 1 bit | Exponent: 11 bits | [cite_start]Fraction:
+                            52 bits [cite: 543-549]</div>
+                    </div>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 30</span>
+                    <h3 class="text-xl font-bold mb-4">The "Spoon is Not Real" Moment</h3>
+                    <p class="mb-4">There is no continuous "real number" in computation. 0.1 is not exactly 1/10.</p>
+
+                    <div class="bg-yellow-50 p-4 rounded border border-yellow-200 mb-4">
+                        [cite_start]<h4 class="font-bold text-sm text-yellow-900 uppercase tracking-wide mb-2">
+                            Interactive Demo [cite: 570]</h4>
+                        <p class="mb-2 text-sm">Python/JS Calculation:</p>
+                        <div class="font-mono bg-white p-2 border rounded mb-2">
+                            >>> 0.1 + 0.2 - 0.3
+                        </div>
+                        <p class="text-sm font-bold">Result: <span id="float-result">...</span></p>
+                        <button onclick="document.getElementById('float-result').innerText = (0.1 + 0.2 - 0.3)"
+                            class="mt-2 bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700 transition">Run
+                            Calculation</button>
+                    </div>
+                    [cite_start]<p class="text-xs text-gray-500">Machine epsilon is $\sim 2.22 \times 10^{-16}$[cite:
+                        561].</p>
+                </div>
+            </section>
+
+            <section id="calc-pi" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Calculating $\pi$</h2>
+                <p class="mb-6 text-gray-700">A classic exercise in numerical analysis to demonstrate error behavior.
+                </p>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 32-37</span>
+                    <h3 class="text-xl font-bold mb-4 text-ntu-blue">Method 1: Polygon Approximation (Liu Hui)</h3>
+                    <p class="mb-2">Approximating a circle by polygons. Start with a hexagon ($S=1$). Use recursive
+                        formula:</p>
+                    <div class="font-mono bg-gray-100 p-2 rounded text-center text-sm mb-4">
+                        $$S' = \sqrt{2 - \sqrt{4 - S^2}}$$
+                        $$\pi \approx \frac{S \times N_{sides}}{2}$$
+                    </div>
+
+                    [cite_start]<h4 class="font-bold text-sm mb-2">The Python Code [cite: 608-617]</h4>
+                    <div class="code-block">
+                        import math
+                        nsides = 6
+                        length = 1.
+                        for i in range(20):
+                        length = (2. - (4. - length**2)**0.5)**0.5
+                        nsides *= 2
+                        pi = length * nsides / 2.
+                        print(nsides, pi)
+                    </div>
+
+                    <div class="bg-red-50 p-4 rounded mt-4 border border-red-200">
+                        <h4 class="font-bold text-red-900">What goes wrong?</h4>
+                        <p class="text-sm text-red-800 mb-4">
+                            For a large number of sides, $S$ becomes very small. $4 - S^2 \approx 4 - 10^{-12}$. This
+                            hits the limit of double precision, causing <strong>Roundoff Error</strong>.
+                        </p>
+                        <button onclick="runPiSim()"
+                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition w-full font-bold">Run
+                            Simulation (Watch Error Increase)</button>
+                        <div id="pi-log" class="mt-4 font-mono text-xs bg-white p-2 border h-48 overflow-y-auto hidden">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 38-40</span>
+                    <h3 class="text-xl font-bold mb-4 text-ntu-blue">Method 2: Leibniz Formula</h3>
+                    <p class="mb-2">Using trigonometric functions: $\tan(\pi/4) = 1 \rightarrow \arctan(1) = \pi/4$.</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$\frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + ...$$
+                    </div>
+                    <p class="text-sm text-gray-600"><strong>Result:</strong> Very inefficient! [cite_start]1,000,000
+                        steps to get $\approx 3.141593$ (only 6 decimals)[cite: 723].</p>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 41-43</span>
+                    <h3 class="text-xl font-bold mb-4 text-ntu-blue">Method 3: Improved Leibniz (A Trick)</h3>
+                    <p class="mb-2">Pick a smaller $x$. Use $\tan(\pi/6) = 1/\sqrt{3}$. Taylor expansions converge much
+                        faster near $x=0$.</p>
+                    <div class="text-center mb-4 text-sm">
+                        $$\frac{\pi}{6} = \frac{1}{\sqrt{3}} [ 1 - \frac{1}{3 \cdot 3} + \frac{1}{5 \cdot 9} - ... ]$$
+                    </div>
+                    [cite_start]<p class="text-sm font-bold text-green-600"><strong>Result:</strong> With only 30 terms,
+                        precision limit is reached! [cite: 760-761].</p>
+                </div>
+
+                <div class="slide-card bg-gray-900 text-white border-none">
+                    <span class="slide-number text-gray-500">Slide 45-46</span>
+                    <h3 class="text-xl font-bold mb-4">How Errors Behave</h3>
+                    <p class="mb-4 text-sm">
+                        Total error is the sum of Approximation Error (goes down with N) and Roundoff Error (goes up
+                        with N).
+                    </p>
+                    <div class="font-mono text-center text-yellow-400 mb-4 text-lg">
+                        $$\epsilon_{total} \approx \frac{\alpha}{N^\beta} + \sqrt{N}\epsilon_{m}$$
+                    </div>
+                    [cite_start]<p class="text-xs text-gray-400">There is a "sweet spot" ($N \approx 7 \times 10^{10}$)
+                        for minimal error using double precision[cite: 789].</p>
+                </div>
+            </section>
+
+            <section id="hands-on" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Hands-On Session</h2>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 47-49</span>
+                    <h3 class="text-xl font-bold mb-4">Tools</h3>
+                    <p class="mb-4">Use PythonAnywhere, IPython, or a local environment. [cite_start]Practice importing
+                        `math`, `numpy` [cite: 796-802].</p>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 50-51</span>
+                    <h3 class="text-xl font-bold mb-4">Practice 1: The `decimal` Module</h3>
+                    [cite_start]<p class="mb-4">Fix the "Spoon is not real" problem using Python's `decimal` module for
+                        arbitrary precision[cite: 884].</p>
+                    <div class="code-block">
+                        import decimal
+                        a = decimal.Decimal('0.1')
+                        b = decimal.Decimal('0.2')
+                        c = decimal.Decimal('0.3')
+                        [cite_start]print(a + b - c) # Result: 0.0 [cite: 895]
+                    </div>
+                    <div class="bg-yellow-50 p-4 border-l-4 border-yellow-400 mt-4">
+                        <p class="font-bold">Challenge:</p>
+                        <p class="text-sm">Modify the Method 1 (Polygon) code to use `Decimal` objects. [cite_start]See
+                            if you can beat the roundoff error![cite: 898].</p>
+                    </div>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 52-53</span>
+                    <h3 class="text-xl font-bold mb-4">Practice 2: Riemann Zeta & Others</h3>
+                    <p class="mb-4">Try calculating $\pi$ using the Riemann zeta function:</p>
+                    <div class="text-center mb-4">
+                        $$\frac{\pi^2}{6} = \frac{1}{1^2} + \frac{1}{2^2} + \frac{1}{3^2} + ...$$
+                    </div>
+                    [cite_start]<p class="text-sm text-gray-500 mb-4">Or try any of these other crazy formulas [cite:
+                        923-939]:</p>
                     <div
-                        class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 h-64 overflow-y-auto border border-slate-700 shadow-inner">
-                        <pre id="codeSnippet">
-import math
-# Step 0: Hexagon
-nsides = 6
-length = 1.0
-
-for i in range(iterations):
-    # Geometric recursive formula
-    length = (2. - (4. - length**2)**0.5)**0.5
-    nsides *= 2
-    pi = length * nsides / 2.0
-    print(f"Polygon {nsides}: {pi}")
-</pre>
-                    </div>
-                    <div class="text-sm text-slate-600 p-3 bg-blue-50 rounded border border-blue-200">
-                        <strong>Insight:</strong> In the Python code, as <code
-                            class="text-blue-600 font-bold">length</code> becomes extremely small, subtracting <code
-                            class="text-blue-600 font-bold">length**2</code> from <code
-                            class="text-blue-600 font-bold">4.</code> hits the limit of floating-point precision.
+                        class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono text-gray-600 bg-gray-100 p-4 rounded">
+                        <div>$\pi = (-1)\sqrt{-1}\log(-1)$</div>
+                        <div>$\pi = \sqrt{\sum \frac{6}{k^2}}$</div>
+                        <div>$\pi = 16 \arctan(1/5) - 4 \arctan(1/239)$</div>
+                        <div>$\pi = 4 \int_0^1 \sqrt{1-x^2} dx$</div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Quiz Section -->
-        <section class="max-w-2xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-8 text-slate-900">Knowledge Check</h2>
-            <div id="quiz" class="card p-8 rounded-3xl border border-blue-100 bg-white shadow-xl shadow-blue-50/50">
-                <p class="text-xl mb-6 text-slate-800" id="question">What happens to the total error as you increase
-                    iterations ($N$) in a typical numerical algorithm?</p>
-                <div class="grid gap-4">
-                    <button
-                        class="quiz-opt w-full text-left p-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 transition"
-                        data-correct="false">A) The error always decreases to zero.</button>
-                    <button
-                        class="quiz-opt w-full text-left p-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 transition"
-                        data-correct="false">B) Approximation error increases while Roundoff decreases.</button>
-                    <button
-                        class="quiz-opt w-full text-left p-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 transition"
-                        data-correct="true">C) Approximation error decreases, but Roundoff error eventually
-                        accumulates.</button>
-                </div>
-                <div id="quizFeedback" class="mt-6 hidden p-4 rounded-xl text-center font-bold"></div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="py-12 px-6 text-center border-t border-slate-200 text-slate-500 text-sm bg-slate-50">
-        <p></p>
-    </footer>
+        </main>
+    </div>
 
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        // Audio Visualizer Logic
-        const audio = document.getElementById('audioElement');
-        const canvas = document.getElementById('visualizer');
-        const ctx = canvas.getContext('2d');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const statusText = document.getElementById('statusText');
-
-        let audioContext, analyzer, dataArray, bufferLength;
-
-        analyzeBtn.addEventListener('click', () => {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const source = audioContext.createMediaElementSource(audio);
-                analyzer = audioContext.createAnalyser();
-                source.connect(analyzer);
-                analyzer.connect(audioContext.destination);
-                analyzer.fftSize = 256;
-                bufferLength = analyzer.frequencyBinCount;
-                dataArray = new Uint8Array(bufferLength);
-            }
-            audio.play();
-            statusText.innerText = "Analyzing Fourier Frequencies...";
-            statusText.classList.add('analyzing');
-            draw();
-        });
-
-        function draw() {
-            requestAnimationFrame(draw);
-            analyzer.getByteFrequencyData(dataArray);
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            const barWidth = (canvas.width / bufferLength) * 2.5;
-            let x = 0;
-            for (let i = 0; i < bufferLength; i++) {
-                const barHeight = dataArray[i] / 2;
-                ctx.fillStyle = `rgb(50, 100, ${dataArray[i] + 100})`;
-                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                x += barWidth + 1;
-            }
-        }
-
-        // Liu Hui Calculation & SVG Logic
-        const liuSlider = document.getElementById('liuHuiRange');
-        const polyShape = document.getElementById('polyShape');
-        const sidesVal = document.getElementById('sidesVal');
-        const piValText = document.getElementById('piCalcVal');
-        const errorText = document.getElementById('errorVal');
-        const roundoffWarning = document.getElementById('roundoffWarning');
-
-        function updateLiuHui() {
-            let iterations = parseInt(liuSlider.value);
-            let n = 6 * Math.pow(2, iterations - 1);
-            let s = 1.0; // side length for hexagon
-
-            // Recursive calculation to mimic the Python script
-            let currentS = 1.0;
-            let currentN = 6;
-            for (let i = 1; i < iterations; i++) {
-                currentS = Math.sqrt(2 - Math.sqrt(4 - Math.pow(currentS, 2)));
-                currentN *= 2;
-            }
-
-            let calculatedPi = (currentS * currentN) / 2;
-            let realPi = Math.PI;
-
-            // Update UI
-            sidesVal.innerText = currentN.toLocaleString();
-            piValText.innerText = calculatedPi.toFixed(15);
-            errorText.innerText = Math.abs(realPi - calculatedPi).toFixed(15);
-
-            // Mocking the round-off behavior after certain iterations
-            roundoffWarning.style.display = (iterations > 18) ? 'block' : 'none';
-
-            // Update SVG Polygon
-            const points = [];
-            const radius = 45;
-            const centerX = 50;
-            const centerY = 50;
-            for (let i = 0; i < currentN; i++) {
-                const angle = (i / currentN) * 2 * Math.PI;
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
-                points.push(`${x},${y}`);
-            }
-            polyShape.setAttribute('points', points.join(' '));
-        }
-
-        liuSlider.addEventListener('input', updateLiuHui);
-        updateLiuHui();
-
-        // Simple Quiz Logic
-        document.querySelectorAll('.quiz-opt').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const isCorrect = e.target.getAttribute('data-correct') === 'true';
-                const feedback = document.getElementById('quizFeedback');
-                feedback.classList.remove('hidden', 'bg-red-500/20', 'bg-green-500/20', 'text-red-400', 'text-green-400');
-
-                // Reset classes
-                feedback.className = "mt-6 hidden p-4 rounded-xl text-center font-bold";
-
-                if (isCorrect) {
-                    feedback.innerText = "Correct! As iterations grow, roundoff error eventually dominates approximation error.";
-                    feedback.classList.add('bg-green-100', 'text-green-700', 'border', 'border-green-200');
-                } else {
-                    feedback.innerText = "Not quite. Remember that roundoff error accumulates as more operations are performed.";
-                    feedback.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-200');
-                }
-                feedback.classList.remove('hidden');
+        // Initialize KaTeX
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ]
             });
         });
+
+        // Simulation for Pi Polygon Method
+        function runPiSim() {
+            const log = document.getElementById('pi-log');
+            log.classList.remove('hidden');
+            log.innerHTML = '';
+
+            let nsides = 6;
+            let length = 1.0;
+            const truePi = Math.PI;
+
+            log.innerHTML += `<div class="grid grid-cols-3 gap-2 font-bold border-b pb-1 mb-1"><span>Sides</span><span>Calc Pi</span><span>Diff</span></div>`;
+
+            // We mimic the float behavior naturally since JS uses 64-bit floats
+            for (let i = 0; i < 26; i++) {
+                let pi_calc = length * nsides / 2.0;
+                let diff = Math.abs(truePi - pi_calc);
+
+                // Highlight when error starts increasing
+                let colorClass = (i > 15 && diff > 0.00000001) ? 'text-red-600 font-bold' : 'text-green-600';
+
+                log.innerHTML += `
+                    <div class="grid grid-cols-3 gap-2 border-b border-gray-100 py-1">
+                        <span>${nsides}</span>
+                        <span>${pi_calc.toFixed(12)}</span>
+                        <span class="${colorClass}">${diff.toExponential(4)}</span>
+                    </div>
+                `;
+
+                // Formula: S' = sqrt(2 - sqrt(4 - S^2))
+                let inner = 4.0 - (length * length);
+                // Simple clamp to avoid NaN if float error makes inner < 0 slightly
+                if (inner < 0) inner = 0;
+                length = Math.sqrt(2.0 - Math.sqrt(inner));
+
+                nsides *= 2;
+            }
+        }
     </script>
 </body>
 
