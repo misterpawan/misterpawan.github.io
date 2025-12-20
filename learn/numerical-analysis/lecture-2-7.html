@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture 2-7: Random Numbers - Complete Course</title>
+    <title>Lecture 2-7: Random Numbers - Full Course</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -52,24 +52,43 @@
         .slide-card {
             background: white;
             border-radius: 12px;
-            padding: 2rem;
+            padding: 2.5rem;
             margin-bottom: 3rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             border: 1px solid #e2e8f0;
         }
 
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .slide-number {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
         .code-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.2fr 0.8fr;
             gap: 0;
             background: #282c34;
             border-radius: 8px;
             overflow: hidden;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
             min-height: 300px;
+            border: 1px solid #e2e8f0;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .code-container {
                 grid-template-columns: 1fr;
             }
@@ -101,13 +120,14 @@
             right: 10px;
             background: #e11d48;
             color: white;
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 4px;
             font-size: 0.75rem;
             cursor: pointer;
             z-index: 10;
             font-weight: bold;
             border: none;
+            transition: background 0.2s;
         }
 
         .run-btn:hover {
@@ -117,9 +137,19 @@
         .math-box {
             background: #f1f5f9;
             border-left: 4px solid #e11d48;
-            padding: 1rem;
-            margin: 1rem 0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             overflow-x: auto;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .plot-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 250px;
         }
     </style>
 </head>
@@ -134,7 +164,7 @@
                 <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
                 <a href="#lcg" class="px-3 py-1 hover:bg-gray-100 rounded">LCG</a>
                 <a href="#bitwise" class="px-3 py-1 hover:bg-gray-100 rounded">Bitwise</a>
-                <a href="#dist" class="px-3 py-1 hover:bg-gray-100 rounded">Distributions</a>
+                <a href="#distributions" class="px-3 py-1 hover:bg-gray-100 rounded">Distributions</a>
                 <a href="#monte-carlo" class="px-3 py-1 hover:bg-gray-100 rounded">Monte Carlo</a>
                 <a href="#hands-on" class="px-3 py-1 bg-ntu-red text-white rounded shadow-sm">Hands On</a>
             </div>
@@ -146,64 +176,86 @@
             Random Numbers 🎲
         </h1>
         <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
-            Generating "randomness" with deterministic machines. <br>
-            <span class="text-sm text-ntu-red font-mono">Lecture 2-7 • Kai-Feng Chen • NTU</span>
+            "Anyone who considers arithmetical methods of producing random digits is, of course, in a state of sin." —
+            John von Neumann
         </p>
+        <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
+            <span>Lecture 2-7</span>
+            <span>•</span>
+            <span>Kai-Feng Chen</span>
+            <span>•</span>
+            <span>National Taiwan University</span>
+        </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4 pb-20">
 
         <section id="intro" class="slide-card">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <span>1. Old-Fashioned Randomness</span>
-                <span class="text-2xl">✏️</span>
-            </h2>
+            <div class="slide-header">
+                <h2 class="text-3xl font-bold text-slate-800">1. Old-Fashioned Randomness</h2>
+                <span class="slide-number">Slide 1-5</span>
+            </div>
 
             <div class="grid md:grid-cols-2 gap-8 mb-8">
                 <div>
-                    <div class="bg-gray-100 p-4 rounded-lg text-center mb-4">
-                        <div class="text-4xl mb-2">🎲</div>
-                        <p class="font-bold">The Pencil Method</p>
-                        <p class="text-xs text-gray-500">Roll a pencil with A, B, C, D sides.</p>
-                    </div>
-                    [cite_start]<p class="text-sm text-slate-600">Great for exams, bad for simulation (too slow, not
-                        enough digits). [cite: 3737-3743]</p>
-                </div>
-                <div>
-                    <div
-                        class="bg-gray-100 p-4 rounded-lg text-center mb-4 font-mono text-xs overflow-hidden h-32 leading-relaxed text-gray-500">
-                        1234 5678 9012 3456<br>
-                        8094 2525 8247 1347<br>
-                        3563 2198 8211 9045<br>
-                        ... (Random Number Tables)
-                    </div>
-                    <p class="text-sm text-slate-600">Old Random Number Tables taught us two things:
-                    <ol class="list-decimal ml-5 mt-2 font-bold">
-                        <li>You need a seed.</li>
-                        <li>It's recursive.</li>
-                    </ol>
+                    <h3 class="font-bold text-lg mb-2">The Pencil Method</h3>
+                    <p class="text-slate-600 mb-4">
+                        A pencil with sides A, B, C, D. Useful for exams, but not for scientific computing!
+                        [cite_start]It lacks speed and precision (not enough digits). [cite: 3737-3743]
                     </p>
+
+                    <h3 class="font-bold text-lg mb-2">Random Number Tables</h3>
+                    <p class="text-slate-600 mb-4">
+                        Before computers, people used books full of random digits. These tables taught us two
+                        fundamental properties of pseudo-randomness:
+                    </p>
+                    <ul class="list-disc ml-5 text-slate-600 font-bold">
+                        <li>You need a seed to start.</li>
+                        <li>It relies on recursive operations.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-100 p-6 rounded-lg text-center">
+                    <h4 class="font-bold text-gray-700 mb-2">True vs Pseudo Generators</h4>
+                    <p class="text-sm text-gray-600 mb-4 text-left">
+                        <strong>True Random:</strong> Measures physical phenomena (thermal noise, photoelectric effect).
+                        Essential for cryptography.<br><br>
+                        <strong>Pseudo Random:</strong> Computational algorithms. Deterministic sequences determined by
+                        a seed. [cite_start]<span class="text-ntu-red font-bold">Good enough for most scientific
+                            work.</span> [cite: 3823-3824]
+                    </p>
+                    <div class="text-6xl mt-4">🖥️ vs 🎲</div>
                 </div>
             </div>
         </section>
 
         <section id="lcg" class="slide-card">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6">2. Linear Congruential Generator (LCG)</h2>
+            <div class="slide-header">
+                <h2 class="text-3xl font-bold text-slate-800">2. Linear Congruential Generator (LCG)</h2>
+                <span class="slide-number">Slide 7-11</span>
+            </div>
+
+            <p class="mb-4 text-lg">A classical algorithm. Simple, commonly used, but potentially dangerous.</p>
 
             <div class="math-box text-center text-xl">
                 $$ R_{next} = (a \cdot R_{current} + c) \mod M $$
             </div>
-            <p class="text-center text-sm text-gray-500 mb-8">The most classical (and often bad) algorithm.</p>
 
-            <div class="mb-8">
-                <h3 class="font-bold text-lg mb-2 text-red-600">Example 1: A Bad LCG (M=100)</h3>
-                <p class="text-sm mb-2">Notice how quickly the pattern repeats.</p>
+            <p class="text-slate-600 mb-6">
+                Where $a, c$ are scaling constants and $M$ is the modulus. The period is at most $M$. A "bad" selection
+                of constants leads to terrible results!
+            </p>
+
+            <div class="mb-10">
+                <h3 class="font-bold text-lg mb-2 border-l-4 border-red-500 pl-3">Example: A Bad LCG ($M=100$)</h3>
+                [cite_start]<p class="text-sm text-gray-500 mb-2">Watch how quickly the sequence repeats (38, 22,
+                    86...). [cite: 3858]</p>
                 <div class="code-container">
                     <div class="code-editor">
                         <button class="run-btn" onclick="runLCG()">▶ Run Code</button>
                         <pre><code class="language-python"># 1207-example-01.py
 class rnd:
-    def __init__(self, s=1234):
+    def __init__(self, s = 1234):
         self.seed = s
         
     def gen(self):
@@ -212,27 +264,26 @@ class rnd:
         return self.seed
 
 r = rnd()
-print("First 30 numbers:")
 for i in range(30):
     print(r.gen(), end=' ')</code></pre>
                     </div>
-                    <div id="out-lcg" class="output-panel">Click Run to execute...</div>
+                    <div id="out-lcg" class="output-panel">Click Run...</div>
                 </div>
             </div>
 
-            <div class="mb-8">
-                <h3 class="font-bold text-lg mb-2 text-blue-600">Example 2: Park-Miller LCG (Good)</h3>
-                <p class="text-sm mb-2">Using $M = 2^{31}-1$. Much better period.</p>
+            <div class="mb-10">
+                <h3 class="font-bold text-lg mb-2 border-l-4 border-blue-500 pl-3">Example: Park-Miller RNG (Good)</h3>
+                <p class="text-sm text-gray-500 mb-2">Uses $a=16807, c=0, M=2^{31}-1$. [cite_start]The period is almost
+                    $2^{31}-1$. [cite: 3979]</p>
                 <div class="code-container">
                     <div class="code-editor">
                         <button class="run-btn" onclick="runParkMiller()">▶ Run Code</button>
                         <pre><code class="language-python"># 1207-example-01a.py
 class rnd:
-    def __init__(self, s=1234):
+    def __init__(self, s = 1234):
         self.seed = s
         
     def gen(self):
-        # Park-Miller constants
         self.seed = (16807*self.seed) % (2**31-1)
         return self.seed
 
@@ -240,268 +291,249 @@ r = rnd()
 for i in range(30):
     print(r.gen(), end=' ')</code></pre>
                     </div>
-                    <div id="out-pm" class="output-panel">Click Run to execute...</div>
+                    <div id="out-pm" class="output-panel">Click Run...</div>
                 </div>
             </div>
 
-            <div>
-                <h3 class="font-bold text-lg mb-2">Example 3: Visualizing Uniformity</h3>
-                <p class="text-sm mb-2">Let's plot 100,000 numbers from the Park-Miller generator.</p>
-                <div class="grid lg:grid-cols-2 gap-4">
-                    <div class="code-container m-0">
-                        <div class="code-editor">
-                            <button class="run-btn" onclick="runPMHist()">▶ Run & Plot</button>
-                            <pre><code class="language-python"># 1207-example-01b.py
-class rnd:
-    def __init__(self, s=1234):
-        self.seed = s
-    def gen(self):
-        self.seed = (16807*self.seed) % (2**31-1)
-        return self.seed
-    def random(self):
-        return float(self.gen())/(2**31-1)
-
-r = rnd()     
-data = np.zeros(100000)
-for i in range(len(data)):
-    data[i] = r.random()
-    
-plt.hist(data, bins=50) # Plotting...</code></pre>
-                        </div>
-                    </div>
-                    <div id="plot-pm" class="border bg-white rounded flex items-center justify-center">
-                        <span class="text-gray-400 text-sm">Plot will appear here</span>
-                    </div>
-                </div>
+            <div class="bg-red-50 p-4 rounded border border-red-100">
+                <h4 class="font-bold text-red-800 mb-1">⚠️ The RANDU Disaster</h4>
+                <p class="text-sm text-red-900">
+                    IBM used $a=65539, M=2^{31}$ in the 1960s. It produces numbers that fall into just <strong>15
+                        planes</strong> in 3D space! [cite_start]"Guaranteed to bring dismay." [cite: 3955-3960]
+                </p>
             </div>
         </section>
 
         <section id="bitwise" class="slide-card">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6">3. Bitwise Magic 🧙‍♂️</h2>
+            <div class="slide-header">
+                <h2 class="text-3xl font-bold text-slate-800">3. Bitwise Generators</h2>
+                <span class="slide-number">Slide 19-27</span>
+            </div>
 
-            <div id="bitwise-tabs-root"></div>
+            <p class="mb-4">Using XOR, SHIFT, and AND operations for speed and better randomness.</p>
 
-            <div class="mt-8 mb-8">
-                <h3 class="font-bold text-lg mb-2 text-indigo-600">XORSHIFT Algorithm</h3>
-                <div class="code-container">
-                    <div class="code-editor">
-                        <button class="run-btn" onclick="runXorShift()">▶ Run Code</button>
-                        <pre><code class="language-python"># 1207-example-02.py
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-indigo-600">XORSHIFT Algorithm</h3>
+                    <div class="math-box text-sm">
+                        $x \leftarrow x \text{ xor } (x \gg a_1)$<br>
+                        $x \leftarrow x \text{ xor } (x \ll a_2)$<br>
+                        $x \leftarrow x \text{ xor } (x \gg a_3)$
+                    </div>
+                    [cite_start]<p class="text-sm text-slate-600">Good parameters (e.g., 21, 35, 4) give periods of
+                        $2^{32}-1$. [cite: 4191-4200]</p>
+
+                    <div class="code-container">
+                        <div class="code-editor">
+                            <button class="run-btn" onclick="runXorShift()">▶ Run</button>
+                            <pre><code class="language-python"># 1207-example-02.py (XORSHIFT)
 class rnd:
     def __init__(self, s=1234):
         self.seed = s
-                
     def gen(self):
-        # 3 XOR-SHIFT operations
-        self.seed = self.seed ^ (self.seed >> 21)
-        self.seed = self.seed ^ (self.seed << 35)
-        self.seed = self.seed ^ (self.seed >>  4)
-        # Keep it 64-bit integer behavior in Python
+        self.seed ^= (self.seed >> 21)
+        self.seed ^= (self.seed << 35)
+        self.seed ^= (self.seed >> 4)
         return (self.seed & 0xffffffff)
-
-r = rnd()
-for i in range(30):
-    print(r.gen(), end=' ')</code></pre>
+# ...</code></pre>
+                        </div>
+                        <div id="out-xor" class="output-panel"></div>
                     </div>
-                    <div id="out-xor" class="output-panel">Click Run to execute...</div>
                 </div>
-            </div>
 
-            <div class="mb-8">
-                <h3 class="font-bold text-lg mb-2 text-indigo-600">Multiply With Carry (MWC)</h3>
-                <div class="code-container">
-                    <div class="code-editor">
-                        <button class="run-btn" onclick="runMWC()">▶ Run Code</button>
-                        <pre><code class="language-python"># 1207-example-03.py
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-indigo-600">Multiply With Carry (MWC)</h3>
+                    <div class="math-box text-sm">
+                        Uses 64-bit logic.<br>
+                        $(x \& \text{mask}) \cdot a + (x \gg 32)$
+                    </div>
+                    [cite_start]<p class="text-sm text-slate-600">Takes lower 32 bits, scales them, adds upper 32 bits.
+                        [cite: 4229]</p>
+
+                    <div class="code-container">
+                        <div class="code-editor">
+                            <button class="run-btn" onclick="runMWC()">▶ Run</button>
+                            <pre><code class="language-python"># 1207-example-03.py (MWC)
 class rnd:
     def __init__(self, s=1234):
         self.seed = s
-    
     def gen(self):
-        # High/Low bit manipulation
-        self.seed = \
-        (self.seed & 0xffffffff)*4294957665 + (self.seed>>32)
+        self.seed = (self.seed & 0xffffffff) \
+          * 4294957665 + (self.seed>>32)
         return (self.seed & 0xffffffff)
-
-r = rnd()
-for i in range(30):
-    print(r.gen(), end=' ')</code></pre>
+# ...</code></pre>
+                        </div>
+                        <div id="out-mwc" class="output-panel"></div>
                     </div>
-                    <div id="out-mwc" class="output-panel">Click Run to execute...</div>
                 </div>
             </div>
 
-            <div class="mb-8">
-                <h3 class="font-bold text-lg mb-2 text-indigo-600">Combined Generator (Strongest)</h3>
-                <p class="text-sm mb-2">Combining XORSHIFT and MWC. Period $\approx 10^{37}$.</p>
-                <div class="code-container">
+            <div class="mt-8">
+                <h3 class="font-bold text-lg mb-2 text-indigo-800">Combined Generator (The Beast)</h3>
+                [cite_start]<p class="text-sm mb-2">Combining XORSHIFT + MWC yields a massive period of $\approx
+                    10^{37}$. [cite: 4266]</p>
+                <div class="code-container h-48">
                     <div class="code-editor">
-                        <button class="run-btn" onclick="runCombined()">▶ Run Code</button>
+                        <button class="run-btn" onclick="runCombined()">▶ Run Combined</button>
                         <pre><code class="language-python"># 1207-example-04 (1).py
 class rnd:
     def __init__(self, s1=1234, s2=5678):
         self.s1, self.s2 = s1, s2
-                
     def gen(self):        
         # XORSHIFT part
-        self.s1 ^= (self.s1 >> 17)
-        self.s1 ^= (self.s1 << 31)
-        self.s1 ^= (self.s1 >>  8)
+        self.s1 ^= (self.s1 >> 17); self.s1 ^= (self.s1 << 31); self.s1 ^= (self.s1 >> 8)
         # MWC part
         self.s2 = (self.s2 & 0xffffffff)*4294957665 + (self.s2>>32)
-        # Combine
-        return ((self.s1 ^ self.s2) & 0xffffffff)
-	
-r = rnd()
-for i in range(30):
-    print(r.gen(), end=' ')</code></pre>
+        return ((self.s1 ^ self.s2) & 0xffffffff)</code></pre>
                     </div>
-                    <div id="out-comb" class="output-panel">Click Run to execute...</div>
+                    <div id="out-comb" class="output-panel"></div>
                 </div>
             </div>
         </section>
 
-        <section id="dist" class="slide-card">
-            <h2 class="text-3xl font-bold text-slate-800 mb-6">4. Non-Uniform Distributions 📊</h2>
-            <p class="mb-4 text-slate-600">How to turn a flat distribution into shapes?</p>
-
-            <div class="mb-8 border-l-4 border-red-500 pl-4">
-                <h3 class="font-bold text-lg mb-2 text-red-600">The Wrong Way</h3>
-                <p class="text-sm mb-2">Just plugging random numbers into $f(x)$ does <strong>not</strong> produce
-                    distribution $f(x)$.</p>
-                <div class="grid lg:grid-cols-2 gap-4">
-                    <div class="code-container m-0">
-                        <div class="code-editor">
-                            <button class="run-btn" onclick="runWrong()">▶ Run & Plot</button>
-                            <pre><code class="language-python"># 1207-example-05.py
-def f(x):
-    return x # y = x
-    
-# If y = x, output is just x!
-x = np.random.rand(100000)
-data = f(x)
-
-plt.hist(data, bins=50) # Still flat!</code></pre>
-                        </div>
-                    </div>
-                    <div id="plot-wrong" class="border bg-white rounded h-[300px]"></div>
-                </div>
+        <section id="distributions" class="slide-card">
+            <div class="slide-header">
+                <h2 class="text-3xl font-bold text-slate-800">4. Non-Uniform Distributions</h2>
+                <span class="slide-number">Slide 30-50</span>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-blue-50 p-4 rounded text-center">
-                    <div class="font-bold text-blue-800 mb-1">Hit-or-Miss</div>
-                    <p class="text-xs">Accept $x$ if $y < f(x)$. Simple but inefficient.</p>
-                </div>
-                <div class="bg-green-50 p-4 rounded text-center">
-                    <div class="font-bold text-green-800 mb-1">Inverse Transform</div>
-                    <p class="text-xs">$x = W^{-1}(r)$. Exact and fast.</p>
-                </div>
-                <div class="bg-purple-50 p-4 rounded text-center">
-                    <div class="font-bold text-purple-800 mb-1">CLT Summation</div>
-                    <p class="text-xs">Add many uniform numbers $\rightarrow$ Gaussian.</p>
+            <p class="mb-4 text-lg">We start with a uniform distribution (flat). How do we get shapes like Gaussian or
+                Exponential?</p>
+
+            <div class="mb-8 p-4 bg-red-50 border border-red-100 rounded">
+                <h4 class="font-bold text-red-700 mb-2">❌ The Wrong Way</h4>
+                <p class="text-sm mb-2">Just plugging random numbers into $f(x)$ does <strong>not</strong> produce
+                    distribution $f(x)$. Since $y=f(x)=x$, the output is just a replica of the input!</p>
+                <div class="code-container m-0 h-40">
+                    <div class="code-editor">
+                        <button class="run-btn" onclick="runWrong()">▶ Plot</button>
+                        <pre><code class="language-python"># 1207-example-05.py
+def f(x): return x
+x = np.random.rand(100000)
+data = f(x)
+plt.hist(data) # Result: Flat!</code></pre>
+                    </div>
+                    <div id="plot-wrong" class="plot-container"></div>
                 </div>
             </div>
 
             <div class="mb-8">
-                <h3 class="font-bold text-lg mb-2">Hit-or-Miss Method</h3>
-                <p class="text-sm mb-2">Generating distribution for $f(x) = x - x^2 + x^3 - x^4 + \sin(13x)/13$.</p>
-                <div class="grid lg:grid-cols-2 gap-4">
-                    <div class="code-container m-0">
-                        <div class="code-editor">
-                            <button class="run-btn" onclick="runHitMiss()">▶ Run & Plot</button>
-                            <pre><code class="language-python"># 1207-example-06.py
+                <h4 class="font-bold text-blue-700 mb-2">✅ Method 1: Hit-or-Miss (Rejection Sampling)</h4>
+                <p class="text-sm mb-2">Generate random $(x, y)$. Keep $x$ only if $y < f(x)$. [cite_start]Simple but
+                        inefficient. [cite: 4560]</p>
+                        <div class="code-container m-0 h-64">
+                            <div class="code-editor">
+                                <button class="run-btn" onclick="runHitMiss()">▶ Run & Plot</button>
+                                <pre><code class="language-python"># 1207-example-06.py
 def f(x):
     return x - x**2 + x**3 - x**4 + np.sin(x*13.)/13.
     
 x = np.random.rand(20000)
 y = np.random.rand(20000)*0.45
 
-# Pythonic filtering
-data = x[y < f(x)]
-
+# Python filter
+data = x[y < f(x)] 
 plt.hist(data, bins=50)</code></pre>
+                            </div>
+                            <div id="plot-hitmiss" class="plot-container"></div>
                         </div>
-                    </div>
-                    <div id="plot-hitmiss" class="border bg-white rounded h-[300px]"></div>
-                </div>
             </div>
 
             <div class="mb-8">
-                <h3 class="font-bold text-lg mb-2">Inverse Transform Method</h3>
-                <div class="grid lg:grid-cols-2 gap-4">
-                    <div class="code-container m-0">
-                        <div class="code-editor">
-                            <button class="run-btn" onclick="runInverse()">▶ Run & Plot</button>
-                            <pre><code class="language-python"># 1207-example-07.py
-# f(x) = exp(-x) on [0, 1]
-# Inverse CDF: x = -ln(1 - r + r/e)
-
+                <h4 class="font-bold text-green-700 mb-2">✅ Method 2: Inverse Transform</h4>
+                <div class="math-box text-sm">
+                    Solve $x = W^{-1}(r)$. <br>
+                    Example: Exponential Decay $f(x) = e^{-x}$. Cumulative $W(x) = 1 - e^{-x}$. <br>
+                    [cite_start]Inverse: $x = -\ln(1-r)$. [cite: 4706-4707]
+                </div>
+                <div class="code-container m-0 h-64">
+                    <div class="code-editor">
+                        <button class="run-btn" onclick="runInverse()">▶ Run & Plot</button>
+                        <pre><code class="language-python"># 1207-example-07.py
 r = np.random.rand(10000)
 data = -np.log(1. - r + r/np.exp(1.))
 
-plt.hist(data, bins=50)</code></pre>
-                        </div>
+plt.hist(data, bins=50, color='y')</code></pre>
                     </div>
-                    <div id="plot-inverse" class="border bg-white rounded h-[300px]"></div>
+                    <div id="plot-inverse" class="plot-container"></div>
                 </div>
             </div>
 
-            <div class="mb-8">
-                <h3 class="font-bold text-lg mb-2">Gaussian via Central Limit Theorem</h3>
-                <p class="text-sm mb-2">Adding 6 uniform random numbers approximates a Normal distribution.</p>
-                <div class="grid lg:grid-cols-2 gap-4">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-purple-700 mb-2">Gaussian: Box-Muller</h4>
+                    <div class="math-box text-xs">
+                        $x = \sqrt{-2\ln(r_1)} \cos(2\pi r_2)$<br>
+                        $y = \sqrt{-2\ln(r_1)} \sin(2\pi r_2)$
+                    </div>
                     <div class="code-container m-0">
                         <div class="code-editor">
-                            <button class="run-btn" onclick="runCLT()">▶ Run & Plot</button>
+                            <button class="run-btn" onclick="runBoxMuller()">▶ Plot</button>
+                            <pre><code class="language-python"># 1207-example-08.py
+r1 = np.random.rand(10000)
+r2 = np.random.rand(10000)
+x = (-2.*np.log(r1))**0.5 * \
+    np.cos(2.*np.pi*r2)
+# ... plot x and y</code></pre>
+                        </div>
+                        <div id="plot-gauss" class="plot-container"></div>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-purple-700 mb-2">Gaussian: CLT Summation</h4>
+                    <p class="text-xs mb-2">Central Limit Theorem: Sum of uniform distributions $\to$ Gaussian.</p>
+                    <div class="code-container m-0">
+                        <div class="code-editor">
+                            <button class="run-btn" onclick="runCLT()">▶ Plot</button>
                             <pre><code class="language-python"># 1207-example-08a.py
 r = np.random.rand(10000)
 # Add 5 more random arrays
 for _ in range(5):
     r += np.random.rand(10000)
 
-plt.hist(r, bins=50, range=(0., 6.))</code></pre>
+plt.hist(r, bins=50)</code></pre>
                         </div>
+                        <div id="plot-clt" class="plot-container"></div>
                     </div>
-                    <div id="plot-clt" class="border bg-white rounded h-[300px]"></div>
                 </div>
             </div>
         </section>
 
-        <section id="monte-carlo" class="slide-card bg-slate-900 text-white">
-            <h2 class="text-3xl font-bold mb-6 text-white border-b border-gray-700 pb-2">5. Monte Carlo Integration 🎲
-            </h2>
-            <p class="mb-6 text-gray-300">
-                Solving high-dimensional integrals where grid methods fail.
-                <br>
+        <section id="monte-carlo" class="slide-card">
+            <div class="slide-header">
+                <h2 class="text-3xl font-bold text-slate-800">5. Monte Carlo Integration</h2>
+                <span class="slide-number">Slide 52-55</span>
+            </div>
+
+            <p class="mb-4">Integration in high dimensions? Grid methods fail ($N^d$). Monte Carlo wins!</p>
+            <div class="math-box text-center">
                 $$ I \approx (b-a) \langle f \rangle = \frac{V}{N} \sum f(x_i) $$
-            </p>
+            </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h4 class="font-bold text-blue-400 mb-2">6D Integral Example</h4>
-                    <div class="code-container m-0 bg-black">
-                        <div class="code-editor text-xs">
-                            <button class="run-btn" onclick="runMC()">▶ Run MC</button>
-                            <pre><code class="language-python"># 1207-example-09.py
-# Integrate sum of trig functions over 6D cube
+            <h3 class="font-bold text-lg mb-2">6D Integral Example</h3>
+            <p class="text-sm text-slate-600 mb-2">Integrating $\sin(a) + \sin(2b) + \dots + \cos(3f)$ over a 6D
+                hypercube.</p>
 
+            <div class="code-container">
+                <div class="code-editor">
+                    <button class="run-btn" onclick="runMC()">▶ Run Simulation</button>
+                    <pre><code class="language-python"># 1207-example-09.py
+def func(a, b, c, d, e, f):
+    return np.sin(a)+np.sin(b*2.)+...
+
+# Exact solution pre-calculated: 3.17426
+
+# Random Sampling (Monte Carlo)
 nsamples = 1000000
 v = np.random.rand(nsamples, 6)
-
-# f = sin(a) + sin(2b) + ...
 val = func(v[:,0], ..., v[:,5])
-
 intf_rand = val.sum() / nsamples
-print(f"MC Result: {intf_rand:.5f}")</code></pre>
-                        </div>
-                    </div>
+
+# Grid Sampling (Boxes)
+# 20^6 = 64 million calls!
+# intf_boxes = ...</code></pre>
                 </div>
-                <div class="flex flex-col justify-center">
-                    <div id="out-mc" class="bg-gray-800 p-4 rounded text-sm font-mono text-green-400 min-h-[150px]">
-                        Click run to start Monte Carlo simulation...
-                    </div>
-                </div>
+                <div id="out-mc" class="output-panel">Click Run to compare MC vs Grid...</div>
             </div>
         </section>
 
@@ -509,7 +541,6 @@ print(f"MC Result: {intf_rand:.5f}")</code></pre>
             <h2 class="text-3xl font-bold text-red-900 mb-6 flex items-center gap-3">
                 <span>👐</span> Hands-On Session
             </h2>
-            <p class="mb-6 text-red-800">Use the methods above to solve these problems.</p>
 
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -534,12 +565,8 @@ print(f"MC Result: {intf_rand:.5f}")</code></pre>
 
     </main>
 
-    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
-        <p>Numerical Analysis Lecture 2-7 • Kai-Feng Chen • National Taiwan University</p>
-    </footer>
-
     <script>
-        // --- HELPERS ---
+        // --- Output Helper ---
         function printTo(id, text, append = true) {
             const el = document.getElementById(id);
             if (!append) el.innerHTML = '';
@@ -547,7 +574,7 @@ print(f"MC Result: {intf_rand:.5f}")</code></pre>
             el.scrollTop = el.scrollHeight;
         }
 
-        // --- LCG Logic ---
+        // --- 1. LCG Code ---
         function runLCG() {
             let seed = 1234;
             let out = "";
@@ -555,20 +582,22 @@ print(f"MC Result: {intf_rand:.5f}")</code></pre>
                 seed = (32533521 * seed + 2424) % 100;
                 out += seed + ", ";
             }
-            printTo('out-lcg', "Sequence: <br>" + out + "...", false);
+            printTo('out-lcg', "First 30 numbers:<br>" + out + "...", false);
         }
 
+        // --- 2. Park-Miller Code ---
         function runParkMiller() {
             let seed = 1234;
-            const M = 2147483647; // 2^31 - 1
+            const M = 2147483647;
             let out = "";
             for (let i = 0; i < 30; i++) {
                 seed = (16807 * seed) % M;
                 out += seed + ", ";
             }
-            printTo('out-pm', "Sequence: <br>" + out + "...", false);
+            printTo('out-pm', "Sequence:<br>" + out + "...", false);
         }
 
+        // --- 3. Histogram Plot (Uniform) ---
         function runPMHist() {
             let seed = 1234;
             const M = 2147483647;
@@ -578,24 +607,24 @@ print(f"MC Result: {intf_rand:.5f}")</code></pre>
                 data.push(seed / M);
             }
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-pm', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Uniform Distribution' });
+            Plotly.newPlot('plot-pm', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Uniform Distribution', height: 250 });
         }
 
-        // --- Bitwise Logic ---
+        // --- 4. XORSHIFT ---
         function runXorShift() {
-            let seed = 1234n; // BigInt for 64bit safety logic simulation
+            let seed = 1234n;
             let out = "";
             for (let i = 0; i < 30; i++) {
                 seed ^= (seed >> 21n);
                 seed ^= (seed << 35n);
                 seed ^= (seed >> 4n);
-                // Simulate 32-bit unsigned return
                 let val = Number(seed & 0xffffffffn);
                 out += val + ", ";
             }
-            printTo('out-xor', "Sequence: <br>" + out + "...", false);
+            printTo('out-xor', "Sequence:<br>" + out + "...", false);
         }
 
+        // --- 5. MWC ---
         function runMWC() {
             let seed = 1234n;
             let out = "";
@@ -605,93 +634,102 @@ print(f"MC Result: {intf_rand:.5f}")</code></pre>
                 let val = Number(seed & 0xffffffffn);
                 out += val + ", ";
             }
-            printTo('out-mwc', "Sequence: <br>" + out + "...", false);
+            printTo('out-mwc', "Sequence:<br>" + out + "...", false);
         }
 
+        // --- 6. Combined ---
         function runCombined() {
             let s1 = 1234n, s2 = 5678n;
             const a = 4294957665n;
             let out = "";
             for (let i = 0; i < 30; i++) {
-                // XORSHIFT
                 s1 ^= (s1 >> 17n); s1 ^= (s1 << 31n); s1 ^= (s1 >> 8n);
-                // MWC
                 s2 = (s2 & 0xffffffffn) * a + (s2 >> 32n);
                 let val = Number((s1 ^ s2) & 0xffffffffn);
                 out += val + ", ";
             }
-            printTo('out-comb', "Sequence: <br>" + out + "...", false);
+            printTo('out-comb', "Sequence:<br>" + out + "...", false);
         }
 
-        // --- Distributions ---
+        // --- 7. Wrong Plot ---
         function runWrong() {
-            // f(x) = x
-            const data = [];
-            for (let i = 0; i < 10000; i++) data.push(Math.random());
+            const data = Array.from({ length: 10000 }, () => Math.random());
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-wrong', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Naive (Wrong) Transform' });
+            Plotly.newPlot('plot-wrong', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Result (Flat)', height: 250 });
         }
 
+        // --- 8. Hit or Miss ---
         function runHitMiss() {
-            // f(x) = x - x^2 + x^3 - x^4 + sin(13x)/13
             const f = (x) => x - x * x + x * x * x - Math.pow(x, 4) + Math.sin(x * 13) / 13;
             const data = [];
-            // Generate 20000 points
             for (let i = 0; i < 20000; i++) {
                 let x = Math.random();
-                let y = Math.random() * 0.45; // Max bound
+                let y = Math.random() * 0.45;
                 if (y < f(x)) data.push(x);
             }
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-hitmiss', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Hit-or-Miss Distribution' });
+            Plotly.newPlot('plot-hitmiss', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Rejection Sampling', height: 250 });
         }
 
+        // --- 9. Inverse Transform ---
         function runInverse() {
-            // f(x) = exp(-x), x = -ln(1-r+r/e)
             const data = [];
             const e = Math.exp(1);
             for (let i = 0; i < 10000; i++) {
                 let r = Math.random();
+                // -ln(1 - r + r/e) approximation from example code
                 data.push(-Math.log(1 - r + r / e));
             }
             const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-inverse', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Exponential Dist.' });
+            Plotly.newPlot('plot-inverse', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Exponential Dist.', height: 250 });
         }
 
+        // --- 10. Box Muller ---
+        function runBoxMuller() {
+            const x = [], y = [];
+            for (let i = 0; i < 10000; i++) {
+                const r1 = Math.random(), r2 = Math.random();
+                const R = Math.sqrt(-2 * Math.log(r1));
+                x.push(R * Math.cos(2 * Math.PI * r2));
+                y.push(R * Math.sin(2 * Math.PI * r2));
+            }
+            Plotly.newPlot('plot-gauss', [
+                { x: x, type: 'histogram', opacity: 0.5, name: 'X', marker: { color: 'gold' } },
+                { x: y, type: 'histogram', opacity: 0.5, name: 'Y', marker: { color: 'cyan' } }
+            ], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Gaussian X & Y', height: 250, barmode: 'overlay' });
+        }
+
+        // --- 11. CLT ---
         function runCLT() {
             const data = new Array(10000).fill(0);
             for (let k = 0; k < 6; k++) {
                 for (let i = 0; i < 10000; i++) data[i] += Math.random();
             }
-            const trace = { x: data, type: 'histogram', marker: { color: '#eab308' } };
-            Plotly.newPlot('plot-clt', [trace], { margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'Gaussian via CLT' });
+            Plotly.newPlot('plot-clt', [{ x: data, type: 'histogram', marker: { color: '#eab308' } }], {
+                margin: { t: 10, b: 20, l: 30, r: 10 }, title: 'CLT Summation', height: 250
+            });
         }
 
-        // --- Monte Carlo ---
+        // --- 12. Monte Carlo ---
         function runMC() {
             const n = 1000000;
+            const batch = 10000; // Simulating small batch for browser speed
             let sum = 0;
-            // Exact solution pre-calculated
-            const exact = 3.17426;
-
-            // Simulating part of the calc to save browser freeze
-            const batch = 10000;
             for (let i = 0; i < batch; i++) {
-                let a = Math.random(), b = Math.random(), c = Math.random();
-                let d = Math.random(), e = Math.random(), f = Math.random();
-                // f = sin(a)+sin(2b)+sin(3c)+cos(d)+cos(2e)+cos(3f)
+                const vals = Array.from({ length: 6 }, () => Math.random());
+                const [a, b, c, d, e, f] = vals;
                 sum += Math.sin(a) + Math.sin(2 * b) + Math.sin(3 * c) +
                     Math.cos(d) + Math.cos(2 * e) + Math.cos(3 * f);
             }
-            // Scale up for demo
-            let avg = sum / batch;
+            const exact = 3.17426;
+            const avg = sum / batch;
 
-            printTo('out-mc', `Exact:  ${exact}`, false);
-            printTo('out-mc', `Random: ${avg.toFixed(5)} (Simulated small batch)`, true);
-            printTo('out-mc', `Diff:   ${(avg - exact).toFixed(5)}`, true);
+            printTo('out-mc', `Exact: ${exact}`, false);
+            printTo('out-mc', `Random: ${avg.toFixed(5)} (Simulated)`, true);
+            printTo('out-mc', `Diff: ${(avg - exact).toFixed(5)}`, true);
+            printTo('out-mc', `Grid (Box) Method: 3.17555 (Pre-calc)`, true);
         }
 
-        // Highlight Code & Math
         document.addEventListener("DOMContentLoaded", function () {
             hljs.highlightAll();
             renderMathInElement(document.body, {
