@@ -574,6 +574,59 @@ for i in range(20):
                         precision limit is reached! .</p>
                 </div>
 
+                <div
+                    style="max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin: 2rem auto;">
+                    <div style="background-color: #1e40af; color: white; padding: 16px; text-align: center;">
+                        <h2 style="margin: 0; font-size: 1.25rem;">Convergence of Arctan Series</h2>
+                    </div>
+
+                    <div style="padding: 24px; background-color: #ffffff; line-height: 1.6;">
+
+                        <div
+                            style="background-color: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                            <p style="margin-top: 0; font-weight: bold; color: #475569;">Taylor Expansion for
+                                $\arctan(x)$</p>
+                            <p style="font-size: 1.1rem; color: #1e293b; margin: 0;">
+                                $$\arctan(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \dots = \sum_{n=0}^{\infty}
+                                \frac{(-1)^n x^{2n+1}}{2n+1}$$
+                            </p>
+                        </div>
+
+                        <h3
+                            style="font-size: 1rem; color: #1e40af; border-bottom: 2px solid #eff6ff; padding-bottom: 8px;">
+                            Series Comparison</h3>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                <span style="font-weight: 600;">Standard ($x=1$)</span>
+                                <span style="font-family: 'Courier New', monospace;">Terms: $\frac{1}{2n+1}$</span>
+                            </div>
+
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #1e40af; border-radius: 6px; background-color: #f0f9ff;">
+                                <span style="font-weight: 600; color: #1e40af;">Improved ($x=1/\sqrt{3}$)</span>
+                                <span style="font-family: 'Courier New', monospace; color: #1e40af;">Terms:
+                                    $\frac{1}{\sqrt{3} \cdot (2n+1) \cdot 3^n}$</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            <h3 style="font-size: 1rem; color: #1e40af; margin-bottom: 8px;">Why is it faster?</h3>
+                            <p style="margin: 0; font-size: 0.95rem; color: #475569;">
+                                <strong>Convergence near $x=0$:</strong> Taylor expansions are most accurate and
+                                converge fastest near the point of expansion.
+                            </p>
+                            <ul style="margin-top: 10px; font-size: 0.9rem; color: #64748b; padding-left: 20px;">
+                                <li>When $x=1$, terms decrease slowly ($1/3, 1/5, 1/7 \dots$).</li>
+                                <li>When $x=1/\sqrt{3}$, the $3^n$ in the denominator forces terms to vanish
+                                    exponentially.</li>
+                                <li>With only 30 terms, the precision limit of the computer is reached.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="slide-card bg-gray-900 text-white border-none">
                     <span class="slide-number text-gray-500">Slide 45-46</span>
                     <h3 class="text-xl font-bold mb-4">How Errors Behave</h3>
