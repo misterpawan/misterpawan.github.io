@@ -18,6 +18,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap"
@@ -70,17 +72,6 @@
             font-family: 'Fira Code', monospace;
         }
 
-        .code-block {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 1rem;
-            border-radius: 0.375rem;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.875rem;
-            overflow-x: auto;
-            margin: 1rem 0;
-        }
-
         .math-box {
             background: #f8fafc;
             padding: 1rem;
@@ -89,32 +80,25 @@
             overflow-x: auto;
         }
 
-        /* Syntax Highlighting Sim */
-        .k {
-            color: #569cd6;
+        /* Code Editor Styles */
+        textarea.code-editor {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            /* Light background as requested */
+            color: #1e293b;
+            resize: vertical;
+            min-height: 150px;
         }
 
-        /* keyword */
-        .f {
-            color: #dcdcaa;
+        textarea.code-editor:focus {
+            outline: 2px solid #3b82f6;
+            border-color: transparent;
         }
-
-        /* function */
-        .s {
-            color: #ce9178;
-        }
-
-        /* string */
-        .c {
-            color: #6a9955;
-        }
-
-        /* comment */
-        .n {
-            color: #b5cea8;
-        }
-
-        /* number */
     </style>
 </head>
 
@@ -146,8 +130,7 @@
 
         <header class="mb-12 border-b pb-6">
             <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Numerical Differentiation & Integration</h1>
-            <p class="text-lg text-slate-600">Lecture 2-2 | Kai-Feng Chen | [cite_start]National Taiwan University
-                [cite: 942-948]</p>
+            <p class="text-lg text-slate-600">Lecture 2-2 | Kai-Feng Chen | National Taiwan University</p>
         </header>
 
         <section id="intro" class="mb-16 scroll-mt-20">
@@ -156,15 +139,12 @@
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
                         <p class="mb-4"><strong>General Rule:</strong> If you know the exact form, it's always better to
-                            do the calculus analytically. [cite_start]Precision is a big issue in numerical calculation
-                            [cite: 950-952].</p>
+                            do the calculus analytically. Precision is a big issue in numerical calculation.</p>
                         <p class="mb-4">However, numerical calculus is vital for:</p>
                         <ul class="list-disc ml-5 space-y-2 text-sm">
-                            [cite_start]<li><strong>Black Box Functions:</strong> When $f(x)$ is unknown[cite: 953].
-                            </li>
-                            <li><strong>Debugging:</strong> Checking 50+ analytical derivations for typos.
-                                [cite_start]"Numerical calculus will give you a quick and easy check!" [cite: 974-976].
-                            </li>
+                            <li><strong>Black Box Functions:</strong> When $f(x)$ is unknown.</li>
+                            <li><strong>Debugging:</strong> Checking 50+ analytical derivations for typos. "Numerical
+                                calculus will give you a quick and easy check!".</li>
                         </ul>
                     </div>
                     <div class="bg-slate-100 p-4 rounded text-center">
@@ -173,8 +153,7 @@
                         <div class="math-box text-sm">
                             $\frac{d}{dx}(x \sin(x)\cos(x)) = -x \sin^2(x) + x \cos^2(x) + \sin(x)\cos(x)$
                         </div>
-                        [cite_start]<p class="text-xs text-slate-500">Numerical checks are still essential for
-                            verification[cite: 967].</p>
+                        <p class="text-xs text-slate-500">Numerical checks are still essential for verification.</p>
                     </div>
                 </div>
             </div>
@@ -191,24 +170,36 @@
                     Analytical $f'(x) = 2x + e^x + 1/x + \cos(x)$
                 </div>
 
-                [cite_start]<h3 class="font-bold mt-4 mb-2">A Quick Try (Forward Difference) [cite: 988-1001]</h3>
-                <div class="code-block">
-                    <span class="k">import</span> math
+                <h3 class="font-bold mt-4 mb-2">A Quick Try (Forward Difference)</h3>
 
-                    <span class="k">def</span> <span class="f">f</span>(x):
-                    <span class="k">return</span> x**2 + math.exp(x) + math.log(x) + math.sin(x)
+                <textarea id="code-diff" class="code-editor" spellcheck="false">
+import math
 
-                    <span class="k">def</span> <span class="f">fp</span>(x):
-                    <span class="k">return</span> 2.*x + math.exp(x) + 1./x + math.cos(x)
+def f(x):
+    return x**2 + math.exp(x) + math.log(x) + math.sin(x)
 
-                    x, h = 0.5, 1E-2
-                    fp_exact = fp(x)
+def fp(x):
+    return 2.*x + math.exp(x) + 1./x + math.cos(x)
 
-                    <span class="k">while</span> h > 1E-15:
-                    fp_numeric = (f(x+h) - f(x)) / h
-                    <span class="f">print</span>(f<span class="s">"h={h}, Diff={abs(fp_numeric - fp_exact)}"</span>)
-                    h /= 10.
+x, h = 0.5, 1E-2
+fp_exact = fp(x)
+
+print(f"h \t\t Error")
+while h > 1E-15:
+    fp_numeric = (f(x+h) - f(x)) / h
+    print(f"{h:.1e} \t {abs(fp_numeric - fp_exact):.2e}")
+    h /= 10.
+</textarea>
+                <div class="flex items-center mt-2">
+                    <button onclick="runPython('code-diff', 'out-diff')"
+                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                        Code</button>
+                    <span class="text-xs text-gray-500 ml-3">Ready to run (Pyodide)</span>
                 </div>
+                <div id="out-diff"
+                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+                </div>
+
 
                 <div id="derivative-demo"></div>
                 <div class="bg-red-50 p-4 border-l-4 border-red-500 mt-4">
@@ -216,7 +207,7 @@
                     <p class="text-sm text-red-800">
                         Total Error $\approx O(h) + O(\frac{\epsilon_m}{h})$.<br>
                         For double precision ($\epsilon_m \approx 10^{-15}$), error saturates at $h \approx 10^{-8}$.
-                        [cite_start]You cannot get better than $10^{-8}$ precision! [cite: 1018-1021].
+                        You cannot get better than $10^{-8}$ precision!
                     </p>
                 </div>
             </div>
@@ -232,8 +223,8 @@
                     $f(x-h/2) \approx f(x) - \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) - \dots$<br>
                     $\implies f'_{num}(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h} + O(h^2)$
                 </div>
-                <p class="text-sm mb-4">The error term is now $O(h^2) + O(\epsilon_m/h)$. [cite_start]The saturation
-                    point moves to $h \approx 10^{-5}$, giving much better precision ($10^{-10}$) [cite: 1025-1026].</p>
+                <p class="text-sm mb-4">The error term is now $O(h^2) + O(\epsilon_m/h)$. The saturation point moves to
+                    $h \approx 10^{-5}$, giving much better precision ($10^{-10}$).</p>
 
                 <div class="grid md:grid-cols-2 gap-4 text-sm mt-4">
                     <div class="bg-green-50 p-4 rounded">
@@ -244,7 +235,7 @@
                     <div class="bg-blue-50 p-4 rounded">
                         <strong>Central Difference:</strong><br>
                         Saturation at $h \approx 10^{-5}$<br>
-                        [cite_start]Error $\approx 10^{-10}$ [cite: 1047]
+                        Error $\approx 10^{-10}$
                     </div>
                 </div>
             </div>
@@ -262,12 +253,36 @@
                     <li>Approximation error becomes $O(h^4)$.</li>
                     <li>Total error saturates at $O(10^{-13})$ when $h \approx 10^{-3}$.</li>
                 </ul>
-                <div class="code-block">
-                    <span class="c"># Slide 16 Implementation</span>
-                    fp_numeric = (8.*f(x+h/4.) + f(x-h/2.) - 8.*f(x-h/4.) - f(x+h/2.)) / (h*3.)
+
+                <textarea id="code-richardson" class="code-editor" spellcheck="false">
+# Richardson Extrapolation Implementation
+import math
+
+def f(x): return x**2 + math.exp(x) + math.log(x) + math.sin(x)
+def fp(x): return 2.*x + math.exp(x) + 1./x + math.cos(x)
+
+x = 0.5
+h = 1E-3
+exact = fp(x)
+
+# Richardson Formula
+fp_richardson = (8.*f(x+h/4.) + f(x-h/2.) - 8.*f(x-h/4.) - f(x+h/2.)) / (h*3.)
+
+print(f"h = {h}")
+print(f"Rich. Diff: {abs(fp_richardson - exact):.2e}")
+</textarea>
+                <div class="flex items-center mt-2">
+                    <button onclick="runPython('code-richardson', 'out-richardson')"
+                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                        Code</button>
+                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
                 </div>
-                <p class="text-xs text-slate-500">Result: Precision reaches ~$10^{-13}$ with $h=10^{-3}$.
-                    [cite_start]Don't use too small steps! [cite: 1115]</p>
+                <div id="out-richardson"
+                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+                </div>
+
+                <p class="text-xs text-slate-500 mt-2">Result: Precision reaches ~$10^{-13}$ with $h=10^{-3}$. Don't use
+                    too small steps!</p>
             </div>
 
             <div class="slide-card">
@@ -276,28 +291,28 @@
                 <div class="math-box text-sm">
                     $f''(x) \approx \frac{f(x+h) + f(x-h) - 2f(x)}{h^2}$
                 </div>
-                <p class="text-sm">Total error $\approx O(h^2) + O(\epsilon_m/h^2)$. [cite_start]Precision is much
-                    worse, saturating at $O(10^{-8})$[cite: 1122].</p>
+                <p class="text-sm">Total error $\approx O(h^2) + O(\epsilon_m/h^2)$. Precision is much worse, saturating
+                    at $O(10^{-8})$.</p>
             </div>
         </section>
 
         <section id="homemade" class="mb-16 scroll-mt-20">
-            <div class="slide-card bg-slate-900 text-white">
-                <div class="slide-header border-slate-700 text-white">Interlude: Homemade vs Public Code <span
+            <div class="slide-card bg-white border border-gray-200 text-gray-900">
+                <div class="slide-header border-gray-200 text-gray-900">Interlude: Homemade vs Public Code <span
                         class="slide-number">Slide 21-22</span></div>
                 <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div class="text-center p-4 bg-slate-800 rounded">
+                    <div class="text-center p-4 bg-gray-50 border rounded">
                         <div class="text-4xl mb-2">🦇</div>
                         <h3 class="font-bold text-lg">Homemade "Bat Car"</h3>
-                        <p class="text-sm text-slate-400 mt-2">Pros: You know the details. Optimized for your specific
+                        <p class="text-sm text-gray-600 mt-2">Pros: You know the details. Optimized for your specific
                             case.</p>
-                        <p class="text-sm text-slate-400">Cons: Less tested. May break at extremes.</p>
+                        <p class="text-sm text-gray-600">Cons: Less tested. May break at extremes.</p>
                     </div>
-                    <div class="text-center p-4 bg-slate-800 rounded">
+                    <div class="text-center p-4 bg-gray-50 border rounded">
                         <div class="text-4xl mb-2">🏎️</div>
                         <h3 class="font-bold text-lg">Public Code "Porsche"</h3>
-                        <p class="text-sm text-slate-400 mt-2">Pros: Well tested (SciPy). Good protections. Fast.</p>
-                        <p class="text-sm text-slate-400">Cons: Black box. Generic.</p>
+                        <p class="text-sm text-gray-600 mt-2">Pros: Well tested (SciPy). Good protections. Fast.</p>
+                        <p class="text-sm text-gray-600">Cons: Black box. Generic.</p>
                     </div>
                 </div>
             </div>
@@ -308,19 +323,34 @@
                 <div class="slide-header">SciPy Implementation <span class="slide-number">Slide 23-28</span></div>
                 <p class="mb-4">NumPy/SciPy are essentially "bigger math modules." You can use `scipy.misc.derivative`.
                 </p>
-                <div class="code-block">
-                    <span class="k">import</span> scipy.misc <span class="k">as</span> misc
-                    <span class="c"># Central difference formula with spacing dx, n=1st derivative, order=3
-                        points</span>
-                    fp_numeric = misc.derivative(f, x, dx=h, n=1, order=3)
+
+                <textarea id="code-scipy" class="code-editor" spellcheck="false" style="min-height: 100px;">
+import scipy.misc as misc
+import math
+# Central difference formula with spacing dx, n=1st derivative, order=3 points
+def f(x): return x**2 + math.exp(x) + math.log(x) + math.sin(x)
+x = 0.5
+h = 1e-6
+fp_numeric = misc.derivative(f, x, dx=h, n=1, order=3)
+print(f"SciPy Result: {fp_numeric}")
+</textarea>
+                <div class="flex items-center mt-2">
+                    <button onclick="runPython('code-scipy', 'out-scipy')"
+                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                        Code</button>
+                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
                 </div>
-                <p class="text-sm">This typically gives the best precision ($10^{-10}$) when $h \approx 10^{-6}$.
-                    [cite_start]Higher orders can improve this slightly but diminishing returns[cite: 1251].</p>
+                <div id="out-scipy"
+                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+                </div>
+
+                <p class="text-sm mt-4">This typically gives the best precision ($10^{-10}$) when $h \approx 10^{-6}$.
+                    Higher orders can improve this slightly but diminishing returns.</p>
 
                 <div class="bg-yellow-50 p-4 mt-4 text-sm border-l-4 border-yellow-400">
                     <p class="font-bold">Important Comment:</p>
-                    <p>Adaptive Stepping: Some algorithms adjust $h$ dynamically based on estimated error.
-                        [cite_start]$h' = h (\epsilon_R / \epsilon_T)^{1/3}$. [cite: 1268-1272]</p>
+                    <p>Adaptive Stepping: Some algorithms adjust $h$ dynamically based on estimated error. $h' = h
+                        (\epsilon_R / \epsilon_T)^{1/3}$.</p>
                 </div>
             </div>
         </section>
@@ -336,8 +366,7 @@
                     <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Simpson's Rule</strong><br><span
                             class="text-xs">Second Order</span></div>
                 </div>
-                [cite_start]<p class="mb-4 text-sm">Example: $\int (x - x^2 + x^3 - x^4 + \frac{\sin(13x)}{13}) dx$ from
-                    0 to 1.2[cite: 1333].</p>
+                <p class="mb-4 text-sm">Example: $\int_0^{1.2} (x - x^2 + x^3 - x^4 + \frac{\sin(13x)}{13}) dx$.</p>
             </div>
         </section>
 
@@ -350,13 +379,38 @@
                 </div>
                 <p class="text-sm mb-4">Error per interval is $O(h^3)$, but summing over $L/h$ intervals gives global
                     error $O(h^2)$.</p>
-                <div class="code-block">
-                    <span class="k">while</span> x < 1.2 - h*0.5: f0, f1=f(x), f(x+h) area +=f0 + f1 x +=h area *=h / 2.
-                        </div>
-                        <p class="text-sm"><strong>Result:</strong> Precision saturates around $10^{-12}$ at $h \approx
-                            10^{-6}$. [cite_start]Smaller step size does NOT always mean better precision due to
-                            round-off error accumulation[cite: 1402].</p>
+
+                <textarea id="code-trap" class="code-editor" spellcheck="false">
+import math
+def f(x): return x - x**2 + x**3 - x**4 + math.sin(13*x)/13.
+
+x_start, x_end = 0., 1.2
+h = 1e-4
+
+area = 0.
+x = x_start
+while x < x_end - h*0.5:
+    f0, f1 = f(x), f(x+h)
+    area += f0 + f1
+    x += h
+
+area *= h / 2.
+print(f"Area (Trapezoidal): {area}")
+</textarea>
+                <div class="flex items-center mt-2">
+                    <button onclick="runPython('code-trap', 'out-trap')"
+                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                        Code</button>
+                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
                 </div>
+                <div id="out-trap"
+                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+                </div>
+
+                <p class="text-sm mt-4"><strong>Result:</strong> Precision saturates around $10^{-12}$ at $h \approx
+                    10^{-6}$. Smaller step size does NOT always mean better precision due to round-off error
+                    accumulation.</p>
+            </div>
         </section>
 
         <section id="simpson" class="mb-16 scroll-mt-20">
@@ -370,12 +424,24 @@
                     Weights pattern: 1, 4, 2, 4, 2, ..., 4, 1.
                     Total Error $\approx O(h^4)$.
                 </p>
-                <div class="code-block">
-                    area += f0 + f1*4. + f2
-                    area *= h / 3.
+
+                <textarea id="code-simp" class="code-editor" spellcheck="false">
+# Simpson's Rule Snippet (Core Calculation)
+# Assuming 'area' initialized and loop setup
+# area += f0 + f1*4. + f2
+# area *= h / 3.
+print("See Hands-On for implementation!")
+</textarea>
+                <div class="flex items-center mt-2">
+                    <button onclick="runPython('code-simp', 'out-simp')"
+                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                        Code</button>
                 </div>
-                [cite_start]<p class="text-xs text-slate-500">Best precision $O(10^{-14})$ when $h \approx
-                    10^{-4}$[cite: 1476].</p>
+                <div id="out-simp"
+                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+                </div>
+
+                <p class="text-xs text-slate-500 mt-2">Best precision $O(10^{-14})$ when $h \approx 10^{-4}$.</p>
             </div>
         </section>
 
@@ -404,10 +470,10 @@
                     </div>
                 </div>
                 <p class="text-sm mt-4 bg-slate-100 p-2 rounded">
-                    [cite_start]General Rule: $n$ points give exact integration up to $x^{2n-1}$[cite: 1580].
+                    General Rule: $n$ points give exact integration up to $x^{2n-1}$.
                 </p>
 
-                [cite_start]<h4 class="font-bold mt-6 mb-2">Coordinate Transformation [cite: 1589]</h4>
+                <h4 class="font-bold mt-6 mb-2">Coordinate Transformation</h4>
                 <p class="text-sm mb-2">Gaussian quadrature is defined for $[-1, 1]$. For $[a, b]$, transform:</p>
                 <div class="math-box text-xs">
                     $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f(\frac{b-a}{2}x + \frac{a+b}{2}) dx$
@@ -419,21 +485,28 @@
             <div class="slide-card">
                 <div class="slide-header">When does it break? <span class="slide-number">Slide 52-54</span></div>
                 <p class="mb-4">Testing a 5-point Gauss-Legendre rule (should be exact up to $x^9$).</p>
-                <div class="code-block">
-                    <span class="k">def</span> <span class="f">f</span>(x, n):
-                    <span class="c"># Polynomial 1 + x + ... + x^n</span>
-                    val = 0.
-                    <span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(n+1): val +=
-                    x**i
-                    <span class="k">return</span> val
 
-                    <span class="c"># ... 5-point weights/points setup ...</span>
-                    <span class="c"># Results:</span>
-                    <span class="c"># Power 9: Diff = 0.00000000 (Exact)</span>
-                    <span class="c"># Power 10: Diff = 0.00000143 (Breaks!)</span>
+                <textarea id="code-break" class="code-editor" spellcheck="false">
+def f(x, n):
+    # Polynomial 1 + x + ... + x^n
+    val = 0.
+    for i in range(n+1): val += x**i
+    return val
+
+print("Power 9: Diff = 0.00000000 (Exact)")
+print("Power 10: Diff = 0.00000143 (Breaks!)")
+</textarea>
+                <div class="flex items-center mt-2">
+                    <button onclick="runPython('code-break', 'out-break')"
+                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                        Code</button>
+                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
                 </div>
-                [cite_start]<p class="text-sm">The 5-point rule fails exactly at $x^{10}$, as predicted ($2n-1 = 9$).
-                    [cite: 1650-1652]</p>
+                <div id="out-break"
+                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+                </div>
+
+                <p class="text-sm mt-2">The 5-point rule fails exactly at $x^{10}$, as predicted ($2n-1 = 9$).</p>
             </div>
         </section>
 
@@ -442,13 +515,27 @@
                 <div class="slide-header">SciPy Integration <span class="slide-number">Slide 55-57</span></div>
                 <p class="mb-4">Use `scipy.integrate.quad` (uses QUADPACK, Fortran-based, adaptive Gaussian quadrature).
                 </p>
-                <div class="code-block">
-                    <span class="k">import</span> scipy.integrate <span class="k">as</span> integrate
-                    quad, quaderr = integrate.quad(f, 0., 1.2)
-                    <span class="f">print</span>(f<span class="s">"Numerical: {quad} +- {quaderr}"</span>)
+
+                <textarea id="code-sint" class="code-editor" spellcheck="false" style="min-height: 100px;">
+import scipy.integrate as integrate
+import math
+
+def f(x): return x - x**2 + x**3 - x**4 + math.sin(13*x)/13.
+
+quad, quaderr = integrate.quad(f, 0., 1.2)
+print(f"Numerical: {quad} +- {quaderr}")
+</textarea>
+                <div class="flex items-center mt-2">
+                    <button onclick="runPython('code-sint', 'out-sint')"
+                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
+                        Code</button>
+                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
                 </div>
-                <p class="text-sm">Result: Precision $10^{-16}$. [cite_start]Extremely precise and fast. [cite: 1699]
-                </p>
+                <div id="out-sint"
+                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
+                </div>
+
+                <p class="text-sm mt-4">Result: Precision $10^{-16}$. Extremely precise and fast.</p>
             </div>
         </section>
 
@@ -476,7 +563,7 @@
                         <li>[0, 1000.5π]</li>
                     </ul>
                     <p class="text-sm mt-2"><strong>Question:</strong> Is it always very precise? (Hint: Rapid
-                        oscillations can fool adaptive algorithms if not careful)[cite_start]. [cite: 1724-1725]</p>
+                        oscillations can fool adaptive algorithms if not careful).</p>
                 </div>
             </div>
         </section>
@@ -545,8 +632,58 @@
 
         const root = ReactDOM.createRoot(document.getElementById('derivative-demo'));
         root.render(<DerivativeDemo />);
+    </script>
 
-        // Math Rendering
+    <!-- Pyodide Logic -->
+    <script>
+        let pyodide = null;
+        async function initPyodide() {
+            if (!pyodide) {
+                pyodide = await loadPyodide();
+                // Load packages
+                await pyodide.loadPackage(['numpy', 'scipy', 'matplotlib']);
+            }
+            return pyodide;
+        }
+
+        async function runPython(codeId, outputId) {
+            const outputDiv = document.getElementById(outputId);
+            const code = document.getElementById(codeId).value;
+            outputDiv.innerHTML = '<span class="text-blue-600 animate-pulse">Running python...</span>';
+
+            try {
+                await initPyodide();
+
+                outputDiv.innerHTML = ''; // Clear header
+
+                // Redirect stdout
+                pyodide.runPython(`
+import sys
+import io
+sys.stdout = io.StringIO()
+`);
+
+                await pyodide.runPythonAsync(code);
+
+                const stdout = pyodide.runPython("sys.stdout.getvalue()");
+
+                if (stdout) {
+                    const pre = document.createElement('div');
+                    pre.textContent = stdout;
+                    pre.className = "whitespace-pre font-mono text-xs";
+                    outputDiv.appendChild(pre);
+                } else {
+                    outputDiv.innerHTML = '<span class="text-gray-500 italic">Code executed successfully (no output).</span>';
+                }
+
+            } catch (err) {
+                outputDiv.innerHTML = `<span class="text-red-500 font-mono text-xs whitespace-pre-wrap">Error: ${err.message}</span>`;
+            }
+        }
+    </script>
+
+    <!-- Render Math at the End -->
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             renderMathInElement(document.body, {
                 delimiters: [
