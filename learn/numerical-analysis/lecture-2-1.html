@@ -715,6 +715,7 @@ for i in range(20):
                 outputDiv.innerHTML = '';
 
                 // Add plot target logic AND stdout capture
+                // Add plot target logic AND stdout capture
                 const plotSetup = `
 import matplotlib.pyplot as plt
 import io, base64, sys
@@ -722,12 +723,21 @@ import io, base64, sys
 # Reset figure and stdout
 plt.clf()
 sys.stdout = io.StringIO()
+
+try:
+`;
+
+                const footer = `
+except Exception as e:
+    print(e)
+
+_captured_stdout = sys.stdout.getvalue()
 `;
                 // Running the user code
-                await pyodide.runPythonAsync(plotSetup + code);
+                await pyodide.runPythonAsync(plotSetup + code + footer);
 
                 // Capture Stdout
-                const stdout = pyodide.runPython("sys.stdout.getvalue()");
+                const stdout = pyodide.runPython("_captured_stdout");
                 if (stdout) {
                     const pre = document.createElement('div');
                     pre.textContent = stdout;
