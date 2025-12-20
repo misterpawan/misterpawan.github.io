@@ -755,11 +755,10 @@ img_str
                 if (imgB64) {
                     const img = document.createElement('img');
                     img.src = 'data:image/png;base64,' + imgB64;
-                    img.className = 'max-w-full h-auto rounded';
-                    outputDiv.innerHTML = '';
+                    img.className = 'max-w-full h-auto rounded mt-2';
                     outputDiv.appendChild(img);
-                } else {
-                    outputDiv.innerHTML = '<span class="text-gray-500">Code ran successfully (No plot output)</span>';
+                } else if (!stdout) {
+                    outputDiv.innerHTML = '<span class="text-gray-500">Code ran successfully (No plot or text output)</span>';
                 }
 
             } catch (err) {
