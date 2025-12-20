@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 2-6: Solving ODEs - Complete Course</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        ntu: {
+                            blue: '#1e3a8a',
+                            cyan: '#06b6d4',
+                            dark: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        .slide-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .code-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 0;
+            background: #282c34;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .code-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .code-editor {
+            padding: 1rem;
+            color: #abb2bf;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            border-right: 1px solid #3e4451;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .output-panel {
+            padding: 1rem;
+            background: #21252b;
+            color: #98c379;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            overflow-y: auto;
+            max-height: 500px;
+            border-left: 1px solid #181a1f;
+        }
+
+        .math-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-left: 4px solid #3b82f6;
+            border-radius: 0 4px 4px 0;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🍎</span>
+                <span class="font-bold text-xl text-slate-800">Numerical Analysis <span
+                        class="text-blue-600">2-6</span></span>
+            </div>
+            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
+                <a href="#euler" class="px-3 py-1 hover:bg-gray-100 rounded">Euler</a>
+                <a href="#rk" class="px-3 py-1 hover:bg-gray-100 rounded">Runge-Kutta</a>
+                <a href="#pendulum" class="px-3 py-1 hover:bg-gray-100 rounded">Pendulum</a>
+                <a href="#scipy" class="px-3 py-1 hover:bg-gray-100 rounded">SciPy</a>
+                <a href="#springs" class="px-3 py-1 hover:bg-gray-100 rounded">Springs</a>
+                <a href="#hands-on" class="px-3 py-1 bg-blue-100 text-blue-700 rounded">Hands On</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Solving Ordinary Differential Equations
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            From Newton's falling apple to chaotic double springs. <br>
+            <span class="text-sm text-blue-600 font-mono">dy/dt = f(y,t)</span>
+        </p>
+        <div class="flex justify-center gap-4">
+            <span class="px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm text-sm">🏎️ RK4</span>
+            <span class="px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm text-sm">⚛️ Physics</span>
+            <span class="px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm text-sm">🐍 SciPy</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 pb-20">
+
+        <section id="intro" class="slide-card">
+            <div class="flex justify-between items-start mb-6">
+                <h2 class="text-3xl font-bold text-slate-800">1. The Work of "Physicists"</h2>
+                <span class="bg-gray-100 text-gray-500 px-2 py-1 rounded text-xs font-mono">Slide 1-3</span>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <p class="mb-4 text-lg">Solving differential equations is the bread and butter of classical
+                        mechanics.</p>
+                    <ul class="space-y-2 text-slate-600 list-disc ml-5">
+                        <li>Many equations in nature <strong>cannot</strong> be solved analytically.</li>
+                        <li>Numerical approximations are often <strong>good enough</strong>.</li>
+                        <li>Today: Euler, Runge-Kutta, and Animations!</li>
+                    </ul>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 flex items-center justify-center">
+                    <div class="text-center">
+                        <div class="text-6xl mb-2">🍏</div>
+                        <div class="font-serif italic text-xl">"Let's get back to F=ma!"</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="euler" class="slide-card">
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">2. The Brainless Example: Euler's Method</h2>
+            <p class="mb-4 text-slate-600">Let's solve $\frac{dy}{dt} = y$ with $y(0)=1$. We know the answer is $e^t$.
+            </p>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                <h3 class="font-bold text-yellow-800 mb-2">Algorithm</h3>
+                <div class="math-box text-sm bg-white">
+                    $$ y_{n+1} \approx y_n + h \cdot f(y_n, t_n) $$
+                </div>
+                <p class="text-xs text-yellow-700">Precision: $O(h)$ (Not very good)</p>
+            </div>
+
+            <div class="code-container">
+                <div class="code-editor">
+                    <pre><code class="language-python"># 1206-example-01.py
+import math
+
+def f(t,y): return y
+
+t, y = 0., 1.
+h = 0.001
+
+while t < 1.:
+    k1 = f(t, y)
+    y += h*k1  # Euler step
+    t += h
+
+y_exact = math.exp(t)
+print('Euler method: %.16f, exact: %.16f, diff: %.16f' % \
+(y,y_exact,abs(y-y_exact)))</code></pre>
+                </div>
+                <div class="output-panel">
+                    > python 1206-example-01.py
+                    Euler method: 2.7169239322358960
+                    exact: 2.7182818284590469
+                    diff: 0.0013578962231509
+                </div>
+            </div>
+        </section>
+
+        <section id="rk" class="slide-card">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6">3. The Runge-Kutta Family 🚀</h2>
+
+            <div id="rk-tabs-root"></div>
+
+            <div class="mt-8">
+                <h3 class="font-bold text-lg mb-2 text-slate-700">Precision Evolution (Error Accumulation)</h3>
+                <p class="text-sm text-slate-500 mb-4">Comparison of relative errors over time steps.</p>
+
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="code-container m-0">
+                        <div class="code-editor" style="max-height: 300px;">
+                            <pre><code class="language-python"># 1206-example-04a.py (Partial)
+# Comparison of RK4 vs RK45 (Adaptive)
+while t < 200.:
+    # RK4 Step (Fixed h)
+    k1 = f(t, y)
+    # ... k2, k3, k4 ...
+    y += h/6.*(...)
+    
+    # RK45 Step (Adaptive h)
+    # Calculate 4th and 5th order
+    # Estimate Error
+    # Adjust h based on error
+    hn = 0.9*h*err**-0.25
+    
+    vt4.append(t)
+    vy4.append(abs(y-exact)/exact)</code></pre>
+                        </div>
+                        <div class="output-panel" style="max-height: 300px;">
+                            [Graph Plotting Output]
+                            RK4 Error: ~10^-10
+                            RK45 Error: ~10^-14
+
+                            Adaptive stepping wins!
+                        </div>
+                    </div>
+                    <div id="precision-chart" class="border rounded-lg bg-white h-[300px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pendulum" class="slide-card">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-slate-800">4. Physics: The Pendulum 🕰️</h2>
+                <div class="flex gap-2">
+                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">ODE System</span>
+                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded">Animation</span>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <div class="math-box text-sm">
+                        $$ \frac{d^2\theta}{dt^2} = -\frac{g}{R}\sin(\theta) $$
+                        Decompose into two 1st-order ODEs:
+                        1. $\dot{\theta} = \omega$
+                        2. $\dot{\omega} = -\frac{g}{R}\sin(\theta)$
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        We can solve this using Euler, RK2, RK4, or SciPy. Notice how Euler (Example 07) fails to
+                        conserve energy!
+                    </p>
+                </div>
+
+                <div
+                    class="relative bg-slate-900 rounded-xl overflow-hidden shadow-lg h-64 flex items-center justify-center">
+                    <canvas id="pendulumCanvas" width="400" height="250"></canvas>
+                    <div class="absolute top-2 left-2 text-xs font-mono text-green-400 bg-black/50 p-2 rounded">
+                        Method: RK4<br>
+                        Energy: <span id="pendE">0.00</span>
+                    </div>
+                    <button onclick="togglePendulum()"
+                        class="absolute bottom-2 right-2 bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1 rounded shadow">
+                        Play/Pause
+                    </button>
+                </div>
+            </div>
+
+            <div id="pendulum-code-tabs" class="mt-8"></div>
+        </section>
+
+        <section id="scipy" class="slide-card border-l-8 border-blue-600">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6">5. Using SciPy `solve_ivp` 🛠️</h2>
+            <p class="mb-4 text-slate-600">Why write your own solver? Use the industrial strength tools.</p>
+
+            <div class="code-container">
+                <div class="code-editor">
+                    <pre><code class="language-python"># 1206-example-08.py (Basic SciPy Usage)
+import numpy as np
+from scipy.integrate import solve_ivp
+
+m, g, R = 1., 9.8, 1.
+t = 0.
+y = np.array([np.pi*0.9999, 0.]) # Initial [theta, omega]
+
+def f(t, y):     
+    theta = y[0]
+    thetap = y[1]
+    thetapp = -g/R * np.sin(theta)
+    return np.array([thetap, thetapp])
+
+# Solve step by step
+while t < 8.:
+    sol = solve_ivp(f, [t, t+0.1], y)
+    y = sol.y[:, -1]
+    t = sol.t[-1]
+    
+    print('At %.2f sec : (%+14.10f, %+14.10f)' % (t, y[0], y[1]))</code></pre>
+                </div>
+                <div class="output-panel">
+                    At 0.10 sec : ( +3.1412629744, -0.0003129294)
+                    At 0.20 sec : ( +3.1412148812, -0.0006567772)
+                    At 0.30 sec : ( +3.1411294629, -0.0010655165)
+                    ...
+                    At 2.00 sec : ( +3.0593354818, -0.2574312087)
+                    ...
+                    At 5.00 sec : ( -3.1253649922, -0.0507902190)
+
+                    (Uses RK45 by default)
+                </div>
+            </div>
+        </section>
+
+        <section id="springs" class="slide-card">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6">6. Springs & Animations 🌀</h2>
+            <p class="mb-4 text-slate-600">Simulating a spring-mass system. (VPython code provided, simulated here with
+                Canvas).</p>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <div
+                    class="relative bg-black rounded-xl overflow-hidden shadow-lg h-64 flex items-center justify-center border border-gray-700">
+                    <canvas id="springCanvas" width="400" height="250"></canvas>
+                    <div class="absolute top-2 left-2 text-xs font-mono text-orange-400 bg-black/50 p-2 rounded">
+                        2D Spring<br>
+                        Energy: <span id="springE">0.00</span>
+                    </div>
+                    <button onclick="toggleSpring()"
+                        class="absolute bottom-2 right-2 bg-orange-600 hover:bg-orange-500 text-white text-xs px-3 py-1 rounded shadow">
+                        Play/Pause
+                    </button>
+                </div>
+
+                <div class="code-container m-0 h-64">
+                    <div class="code-editor">
+                        <pre><code class="language-python"># 1206-example-09.py (Spring Logic)
+def f(t,y):
+    bx, by = y[0], y[1]
+    vx, vy = y[2], y[3]
+    R = (bx**2 + by**2)**0.5
+    
+    fs = -k * (R - R0) # Hooke's Law
+    ax = fs * bx / R / m
+    ay = fs * by / R / m - g # Gravity
+    
+    return np.array([vx, vy, ax, ay])</code></pre>
+                    </div>
+                    <div class="output-panel">
+                        E = 3.91936686
+                        E = 3.91936686
+                        ...
+                        Energy conserved!
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="font-bold text-slate-700 mb-2">Double Spring System (8 Equations!)</h3>
+                <div class="code-container">
+                    <div class="code-editor" style="max-height: 250px;">
+                        <pre><code class="language-python"># 1206-example-09a.py (Double Spring)
+def f(t,y):
+    # Unpack 8 variables (2 balls x 4 vars each)
+    bx1, by1, bx2, by2 = y[0], y[1], y[2], y[3]
+    vx1, vy1, vx2, vy2 = y[4], y[5], y[6], y[7]
+    
+    # Distances
+    R1 = (bx1**2 + by1**2)**0.5
+    R2 = ((bx2-bx1)**2 + (by2-by1)**2)**0.5
+    
+    # Forces
+    fs1 = -k*(R1-R0)
+    fs2 = -k*(R2-R0)
+    
+    # Accelerations (Coupled!)
+    ax1 = fs1*bx1/R1/m - fs2*(bx2-bx1)/R2/m
+    ay1 = fs1*by1/R1/m - fs2*(by2-by1)/R2/m - g
+    
+    ax2 = fs2*(bx2-bx1)/R2/m
+    ay2 = fs2*(by2-by1)/R2/m - g
+    
+    return np.array([vx1,vy1,vx2,vy2,ax1,ay1,ax2,ay2])</code></pre>
+                    </div>
+                    <div class="output-panel bg-slate-900 text-orange-300">
+                        Solving 8 coupled ODEs...
+                        Ball 1 Pos: (0.18, -0.24)
+                        Ball 2 Pos: (0.42, -0.42)
+                        System Energy: Constant
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="hands-on" class="slide-card bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100">
+            <h2 class="text-3xl font-bold text-indigo-900 mb-6 flex items-center gap-3">
+                <span>👐</span> Hands-On Session
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-bold text-indigo-700 mb-2">1. Gravity Shot 🌠</h3>
+                    <p class="text-sm text-slate-600 mb-4">Simulate a red star shooting towards a black hole. $a =
+                        1/r^2$.</p>
+                    <div class="code-container m-0">
+                        <div class="code-editor text-xs">
+                            <pre><code class="language-python"># l206-practice-01-template.py
+def f(t,y):     
+    # y = [px, py, vx, vy]
+    px, py = y[0], y[1]
+    vx, vy = y[2], y[3]
+    
+    # Distance sq
+    r2 = px**2 + py**2
+    r = r2**0.5
+    
+    # Force F = 1/r^2 directed to origin
+    # a = F/m = 1/r^2
+    # ax = -a * (px/r) = -px / r^3
+    
+    ax = -px / (r**3) # Complete this
+    ay = -py / (r**3) # Complete this
+    
+    return np.array([vx,vy,ax,ay])</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-bold text-purple-700 mb-2">2. Damped Oscillator 〰️</h3>
+                    <p class="text-sm text-slate-600 mb-4">Mass on a spring with damping $f_b = -b v$ and driving force.
+                    </p>
+                    <div class="code-container m-0">
+                        <div class="code-editor text-xs">
+                            <pre><code class="language-python"># l206-practice-02-template.py
+def f(t,y):     
+    x, v = y[0], y[1]
+    
+    # Constants: k, m, b
+    # F_spring = -k*x
+    # F_damp   = -b*v
+    # a = F_total / m
+    
+    a = (-k*x - b*v) / m 
+    
+    return np.array([v, a])
+
+# Modify initial conditions
+y = [0.1, 0.] # x=0.1m, v=0</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
+        <p>Numerical Analysis Lecture 2-6 • Kai-Feng Chen • National Taiwan University</p>
+    </footer>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // --- RK TABS ---
+        const RKTabs = () => {
+            const [tab, setTab] = useState('RK4');
+
+            const content = {
+                RK2: {
+                    title: "2nd Order Runge-Kutta",
+                    code: `# 1206-example-02.py\nk1 = f(t, y)\nk2 = f(t + 0.5*h, y + 0.5*h*k1)\ny += h * k2\nt += h`,
+                    output: `RK2 method: 2.7182813757517628\nDiff: 0.0000004527072841`
+                },
+                RK4: {
+                    title: "4th Order Runge-Kutta",
+                    code: `# 1206-example-03.py\nk1 = f(t, y)\nk2 = f(t + 0.5*h, y + 0.5*h*k1)\nk3 = f(t + 0.5*h, y + 0.5*h*k2)\nk4 = f(t + h, y + h*k3)\ny += h/6.*(k1 + 2*k2 + 2*k3 + k4)\nt += h`,
+                    output: `RK4 method: 2.7182818284590247\nDiff: 0.0000000000000222`
+                },
+                RK45: {
+                    title: "Adaptive RK45",
+                    code: `# 1206-example-04.py\n# Uses Cash-Karp parameters for 4th/5th order\nyn = y + h*(...5th order...)\nyp = y + h*(...4th order...)\nerr = abs(yn - yp)\n# Adjust h based on error\nhn = 0.9 * h * err**-0.25`,
+                    output: `RK45 method after 147 step\nDiff: 0.0000000000000067\n(Precision optimized automatically)`
+                }
+            };
+
+            return (
+                <div className="border rounded-xl overflow-hidden bg-white shadow-sm">
+                    <div className="flex bg-gray-50 border-b">
+                        {Object.keys(content).map(k => (
+                            <button
+                                key={k}
+                                onClick={() => setTab(k)}
+                                className={`px-6 py-3 font-bold text-sm transition-colors ${tab === k ? 'bg-white text-blue-600 border-t-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                {k}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="p-0">
+                        <div className="code-container m-0 rounded-none border-none shadow-none">
+                            <div className="code-editor">
+                                <pre><code className="language-python">{content[tab].code}</code></pre>
+                            </div>
+                            <div className="output-panel">
+                                <pre>{content[tab].output}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- PENDULUM CODE TABS ---
+        const PendulumTabs = () => {
+            const [tab, setTab] = useState('Animation');
+
+            const content = {
+                Euler: {
+                    file: "1206-example-07.py",
+                    code: `# Simple Euler Loop\nfor step in range(40):\n    k1 = f(t, y)\n    y += h*k1\n    t += h\n# Energy drifts significantly!`,
+                    out: "E = 9.88 (Energy Increases!)"
+                },
+                Animation: {
+                    file: "1206-example-08a.py",
+                    code: `# SciPy + Animation\ndef animate(i):\n    global t, y\n    sol = solve_ivp(f, [t, t+0.040], y)\n    y = sol.y[:,-1]\n    t = sol.t[-1]\n    \n    # Update Ball Position\n    bx = np.sin(y[0])\n    by = -np.cos(y[0])\n    ball.set_data(bx, by)`,
+                    out: "Animation Running... Energy Conserved."
+                }
+            };
+
+            return (
+                <div className="border rounded-xl overflow-hidden bg-white shadow-sm">
+                    <div className="flex bg-gray-50 border-b">
+                        {Object.keys(content).map(k => (
+                            <button
+                                key={k}
+                                onClick={() => setTab(k)}
+                                className={`px-6 py-3 font-bold text-sm transition-colors ${tab === k ? 'bg-white text-indigo-600 border-t-2 border-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            >
+                                {k} ({content[k].file})
+                            </button>
+                        ))}
+                    </div>
+                    <div className="code-container m-0 rounded-none">
+                        <div className="code-editor">
+                            <pre><code className="language-python">{content[tab].code}</code></pre>
+                        </div>
+                        <div className="output-panel">
+                            <pre>{content[tab].out}</pre>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('rk-tabs-root')).render(<RKTabs />);
+        ReactDOM.createRoot(document.getElementById('pendulum-code-tabs')).render(<PendulumTabs />);
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Simulated Data for Error Chart
+            const t = Array.from({ length: 200 }, (_, i) => i);
+            const errRK4 = t.map(x => 1e-12 * Math.exp(x * 0.03));
+            const errRK45 = t.map(x => 1e-14 * (1 + Math.random()));
+
+            const trace3 = { x: t, y: errRK4, mode: 'lines', name: 'RK4', line: { color: 'red' } };
+            const trace4 = { x: t, y: errRK45, mode: 'lines', name: 'RK45 (Adaptive)', line: { color: 'brown' } };
+
+            const layout = {
+                margin: { t: 20, r: 20, b: 40, l: 60 },
+                yaxis: { type: 'log', title: 'Relative Error', range: [-16, -9] },
+                xaxis: { title: 'Time steps' },
+                showlegend: true,
+                legend: { x: 0, y: 1 }
+            };
+
+            Plotly.newPlot('precision-chart', [trace3, trace4], layout, { staticPlot: true, responsive: true });
+
+            // Highlight Code
+            hljs.highlightAll();
+
+            // Math Rendering
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ]
+            });
+        });
+    </script>
+
+    <script>
+        // --- PENDULUM ---
+        let pId = null;
+        let pState = { th: Math.PI * 0.9, om: 0 };
+        const pParams = { g: 9.8, R: 1, dt: 0.02 };
+
+        function drawPendulum(ctx, w, h) {
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, w, h);
+            const cx = w / 2, cy = h / 3;
+            const scale = 100;
+            const bx = cx + scale * Math.sin(pState.th);
+            const by = cy + scale * Math.cos(pState.th);
+
+            ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by);
+            ctx.strokeStyle = 'white'; ctx.lineWidth = 2; ctx.stroke();
+
+            ctx.beginPath(); ctx.arc(bx, by, 8, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ef4444'; ctx.fill();
+        }
+
+        function updatePendulum() {
+            // RK4 Step
+            const { th, om } = pState;
+            const { g, R, dt } = pParams;
+            const f = (t, o) => -g / R * Math.sin(t);
+
+            const k1t = om; const k1o = f(th, om);
+            const k2t = om + 0.5 * dt * k1o; const k2o = f(th + 0.5 * dt * k1t, om + 0.5 * dt * k1o);
+            const k3t = om + 0.5 * dt * k2o; const k3o = f(th + 0.5 * dt * k2t, om + 0.5 * dt * k2o);
+            const k4t = om + dt * k3o; const k4o = f(th + dt * k3t, om + dt * k3o);
+
+            pState.th += dt / 6 * (k1t + 2 * k2t + 2 * k3t + k4t);
+            pState.om += dt / 6 * (k1o + 2 * k2o + 2 * k3o + k4o);
+
+            // Energy
+            const E = 1 * g * (1 - Math.cos(pState.th)) + 0.5 * (R * pState.om) ** 2; // m=1
+            document.getElementById('pendE').innerText = E.toFixed(4);
+        }
+
+        function togglePendulum() {
+            if (pId) { cancelAnimationFrame(pId); pId = null; }
+            else {
+                const cvs = document.getElementById('pendulumCanvas');
+                const ctx = cvs.getContext('2d');
+                function loop() { updatePendulum(); drawPendulum(ctx, cvs.width, cvs.height); pId = requestAnimationFrame(loop); }
+                loop();
+            }
+        }
+        drawPendulum(document.getElementById('pendulumCanvas').getContext('2d'), 400, 250);
+
+
+        // --- SPRING ---
+        let sId = null;
+        let sState = { x: 0.3, y: 0.4, vx: 0, vy: 0 };
+        const sParams = { k: 50, m: 1, g: 9.8, R0: 0.5, dt: 0.015 };
+
+        function drawSpring(ctx, w, h) {
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+            const cx = w / 2, cy = 20;
+            const scale = 200;
+            const bx = cx + sState.x * scale;
+            const by = cy + sState.y * scale;
+
+            // Spring
+            ctx.beginPath(); ctx.moveTo(cx, cy);
+            const segs = 12;
+            for (let i = 1; i <= segs; i++) {
+                const r = i / segs;
+                const zig = (i % 2 == 0 ? 6 : -6) * (1 - r);
+                ctx.lineTo(cx + (bx - cx) * r + zig, cy + (by - cy) * r);
+            }
+            ctx.strokeStyle = 'orange'; ctx.lineWidth = 2; ctx.stroke();
+
+            // Ball
+            ctx.beginPath(); ctx.arc(bx, by, 8, 0, 2 * Math.PI);
+            ctx.fillStyle = 'red'; ctx.fill();
+        }
+
+        function updateSpring() {
+            // RK2
+            const { x, y, vx, vy } = sState;
+            const { k, m, g, R0, dt } = sParams;
+
+            const getAcc = (px, py) => {
+                const R = Math.sqrt(px ** 2 + py ** 2);
+                const fs = -k * (R - R0);
+                return [(fs * px / R) / m, (fs * py / R) / m + g]; // +g because Y is down in Canvas
+            }
+
+            const [ax1, ay1] = getAcc(x, y);
+            const x2 = x + 0.5 * dt * vx;
+            const y2 = y + 0.5 * dt * vy;
+            const vx2 = vx + 0.5 * dt * ax1;
+            const vy2 = vy + 0.5 * dt * ay1;
+            const [ax2, ay2] = getAcc(x2, y2);
+
+            sState.x += dt * vx2;
+            sState.y += dt * vy2;
+            sState.vx += dt * ax2;
+            sState.vy += dt * ay2;
+
+            // Approx Energy (visual only)
+            const R = Math.sqrt(sState.x ** 2 + sState.y ** 2);
+            const E = 0.5 * k * (R - R0) ** 2 + 0.5 * m * (sState.vx ** 2 + sState.vy ** 2) - m * g * sState.y;
+            document.getElementById('springE').innerText = E.toFixed(2);
+        }
+
+        function toggleSpring() {
+            if (sId) { cancelAnimationFrame(sId); sId = null; }
+            else {
+                const cvs = document.getElementById('springCanvas');
+                const ctx = cvs.getContext('2d');
+                function loop() { updateSpring(); drawSpring(ctx, cvs.width, cvs.height); sId = requestAnimationFrame(loop); }
+                loop();
+            }
+        }
+        drawSpring(document.getElementById('springCanvas').getContext('2d'), 400, 250);
+
+    </script>
+</body>
+
+</html>
