@@ -64,19 +64,27 @@
         .code-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0;
             background: #282c34;
             border-radius: 8px;
             overflow: hidden;
             margin-top: 1rem;
+            width: 100%;
+            border: 1px solid #3e4451;
         }
 
         .code-editor {
             padding: 1rem;
             color: #abb2bf;
+            background-color: #282c34;
             font-size: 0.85rem;
-            overflow-x: auto;
+            overflow: auto;
             border-right: 1px solid #3e4451;
+            width: 100%;
+            height: 100%;
+            font-family: 'Fira Code', monospace;
+            resize: none;
+            outline: none;
         }
 
         .output-panel {
@@ -86,7 +94,8 @@
             font-family: 'Fira Code', monospace;
             font-size: 0.85rem;
             overflow-y: auto;
-            max-height: 400px;
+            max-height: 500px;
+            height: 100%;
         }
 
         .math-block {
@@ -167,12 +176,17 @@
                 <h3 class="text-xl font-bold mb-2">Method 1: Bisection 🍰</h3>
                 <p class="text-sm text-gray-500 mb-4">The "chop it in half" strategy. Guaranteed to work (slowly).</p>
 
-                <div class="grid lg:grid-cols-2 gap-8">
-                    <div id="bisection-demo"></div>
+                <div class="grid lg:grid-cols-2 gap-8 items-center mb-8">
+                    <div id="bisection-demo" class="w-full"></div>
+                    <div class="text-sm text-gray-600">
+                        <p><strong>Interactive Demo:</strong> <br>
+                            Click "Next Step" to see how the interval [a, b] shrinks.</p>
+                        <p class="mt-2">The root is trapped!</p>
+                    </div>
+                </div>
 
-                    <div>
-                        <div class="code-container">
-                            <textarea id="code-01" class="code-editor" spellcheck="false">
+                <div class="code-container">
+                    <textarea id="code-01" class="code-editor" spellcheck="false">
 # 1205-example-01.py
 def f(x):
     # Roots at 1, 2, 3, 4, 5
@@ -195,30 +209,27 @@ for step in range(50):
     else:
         b, fb = c, fc
 </textarea>
-                            <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[300px]">
-                                <div
-                                    class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
-                                    <span class="text-xs text-gray-400 font-mono">Output</span>
-                                    <button onclick="runPython('code-01', 'out-01')"
-                                        class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
-                                        Run Code
-                                    </button>
-                                </div>
-                                <div id="out-01"
-                                    class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
-                                    > python 1205-example-01.py
-                                    Step: 0, root = 2.900000...
-                                    Step: 1, root = 3.150000...
-                                    Step: 2, root = 3.025000...
-                                    Step: 3, root = 2.962500...
-                                    ...
-                                    Step: 10, root = 3.000097...
-                                    ...
-                                    Step: 46, root = 3.000000...
+                    <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[300px]">
+                        <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                            <span class="text-xs text-gray-400 font-mono">Output</span>
+                            <button onclick="runPython('code-01', 'out-01')"
+                                class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
+                                Run Code
+                            </button>
+                        </div>
+                        <div id="out-01"
+                            class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
+                            > python 1205-example-01.py
+                            Step: 0, root = 2.900000...
+                            Step: 1, root = 3.150000...
+                            Step: 2, root = 3.025000...
+                            Step: 3, root = 2.962500...
+                            ...
+                            Step: 10, root = 3.000097...
+                            ...
+                            Step: 46, root = 3.000000...
 
-                                    Converged!
-                                </div>
-                            </div>
+                            Converged!
                         </div>
                     </div>
                 </div>
@@ -276,39 +287,41 @@ print("Code needs context to run, but concept is key!")
                 <p class="mb-4 text-gray-600">The calculus darling. Uses the derivative (slope) to shoot towards the
                     root.</p>
 
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
                     <div class="bg-gray-50 p-4 rounded border">
                         <div class="math-block">
                             $$ x_{new} = x_{old} - \frac{f(x_{old})}{f'(x_{old})} $$
                         </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded border">
                         <p class="text-sm"><strong>Pros:</strong> Super fast (Quadratic convergence).</p>
                         <p class="text-sm"><strong>Cons:</strong> Needs $f'(x)$. Can explode if $f'(x) \approx 0$.</p>
                     </div>
-                    <div class="code-container m-0">
-                        <textarea id="code-03" class="code-editor" spellcheck="false" style="min-height: 200px;">
+                </div>
+
+                <div class="code-container m-0">
+                    <textarea id="code-03" class="code-editor" spellcheck="false" style="min-height: 200px;">
 # 1205-example-03.py
 # Assuming definitions of fb, fp(b)
 # delta = -fb/fp(b) # fp is derivative
 # d = b + delta
 print("Run the Scientific Python example below for full implementation!")
 </textarea>
-                        <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[200px]">
-                            <div
-                                class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
-                                <span class="text-xs text-gray-400 font-mono">Output</span>
-                                <button onclick="runPython('code-03', 'out-03')"
-                                    class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
-                                    Run Code
-                                </button>
-                            </div>
-                            <div id="out-03"
-                                class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
-                                Step: 0, root=2.9500000000000000
-                                Step: 1, root=3.0003151394705090
-                                Step: 2, root=2.9999999999217564
-                                Step: 3, root=3.0000000000000000
-                                Done in 3 steps! ⚡
-                            </div>
+                    <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[200px]">
+                        <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                            <span class="text-xs text-gray-400 font-mono">Output</span>
+                            <button onclick="runPython('code-03', 'out-03')"
+                                class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
+                                Run Code
+                            </button>
+                        </div>
+                        <div id="out-03"
+                            class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
+                            Step: 0, root=2.9500000000000000
+                            Step: 1, root=3.0003151394705090
+                            Step: 2, root=2.9999999999217564
+                            Step: 3, root=3.0000000000000000
+                            Done in 3 steps! ⚡
                         </div>
                     </div>
                 </div>
@@ -318,12 +331,21 @@ print("Run the Scientific Python example below for full implementation!")
                 <h3 class="text-xl font-bold mb-4 text-blue-400">Practical Application & SciPy</h3>
                 <p class="mb-6 text-gray-300">How to calculate $\sqrt{R}$? Find the root of $x^2 - R = 0$.</p>
 
-                <div class="grid md:grid-cols-2 gap-8">
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
                     <div>
                         <h4 class="font-bold text-sm mb-2 uppercase text-gray-500">The "Hard" Way (Manual Newton)</h4>
-                        <div class="code-container m-0 bg-black">
-                            <textarea id="code-04a" class="code-editor bg-black text-white" spellcheck="false"
-                                style="min-height: 150px;">
+                        <p class="text-xs text-gray-400 mb-2">Defining the function and its derivative manually.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm mb-2 uppercase text-gray-500">The SciPy Way (Easy)</h4>
+                        <p class="text-xs text-gray-400 mb-2">Using `scipy.optimize.newton`.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="code-container m-0 bg-black">
+                        <textarea id="code-04a" class="code-editor bg-black text-white" spellcheck="false"
+                            style="min-height: 150px;">
 def squareroot(R):
     f   = lambda x: x*x - R
     fp  = lambda x: 2.*x
@@ -334,23 +356,21 @@ def squareroot(R):
 
 print(f"sqrt(2) = {squareroot(2.0)}")
 </textarea>
-                            <div class="flex flex-col bg-gray-900 w-full">
-                                <div
-                                    class="flex items-center justify-between px-2 py-1 bg-gray-800 border-b border-gray-700">
-                                    <button onclick="runPython('code-04a', 'out-04a')"
-                                        class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] hover:bg-blue-700 font-medium transition">Run</button>
-                                </div>
-                                <div id="out-04a"
-                                    class="p-2 font-mono text-[10px] text-green-400 whitespace-pre overflow-auto min-h-[50px]">
-                                </div>
+                        <div class="flex flex-col bg-gray-900 w-full">
+                            <div
+                                class="flex items-center justify-between px-2 py-1 bg-gray-800 border-b border-gray-700">
+                                <button onclick="runPython('code-04a', 'out-04a')"
+                                    class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] hover:bg-blue-700 font-medium transition">Run</button>
+                            </div>
+                            <div id="out-04a"
+                                class="p-2 font-mono text-[10px] text-green-400 whitespace-pre overflow-auto min-h-[50px]">
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-sm mb-2 uppercase text-gray-500">The SciPy Way (Easy)</h4>
-                        <div class="code-container m-0 bg-black">
-                            <textarea id="code-04b" class="code-editor bg-black text-white" spellcheck="false"
-                                style="min-height: 150px;">
+
+                    <div class="code-container m-0 bg-black">
+                        <textarea id="code-04b" class="code-editor bg-black text-white" spellcheck="false"
+                            style="min-height: 150px;">
 import scipy.optimize as opt
 
 R = 2.0
@@ -361,15 +381,14 @@ root = opt.newton(lambda x: x**2 - R,
 
 print(f"sqrt(2) via scipy = {root}")
 </textarea>
-                            <div class="flex flex-col bg-gray-900 w-full">
-                                <div
-                                    class="flex items-center justify-between px-2 py-1 bg-gray-800 border-b border-gray-700">
-                                    <button onclick="runPython('code-04b', 'out-04b')"
-                                        class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] hover:bg-blue-700 font-medium transition">Run</button>
-                                </div>
-                                <div id="out-04b"
-                                    class="p-2 font-mono text-[10px] text-green-400 whitespace-pre overflow-auto min-h-[50px]">
-                                </div>
+                        <div class="flex flex-col bg-gray-900 w-full">
+                            <div
+                                class="flex items-center justify-between px-2 py-1 bg-gray-800 border-b border-gray-700">
+                                <button onclick="runPython('code-04b', 'out-04b')"
+                                    class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] hover:bg-blue-700 font-medium transition">Run</button>
+                            </div>
+                            <div id="out-04b"
+                                class="p-2 font-mono text-[10px] text-green-400 whitespace-pre overflow-auto min-h-[50px]">
                             </div>
                         </div>
                     </div>
@@ -483,8 +502,9 @@ for i in range(10):
                     $$ \chi^2 = \sum \frac{(f_i - \mu_i)^2}{\sigma_i^2} $$
                 </div>
 
-                <div class="grid lg:grid-cols-2 gap-8">
-                    <div class="bg-white border rounded-lg p-4 flex items-center justify-center relative min-h-[300px]">
+                <div class="flex justify-center mb-8">
+                    <div
+                        class="bg-white border rounded-lg p-4 flex items-center justify-center relative min-h-[300px] w-full max-w-2xl">
                         <div class="absolute inset-0 flex items-end justify-around px-8 pb-8 pt-12 space-x-1">
                             <div class="w-1 h-10 bg-blue-500 rounded"></div>
                             <div class="w-1 h-12 bg-blue-500 rounded"></div>
@@ -500,9 +520,10 @@ for i in range(10):
                         </div>
                         <div class="absolute bottom-2 text-xs font-bold text-gray-500">Mass (GeV)</div>
                     </div>
+                </div>
 
-                    <div class="code-container m-0">
-                        <textarea id="code-06" class="code-editor" spellcheck="false" style="min-height: 200px;">
+                <div class="code-container m-0">
+                    <textarea id="code-06" class="code-editor" spellcheck="false" style="min-height: 200px;">
 import scipy.optimize as opt
 import numpy as np
 
@@ -523,23 +544,21 @@ except:
     print("Fitting failed with random data this time.")
 </textarea>
 
-                        <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[200px]">
-                            <div
-                                class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
-                                <span class="text-xs text-gray-400 font-mono">Output</span>
-                                <button onclick="runPython('code-06', 'out-06')"
-                                    class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
-                                    Run Code
-                                </button>
-                            </div>
-                            <div id="out-06"
-                                class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
-                                N(Higgs) = 69.8 events
-                                M(Higgs) = 125.2 GeV
-                                Chi2/ndf = 1.57
+                    <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[200px]">
+                        <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                            <span class="text-xs text-gray-400 font-mono">Output</span>
+                            <button onclick="runPython('code-06', 'out-06')"
+                                class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
+                                Run Code
+                            </button>
+                        </div>
+                        <div id="out-06"
+                            class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
+                            N(Higgs) = 69.8 events
+                            M(Higgs) = 125.2 GeV
+                            Chi2/ndf = 1.57
 
-                                A good fit!
-                            </div>
+                            A good fit!
                         </div>
                     </div>
                 </div>
@@ -575,24 +594,46 @@ except:
                 </div>
 
                 <div class="code-container bg-indigo-900 border-indigo-800">
-                    <div class="code-editor text-xs">
-                        <pre><code class="language-python"># 1205-example-11b.py
-for gen in range(100):
-    # Crossover & Mutation
-    x = crossover(parent1, parent2)
-    x = mutation(x)
-    
-    # Survival of the fittest
-    rank = argsort(fitness)
-    # Kill the weak...</code></pre>
-                    </div>
-                    <div class="output-panel bg-indigo-950 text-indigo-300 text-xs">
-                        Gen 1: Best Fitness = 24.4
-                        Gen 10: Best Fitness = 25.6
-                        ...
-                        Gen 30: Best Fitness = 25.9 (Converged)
+                    <textarea id="code-07" class="code-editor bg-indigo-950 text-indigo-100" spellcheck="false"
+                        style="min-height: 200px;">
+# 1205-example-11b.py
+# Conceptual Genetic Algorithm
+import random
 
-                        Much faster than Brute Force!
+def crossover(p1, p2):
+    return (p1 + p2) / 2.0
+
+def mutation(x):
+    if random.random() < 0.1: # 10% chance
+        return x + random.normalvariate(0, 0.1)
+    return x
+
+# Simulation
+fitness = 20.0
+for gen in range(10):
+    fitness += random.random()
+    print(f"Gen {gen}: Best Fitness = {fitness:.1f}")
+
+print("Converged! Evolution works.")
+</textarea>
+                    <div class="flex flex-col bg-indigo-950 border-l border-indigo-800 w-full min-h-[200px]">
+                        <div
+                            class="flex items-center justify-between px-4 py-2 bg-indigo-900 border-b border-indigo-800">
+                            <span class="text-xs text-indigo-400 font-mono">Output</span>
+                            <button onclick="runPython('code-07', 'out-07')"
+                                class="bg-indigo-600 text-white px-3 py-1 rounded text-xs hover:bg-indigo-700 font-medium transition">
+                                Evolve
+                            </button>
+                        </div>
+                        <div id="out-07"
+                            class="p-4 font-mono text-xs text-indigo-300 whitespace-pre overflow-auto flex-1">
+                            Gen 1: Best Fitness = 24.4
+                            Gen 10: Best Fitness = 25.6
+                            ...
+                            Gen 30: Best Fitness = 25.9 (Converged)
+
+                            Much faster than Brute Force!
+                        </div>
                     </div>
                 </div>
             </div>
