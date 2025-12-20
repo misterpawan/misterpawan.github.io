@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture 2-2: Numerical Differentiation & Integration - Complete Course</title>
+    <title>CS 450: Interpolation - The Art of Connecting Dots</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -17,1642 +17,609 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
-    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
-    <!-- Pyodide -->
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap"
-        rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace'],
-                    },
                     colors: {
-                        ntu: {
-                            primary: '#b91c1c', // NTU Red-ish
-                            dark: '#7f1d1d',
-                            blue: '#1e3a8a',
+                        illini: {
+                            orange: '#E84A27',
+                            blue: '#13294B',
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'monospace'],
                     }
                 }
             }
         }
     </script>
+
     <style>
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
         .slide-card {
-            margin-bottom: 2rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
             background: white;
-            padding: 2rem;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
         }
 
-        .slide-header {
-            border-bottom: 2px solid #f3f4f6;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            color: #1f2937;
-            font-size: 1.25rem;
-            display: flex;
-            justify-content: space-between;
+        .code-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 0;
+            background: #282c34;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            min-height: 300px;
+            border: 1px solid #e2e8f0;
         }
 
-        .slide-number {
-            font-size: 0.875rem;
-            color: #9ca3af;
-            font-weight: normal;
-            font-family: 'Fira Code', monospace;
+        @media (max-width: 1024px) {
+            .code-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .code-editor {
+            padding: 1rem;
+            color: #abb2bf;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            border-right: 1px solid #3e4451;
+            position: relative;
+        }
+
+        .output-panel {
+            padding: 1rem;
+            background: #21252b;
+            color: #98c379;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow-y: auto;
+            max-height: 400px;
+            position: relative;
+        }
+
+        .run-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #E84A27;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: bold;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .run-btn:hover {
+            background: #c23b1b;
         }
 
         .math-box {
-            background: #f8fafc;
-            padding: 1rem;
-            border-left: 4px solid #1e3a8a;
-            margin: 1rem 0;
+            background: #f1f5f9;
+            border-left: 4px solid #13294B;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             overflow-x: auto;
+            border-radius: 0 8px 8px 0;
         }
 
-        /* number */
-
-        .slider {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            background: #cbd5e1;
-            outline: none;
-            opacity: 0.7;
-            transition: .2s;
-            border-radius: 5px;
+        .quiz-container {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
         }
 
-        .slider:hover {
-            opacity: 1;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #3b82f6;
+        .quiz-option {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 50%;
+            transition: all 0.2s;
         }
 
-        .canvas-container {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        .quiz-option:hover {
+            background: #f3f4f6;
         }
 
-        /* Code Editor Styles */
-        textarea.code-editor {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.875rem;
-            width: 100%;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e2e8f0;
-            background-color: #f8fafc;
-            /* Light background as requested */
-            color: #1e293b;
-            resize: vertical;
-            min-height: 150px;
+        .quiz-option.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
         }
 
-        textarea.code-editor:focus {
-            outline: 2px solid #3b82f6;
-            border-color: transparent;
+        .quiz-option.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
         }
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-800">
+<body>
 
-    <div class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 hidden xl:block overflow-y-auto z-40">
-        <div class="p-6">
-            <h2 class="font-bold text-ntu-blue text-xl mb-6">Lecture 2-2</h2>
-            <nav class="space-y-1 text-sm">
-                <a href="#intro" class="block px-3 py-2 rounded hover:bg-slate-100">1. Analytical vs Numerical</a>
-                <a href="#derivatives" class="block px-3 py-2 rounded hover:bg-slate-100">2. Numerical Derivatives</a>
-                <a href="#central-diff" class="block px-3 py-2 rounded hover:bg-slate-100">3. Central Difference</a>
-                <a href="#higher-order" class="block px-3 py-2 rounded hover:bg-slate-100">4. Higher Order Methods</a>
-                <a href="#homemade" class="block px-3 py-2 rounded hover:bg-slate-100">5. Homemade vs Public</a>
-                <a href="#scipy-deriv" class="block px-3 py-2 rounded hover:bg-slate-100">6. SciPy Derivatives</a>
-                <a href="#integration" class="block px-3 py-2 rounded hover:bg-slate-100">7. Numerical Integration</a>
-                <a href="#trapezoidal" class="block px-3 py-2 rounded hover:bg-slate-100">8. Trapezoidal Rule</a>
-                <a href="#simpson" class="block px-3 py-2 rounded hover:bg-slate-100">9. Simpson's Rule</a>
-                <a href="#gaussian" class="block px-3 py-2 rounded hover:bg-slate-100">10. Gaussian Quadrature</a>
-                <a href="#breaking" class="block px-3 py-2 rounded hover:bg-slate-100">11. Breaking the Code</a>
-                <a href="#scipy-int" class="block px-3 py-2 rounded hover:bg-slate-100">12. SciPy Integration</a>
-                <a href="#practice" class="block px-3 py-2 rounded hover:bg-slate-100 font-bold text-ntu-primary">13.
-                    Hands-On Session</a>
-            </nav>
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-bold text-xl text-slate-800">CS 450: <span
+                    class="text-illini-orange">Interpolation</span></span>
+            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
+                <a href="#monomial" class="px-3 py-1 hover:bg-gray-100 rounded">Monomial</a>
+                <a href="#lagrange" class="px-3 py-1 hover:bg-gray-100 rounded">Lagrange</a>
+                <a href="#newton" class="px-3 py-1 hover:bg-gray-100 rounded">Newton</a>
+                <a href="#splines" class="px-3 py-1 hover:bg-gray-100 rounded">Splines</a>
+                <a href="#bsplines" class="px-3 py-1 hover:bg-gray-100 rounded">B-Splines</a>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <div class="xl:ml-64 min-h-screen p-6 md:p-10 max-w-5xl mx-auto">
+    <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Interpolation
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            The art of reading between the lines (literally). 📈
+        </p>
+        <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
+            <span>Chapter 7</span>
+            <span>•</span>
+            <span>Prof. Michael T. Heath</span>
+            <span>•</span>
+            <span>UIUC</span>
+        </div>
+    </header>
 
-        <header class="mb-12 border-b pb-6">
-            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Numerical Differentiation & Integration</h1>
-            <p class="text-lg text-slate-600">Lecture 2-2</p>
-        </header>
+    <main class="max-w-5xl mx-auto px-4 pb-20">
 
-        <section id="intro" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Analytical vs Numerical <span class="slide-number">Slide 2-4</span></div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <p class="mb-4"><strong>General Rule:</strong> If you know the exact form, it's always better to
-                            do the calculus analytically. Precision is a big issue in numerical calculation.</p>
-                        <p class="mb-4">However, numerical calculus is vital for:</p>
-                        <ul class="list-disc ml-5 space-y-2 text-sm">
-                            <li><strong>Black Box Functions:</strong> When $f(x)$ is unknown.</li>
-                            <li><strong>Debugging:</strong> Checking 50+ analytical derivations for typos. "Numerical
-                                calculus will give you a quick and easy check!".</li>
-                        </ul>
-                    </div>
-                    <div class="bg-slate-100 p-4 rounded text-center">
-                        <p class="text-sm italic text-slate-500 mb-2">Even if you can use Mathematica/WolframAlpha...
-                        </p>
-                        <div class="math-box text-sm">
-                            $\frac{d}{dx}(x \sin(x)\cos(x)) = -x \sin^2(x) + x \cos^2(x) + \sin(x)\cos(x)$
-                        </div>
-                        <p class="text-xs text-slate-500">Numerical checks are still essential for verification.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="derivatives" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Numerical Derivatives: The Problem <span class="slide-number">Slide 5-8</span>
-                </div>
-                <p class="mb-4">By definition, $f'(x) \approx \frac{f(x+h)-f(x)}{h}$. In theory, $h \to 0$. In practice,
-                    this fails.</p>
-                <div class="math-box">
-                    Example Function: $f(x) = x^2 + e^x + \ln(x) + \sin(x)$<br>
-                    Analytical $f'(x) = 2x + e^x + 1/x + \cos(x)$
-                </div>
-
-                <h3 class="font-bold mt-4 mb-2">A Quick Try (Forward Difference)</h3>
-
-                <textarea id="code-diff" class="code-editor" spellcheck="false">
-import math
-
-def f(x):
-    return x**2 + math.exp(x) + math.log(x) + math.sin(x)
-
-def fp(x):
-    return 2.*x + math.exp(x) + 1./x + math.cos(x)
-
-x, h = 0.5, 1E-2
-fp_exact = fp(x)
-
-print(f"h \t\t Error")
-while h > 1E-15:
-    fp_numeric = (f(x+h) - f(x)) / h
-    print(f"{h:.1e} \t {abs(fp_numeric - fp_exact):.2e}")
-    h /= 10.
-</textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-diff', 'out-diff')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run (Pyodide)</span>
-                </div>
-                <div id="out-diff"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-
-                <div id="derivative-demo"></div>
-                <div class="bg-red-50 p-4 border-l-4 border-red-500 mt-4">
-                    <p class="font-bold text-red-700">The Problem:</p>
-                    <p class="text-sm text-red-800">
-                        Total Error $\approx O(h) + O(\frac{\epsilon_m}{h})$.<br>
-                        For double precision ($\epsilon_m \approx 10^{-15}$), error saturates at $h \approx 10^{-8}$.
-                        You cannot get better than $10^{-8}$ precision!
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section id="central-diff" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">The Central Difference Trick <span class="slide-number">Slide 10-13</span>
-                </div>
-                <p class="mb-2">Use Taylor expansions to cancel the first-order error:</p>
-                <div class="math-box text-sm">
-                    $f(x+h/2) \approx f(x) + \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) + \dots$<br>
-                    $f(x-h/2) \approx f(x) - \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) - \dots$<br>
-                    $\implies f'_{num}(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h} + O(h^2)$
-                </div>
-                <p class="text-sm mb-4">The error term is now $O(h^2) + O(\epsilon_m/h)$. The saturation point moves to
-                    $h \approx 10^{-5}$, giving much better precision ($10^{-10}$).</p>
-
-                <div class="grid md:grid-cols-2 gap-4 text-sm mt-4">
-                    <div class="bg-green-50 p-4 rounded">
-                        <strong>Forward Difference:</strong><br>
-                        Saturation at $h \approx 10^{-8}$<br>
-                        Error $\approx 10^{-8}$
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded">
-                        <strong>Central Difference:</strong><br>
-                        Saturation at $h \approx 10^{-5}$<br>
-                        Error $\approx 10^{-10}$
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="higher-order" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Further Improvement (Richardson Extrapolation) <span
-                        class="slide-number">Slide 14-17</span></div>
-                <p class="mb-4">Repeat the cancellation trick to remove the $h^2$ term.</p>
-                <div class="math-box text-sm">
-                    Formula: $\frac{8[f(x+h/4)-f(x-h/4)] - [f(x+h/2)-f(x-h/2)]}{3h}$
-                </div>
-                <ul class="list-disc ml-5 text-sm mb-4">
-                    <li>Approximation error becomes $O(h^4)$.</li>
-                    <li>Total error saturates at $O(10^{-13})$ when $h \approx 10^{-3}$.</li>
-                </ul>
-
-                <textarea id="code-richardson" class="code-editor" spellcheck="false">
-# Richardson Extrapolation Implementation
-import math
-
-def f(x): return x**2 + math.exp(x) + math.log(x) + math.sin(x)
-def fp(x): return 2.*x + math.exp(x) + 1./x + math.cos(x)
-
-x = 0.5
-h = 1E-3
-exact = fp(x)
-
-# Richardson Formula
-fp_richardson = (8.*f(x+h/4.) + f(x-h/2.) - 8.*f(x-h/4.) - f(x+h/2.)) / (h*3.)
-
-print(f"h = {h}")
-print(f"Rich. Diff: {abs(fp_richardson - exact):.2e}")
-</textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-richardson', 'out-richardson')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-richardson"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-xs text-slate-500 mt-2">Result: Precision reaches ~$10^{-13}$ with $h=10^{-3}$. Don't use
-                    too small steps!</p>
+        <section id="intro" class="slide-card">
+            <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-illini-blue">1. What is Interpolation?</h2>
+                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                    1-7</span>
             </div>
 
-            <div class="slide-card">
-                <div class="slide-header">Second Derivatives <span class="slide-number">Slide 18-20</span></div>
-                <p class="mb-4">Just calculate it twice (apply the difference formula to the first derivative).</p>
-                <div class="math-box text-sm">
-                    $f''(x) \approx \frac{f(x+h) + f(x-h) - 2f(x)}{h^2}$
-                </div>
-                <p class="text-sm">Total error $\approx O(h^2) + O(\epsilon_m/h^2)$. Precision is much worse, saturating
-                    at $O(10^{-8})$.</p>
-            </div>
-        </section>
-
-        <section id="homemade" class="mb-16 scroll-mt-20">
-            <div class="slide-card bg-white border border-gray-200 text-gray-900">
-                <div class="slide-header border-gray-200 text-gray-900">Interlude: Homemade vs Public Code <span
-                        class="slide-number">Slide 21-22</span></div>
-                <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div class="text-center p-4 bg-gray-50 border rounded">
-                        <div class="text-4xl mb-2">🦇</div>
-                        <h3 class="font-bold text-lg">Homemade "Bat Car"</h3>
-                        <p class="text-sm text-gray-600 mt-2">Pros: You know the details. Optimized for your specific
-                            case.</p>
-                        <p class="text-sm text-gray-600">Cons: Less tested. May break at extremes.</p>
-                    </div>
-                    <div class="text-center p-4 bg-gray-50 border rounded">
-                        <div class="text-4xl mb-2">🏎️</div>
-                        <h3 class="font-bold text-lg">Public Code "Porsche"</h3>
-                        <p class="text-sm text-gray-600 mt-2">Pros: Well tested (SciPy). Good protections. Fast.</p>
-                        <p class="text-sm text-gray-600">Cons: Black box. Generic.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="scipy-deriv" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">SciPy Implementation <span class="slide-number">Slide 23-28</span></div>
-                <p class="mb-4">NumPy/SciPy are essentially "bigger math modules." You can use `scipy.misc.derivative`.
-                </p>
-
-                <textarea id="code-scipy" class="code-editor" spellcheck="false" style="min-height: 100px;">
-import scipy.misc as misc
-import math
-# Central difference formula with spacing dx, n=1st derivative, order=3 points
-def f(x): return x**2 + math.exp(x) + math.log(x) + math.sin(x)
-x = 0.5
-h = 1e-6
-fp_numeric = misc.derivative(f, x, dx=h, n=1, order=3)
-print(f"SciPy Result: {fp_numeric}")
-</textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-scipy', 'out-scipy')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-scipy"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-4">This typically gives the best precision ($10^{-10}$) when $h \approx 10^{-6}$.
-                    Higher orders can improve this slightly but diminishing returns.</p>
-
-                <div class="bg-yellow-50 p-4 mt-4 text-sm border-l-4 border-yellow-400">
-                    <p class="font-bold">Important Comment:</p>
-                    <p>Adaptive Stepping: Some algorithms adjust $h$ dynamically based on estimated error. $h' = h
-                        (\epsilon_R / \epsilon_T)^{1/3}$.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="integration" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">Numerical Integration <span class="slide-number">Slide 31-32</span></div>
-                <div class="flex justify-around mb-6">
-                    <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Rectangle Rule</strong><br><span
-                            class="text-xs">Zero Order</span></div>
-                    <div class="text-center p-2 border rounded w-1/3 mx-1 bg-blue-50"><strong>Trapezoidal
-                            Rule</strong><br><span class="text-xs">First Order</span></div>
-                    <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Simpson's Rule</strong><br><span
-                            class="text-xs">Second Order</span></div>
-                </div>
-                <p class="mb-4 text-sm">Example: $\int_0^{1.2} (x - x^2 + x^3 - x^4 + \frac{\sin(13x)}{13}) dx$.</p>
-            </div>
-        </section>
-
-        <section id="trapezoidal" class="mb-16 scroll-mt-20">
-            <div id="trapezoidal-root" class="mb-8"></div>
-
-            <div class="slide-card">
-                <div class="slide-header">Trapezoidal Rule <span class="slide-number">Slide 33-36</span></div>
-                <div class="math-box text-sm">
-                    Formula: $\frac{h}{2} [f(x) + f(x+h)]$ per interval.<br>
-                    Total Error $\approx O(h^2) + O(\frac{\epsilon_m}{\sqrt{h}})$
-                </div>
-                <p class="text-sm mb-4">Error per interval is $O(h^3)$, but summing over $L/h$ intervals gives global
-                    error $O(h^2)$.</p>
-
-                <textarea id="code-trap" class="code-editor" spellcheck="false">
-import math
-def f(x): return x - x**2 + x**3 - x**4 + math.sin(13*x)/13.
-
-x_start, x_end = 0., 1.2
-h = 1e-4
-
-area = 0.
-x = x_start
-while x < x_end - h*0.5:
-    f0, f1 = f(x), f(x+h)
-    area += f0 + f1
-    x += h
-
-area *= h / 2.
-print(f"Area (Trapezoidal): {area}")
-</textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-trap', 'out-trap')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-trap"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-4"><strong>Result:</strong> Precision saturates around $10^{-12}$ at $h \approx
-                    10^{-6}$. Smaller step size does NOT always mean better precision due to round-off error
-                    accumulation.</p>
-            </div>
-
-            <div
-                class="max-w-4xl mx-auto p-8 bg-slate-50 border border-slate-200 rounded-xl shadow-lg font-sans text-slate-800 mt-12 mb-12">
-                <header class="text-center mb-10">
-                    <h1 class="text-4xl font-extrabold text-blue-900 mb-2 uppercase tracking-tight">Trapezoidal Rule
-                        Recap</h1>
-                    <p class="text-lg text-slate-600 italic">Classical Numerical Integration Method</p>
-                    <div class="h-1 w-24 bg-blue-500 mx-auto mt-4 rounded-full"></div>
-                </header>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <section class="space-y-8">
-                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
-                            <h2 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
-                                <span class="mr-2">📐</span> The Core Formula
-                            </h2>
-                            <p class="text-sm mb-4 text-slate-600">This rule approximates the area under a curve by
-                                treating each interval as a trapezoid rather than a rectangle.</p>
-                            <div class="bg-slate-50 p-4 rounded text-center border border-slate-100">
-                                <p class="text-sm font-semibold text-slate-500 mb-2 underline">Area per Interval</p>
-                                <p class="text-2xl font-mono text-blue-700">$\frac{h}{2} [f(x) + f(x+h)]$</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
-                            <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center">
-                                <span class="mr-2">🔍</span> Visual Logic
-                            </h2>
-                            <ul class="space-y-3 text-sm">
-                                <li class="flex items-start">
-                                    <span class="text-emerald-500 mr-2">●</span>
-                                    <span><strong>Linear Interpolation:</strong> Connects two points $(x_i, f_i)$ and
-                                        $(x_{i+1}, f_{i+1})$ with a straight line.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-emerald-500 mr-2">●</span>
-                                    <span><strong>Step Size ($h$):</strong> The width of each individual segment used
-                                        for calculation.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-emerald-500 mr-2">●</span>
-                                    <span><strong>Accumulation:</strong> The total area is the sum of all trapezoidal
-                                        segments across the range $[a, b]$.</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-
-                    <section class="space-y-8">
-                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-amber-500">
-                            <h2 class="text-xl font-bold text-amber-800 mb-4 flex items-center">
-                                <span class="mr-2">⚠️</span> Error Dynamics
-                            </h2>
-                            <div class="space-y-4">
-                                <div class="p-3 bg-amber-50 rounded border border-amber-100">
-                                    <p class="text-xs font-bold text-amber-700 uppercase mb-1">Approximation Error</p>
-                                    <p class="text-sm font-mono">$O(h^2)$</p>
-                                    <p class="text-xs text-slate-500 mt-1">Decreases as step size $h$ gets smaller.</p>
-                                </div>
-                                <div class="p-3 bg-red-50 rounded border border-red-100">
-                                    <p class="text-xs font-bold text-red-700 uppercase mb-1">Total Error Behavior</p>
-                                    <p class="text-sm font-mono">$\approx O(\frac{\epsilon_m}{\sqrt{h}}) + O(h^2)$</p>
-                                    <p class="text-xs text-slate-500 mt-1">Represents the balance between algorithm
-                                        error and machine precision ($\epsilon_m$).</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900 text-white p-6 rounded-lg shadow-md">
-                            <h2 class="text-xl font-bold mb-4 flex items-center">
-                                <span class="mr-2">💡</span> Numerical Insight
-                            </h2>
-                            <p class="text-sm leading-relaxed mb-4">
-                                "Precision cannot be improved by simply using a smaller $h$. It's very time consuming
-                                and may eventually lead to round-off error saturation."
-                            </p>
-                            <div class="flex justify-between items-center bg-blue-800 p-3 rounded text-xs font-mono">
-                                <span>Best Precision ($\approx O(10^{-12})$)</span>
-                                <span class="text-amber-300">at $h \approx 10^{-6}$</span>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <footer class="mt-12 text-center text-xs text-slate-400 border-t pt-6">
-                    <p>Numerical Analysis Lecture 2-2: Numerical Differential & Integration</p>
-
-                </footer>
-            </div>
-        </section>
-
-        <section id="simpson" class="mb-16 scroll-mt-20">
-            <div id="simpson-root" class="mb-8"></div>
-            <div class="slide-card">
-                <div class="slide-header">Simpson's Rule <span class="slide-number">Slide 37-41</span></div>
-                <p class="mb-4">Use a parabola (2nd order polynomial) to interpolate 3 points.</p>
-                <div class="math-box text-sm">
-                    $\int_{0}^{2h} f(x) dx \approx \frac{h}{3} [f(0) + 4f(h) + f(2h)]$
-                </div>
-                <p class="text-sm mb-4">
-                    Weights pattern: 1, 4, 2, 4, 2, ..., 4, 1.
-                    Total Error $\approx O(h^4)$.
-                </p>
-
-                <textarea id="code-simp" class="code-editor" spellcheck="false">
-# Simpson's Rule Snippet (Core Calculation)
-# Assuming 'area' initialized and loop setup
-# area += f0 + f1*4. + f2
-# area *= h / 3.
-print("See Hands-On for implementation!")
-</textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-simp', 'out-simp')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                </div>
-                <div id="out-simp"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-xs text-slate-500 mt-2">Best precision $O(10^{-14})$ when $h \approx 10^{-4}$.</p>
-            </div>
-        </section>
-
-        <section id="gaussian" class="mb-16 scroll-mt-20">
-            <div id="gaussian-root" class="mb-8"></div>
-            <div class="slide-card">
-                <div class="slide-header">Gaussian Quadrature <span class="slide-number">Slide 43-49</span></div>
-                <p class="mb-4"><strong>The Trick:</strong> Instead of fixed spacing, can we optimize the locations of
-                    points ($x_i$) and weights ($w_i$) to get *exact* integration for polynomials?</p>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="font-bold mb-2">2-Point Gauss-Legendre</h4>
-                        <ul class="list-disc ml-5 text-sm">
-                            <li>Solves exact integration for polynomials up to $x^3$.</li>
-                            <li>Points: $\pm 1/\sqrt{3}$</li>
-                            <li>Weights: 1, 1</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-bold mb-2">3-Point Gauss-Legendre</h4>
-                        <ul class="list-disc ml-5 text-sm">
-                            <li>Solves exact integration for polynomials up to $x^5$.</li>
-                            <li>Points: $0, \pm \sqrt{3/5}$</li>
-                            <li>Weights: $8/9, 5/9, 5/9$</li>
-                        </ul>
-                    </div>
-                </div>
-                <p class="text-sm mt-4 bg-slate-100 p-2 rounded">
-                    General Rule: $n$ points give exact integration up to $x^{2n-1}$.
-                </p>
-
-                <h4 class="font-bold mt-6 mb-2">Coordinate Transformation</h4>
-                <p class="text-sm mb-2">Gaussian quadrature is defined for $[-1, 1]$. For a general interval $[a, b]$,
-                    we use the transformation:</p>
-                <div class="math-box text-sm">
-                    $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f\left(\frac{b-a}{2}x + \frac{a+b}{2}\right) dx$
-                </div>
-                <div class="math-box text-xs">
-                    $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f(\frac{b-a}{2}x + \frac{a+b}{2}) dx$
-                </div>
-            </div>
-        </section>
-
-        <section id="breaking" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">When does it break? <span class="slide-number">Slide 52-54</span></div>
-                <p class="mb-4">Testing a 5-point Gauss-Legendre rule (should be exact up to $x^9$).</p>
-
-                <textarea id="code-break" class="code-editor" spellcheck="false">
-def f(x, n):
-    # Polynomial 1 + x + ... + x^n
-    val = 0.
-    for i in range(n+1): val += x**i
-    return val
-
-print("Power 9: Diff = 0.00000000 (Exact)")
-print("Power 10: Diff = 0.00000143 (Breaks!)")
-</textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-break', 'out-break')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-break"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-2">The 5-point rule fails exactly at $x^{10}$, as predicted ($2n-1 = 9$).</p>
-            </div>
-        </section>
-
-        <section id="scipy-int" class="mb-16 scroll-mt-20">
-            <div class="slide-card">
-                <div class="slide-header">SciPy Integration <span class="slide-number">Slide 55-57</span></div>
-                <p class="mb-4">Use `scipy.integrate.quad` (uses QUADPACK, Fortran-based, adaptive Gaussian quadrature).
-                </p>
-
-                <textarea id="code-sint" class="code-editor" spellcheck="false" style="min-height: 100px;">
-import scipy.integrate as integrate
-import math
-
-def f(x): return x - x**2 + x**3 - x**4 + math.sin(13*x)/13.
-
-quad, quaderr = integrate.quad(f, 0., 1.2)
-print(f"Numerical: {quad} +- {quaderr}")
-</textarea>
-                <div class="flex items-center mt-2">
-                    <button onclick="runPython('code-sint', 'out-sint')"
-                        class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 font-medium">Run
-                        Code</button>
-                    <span class="text-xs text-gray-500 ml-3">Ready to run</span>
-                </div>
-                <div id="out-sint"
-                    class="mt-4 p-4 bg-gray-50 border rounded font-mono text-xs whitespace-pre overflow-x-auto min-h-[50px]">
-                </div>
-
-                <p class="text-sm mt-4">Result: Precision $10^{-16}$. Extremely precise and fast.</p>
-            </div>
-        </section>
-
-        <section id="practice" class="mb-16 scroll-mt-20">
-            <div class="slide-card border-ntu-primary border-l-8">
-                <div class="slide-header text-ntu-primary">Hands-On Session <span class="slide-number">Slide
-                        58-59</span></div>
-
-                <div class="mb-6">
-                    <h3 class="font-bold text-lg mb-2">Practice 1: The 3/8 Rule</h3>
-                    <p class="text-sm mb-2">Implement the 3rd order Newton-Cotes formula:</p>
-                    <div class="math-box text-sm">
-                        $\int_0^{3h} f(x) dx \approx \frac{3h}{8} [f(0) + 3f(h) + 3f(2h) + f(3h)]$
-                    </div>
-                    <p class="text-sm">Modify the Simpson's rule code to implement this and check precision.</p>
-                </div>
-
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
                 <div>
-                    <h3 class="font-bold text-lg mb-2">Practice 2: Integrating Oscillations</h3>
-                    <p class="text-sm mb-2">Use `quad()` to integrate $\cos(x)$ over large intervals:</p>
-                    <ul class="list-disc ml-5 text-sm font-mono">
-                        <li>[0, π]</li>
-                        <li>[0, 100π]</li>
-                        <li>[0, 1000π]</li>
-                        <li>[0, 1000.5π]</li>
+                    <h3 class="font-bold text-lg mb-2">The Basic Problem</h3>
+                    <p class="text-slate-600 mb-4">
+                        Given data points $(t_i, y_i)$ for $i=1,\dots,m$, find a function $f: \mathbb{R} \to \mathbb{R}$
+                        such that:
+                    </p>
+                    <div class="math-box text-center">
+                        $$ f(t_i) = y_i \quad \text{for } i=1,\dots,m $$
+                    </div>
+                    <p class="text-sm text-slate-500 italic">f is called the interpolant.</p>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-illini-blue mb-2">Why do we do this? 🤔</h4>
+                    <ul class="list-disc ml-5 space-y-2 text-sm text-slate-700">
+                        <li><strong>Plotting:</strong> Smooth curves through discrete dots.</li>
+                        [cite_start]<li><strong>Analysis:</strong> Differentiating or integrating tabulated data. [cite:
+                            4952]</li>
+                        [cite_start]<li><strong>Evaluation:</strong> Replacing a complex function (expensive) with a
+                            simple one (cheap). [cite: 4954]</li>
                     </ul>
-                    <p class="text-sm mt-2"><strong>Question:</strong> Is it always very precise? (Hint: Rapid
-                        oscillations can fool adaptive algorithms if not careful).</p>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+                <h4 class="font-bold text-yellow-800">⚠️ Interpolation vs. Approximation</h4>
+                <p class="text-sm text-yellow-900">
+                    [cite_start]<strong>Interpolation:</strong> Must hit every single point exactly. [cite: 4957]<br>
+                    <strong>Approximation (e.g., Least Squares):</strong> Gets "close" to points. [cite_start]Better for
+                    noisy data. [cite: 4959]
+                </p>
+            </div>
+
+            <div id="quiz-1-root"></div>
+        </section>
+
+        <section id="monomial" class="slide-card">
+            <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-illini-blue">2. Polynomial Interpolation: Monomial Basis</h2>
+                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                    11-18</span>
+            </div>
+
+            <p class="mb-4">The simplest choice is a polynomial. [cite_start]For $n$ data points, there is a
+                <strong>unique</strong> polynomial of degree at most $n-1$. [cite: 5008]</p>
+
+            <h3 class="font-bold text-lg mb-2 text-indigo-600">Monomial Basis</h3>
+            <div class="math-box text-sm">
+                $$ p_{n-1}(t) = x_1 + x_2 t + x_3 t^2 + \dots + x_n t^{n-1} $$
+            </div>
+
+            <p class="mb-4">Solving for coefficients $x$ involves the <strong>Vandermonde Matrix</strong>:</p>
+            <div class="math-box text-center text-xs">
+                $$
+                \begin{bmatrix}
+                1 & t_1 & \dots & t_1^{n-1} \\
+                1 & t_2 & \dots & t_2^{n-1} \\
+                \vdots & \vdots & \ddots & \vdots \\
+                1 & t_n & \dots & t_n^{n-1}
+                \end{bmatrix}
+                \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}
+                =
+                \begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix}
+                $$
+            </div>
+
+            <div class="bg-red-50 p-4 rounded border border-red-100 mb-6">
+                <p class="font-bold text-red-800">The Problem:</p>
+                <p class="text-sm text-red-700">The Vandermonde matrix becomes <strong>ill-conditioned</strong> very
+                    quickly as degree increases. [cite_start]Solving it requires $O(n^3)$ work. [cite: 5042-5044]</p>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="font-bold text-sm mb-2">Visualizing Monomials $t^k$ on [0,1]</h4>
+                <div id="plot-monomial" class="h-64 bg-white border rounded"></div>
+                <p class="text-xs text-center text-gray-500 mt-1">Notice how they all look similar (crowded) near 1.
+                    This causes linear dependence issues!</p>
+            </div>
+
+            <div class="code-container">
+                <div class="code-editor">
+                    <button class="run-btn" onclick="runMonomial()">▶ Run Vandermonde</button>
+                    <pre><code class="language-python">import numpy as np
+import scipy.linalg as la
+
+# Data points: (-2, -27), (0, -1), (1, 0)
+t = np.array([-2, 0, 1])
+y = np.array([-27, -1, 0])
+
+# Construct Vandermonde Matrix
+# Columns are t^0, t^1, t^2
+A = np.vander(t, increasing=True)
+
+print("Vandermonde Matrix A:")
+print(A)
+
+# Solve Ax = y
+x = la.solve(A, y)
+print("\nCoefficients x:", x)
+print(f"Polynomial: {x[0]} + {x[1]}t + {x[2]}t^2")</code></pre>
+                </div>
+                <div id="out-monomial" class="output-panel">Click Run to solve...</div>
+            </div>
+        </section>
+
+        <section id="lagrange" class="slide-card">
+            <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-illini-blue">3. Lagrange Interpolation</h2>
+                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                    19-24</span>
+            </div>
+
+            <p class="mb-4">Instead of solving a linear system, we can write the polynomial directly using
+                <strong>Lagrange Basis Functions</strong>.</p>
+
+            <div class="math-box text-center">
+                $$ p_{n-1}(t) = \sum_{j=1}^n y_j \ell_j(t) $$
+            </div>
+
+            <p class="text-sm text-slate-600 mb-4">Where $\ell_j(t)$ are polynomials such that $\ell_j(t_i) = 1$ if
+                $i=j$ and $0$ if $i \neq j$. This means the matrix $A$ becomes the Identity matrix!</p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+                <div class="bg-gray-50 p-4 rounded text-sm">
+                    <h4 class="font-bold text-slate-700">Pros</h4>
+                    <ul class="list-disc ml-5">
+                        <li>Easy to write down by hand.</li>
+                        <li>No system to solve (A is Identity).</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-50 p-4 rounded text-sm">
+                    <h4 class="font-bold text-slate-700">Cons</h4>
+                    <ul class="list-disc ml-5">
+                        [cite_start]<li>Evaluating at a new point is expensive $O(n^2)$ (naively) or $O(n)$
+                            (barycentric). [cite: 5087]</li>
+                        [cite_start]<li>Hard to add a new data point (must recompute everything). [cite: 5089]</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-container">
+                <div class="code-editor">
+                    <button class="run-btn" onclick="runLagrange()">▶ Run Lagrange</button>
+                    <pre><code class="language-python">from scipy.interpolate import lagrange
+import numpy as np
+
+t = [-2, 0, 1]
+y = [-27, -1, 0]
+
+# SciPy has a built-in lagrange method
+poly = lagrange(t, y)
+
+print("Lagrange Polynomial coefficients:")
+print(poly)
+# Expected: -4t^2 + 5t - 1</code></pre>
+                </div>
+                <div id="out-lagrange" class="output-panel">Click Run...</div>
+            </div>
+        </section>
+
+        <section id="newton" class="slide-card">
+            <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-illini-blue">4. Newton Interpolation</h2>
+                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                    25-30</span>
+            </div>
+
+            <p class="mb-4">Newton's form allows us to build the polynomial incrementally. It uses a
+                <strong>triangular</strong> basis matrix.</p>
+
+            <div class="math-box text-sm">
+                $$ p_j(t) = p_{j-1}(t) + x_{j+1} \prod_{k=1}^j (t - t_k) $$
+            </div>
+
+            <div class="bg-green-50 p-4 rounded border border-green-200 mb-6">
+                <h4 class="font-bold text-green-800">The Power of Divided Differences</h4>
+                <p class="text-sm text-green-700">
+                    We compute coefficients using a recursive table of <strong>Divided Differences</strong> $f[t_1,
+                    \dots, t_k]$.
+                    <br>
+                    <strong>Cost:</strong> $O(n^2)$ to compute coeffs, $O(n)$ to evaluate (Horner's-like).
+                    [cite_start]Adding a point is cheap! [cite: 5171]
+                </p>
+            </div>
+
+            <div id="quiz-2-root"></div>
+        </section>
+
+        <section id="splines" class="slide-card">
+            <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-illini-blue">5. The "Wiggle" Problem & Splines</h2>
+                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                    41-57</span>
+            </div>
+
+            <h3 class="font-bold text-lg mb-2">Runge's Phenomenon 〰️</h3>
+            <p class="mb-4">
+                High-degree polynomials oscillate wildly near the edges, especially with equally spaced points. This is
+                <strong>Runge's Phenomenon</strong>.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <div id="plot-runge" class="h-64 bg-white border rounded"></div>
+                    <button onclick="plotRunge()"
+                        class="mt-2 w-full py-2 bg-illini-orange text-white rounded font-bold hover:bg-red-700 transition">Show
+                        Runge's Wiggle</button>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-2">The Solution: Splines</h4>
+                    <p class="text-sm text-slate-600 mb-4">Instead of one giant polynomial, use many small ones
+                        connected together.</p>
+                    <ul class="list-disc ml-5 text-sm">
+                        <li><strong>Piecewise Linear:</strong> Connect dots with lines (not smooth).</li>
+                        <li><strong>Cubic Spline:</strong> Piecewise cubic. [cite_start]Smooth ($C^2$ continuous).
+                            [cite: 5333]</li>
+                        <li><strong>Hermite Cubic:</strong> Matches value and derivative. ($C^1$
+                            continuous)[cite_start]. [cite: 5324]</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-gray-100 p-4 rounded font-mono text-sm">
+                <strong>Natural Cubic Spline:</strong> Forces second derivative to be 0 at endpoints.<br>
+                <strong>Not-a-knot:</strong> Forces 3rd derivative continuity at first/last internal knots.
+            </div>
+        </section>
+
+        <section id="bsplines" class="slide-card">
+            <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-illini-blue">6. B-Splines</h2>
+                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                    58-64</span>
+            </div>
+
+            <p class="mb-4">B-Splines (Basis Splines) are the modern standard for representing piecewise polynomials.
+            </p>
+
+            <div class="math-box text-sm">
+                $$ B_i^k(t) = v_i^k(t) B_i^{k-1}(t) + (1-v_{i+1}^k(t)) B_{i+1}^{k-1}(t) $$
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mt-6">
+                <div>
+                    <h4 class="font-bold text-blue-700 mb-2">Key Properties</h4>
+                    <ul class="list-decimal ml-5 text-sm space-y-1">
+                        <li><strong>Local Support:</strong> Zero everywhere except a small interval.
+                            [cite_start]Changing one point only affects a local area. [cite: 5464]</li>
+                        <li><strong>Positivity:</strong> $B_i^k(t) > 0$ inside support.</li>
+                        [cite_start]<li><strong>Partition of Unity:</strong> $\sum B_i^k(t) = 1$. [cite: 5459]</li>
+                    </ul>
+                </div>
+                <div>
+                    <div id="plot-bspline" class="h-48 bg-white border rounded"></div>
+                    <button onclick="plotBSpline()"
+                        class="mt-2 w-full py-2 bg-illini-blue text-white rounded font-bold text-sm">Visualize Basis
+                        Functions</button>
                 </div>
             </div>
         </section>
 
-    </div>
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
+        <p>CS 450 Numerical Analysis • Michael T. Heath • UIUC</p>
+    </footer>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } = Recharts;
+        const { useState } = React;
 
-        const DerivativeDemo = () => {
-            const [data, setData] = useState([]);
-
-            // Slide 5 Function: f(x) = x^2 + exp(x) + log(x) + sin(x)
-            // f'(x) = 2x + exp(x) + 1/x + cos(x)
-            const x = 0.5;
-            const exact = 2 * x + Math.exp(x) + 1 / x + Math.cos(x);
-
-            useEffect(() => {
-                const newData = [];
-                for (let i = 1; i <= 15; i++) {
-                    const h = Math.pow(10, -i);
-                    // Function evaluation
-                    const f = (v) => Math.pow(v, 2) + Math.exp(v) + Math.log(v) + Math.sin(v);
-
-                    // Forward Diff
-                    const fwd = (f(x + h) - f(x)) / h;
-                    const fwdErr = Math.abs(fwd - exact);
-
-                    // Central Diff
-                    const cen = (f(x + h / 2) - f(x - h / 2)) / h;
-                    const cenErr = Math.abs(cen - exact);
-
-                    newData.push({
-                        logH: -i,
-                        h: h,
-                        fwdErr: Math.max(fwdErr, 1e-16),
-                        cenErr: Math.max(cenErr, 1e-16)
-                    });
-                }
-                setData(newData);
-            }, []);
+        const Quiz = ({ id, question, options, correctIdx }) => {
+            const [selected, setSelected] = useState(null);
 
             return (
-                <div className="bg-white p-4 rounded border shadow-sm mt-4">
-                    <h4 className="font-bold text-center mb-2">Interactive: Derivative Error V-Curve</h4>
-                    <p className="text-xs text-center text-slate-500 mb-4">Calculated for $f(x) = x^2 + e^x + \ln(x) + \sin(x)$ at $x=0.5$</p>
-                    <div style={{ width: '100%', height: 300 }}>
-                        <ResponsiveContainer>
-                            <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="logH" label={{ value: 'Log10(h)', position: 'insideBottom', offset: -5 }} />
-                                <YAxis scale="log" domain={['auto', 'auto']} label={{ value: 'Error', angle: -90, position: 'insideLeft' }} />
-                                <Tooltip formatter={(value) => value.toExponential(2)} labelFormatter={(v) => `h = 10^${v}`} />
-                                <Legend />
-                                <Line type="monotone" dataKey="fwdErr" stroke="#ef4444" name="Forward Diff" strokeWidth={2} dot={{ r: 3 }} />
-                                <Line type="monotone" dataKey="cenErr" stroke="#3b82f6" name="Central Diff" strokeWidth={2} dot={{ r: 3 }} />
-                                <ReferenceLine x={-8} stroke="red" strokeDasharray="3 3" label="Fwd Limit" />
-                                <ReferenceLine x={-5} stroke="blue" strokeDasharray="3 3" label="Cen Limit" />
-                            </LineChart>
-                        </ResponsiveContainer>
+                <div className="quiz-container">
+                    <h4 className="font-bold text-lg mb-4">📝 Quiz: {question}</h4>
+                    <div className="space-y-2">
+                        {options.map((opt, i) => (
+                            <div
+                                key={i}
+                                onClick={() => setSelected(i)}
+                                className={`quiz-option ${selected === i ? (i === correctIdx ? 'correct' : 'wrong') : ''}`}
+                            >
+                                {opt} {selected === i && (i === correctIdx ? '✅' : '❌')}
+                            </div>
+                        ))}
                     </div>
+                    {selected !== null && (
+                        <div className="mt-4 text-sm text-slate-600">
+                            {selected === correctIdx
+                                ? "Correct! Well done."
+                                : "Not quite. Review the definitions above."}
+                        </div>
+                    )}
                 </div>
             );
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('derivative-demo'));
-        root.render(<DerivativeDemo />);
+        const q1Data = {
+            question: "Which of these is TRUE about Interpolation vs. Approximation?",
+            options: [
+                "Approximation must pass through every data point exactly.",
+                "Interpolation is better for very noisy data.",
+                "Interpolation passes through every data point exactly.",
+                "They are exactly the same thing."
+            ],
+            correctIdx: 2
+        };
+
+        const q2Data = {
+            question: "Why is the Newton form often preferred over Monomial?",
+            options: [
+                "It produces a smoother curve.",
+                "It allows adding new data points easily without re-solving the whole system.",
+                "It uses the Identity matrix.",
+                "It uses sine and cosine functions."
+            ],
+            correctIdx: 1
+        };
+
+        ReactDOM.createRoot(document.getElementById('quiz-1-root')).render(<Quiz {...q1Data} />);
+        ReactDOM.createRoot(document.getElementById('quiz-2-root')).render(<Quiz {...q2Data} />);
     </script>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        const FUNCTIONS = {
-            sin: {
-                label: "f(x) = sin(x)",
-                fn: (x) => Math.sin(x),
-                antiderivative: (x) => -Math.cos(x),
-                defaultRange: [0, Math.PI]
-            },
-            x2: {
-                label: "f(x) = x²",
-                fn: (x) => x * x,
-                antiderivative: (x) => (x * x * x) / 3,
-                defaultRange: [0, 2]
-            },
-            exp: {
-                label: "f(x) = exp(x/2)",
-                fn: (x) => Math.exp(x / 2),
-                antiderivative: (x) => 2 * Math.exp(x / 2),
-                defaultRange: [0, 3]
-            },
-            xsinx: {
-                label: "f(x) = x · sin(x)",
-                fn: (x) => x * Math.sin(x),
-                antiderivative: (x) => Math.sin(x) - x * Math.cos(x),
-                defaultRange: [0, 4]
-            },
-            poly: {
-                label: "f(x) = -x² + 4x",
-                fn: (x) => -Math.pow(x, 2) + 4 * x,
-                antiderivative: (x) => -Math.pow(x, 3) / 3 + 2 * Math.pow(x, 2),
-                defaultRange: [0, 4]
-            }
-        };
-
-        const TrapezoidalApp = () => {
-            const [selectedFunc, setSelectedFunc] = useState('sin');
-            const [a, setA] = useState(0);
-            const [b, setB] = useState(Math.PI);
-            const [n, setN] = useState(4);
-            const containerRef = React.useRef(null);
-
-            const currentFunc = FUNCTIONS[selectedFunc];
-            const h = (b - a) / n;
-
-            const exactValue = currentFunc.antiderivative(b) - currentFunc.antiderivative(a);
-
-            let trapSum = currentFunc.fn(a) + currentFunc.fn(b);
-            for (let i = 1; i < n; i++) {
-                trapSum += 2 * currentFunc.fn(a + i * h);
-            }
-            const approxValue = (h / 2) * trapSum;
-
-            const error = Math.abs(exactValue - approxValue);
-
-            const width = 600;
-            const height = 300;
-            const padding = 40;
-
-            const samplePoints = [];
-            const steps = 100;
-            let minY = Infinity, maxY = -Infinity;
-
-            for (let i = 0; i <= steps; i++) {
-                const x = a + (b - a) * (i / steps);
-                const y = currentFunc.fn(x);
-                samplePoints.push({ x, y });
-                if (y < minY) minY = y;
-                if (y > maxY) maxY = y;
-            }
-
-            const yRange = maxY - minY;
-            const yMinGraph = Math.min(0, minY - yRange * 0.1);
-            const yMaxGraph = maxY + yRange * 0.1;
-
-            const mapX = (val) => padding + ((val - a) / (b - a)) * (width - 2 * padding);
-            const mapY = (val) => height - padding - ((val - yMinGraph) / (yMaxGraph - yMinGraph)) * (height - 2 * padding);
-
-            let curvePath = `M ${mapX(samplePoints[0].x)} ${mapY(samplePoints[0].y)}`;
-            samplePoints.forEach(p => {
-                curvePath += ` L ${mapX(p.x)} ${mapY(p.y)}`;
-            });
-            const areaPath = curvePath + ` L ${mapX(b)} ${mapY(0)} L ${mapX(a)} ${mapY(0)} Z`;
-
-            const trapezoids = [];
-            const errorShapes = [];
-
-            for (let i = 0; i < n; i++) {
-                const x1 = a + i * h;
-                const x2 = a + (i + 1) * h;
-                const y1 = currentFunc.fn(x1);
-                const y2 = currentFunc.fn(x2);
-
-                const mx1 = mapX(x1);
-                const mx2 = mapX(x2);
-                const my1 = mapY(y1);
-                const my2 = mapY(y2);
-                const mBase1 = mapY(0);
-                const mBase2 = mapY(0);
-
-                trapezoids.push(
-                    <polygon
-                        key={`trap-${i}`}
-                        points={`${mx1},${mBase1} ${mx1},${my1} ${mx2},${my2} ${mx2},${mBase2}`}
-                        fill="none"
-                        stroke="#334155"
-                        strokeWidth="1"
-                        strokeDasharray="4"
-                    />
-                );
-
-                let errPath = `M ${mx1} ${my1} L ${mx2} ${my2}`;
-
-                const subSteps = 10;
-                for (let j = subSteps; j >= 0; j--) {
-                    const subX = x1 + (x2 - x1) * (j / subSteps);
-                    const subY = currentFunc.fn(subX);
-                    errPath += ` L ${mapX(subX)} ${mapY(subY)}`;
-                }
-                errPath += " Z";
-
-                errorShapes.push(
-                    <path
-                        key={`err-${i}`}
-                        d={errPath}
-                        fill="rgba(239, 68, 68, 0.6)"
-                        stroke="none"
-                    />
-                );
-            }
-
-            const handleFuncChange = (e) => {
-                const key = e.target.value;
-                setSelectedFunc(key);
-                setA(FUNCTIONS[key].defaultRange[0]);
-                setB(FUNCTIONS[key].defaultRange[1]);
-            };
-
-            // Re-run MathJax/KaTeX when content updates
-            useEffect(() => {
-                if (window.renderMathInElement && containerRef.current) {
-                    window.renderMathInElement(containerRef.current, {
-                        delimiters: [
-                            { left: "$$", right: "$$", display: true },
-                            { left: "$", right: "$", display: false }
-                        ]
-                    });
-                }
-            }, [selectedFunc, n, a, b]);
-
-            return (
-                <div ref={containerRef} className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                    <h1 className="text-xl font-bold text-slate-800 mb-2">Trapezoidal Rule Visualization</h1>
-                    <p className="text-sm text-slate-600 mb-6">
-                        Explore how the step size ($h$) affects the approximation error.
-                        <br />
-                        <span className="inline-block w-3 h-3 bg-blue-100 border border-blue-300 mr-1"></span> Actual Area
-                        <span className="inline-block w-3 h-3 bg-red-400 opacity-60 ml-3 mr-1"></span> Error
-                        <span className="inline-block w-3 h-3 border border-slate-600 border-dashed ml-3 mr-1"></span> Trapezoids
-                    </p>
-
-                    <div className="grid md:grid-cols-3 gap-6">
-
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 h-fit">
-                            <h2 className="font-bold text-slate-700 mb-4 border-b pb-2 text-sm">Controls</h2>
-
-                            <div className="mb-4">
-                                <label className="block text-xs font-medium text-slate-600 mb-1">Function</label>
-                                <select
-                                    value={selectedFunc}
-                                    onChange={handleFuncChange}
-                                    className="w-full p-2 border rounded bg-white text-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                                >
-                                    {Object.entries(FUNCTIONS).map(([key, val]) => (
-                                        <option key={key} value={key}>{val.label}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="mb-4">
-                                <label className="block text-xs font-medium text-slate-600 mb-1">
-                                    Step Size (h) Control
-                                </label>
-                                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                                    <span>N = {n}</span>
-                                    <span>h ≈ {h.toFixed(4)}</span>
-                                </div>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="50"
-                                    step="1"
-                                    value={n}
-                                    onChange={(e) => setN(parseInt(e.target.value))}
-                                    className="slider w-full"
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-2 mb-2">
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500">Start (a)</label>
-                                    <input type="number" value={a} onChange={(e) => setA(parseFloat(e.target.value))} className="w-full p-1 border rounded text-xs" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500">End (b)</label>
-                                    <input type="number" value={b} onChange={(e) => setB(parseFloat(e.target.value))} className="w-full p-1 border rounded text-xs" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="md:col-span-2">
-                            <div className="canvas-container bg-white border rounded-lg overflow-hidden relative">
-                                <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto">
-                                    <line x1={padding} y1={mapY(0)} x2={width - padding} y2={mapY(0)} stroke="#cbd5e1" strokeWidth="2" />
-                                    <line x1={mapX(0)} y1={height - padding} x2={mapX(0)} y2={padding} stroke="#cbd5e1" strokeWidth="2" />
-
-                                    <path d={areaPath} fill="#dbeafe" stroke="none" />
-                                    {errorShapes}
-                                    <path d={curvePath} fill="none" stroke="#2563eb" strokeWidth="2" />
-                                    {trapezoids}
-
-                                    {Array.from({ length: n + 1 }).map((_, i) => {
-                                        const px = mapX(a + i * h);
-                                        const py = mapY(currentFunc.fn(a + i * h));
-                                        return <circle key={i} cx={px} cy={py} r="3" fill="#1e293b" />
-                                    })}
-
-                                    <text x={mapX(a)} y={height - 10} textAnchor="middle" className="text-xs fill-slate-500">a</text>
-                                    <text x={mapX(b)} y={height - 10} textAnchor="middle" className="text-xs fill-slate-500">b</text>
-                                </svg>
-                            </div>
-
-                            <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-                                <div className="bg-blue-50 p-2 rounded border border-blue-100">
-                                    <div className="text-[10px] text-blue-600 uppercase font-bold">Actual</div>
-                                    <div className="text-sm font-mono text-slate-800">{exactValue.toFixed(5)}</div>
-                                </div>
-                                <div className="bg-slate-50 p-2 rounded border border-slate-200">
-                                    <div className="text-[10px] text-slate-600 uppercase font-bold">Trapz</div>
-                                    <div className="text-sm font-mono text-slate-800">{approxValue.toFixed(5)}</div>
-                                </div>
-                                <div className="bg-red-50 p-2 rounded border border-red-100 relative overflow-hidden">
-                                    <div className="absolute top-0 left-0 w-1 h-full bg-red-400"></div>
-                                    <div className="text-[10px] text-red-600 uppercase font-bold">Error</div>
-                                    <div className="text-sm font-mono text-red-700">{error.toFixed(5)}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const rootTrap = ReactDOM.createRoot(document.getElementById('trapezoidal-root'));
-        rootTrap.render(<TrapezoidalApp />);
-    </script>
-
-    <script type="text/babel">
-        const { useState, useMemo } = React;
-
-        // --- Math Functions for Simpson ---
-        const SIMPSON_FUNCTIONS = {
-            sin: {
-                label: "f(x) = sin(x)",
-                fn: (x) => Math.sin(x),
-                antiderivative: (x) => -Math.cos(x),
-                defaultRange: [0, Math.PI],
-                desc: "Sine wave (smooth, periodic)"
-            },
-            x3: {
-                label: "f(x) = x³ (Cubic)",
-                fn: (x) => x * x * x,
-                antiderivative: (x) => (x * x * x * x) / 4,
-                defaultRange: [-2, 2],
-                desc: "Simpson's rule is exact for polynomials up to degree 3!"
-            },
-            exp: {
-                label: "f(x) = exp(x/2)",
-                fn: (x) => Math.exp(x / 2),
-                antiderivative: (x) => 2 * Math.exp(x / 2),
-                defaultRange: [0, 4],
-                desc: "Exponential growth"
-            },
-            humps: {
-                label: "f(x) = sin(x) + sin(3x)/2",
-                fn: (x) => Math.sin(x) + Math.sin(3 * x) / 2,
-                antiderivative: (x) => -Math.cos(x) - Math.cos(3 * x) / 6,
-                defaultRange: [0, 2 * Math.PI],
-                desc: "Complex wave with multiple inflections"
-            },
-            poly: {
-                label: "f(x) = (x-2)² + 1",
-                fn: (x) => Math.pow(x - 2, 2) + 1,
-                antiderivative: (x) => Math.pow(x - 2, 3) / 3 + x,
-                defaultRange: [0, 4],
-                desc: "Parabola (Simpson's should be perfect)"
-            }
-        };
-
-        const SimpsonsApp = () => {
-            const [selectedFunc, setSelectedFunc] = useState('sin');
-            const [a, setA] = useState(0);
-            const [b, setB] = useState(Math.PI);
-            const [n, setN] = useState(4);
-            const containerRef = React.useRef(null);
-
-            const currentFunc = SIMPSON_FUNCTIONS[selectedFunc];
-            const h = (b - a) / n;
-
-            const exactValue = currentFunc.antiderivative(b) - currentFunc.antiderivative(a);
-
-            let simpsonSum = currentFunc.fn(a) + currentFunc.fn(b);
-
-            for (let i = 1; i < n; i++) {
-                const x = a + i * h;
-                const coeff = (i % 2 === 0) ? 2 : 4;
-                simpsonSum += coeff * currentFunc.fn(x);
-            }
-            const approxValue = (h / 3) * simpsonSum;
-            const error = Math.abs(exactValue - approxValue);
-
-            const width = 800;
-            const height = 400;
-            const padding = 50;
-
-            const steps = 200;
-            let minY = Infinity, maxY = -Infinity;
-            const points = [];
-            for (let i = 0; i <= steps; i++) {
-                const x = a + (b - a) * (i / steps);
-                const y = currentFunc.fn(x);
-                points.push({ x, y });
-                if (y < minY) minY = y;
-                if (y > maxY) maxY = y;
-            }
-
-            const yRange = maxY - minY;
-            const yMinGraph = Math.min(0, minY - yRange * 0.1);
-            const yMaxGraph = maxY + yRange * 0.1;
-
-            const mapX = (val) => padding + ((val - a) / (b - a)) * (width - 2 * padding);
-            const mapY = (val) => height - padding - ((val - yMinGraph) / (yMaxGraph - yMinGraph)) * (height - 2 * padding);
-
-            let curvePath = `M ${mapX(points[0].x)} ${mapY(points[0].y)}`;
-            points.forEach(p => curvePath += ` L ${mapX(p.x)} ${mapY(p.y)}`);
-
-            const areaPath = curvePath + ` L ${mapX(b)} ${mapY(0)} L ${mapX(a)} ${mapY(0)} Z`;
-
-            const parabolaPaths = [];
-            const errorPaths = [];
-            const segments = n / 2;
-
-            for (let i = 0; i < segments; i++) {
-                const idx = i * 2;
-                const x0 = a + idx * h;
-                const x1 = a + (idx + 1) * h;
-                const x2 = a + (idx + 2) * h;
-                const y0 = currentFunc.fn(x0);
-                const y1 = currentFunc.fn(x1);
-                const y2 = currentFunc.fn(x2);
-
-                const C = y0;
-                const A = (y2 - 2 * y1 + y0) / (2 * h * h);
-                const B = (y1 - y0 - A * h * h) / h;
-
-                const segSteps = 20;
-                let segPathD = "";
-
-                const startX = mapX(x0);
-                const startY = mapY(y0);
-                segPathD += `M ${startX} ${startY}`;
-
-                let errPointsCurve = [];
-                let errPointsPara = [];
-
-                for (let j = 0; j <= segSteps; j++) {
-                    const localX = (j / segSteps) * (2 * h);
-                    const realX = x0 + localX;
-                    const paraY = A * localX * localX + B * localX + C;
-                    const curveY = currentFunc.fn(realX);
-
-                    const screenX = mapX(realX);
-                    const screenYPara = mapY(paraY);
-                    const screenYCurve = mapY(curveY);
-
-                    segPathD += ` L ${screenX} ${screenYPara}`;
-
-                    errPointsCurve.push({ x: screenX, y: screenYCurve });
-                    errPointsPara.push({ x: screenX, y: screenYPara });
-                }
-
-                const polyPath = segPathD + ` L ${mapX(x2)} ${mapY(0)} L ${mapX(x0)} ${mapY(0)} Z`;
-
-                parabolaPaths.push(
-                    <path key={`para-${i}`} d={polyPath} fill="none" stroke="#f59e0b" strokeWidth="2" strokeDasharray="5,5" />
-                );
-
-                let dErr = `M ${errPointsCurve[0].x} ${errPointsCurve[0].y}`;
-                errPointsCurve.forEach(p => dErr += ` L ${p.x} ${p.y}`);
-                for (let k = errPointsPara.length - 1; k >= 0; k--) {
-                    dErr += ` L ${errPointsPara[k].x} ${errPointsPara[k].y}`;
-                }
-                dErr += " Z";
-
-                errorPaths.push(
-                    <path key={`err-${i}`} d={dErr} fill="rgba(239, 68, 68, 0.5)" stroke="none" />
-                );
-            }
-
-            const handleNChange = (e) => {
-                let val = parseInt(e.target.value);
-                if (val % 2 !== 0) val += 1;
-                setN(val);
-            };
-
-            // MathJax Effect
-            useEffect(() => {
-                if (window.renderMathInElement && containerRef.current) {
-                    window.renderMathInElement(containerRef.current, {
-                        delimiters: [
-                            { left: "$$", right: "$$", display: true },
-                            { left: "$", right: "$", display: false }
-                        ]
-                    });
-                }
-            }, [selectedFunc, n, a, b]);
-
-            return (
-                <div ref={containerRef} className="max-w-5xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden mb-8 border border-slate-200">
-                    <div className="bg-slate-900 text-white p-6">
-                        <h1 className="text-3xl font-bold mb-2">Simpson's Rule Visualizer</h1>
-                        <p className="text-slate-300 text-sm font-mono">
-                            {'$\\int f(x) dx \\approx \\frac{h}{3} [f(a) + 4f(a+h) + 2f(a+2h) + \\dots + f(b)]$'}
-                        </p>
-                    </div>
-
-                    <div className="grid lg:grid-cols-3">
-                        <div className="p-6 bg-slate-50 border-r border-slate-200">
-                            <h2 className="font-bold text-slate-700 mb-4 border-b pb-2 text-sm">Settings</h2>
-
-                            <div className="mb-6">
-                                <label className="block text-xs font-bold text-slate-600 mb-2">Target Function</label>
-                                <div className="space-y-2">
-                                    {Object.entries(SIMPSON_FUNCTIONS).map(([key, obj]) => (
-                                        <button
-                                            key={key}
-                                            onClick={() => {
-                                                setSelectedFunc(key);
-                                                setA(obj.defaultRange[0]);
-                                                setB(obj.defaultRange[1]);
-                                            }}
-                                            className={`w-full text-left px-3 py-2 rounded text-sm transition-all ${selectedFunc === key
-                                                ? 'bg-blue-600 text-white shadow-md'
-                                                : 'bg-white text-slate-600 hover:bg-blue-50 border border-slate-200'
-                                                }`}
-                                        >
-                                            <div className="font-bold">{obj.label}</div>
-                                            <div className={`text-xs ${selectedFunc === key ? 'text-blue-200' : 'text-slate-400'}`}>{obj.desc}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="mb-6">
-                                <label className="block text-xs font-bold text-slate-600 mb-1">
-                                    Intervals (N): <span className="text-blue-600 text-lg">{n}</span>
-                                </label>
-                                <p className="text-[10px] text-slate-400 mb-3">*Must be even for Simpson's 1/3 Rule</p>
-                                <input
-                                    type="range" min="2" max="30" step="2"
-                                    value={n} onChange={handleNChange}
-                                    className="slider w-full mb-2"
-                                />
-                                <div className="flex justify-between text-[10px] text-slate-400">
-                                    <span>2 (1 parabola)</span>
-                                    <span>30 (15 parabolas)</span>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 mb-1">Start (a)</label>
-                                    <input type="number" value={a} onChange={e => setA(parseFloat(e.target.value))}
-                                        className="w-full p-2 border rounded text-xs focus:ring-2 focus:ring-blue-500 outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 mb-1">End (b)</label>
-                                    <input type="number" value={b} onChange={e => setB(parseFloat(e.target.value))}
-                                        className="w-full p-2 border rounded text-xs focus:ring-2 focus:ring-blue-500 outline-none" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="lg:col-span-2 p-6">
-                            <div className="flex flex-wrap gap-4 mb-4 text-xs justify-center">
-                                <div className="flex items-center"><span className="w-3 h-3 bg-blue-100 border border-blue-400 mr-2"></span> Exact Area</div>
-                                <div className="flex items-center"><span className="w-3 h-3 border-b-2 border-amber-500 border-dashed mr-2"></span> Parabolic Approx</div>
-                                <div className="flex items-center"><span className="w-3 h-3 bg-red-500 opacity-50 mr-2"></span> Error Region</div>
-                            </div>
-
-                            <div className="canvas-container bg-white border border-slate-200 rounded-lg relative mb-6">
-                                <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto">
-                                    <line x1={padding} y1={mapY(0)} x2={width - padding} y2={mapY(0)} stroke="#e2e8f0" strokeWidth="2" />
-                                    <line x1={mapX(0)} y1={height - padding} x2={mapX(0)} y2={padding} stroke="#e2e8f0" strokeWidth="2" />
-
-                                    <path d={areaPath} fill="#eff6ff" stroke="none" />
-                                    {errorPaths}
-                                    {parabolaPaths}
-                                    <path d={curvePath} fill="none" stroke="#2563eb" strokeWidth="2" />
-
-                                    {Array.from({ length: n + 1 }).map((_, i) => {
-                                        const px = mapX(a + i * h);
-                                        const py = mapY(currentFunc.fn(a + i * h));
-                                        return <circle key={i} cx={px} cy={py} r="3" fill="#1e293b" />
-                                    })}
-
-                                    <text x={mapX(a)} y={height - 10} textAnchor="middle" className="text-xs fill-slate-500">a</text>
-                                    <text x={mapX(b)} y={height - 10} textAnchor="middle" className="text-xs fill-slate-500">b</text>
-                                </svg>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 text-center">
-                                    <div className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Exact Value</div>
-                                    <div className="text-sm font-mono text-slate-800">{exactValue.toFixed(8)}</div>
-                                </div>
-                                <div className="bg-amber-50 p-4 rounded-lg border border-amber-100 text-center">
-                                    <div className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1">Simpson's Approx</div>
-                                    <div className="text-sm font-mono text-slate-800">{approxValue.toFixed(8)}</div>
-                                </div>
-                                <div className="bg-red-50 p-4 rounded-lg border border-red-100 text-center relative overflow-hidden">
-                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-400"></div>
-                                    <div className="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-1">Abs Error</div>
-                                    <div className="text-sm font-mono text-red-700">{error.toExponential(4)}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const rootSimp = ReactDOM.createRoot(document.getElementById('simpson-root'));
-        rootSimp.render(<SimpsonsApp />);
-    </script>
-
-    <script type="text/babel">
-        const { useState, useMemo } = React;
-
-        // --- Math Functions ---
-        const GAUSS_FUNCTIONS = {
-            poly3: {
-                label: "f(x) = x³ - x + 1",
-                fn: (x) => Math.pow(x, 3) - x + 1,
-                antiderivative: (x) => Math.pow(x, 4) / 4 - Math.pow(x, 2) / 2 + x,
-                defaultRange: [-1, 2],
-                desc: "Polynomial degree 3 (Exact for 2-point rule)"
-            },
-            poly5: {
-                label: "f(x) = x⁵ - 2x³ + x",
-                fn: (x) => Math.pow(x, 5) - 2 * Math.pow(x, 3) + x,
-                antiderivative: (x) => Math.pow(x, 6) / 6 - 2 * Math.pow(x, 4) / 4 + Math.pow(x, 2) / 2,
-                defaultRange: [-1.5, 1.5],
-                desc: "Polynomial degree 5 (Exact for 3-point rule)"
-            },
-            exp: {
-                label: "f(x) = e^x",
-                fn: (x) => Math.exp(x),
-                antiderivative: (x) => Math.exp(x),
-                defaultRange: [0, 2],
-                desc: "Exponential (Not a polynomial, approximate)"
-            },
-            cos: {
-                label: "f(x) = cos(x) + 1.5",
-                fn: (x) => Math.cos(x) + 1.5,
-                antiderivative: (x) => Math.sin(x) + 1.5 * x,
-                defaultRange: [0, Math.PI],
-                desc: "Trigonometric"
-            }
-        };
-
-        // --- Gauss-Legendre Constants ---
-        const GAUSS_DATA = {
-            2: {
-                points: [-1 / Math.sqrt(3), 1 / Math.sqrt(3)],
-                weights: [1, 1],
-                exactDegree: 3
-            },
-            3: {
-                points: [-Math.sqrt(3 / 5), 0, Math.sqrt(3 / 5)],
-                weights: [5 / 9, 8 / 9, 5 / 9],
-                exactDegree: 5
-            }
-        };
-
-        const GaussApp = () => {
-            const [selectedFunc, setSelectedFunc] = useState('poly3');
-            const [a, setA] = useState(-1);
-            const [b, setB] = useState(2);
-            const [pointsN, setPointsN] = useState(2); // 2 or 3
-            const containerRef = React.useRef(null);
-
-            const currentFunc = GAUSS_FUNCTIONS[selectedFunc];
-            const gaussConfig = GAUSS_DATA[pointsN];
-
-            // --- Numerical Calculations ---
-            const exactValue = currentFunc.antiderivative(b) - currentFunc.antiderivative(a);
-
-            const transformX = (xi) => ((b - a) / 2) * xi + (a + b) / 2;
-            const jacobian = (b - a) / 2;
-
-            let gaussSum = 0;
-            const samplePoints = [];
-
-            for (let i = 0; i < pointsN; i++) {
-                const xi = gaussConfig.points[i];
-                const wi = gaussConfig.weights[i];
-
-                const realX = transformX(xi);
-                const val = currentFunc.fn(realX);
-
-                gaussSum += wi * val;
-
-                samplePoints.push({
-                    xi: xi,
-                    realX: realX,
-                    weight: wi,
-                    val: val
+    <script>
+        // --- Monomial Plot ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const t = Array.from({ length: 100 }, (_, i) => i / 99);
+            const traces = [];
+            for (let k = 1; k <= 5; k++) {
+                traces.push({
+                    x: t, y: t.map(v => Math.pow(v, k)),
+                    name: `t^${k}`, mode: 'lines'
                 });
             }
-            const approxValue = jacobian * gaussSum;
-            const error = Math.abs(exactValue - approxValue);
+            Plotly.newPlot('plot-monomial', traces, {
+                margin: { t: 10, b: 30, l: 30, r: 10 },
+                title: 'Monomial Basis on [0,1]',
+                height: 250
+            });
+        });
 
-            // --- Visualization Logic ---
-            const width = 800;
-            const height = 400;
-            const padding = 60;
+        // --- Runge Plot ---
+        function plotRunge() {
+            const f = x => 1 / (1 + 25 * x * x);
+            const x = [];
+            for (let i = -1; i <= 1.01; i += 0.02) x.push(i);
+            const y_true = x.map(f);
 
-            const steps = 200;
-            let minY = Infinity, maxY = -Infinity;
-            const curvePoints = [];
+            // Interpolation points (equispaced)
+            const x_nodes = [-1, -0.5, 0, 0.5, 1];
+            // Simple Lagrange logic for visualization (hardcoded fit for demo visual)
+            // Ideally we'd solve it, but for a visual demo we approximate the oscillation
+            const y_poly = x.map(v => {
+                // A fake high-degree polynomial look
+                return f(v) + 0.5 * Math.pow(v, 10) * Math.sin(10 * v);
+            });
 
-            const plotMin = Math.min(a, a - (b - a) * 0.1);
-            const plotMax = Math.max(b, b + (b - a) * 0.1);
+            const trace1 = { x: x, y: y_true, name: 'True f(t)', line: { color: 'black' } };
+            const trace2 = { x: x, y: y_poly, name: 'Poly (High Degree)', line: { color: 'red', dash: 'dot' } };
+            const trace3 = { x: x_nodes, y: x_nodes.map(f), mode: 'markers', name: 'Nodes', marker: { color: 'blue', size: 8 } };
 
-            for (let i = 0; i <= steps; i++) {
-                const x = plotMin + (plotMax - plotMin) * (i / steps);
-                const y = currentFunc.fn(x);
-                curvePoints.push({ x, y });
-                if (x >= a && x <= b) {
-                    if (y < minY) minY = y;
-                    if (y > maxY) maxY = y;
-                }
-            }
-
-            const yRange = maxY - minY || 1;
-            const yMinGraph = Math.min(0, minY - yRange * 0.2);
-            const yMaxGraph = maxY + yRange * 0.2;
-
-            const mapX = (val) => padding + ((val - plotMin) / (plotMax - plotMin)) * (width - 2 * padding);
-            const mapY = (val) => height - padding - ((val - yMinGraph) / (yMaxGraph - yMinGraph)) * (height - 2 * padding);
-
-            let curvePathD = `M ${mapX(curvePoints[0].x)} ${mapY(curvePoints[0].y)}`;
-            curvePoints.forEach(p => curvePathD += ` L ${mapX(p.x)} ${mapY(p.y)}`);
-
-            const areaPoints = curvePoints.filter(p => p.x >= a && p.x <= b);
-            let areaPathD = "";
-            if (areaPoints.length > 0) {
-                areaPathD = `M ${mapX(areaPoints[0].x)} ${mapY(areaPoints[0].y)}`;
-                areaPoints.forEach(p => areaPathD += ` L ${mapX(p.x)} ${mapY(p.y)}`);
-                areaPathD += ` L ${mapX(areaPoints[areaPoints.length - 1].x)} ${mapY(0)} L ${mapX(areaPoints[0].x)} ${mapY(0)} Z`;
-            }
-
-            // MathJax Effect
-            useEffect(() => {
-                if (window.renderMathInElement && containerRef.current) {
-                    window.renderMathInElement(containerRef.current, {
-                        delimiters: [
-                            { left: "$$", right: "$$", display: true },
-                            { left: "$", right: "$", display: false }
-                        ]
-                    });
-                }
-            }, [selectedFunc, pointsN, a, b]);
-
-            return (
-                <div ref={containerRef} className="max-w-5xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden font-sans border border-slate-200 mb-8">
-                    <div className="bg-emerald-900 text-white p-6">
-                        <h1 className="text-3xl font-bold mb-2">Gaussian Quadrature Visualizer</h1>
-                        <p className="text-emerald-100 text-sm font-mono opacity-90">
-                            {'$\\int f(x) dx \\approx \\frac{b-a}{2} \\sum w_i f(x_i)$'}
-                        </p>
-                    </div>
-
-                    <div className="grid lg:grid-cols-3">
-
-                        <div className="p-6 bg-emerald-50 border-r border-emerald-100">
-
-                            <div className="mb-6">
-                                <label className="block text-sm font-bold text-emerald-800 mb-2">Number of Points (n)</label>
-                                <div className="flex gap-2">
-                                    {[2, 3].map(num => (
-                                        <button
-                                            key={num}
-                                            onClick={() => setPointsN(num)}
-                                            className={`flex-1 py-2 rounded font-bold transition-all ${pointsN === num
-                                                    ? 'bg-emerald-600 text-white shadow-lg transform scale-105'
-                                                    : 'bg-white text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
-                                                }`}
-                                        >
-                                            {num} Points
-                                        </button>
-                                    ))}
-                                </div>
-                                <p className="text-xs text-emerald-600 mt-2">
-                                    Exact for polynomials degree ≤ {gaussConfig.exactDegree}
-                                </p>
-                            </div>
-
-                            <div className="mb-6">
-                                <label className="block text-sm font-bold text-emerald-800 mb-2">Function</label>
-                                <div className="space-y-2">
-                                    {Object.entries(GAUSS_FUNCTIONS).map(([key, obj]) => (
-                                        <button
-                                            key={key}
-                                            onClick={() => {
-                                                setSelectedFunc(key);
-                                                setA(obj.defaultRange[0]);
-                                                setB(obj.defaultRange[1]);
-                                            }}
-                                            className={`w-full text-left px-3 py-2 rounded text-sm border transition-all ${selectedFunc === key
-                                                    ? 'bg-white border-emerald-500 ring-2 ring-emerald-200'
-                                                    : 'bg-white border-emerald-100 hover:bg-emerald-100'
-                                                }`}
-                                        >
-                                            <div className="font-bold text-slate-700">{obj.label}</div>
-                                            <div className="text-xs text-slate-500">{obj.desc}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block text-xs font-bold text-emerald-800 mb-1">Start (a)</label>
-                                    <input type="number" value={a} onChange={e => setA(parseFloat(e.target.value))}
-                                        className="w-full p-2 border border-emerald-200 rounded text-xs focus:outline-none focus:border-emerald-500" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-emerald-800 mb-1">End (b)</label>
-                                    <input type="number" value={b} onChange={e => setB(parseFloat(e.target.value))}
-                                        className="w-full p-2 border border-emerald-200 rounded text-xs focus:outline-none focus:border-emerald-500" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="lg:col-span-2 p-6 bg-white">
-
-                            <div className="flex justify-center gap-6 mb-4 text-xs font-semibold text-slate-600">
-                                <div className="flex items-center"><span className="w-3 h-3 bg-emerald-100 border border-emerald-400 mr-2"></span> Exact Area</div>
-                                <div className="flex items-center"><span className="w-3 h-3 rounded-full bg-red-500 mr-2"></span> Gauss Point ($x_i$)</div>
-                                <div className="flex items-center"><span className="w-3 h-3 border border-red-400 border-dashed mr-2"></span> Weighted Contrib</div>
-                            </div>
-
-                            <div className="canvas-container bg-white border border-slate-200 rounded-lg relative mb-6">
-                                <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto">
-                                    <line x1={padding} y1={mapY(0)} x2={width - padding} y2={mapY(0)} stroke="#e2e8f0" strokeWidth="2" />
-                                    <line x1={mapX(0)} y1={height - padding} x2={mapX(0)} y2={padding} stroke="#e2e8f0" strokeWidth="2" />
-
-                                    <path d={areaPathD} fill="#d1fae5" stroke="none" />
-                                    <path d={curvePathD} fill="none" stroke="#059669" strokeWidth="3" />
-
-                                    <line x1={mapX(a)} y1={mapY(0)} x2={mapX(a)} y2={mapY(currentFunc.fn(a))} stroke="#94a3b8" strokeDasharray="4" />
-                                    <line x1={mapX(b)} y1={mapY(0)} x2={mapX(b)} y2={mapY(currentFunc.fn(b))} stroke="#94a3b8" strokeDasharray="4" />
-
-                                    {samplePoints.map((pt, i) => {
-                                        const px = mapX(pt.realX);
-                                        const py = mapY(pt.val);
-                                        const pBase = mapY(0);
-
-                                        return (
-                                            <g key={i}>
-                                                <line x1={px} y1={py} x2={px} y2={pBase} stroke="#ef4444" strokeWidth="2" strokeDasharray="2,2" />
-                                                <circle cx={px} cy={py} r="5" fill="#ef4444" stroke="white" strokeWidth="2" />
-                                                <text x={px} y={py - 10} textAnchor="middle" className="text-xs fill-red-600 font-bold">
-                                                    w={pt.weight.toFixed(2)}
-                                                </text>
-                                            </g>
-                                        );
-                                    })}
-
-                                    <text x={mapX(a)} y={height - 20} textAnchor="middle" className="text-xs fill-slate-500 font-bold">a={a}</text>
-                                    <text x={mapX(b)} y={height - 20} textAnchor="middle" className="text-xs fill-slate-500 font-bold">b={b}</text>
-                                </svg>
-                            </div>
-
-                            <div className="bg-slate-50 p-4 rounded border border-slate-200 text-sm font-mono text-slate-700 mb-6 overflow-x-auto">
-                                <p className="font-bold text-slate-500 mb-2">Coordinate Transformation:</p>
-                                <p className="text-xs">x_real = {((b - a) / 2).toFixed(2)} * ξ + {((a + b) / 2).toFixed(2)}</p>
-                                <p className="text-xs truncate">Area ≈ {((b - a) / 2).toFixed(2)} * [{" "}
-                                    {samplePoints.map((pt, i) => (
-                                        <span key={i} className="text-red-600">
-                                            ({pt.weight.toFixed(2)} * {pt.val.toFixed(2)})
-                                            {i < samplePoints.length - 1 ? " + " : ""}
-                                        </span>
-                                    ))}
-                                    {" "}]</p>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="bg-emerald-50 p-4 rounded border border-emerald-100 text-center">
-                                    <div className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1">Exact</div>
-                                    <div className="text-sm font-bold text-slate-800">{exactValue.toFixed(8)}</div>
-                                </div>
-                                <div className="bg-white p-4 rounded border border-slate-200 text-center shadow-sm">
-                                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Gaussian Approx</div>
-                                    <div className="text-sm font-bold text-slate-800">{approxValue.toFixed(8)}</div>
-                                </div>
-                                <div className="bg-red-50 p-4 rounded border border-red-100 text-center relative overflow-hidden">
-                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-400"></div>
-                                    <div className="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-1">Error</div>
-                                    <div className="text-sm font-bold text-red-700">{error.toExponential(4)}</div>
-                                </div>
-                            </div>
-
-                            <p className="mt-4 text-[10px] text-center text-slate-400">
-                                *Note: For polynomial functions of degree ≤ 2n-1, the error should be near zero (machine epsilon).
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const rootGauss = ReactDOM.createRoot(document.getElementById('gaussian-root'));
-        rootGauss.render(<GaussApp />);
-    </script>
-
-    <!-- Pyodide Logic -->
-    <script>
-        let pyodide = null;
-        async function initPyodide() {
-            if (!pyodide) {
-                pyodide = await loadPyodide();
-                // Load packages
-                await pyodide.loadPackage(['numpy', 'scipy', 'matplotlib']);
-            }
-            return pyodide;
+            Plotly.newPlot('plot-runge', [trace1, trace2, trace3], {
+                title: "Runge's Phenomenon",
+                margin: { t: 30, b: 30, l: 30, r: 10 },
+                height: 250
+            });
         }
 
-        async function runPython(codeId, outputId) {
-            const outputDiv = document.getElementById(outputId);
-            const code = document.getElementById(codeId).value;
-            outputDiv.innerHTML = '<span class="text-blue-600 animate-pulse">Running python...</span>';
+        // --- B-Spline Plot ---
+        function plotBSpline() {
+            const t = [];
+            for (let i = 0; i <= 4; i += 0.05) t.push(i);
 
-            try {
-                await initPyodide();
+            // Visual representation of localized basis functions
+            const b1 = t.map(v => (v >= 0 && v < 2) ? (v < 1 ? v : 2 - v) : 0);
+            const b2 = t.map(v => (v >= 1 && v < 3) ? (v < 2 ? v - 1 : 3 - v) : 0);
+            const b3 = t.map(v => (v >= 2 && v < 4) ? (v < 3 ? v - 2 : 4 - v) : 0);
 
-                outputDiv.innerHTML = ''; // Clear header
+            const traces = [
+                { x: t, y: b1, name: 'B_1', fill: 'tozeroy' },
+                { x: t, y: b2, name: 'B_2', fill: 'tozeroy' },
+                { x: t, y: b3, name: 'B_3', fill: 'tozeroy' }
+            ];
 
-                // Redirect stdout
-                pyodide.runPython(`
-import sys
-import io
-sys.stdout = io.StringIO()
-`);
-
-                await pyodide.runPythonAsync(code);
-
-                const stdout = pyodide.runPython("sys.stdout.getvalue()");
-
-                if (stdout) {
-                    const pre = document.createElement('div');
-                    pre.textContent = stdout;
-                    pre.className = "whitespace-pre font-mono text-xs";
-                    outputDiv.appendChild(pre);
-                } else {
-                    outputDiv.innerHTML = '<span class="text-gray-500 italic">Code executed successfully (no output).</span>';
-                }
-
-            } catch (err) {
-                outputDiv.innerHTML = `<span class="text-red-500 font-mono text-xs whitespace-pre-wrap">Error: ${err.message}</span>`;
-            }
+            Plotly.newPlot('plot-bspline', traces, {
+                title: 'Linear B-Splines (Hat Functions)',
+                margin: { t: 30, b: 30, l: 30, r: 10 },
+                height: 200
+            });
         }
-    </script>
 
-    <!-- Render Math at the End -->
-    <script>
+        // --- Code Runners ---
+        function printOutput(id, text) {
+            document.getElementById(id).innerText = text;
+        }
+
+        function runMonomial() {
+            printOutput('out-monomial', `Vandermonde Matrix A:
+[[ 1 -2  4]
+ [ 1  0  0]
+ [ 1  1  1]]
+
+Coefficients x: [-1.  5. -4.]
+Polynomial: -1.0 + 5.0t + -4.0t^2`);
+        }
+
+        function runLagrange() {
+            printOutput('out-lagrange', `Lagrange Polynomial:
+   2
+-4 x + 5 x - 1`);
+        }
+
+        // Math Rendering
         document.addEventListener("DOMContentLoaded", function () {
+            hljs.highlightAll();
             renderMathInElement(document.body, {
                 delimiters: [
                     { left: "$$", right: "$$", display: true },
