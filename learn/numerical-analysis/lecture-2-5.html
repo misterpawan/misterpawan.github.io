@@ -113,32 +113,44 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Newton Visualizer Styles */
-        .anim-line {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: drawLine 1s forwards ease-out;
+        /* Newton Visualizer Styles (New) */
+        .canvas-container {
+            cursor: crosshair;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
         }
 
-        @keyframes drawLine {
+        /* Smooth drawing animation for lines */
+        .draw-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 1s linear forwards;
+        }
+
+        @keyframes dash {
             to {
                 stroke-dashoffset: 0;
             }
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
+        .fade-in-point {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform-box: fill-box;
+            transform-origin: center;
+            opacity: 0;
         }
 
-        @keyframes fadeIn {
+        @keyframes popIn {
             from {
+                transform: scale(0);
                 opacity: 0;
-                r: 0;
             }
 
             to {
+                transform: scale(1);
                 opacity: 1;
-                r: 4;
             }
         }
     </style>
@@ -815,145 +827,154 @@ print("Converged! Evolution works.")
     </script>
     <script type="text/babel">
         {
-            // Newton Visualizer Component
             const { useState, useEffect, useRef } = React;
 
+            // --- Math Functions Configuration ---
             const FUNCTIONS = {
                 poly: {
+                    name: "Polynomial",
                     label: "f(x) = x² - 2",
                     latex: "x^2 - 2",
                     fn: (x) => x * x - 2,
                     df: (x) => 2 * x,
                     range: [-0.5, 3],
-                    roots: [Math.sqrt(2)]
+                    root: Math.sqrt(2)
                 },
                 cubic: {
+                    name: "Cubic",
                     label: "f(x) = x³ - 2x - 5",
                     latex: "x^3 - 2x - 5",
                     fn: (x) => Math.pow(x, 3) - 2 * x - 5,
                     df: (x) => 3 * x * x - 2,
                     range: [1, 3.5],
-                    roots: [2.09455148]
+                    root: 2.09455148
                 },
                 trans: {
+                    name: "Transcendental",
                     label: "f(x) = x - cos(x)",
                     latex: "x - \\cos(x)",
                     fn: (x) => x - Math.cos(x),
                     df: (x) => 1 + Math.sin(x),
-                    range: [0, 4],
-                    roots: [0.739085]
+                    range: [0, 2],
+                    root: 0.739085
                 }
             };
 
-            const NewtonVisualizer = () => {
-                const [selectedFunc, setSelectedFunc] = useState('poly');
+            const NewtonApp = () => {
+                const [funcKey, setFuncKey] = useState('poly');
                 const [steps, setSteps] = useState([]);
                 const [isAnimating, setIsAnimating] = useState(false);
-                const [message, setMessage] = useState("Click on the graph to pick a starting point x₀");
-
-                const funcData = FUNCTIONS[selectedFunc];
                 const svgRef = useRef(null);
 
-                // Effect to trigger MathJax when latex changes
-                useEffect(() => {
-                    if (window.renderMathInElement) {
-                        // Simple re-render trigger if needed, but KaTeX global auto-render handles document scan.
-                        // For dynamic content, we might need manual trigger, but here latex is just text.
-                    }
-                }, [selectedFunc]);
+                const funcData = FUNCTIONS[funcKey];
 
+                // --- Graphics Setup ---
                 const width = 800;
-                const height = 450;
+                const height = 500;
                 const padding = 50;
 
-                const xMin = funcData.range[0] - 1;
-                const xMax = funcData.range[1] + 1;
+                // Dynamic Ranges
+                const xMin = funcData.range[0] - 0.5;
+                const xMax = funcData.range[1] + 0.5;
 
-                const stepsN = 100;
+                // Calculate Y range to fit curve nicely
                 let yMin = Infinity, yMax = -Infinity;
-                for (let i = 0; i <= stepsN; i++) {
-                    const x = xMin + (xMax - xMin) * (i / stepsN);
+                const sampleSteps = 200;
+                for (let i = 0; i <= sampleSteps; i++) {
+                    const x = xMin + (xMax - xMin) * (i / sampleSteps);
                     const y = funcData.fn(x);
                     if (y < yMin) yMin = y;
                     if (y > yMax) yMax = y;
                 }
-                const yPad = (yMax - yMin) * 0.2;
-                yMin -= yPad; yMax += yPad;
+                // Ensure 0 is included in Y range for X-axis
+                yMin = Math.min(yMin, -1);
+                yMax = Math.max(yMax, 1);
+                const yPad = (yMax - yMin) * 0.1;
+                const domainY = [yMin - yPad, yMax + yPad];
 
+                // Mappers
                 const mapX = (x) => padding + ((x - xMin) / (xMax - xMin)) * (width - 2 * padding);
-                const mapY = (y) => height - padding - ((y - yMin) / (yMax - yMin)) * (height - 2 * padding);
-                const unmapX = (px) => xMin + ((px - padding) / (width - 2 * padding)) * (xMax - xMin);
+                const mapY = (y) => height - padding - ((y - domainY[0]) / (domainY[1] - domainY[0])) * (height - 2 * padding);
+                const invertX = (px) => xMin + ((px - padding) / (width - 2 * padding)) * (xMax - xMin);
 
-                const handleGraphClick = (e) => {
+                // --- Logic ---
+
+                const handleCanvasClick = async (e) => {
                     if (isAnimating) return;
 
                     const rect = svgRef.current.getBoundingClientRect();
                     const clickX = e.clientX - rect.left;
-                    // Scaling for responsiveness if SVG is scaled
-                    const scaleX = width / rect.width;
-                    const x0 = unmapX(clickX * scaleX);
 
-                    setSteps([{ x: x0, y: funcData.fn(x0), step: 0 }]);
-                    setMessage(`Starting at x₀ = ${x0.toFixed(4)}. Calculating...`);
-                    runNewtonIterations(x0);
+                    // Get initial guess x0
+                    // Scale clickX if canvas is resized
+                    const scaleX = width / rect.width;
+                    const x0 = invertX(clickX * scaleX);
+                    startNewtonMethod(x0);
                 };
 
-                const runNewtonIterations = async (startX) => {
+                const startNewtonMethod = async (x0) => {
                     setIsAnimating(true);
-                    let currentX = startX;
+                    setSteps([]); // Clear previous
 
+                    let currentX = x0;
+                    const newSteps = [];
                     const maxIter = 5;
 
                     for (let i = 0; i < maxIter; i++) {
                         const y = funcData.fn(currentX);
                         const slope = funcData.df(currentX);
 
-                        if (Math.abs(slope) < 1e-10) {
-                            setMessage("Derivative too close to 0! Method fails.");
-                            break;
-                        }
+                        if (Math.abs(slope) < 1e-9) break; // Slope too flat
 
                         const nextX = currentX - y / slope;
 
-                        await new Promise(r => setTimeout(r, 800));
+                        // 1. Initial State (Just x location)
+                        const stepData = {
+                            iter: i,
+                            x: currentX,
+                            y: y,
+                            slope: slope,
+                            nextX: nextX,
+                            showVertical: false,
+                            showTangent: false,
+                            showNextX: false
+                        };
 
-                        setSteps(prev => [
-                            ...prev,
-                            {
-                                x: currentX,
-                                y: y,
-                                slope: slope,
-                                nextX: nextX,
-                                isTangent: true
-                            }
-                        ]);
+                        // Update state to show point on axis
+                        newSteps.push(stepData);
+                        setSteps([...newSteps]);
+                        await wait(600);
 
-                        if (Math.abs(nextX - currentX) < 1e-5) {
-                            setMessage(`Converged to root x ≈ ${nextX.toFixed(6)}`);
-                            setIsAnimating(false);
-                            return;
-                        }
+                        // 2. Show Vertical Line to Curve
+                        stepData.showVertical = true;
+                        setSteps([...newSteps]);
+                        await wait(600);
 
+                        // 3. Show Tangent Line
+                        stepData.showTangent = true;
+                        setSteps([...newSteps]);
+                        await wait(1000);
+
+                        // 4. Show New Intercept
+                        stepData.showNextX = true;
+                        setSteps([...newSteps]);
+                        await wait(600);
+
+                        if (Math.abs(nextX - currentX) < 1e-5) break; // Converged
                         currentX = nextX;
-
-                        await new Promise(r => setTimeout(r, 800));
-                        setSteps(prev => [...prev, { x: currentX, y: 0, step: i + 1, isIntercept: true }]);
                     }
-
-                    setMessage(`Stopped after ${maxIter} iterations.`);
                     setIsAnimating(false);
                 };
 
-                const reset = () => {
-                    setSteps([]);
-                    setIsAnimating(false);
-                    setMessage("Click on the graph to pick a starting point x₀");
-                };
+                const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-                let curvePath = `M ${mapX(xMin)} ${mapY(funcData.fn(xMin))}`;
+                // --- Rendering ---
+
+                // Curve Path
+                let pathD = `M ${mapX(xMin)} ${mapY(funcData.fn(xMin))}`;
                 for (let i = 1; i <= 200; i++) {
                     const x = xMin + (xMax - xMin) * (i / 200);
-                    curvePath += ` L ${mapX(x)} ${mapY(funcData.fn(x))}`;
+                    pathD += ` L ${mapX(x)} ${mapY(funcData.fn(x))}`;
                 }
 
                 return (
@@ -970,10 +991,10 @@ print("Converged! Evolution works.")
                                     {Object.entries(FUNCTIONS).map(([key, data]) => (
                                         <button
                                             key={key}
-                                            onClick={() => { setSelectedFunc(key); reset(); }}
-                                            className={`w-full text-left px-3 py-2 mb-1 rounded text-xs font-mono transition-all border ${selectedFunc === key
-                                                ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                                                : 'bg-white text-slate-600 hover:bg-blue-50 border-slate-200'
+                                            onClick={() => { setFuncKey(key); setSteps([]); }}
+                                            className={`w-full text-left px-3 py-2 mb-1 rounded text-xs font-mono transition-all border ${funcKey === key
+                                                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                                    : 'bg-white text-slate-600 hover:bg-blue-50 border-slate-200'
                                                 }`}
                                         >
                                             {data.label}
@@ -983,15 +1004,26 @@ print("Converged! Evolution works.")
 
                                 <div className="bg-blue-50 p-3 rounded border border-blue-100">
                                     <h4 className="font-bold text-blue-800 text-xs mb-1">Status</h4>
-                                    <p className="text-xs text-slate-700 min-h-[2.5rem]">{message}</p>
-                                    {steps.length > 0 && (
-                                        <button
-                                            onClick={reset}
-                                            className="mt-2 w-full bg-white border border-blue-300 text-blue-600 hover:bg-blue-600 hover:text-white transition py-1 rounded text-xs font-bold"
-                                        >
-                                            Reset
-                                        </button>
-                                    )}
+                                    {/* Instructions simplified */}
+                                    <p className="text-xs text-slate-700">
+                                        1. Click graph to set $x_0$.<br />
+                                        2. Watch convergence.
+                                    </p>
+                                    <button
+                                        onClick={() => setSteps([])}
+                                        className="mt-2 w-full bg-white border border-blue-300 text-blue-600 hover:bg-blue-600 hover:text-white transition py-1 rounded text-xs font-bold"
+                                    >
+                                        Clear
+                                    </button>
+                                </div>
+
+                                {/* Log */}
+                                <div className="max-h-48 overflow-y-auto text-[10px] font-mono border-t pt-2">
+                                    {steps.map((s, i) => (
+                                        <div key={i} className="mb-1 border-b pb-1">
+                                            <span className="font-bold">Iter {i}:</span> x={s.x.toFixed(3)} &rarr; {s.nextX.toFixed(3)}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
@@ -1000,67 +1032,76 @@ print("Converged! Evolution works.")
                                     ref={svgRef}
                                     viewBox={`0 0 ${width} ${height}`}
                                     className="w-full h-auto cursor-crosshair select-none"
-                                    onClick={handleGraphClick}
+                                    onClick={handleCanvasClick}
                                 >
+                                    {/* Grid / Axes */}
                                     <line x1={padding} y1={mapY(0)} x2={width - padding} y2={mapY(0)} stroke="#e2e8f0" strokeWidth="2" />
                                     <line x1={mapX(0)} y1={height - padding} x2={mapX(0)} y2={padding} stroke="#e2e8f0" strokeWidth="2" />
 
-                                    <path d={curvePath} fill="none" stroke="#3b82f6" strokeWidth="3" />
+                                    {/* Function Curve */}
+                                    <path d={pathD} fill="none" stroke="#3b82f6" strokeWidth="3" />
 
-                                    {steps.map((step, i) => {
-                                        const px = mapX(step.x);
-                                        const py = mapY(step.y);
-                                        const pBase = mapY(0);
+                                    {/* Real Root Marker (Ghost) */}
+                                    <circle cx={mapX(funcData.root)} cy={mapY(0)} r="5" fill="none" stroke="#10b981" strokeWidth="2" opacity="0.5" />
 
-                                        return (
-                                            <g key={i}>
-                                                {!step.isIntercept && (
-                                                    <line
-                                                        x1={px} y1={pBase} x2={px} y2={py}
-                                                        stroke="#94a3b8" strokeDasharray="4" strokeWidth="1"
-                                                        className="fade-in"
-                                                    />
-                                                )}
-                                                {!step.isIntercept && (
-                                                    <circle cx={px} cy={py} r="4" fill="#3b82f6" className="fade-in" />
-                                                )}
-                                                {step.isTangent && (
-                                                    <line
-                                                        x1={px} y1={py}
-                                                        x2={mapX(step.nextX)} y2={mapY(0)}
-                                                        stroke="#ef4444" strokeWidth="2"
-                                                        className="anim-line"
-                                                    />
-                                                )}
-                                                {step.isIntercept && (
-                                                    <g className="fade-in">
-                                                        <circle cx={px} cy={py} r="4" fill="#22c55e" />
-                                                        <text x={px} y={py + 15} textAnchor="middle" className="text-[10px] font-bold fill-green-700">
-                                                            x{steps.filter(s => s.isIntercept && s.step < step.step).length + 1}
-                                                        </text>
-                                                    </g>
-                                                )}
-                                                {i === 0 && (
-                                                    <text x={px} y={pBase + 15} textAnchor="middle" className="text-[10px] font-bold fill-slate-500">x₀</text>
-                                                )}
-                                            </g>
-                                        );
-                                    })}
+                                    {/* Render Steps */}
+                                    {steps.map((step, idx) => (
+                                        <g key={idx}>
 
-                                    {funcData.roots.map((root, i) => (
-                                        <g key={`root-${i}`} opacity="0.4">
-                                            <circle cx={mapX(root)} cy={mapY(0)} r="5" fill="none" stroke="black" strokeWidth="2" />
+                                            {/* 1. Vertical Line from Axis to Curve */}
+                                            {step.showVertical && (
+                                                <line
+                                                    x1={mapX(step.x)} y1={mapY(0)}
+                                                    x2={mapX(step.x)} y2={mapY(step.y)}
+                                                    stroke="#94a3b8" strokeWidth="1" strokeDasharray="4"
+                                                />
+                                            )}
+
+                                            {/* 2. Point on Curve */}
+                                            {step.showVertical && (
+                                                <g className="fade-in-point">
+                                                    <circle cx={mapX(step.x)} cy={mapY(step.y)} r="5" fill="#ef4444" stroke="white" strokeWidth="2" />
+                                                </g>
+                                            )}
+
+                                            {/* 3. Tangent Line */}
+                                            {step.showTangent && (
+                                                <line
+                                                    x1={mapX(step.x)} y1={mapY(step.y)}
+                                                    x2={mapX(step.nextX)} y2={mapY(0)}
+                                                    stroke="#ef4444" strokeWidth="2"
+                                                    className="draw-path"
+                                                />
+                                            )}
+
+                                            {/* 4. New Guess Point on X-Axis */}
+                                            {step.showNextX && (
+                                                <g className="fade-in-point">
+                                                    <circle cx={mapX(step.nextX)} cy={mapY(0)} r="4" fill="#10b981" />
+                                                    <text x={mapX(step.nextX)} y={mapY(0) + 15} textAnchor="middle" className="text-[10px] font-bold fill-emerald-700">
+                                                        x{idx + 1}
+                                                    </text>
+                                                </g>
+                                            )}
+
+                                            {/* Initial x0 Label */}
+                                            {idx === 0 && (
+                                                <text x={mapX(step.x)} y={mapY(0) + 15} textAnchor="middle" className="text-[10px] font-bold fill-slate-500">
+                                                    x₀
+                                                </text>
+                                            )}
                                         </g>
                                     ))}
-                                </svg>
 
-                                {steps.length === 0 && (
-                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <div className="bg-white/90 px-4 py-2 rounded-full shadow border border-slate-200 text-slate-500 text-xs font-bold animate-pulse">
-                                            👆 Click anywhere on the graph
+                                    {/* Overlay Text for empty state */}
+                                    {steps.length === 0 && !isAnimating && (
+                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <div className="bg-white/90 px-4 py-2 rounded-full shadow border border-slate-200 text-slate-500 text-xs font-bold animate-pulse">
+                                                👆 Click anywhere on the graph
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -1068,53 +1109,54 @@ print("Converged! Evolution works.")
             };
 
             const rootNewton = ReactDOM.createRoot(document.getElementById('newton-demo'));
-            rootNewton.render(<NewtonVisualizer />);
+            rootNewton.render(<NewtonApp />);
         }
     </script>
-    // Pyodide and Run Logic
-    let pyodide = null;
-    async function initPyodide() {
-    if (!pyodide) {
-    pyodide = await loadPyodide();
-    await pyodide.loadPackage(['numpy', 'scipy', 'matplotlib']);
-    }
-    return pyodide;
-    }
+    <script>
+        // Pyodide and Run Logic
+        let pyodide = null;
+        async function initPyodide() {
+            if (!pyodide) {
+                pyodide = await loadPyodide();
+                await pyodide.loadPackage(['numpy', 'scipy', 'matplotlib']);
+            }
+            return pyodide;
+        }
 
-    async function runPython(codeId, outputId) {
-    const outputDiv = document.getElementById(outputId);
-    const code = document.getElementById(codeId).value;
-    outputDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Running python...</span>';
+        async function runPython(codeId, outputId) {
+            const outputDiv = document.getElementById(outputId);
+            const code = document.getElementById(codeId).value;
+            outputDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Running python...</span>';
 
-    try {
-    await initPyodide();
+            try {
+                await initPyodide();
 
-    outputDiv.innerHTML = '';
+                outputDiv.innerHTML = '';
 
-    // Redirect stdout
-    pyodide.runPython(`
+                // Redirect stdout
+                pyodide.runPython(`
     import sys
     import io
     sys.stdout = io.StringIO()
     `);
 
-    await pyodide.runPythonAsync(code);
+                await pyodide.runPythonAsync(code);
 
-    const stdout = pyodide.runPython("sys.stdout.getvalue()");
+                const stdout = pyodide.runPython("sys.stdout.getvalue()");
 
-    if (stdout) {
-    const pre = document.createElement('div');
-    pre.textContent = stdout;
-    outputDiv.appendChild(pre);
-    } else {
-    outputDiv.innerHTML = '<span class="text-gray-500 italic">Code executed successfully (no output).</span>';
-    }
+                if (stdout) {
+                    const pre = document.createElement('div');
+                    pre.textContent = stdout;
+                    outputDiv.appendChild(pre);
+                } else {
+                    outputDiv.innerHTML = '<span class="text-gray-500 italic">Code executed successfully (no output).</span>';
+                }
 
-    } catch (err) {
-    outputDiv.innerHTML = `<span class="text-red-400 font-mono text-xs whitespace-pre-wrap">Error:
+            } catch (err) {
+                outputDiv.innerHTML = `<span class="text-red-400 font-mono text-xs whitespace-pre-wrap">Error:
         ${err.message}</span>`;
-    }
-    }
+            }
+        }
     </script>
 
     <script>
