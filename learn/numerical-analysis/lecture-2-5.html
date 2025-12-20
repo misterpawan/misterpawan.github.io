@@ -808,260 +808,262 @@ print("Converged! Evolution works.")
         rootGauss.render(<GaussApp />);
     </script>
     <script type="text/babel">
-        // Newton Visualizer Component
-        const { useState, useEffect, useRef } = React;
+        {
+            // Newton Visualizer Component
+            const { useState, useEffect, useRef } = React;
 
-        const FUNCTIONS = {
-            poly: {
-                label: "f(x) = x² - 2",
-                latex: "x^2 - 2",
-                fn: (x) => x * x - 2,
-                df: (x) => 2 * x,
-                range: [-0.5, 3],
-                roots: [Math.sqrt(2)]
-            },
-            cubic: {
-                label: "f(x) = x³ - 2x - 5",
-                latex: "x^3 - 2x - 5",
-                fn: (x) => Math.pow(x, 3) - 2 * x - 5,
-                df: (x) => 3 * x * x - 2,
-                range: [1, 3.5],
-                roots: [2.09455148]
-            },
-            trans: {
-                label: "f(x) = x - cos(x)",
-                latex: "x - \\cos(x)",
-                fn: (x) => x - Math.cos(x),
-                df: (x) => 1 + Math.sin(x),
-                range: [0, 4],
-                roots: [0.739085]
-            }
-        };
-
-        const NewtonVisualizer = () => {
-            const [selectedFunc, setSelectedFunc] = useState('poly');
-            const [steps, setSteps] = useState([]);
-            const [isAnimating, setIsAnimating] = useState(false);
-            const [message, setMessage] = useState("Click on the graph to pick a starting point x₀");
-
-            const funcData = FUNCTIONS[selectedFunc];
-            const svgRef = useRef(null);
-
-            // Effect to trigger MathJax when latex changes
-            useEffect(() => {
-                if (window.renderMathInElement) {
-                    // Simple re-render trigger if needed, but KaTeX global auto-render handles document scan.
-                    // For dynamic content, we might need manual trigger, but here latex is just text.
+            const FUNCTIONS = {
+                poly: {
+                    label: "f(x) = x² - 2",
+                    latex: "x^2 - 2",
+                    fn: (x) => x * x - 2,
+                    df: (x) => 2 * x,
+                    range: [-0.5, 3],
+                    roots: [Math.sqrt(2)]
+                },
+                cubic: {
+                    label: "f(x) = x³ - 2x - 5",
+                    latex: "x^3 - 2x - 5",
+                    fn: (x) => Math.pow(x, 3) - 2 * x - 5,
+                    df: (x) => 3 * x * x - 2,
+                    range: [1, 3.5],
+                    roots: [2.09455148]
+                },
+                trans: {
+                    label: "f(x) = x - cos(x)",
+                    latex: "x - \\cos(x)",
+                    fn: (x) => x - Math.cos(x),
+                    df: (x) => 1 + Math.sin(x),
+                    range: [0, 4],
+                    roots: [0.739085]
                 }
-            }, [selectedFunc]);
-
-            const width = 800;
-            const height = 450;
-            const padding = 50;
-
-            const xMin = funcData.range[0] - 1;
-            const xMax = funcData.range[1] + 1;
-
-            const stepsN = 100;
-            let yMin = Infinity, yMax = -Infinity;
-            for (let i = 0; i <= stepsN; i++) {
-                const x = xMin + (xMax - xMin) * (i / stepsN);
-                const y = funcData.fn(x);
-                if (y < yMin) yMin = y;
-                if (y > yMax) yMax = y;
-            }
-            const yPad = (yMax - yMin) * 0.2;
-            yMin -= yPad; yMax += yPad;
-
-            const mapX = (x) => padding + ((x - xMin) / (xMax - xMin)) * (width - 2 * padding);
-            const mapY = (y) => height - padding - ((y - yMin) / (yMax - yMin)) * (height - 2 * padding);
-            const unmapX = (px) => xMin + ((px - padding) / (width - 2 * padding)) * (xMax - xMin);
-
-            const handleGraphClick = (e) => {
-                if (isAnimating) return;
-
-                const rect = svgRef.current.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                // Scaling for responsiveness if SVG is scaled
-                const scaleX = width / rect.width;
-                const x0 = unmapX(clickX * scaleX);
-
-                setSteps([{ x: x0, y: funcData.fn(x0), step: 0 }]);
-                setMessage(`Starting at x₀ = ${x0.toFixed(4)}. Calculating...`);
-                runNewtonIterations(x0);
             };
 
-            const runNewtonIterations = async (startX) => {
-                setIsAnimating(true);
-                let currentX = startX;
+            const NewtonVisualizer = () => {
+                const [selectedFunc, setSelectedFunc] = useState('poly');
+                const [steps, setSteps] = useState([]);
+                const [isAnimating, setIsAnimating] = useState(false);
+                const [message, setMessage] = useState("Click on the graph to pick a starting point x₀");
 
-                const maxIter = 5;
+                const funcData = FUNCTIONS[selectedFunc];
+                const svgRef = useRef(null);
 
-                for (let i = 0; i < maxIter; i++) {
-                    const y = funcData.fn(currentX);
-                    const slope = funcData.df(currentX);
-
-                    if (Math.abs(slope) < 1e-10) {
-                        setMessage("Derivative too close to 0! Method fails.");
-                        break;
+                // Effect to trigger MathJax when latex changes
+                useEffect(() => {
+                    if (window.renderMathInElement) {
+                        // Simple re-render trigger if needed, but KaTeX global auto-render handles document scan.
+                        // For dynamic content, we might need manual trigger, but here latex is just text.
                     }
+                }, [selectedFunc]);
 
-                    const nextX = currentX - y / slope;
+                const width = 800;
+                const height = 450;
+                const padding = 50;
 
-                    await new Promise(r => setTimeout(r, 800));
+                const xMin = funcData.range[0] - 1;
+                const xMax = funcData.range[1] + 1;
 
-                    setSteps(prev => [
-                        ...prev,
-                        {
-                            x: currentX,
-                            y: y,
-                            slope: slope,
-                            nextX: nextX,
-                            isTangent: true
+                const stepsN = 100;
+                let yMin = Infinity, yMax = -Infinity;
+                for (let i = 0; i <= stepsN; i++) {
+                    const x = xMin + (xMax - xMin) * (i / stepsN);
+                    const y = funcData.fn(x);
+                    if (y < yMin) yMin = y;
+                    if (y > yMax) yMax = y;
+                }
+                const yPad = (yMax - yMin) * 0.2;
+                yMin -= yPad; yMax += yPad;
+
+                const mapX = (x) => padding + ((x - xMin) / (xMax - xMin)) * (width - 2 * padding);
+                const mapY = (y) => height - padding - ((y - yMin) / (yMax - yMin)) * (height - 2 * padding);
+                const unmapX = (px) => xMin + ((px - padding) / (width - 2 * padding)) * (xMax - xMin);
+
+                const handleGraphClick = (e) => {
+                    if (isAnimating) return;
+
+                    const rect = svgRef.current.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    // Scaling for responsiveness if SVG is scaled
+                    const scaleX = width / rect.width;
+                    const x0 = unmapX(clickX * scaleX);
+
+                    setSteps([{ x: x0, y: funcData.fn(x0), step: 0 }]);
+                    setMessage(`Starting at x₀ = ${x0.toFixed(4)}. Calculating...`);
+                    runNewtonIterations(x0);
+                };
+
+                const runNewtonIterations = async (startX) => {
+                    setIsAnimating(true);
+                    let currentX = startX;
+
+                    const maxIter = 5;
+
+                    for (let i = 0; i < maxIter; i++) {
+                        const y = funcData.fn(currentX);
+                        const slope = funcData.df(currentX);
+
+                        if (Math.abs(slope) < 1e-10) {
+                            setMessage("Derivative too close to 0! Method fails.");
+                            break;
                         }
-                    ]);
 
-                    if (Math.abs(nextX - currentX) < 1e-5) {
-                        setMessage(`Converged to root x ≈ ${nextX.toFixed(6)}`);
-                        setIsAnimating(false);
-                        return;
+                        const nextX = currentX - y / slope;
+
+                        await new Promise(r => setTimeout(r, 800));
+
+                        setSteps(prev => [
+                            ...prev,
+                            {
+                                x: currentX,
+                                y: y,
+                                slope: slope,
+                                nextX: nextX,
+                                isTangent: true
+                            }
+                        ]);
+
+                        if (Math.abs(nextX - currentX) < 1e-5) {
+                            setMessage(`Converged to root x ≈ ${nextX.toFixed(6)}`);
+                            setIsAnimating(false);
+                            return;
+                        }
+
+                        currentX = nextX;
+
+                        await new Promise(r => setTimeout(r, 800));
+                        setSteps(prev => [...prev, { x: currentX, y: 0, step: i + 1, isIntercept: true }]);
                     }
 
-                    currentX = nextX;
+                    setMessage(`Stopped after ${maxIter} iterations.`);
+                    setIsAnimating(false);
+                };
 
-                    await new Promise(r => setTimeout(r, 800));
-                    setSteps(prev => [...prev, { x: currentX, y: 0, step: i + 1, isIntercept: true }]);
+                const reset = () => {
+                    setSteps([]);
+                    setIsAnimating(false);
+                    setMessage("Click on the graph to pick a starting point x₀");
+                };
+
+                let curvePath = `M ${mapX(xMin)} ${mapY(funcData.fn(xMin))}`;
+                for (let i = 1; i <= 200; i++) {
+                    const x = xMin + (xMax - xMin) * (i / 200);
+                    curvePath += ` L ${mapX(x)} ${mapY(funcData.fn(x))}`;
                 }
 
-                setMessage(`Stopped after ${maxIter} iterations.`);
-                setIsAnimating(false);
-            };
+                return (
+                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div className="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
+                            <h3 className="font-bold text-slate-700">Newton's Method Visualizer</h3>
+                            <div className="text-xs font-mono text-slate-500">Click graph to start</div>
+                        </div>
 
-            const reset = () => {
-                setSteps([]);
-                setIsAnimating(false);
-                setMessage("Click on the graph to pick a starting point x₀");
-            };
-
-            let curvePath = `M ${mapX(xMin)} ${mapY(funcData.fn(xMin))}`;
-            for (let i = 1; i <= 200; i++) {
-                const x = xMin + (xMax - xMin) * (i / 200);
-                curvePath += ` L ${mapX(x)} ${mapY(funcData.fn(x))}`;
-            }
-
-            return (
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div className="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
-                        <h3 className="font-bold text-slate-700">Newton's Method Visualizer</h3>
-                        <div className="text-xs font-mono text-slate-500">Click graph to start</div>
-                    </div>
-
-                    <div className="grid lg:grid-cols-4">
-                        <div className="lg:col-span-1 p-4 border-r border-slate-100 bg-slate-50/50 space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Function</label>
-                                {Object.entries(FUNCTIONS).map(([key, data]) => (
-                                    <button
-                                        key={key}
-                                        onClick={() => { setSelectedFunc(key); reset(); }}
-                                        className={`w-full text-left px-3 py-2 mb-1 rounded text-xs font-mono transition-all border ${selectedFunc === key
+                        <div className="grid lg:grid-cols-4">
+                            <div className="lg:col-span-1 p-4 border-r border-slate-100 bg-slate-50/50 space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Function</label>
+                                    {Object.entries(FUNCTIONS).map(([key, data]) => (
+                                        <button
+                                            key={key}
+                                            onClick={() => { setSelectedFunc(key); reset(); }}
+                                            className={`w-full text-left px-3 py-2 mb-1 rounded text-xs font-mono transition-all border ${selectedFunc === key
                                                 ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                                                 : 'bg-white text-slate-600 hover:bg-blue-50 border-slate-200'
-                                            }`}
-                                    >
-                                        {data.label}
-                                    </button>
-                                ))}
+                                                }`}
+                                        >
+                                            {data.label}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div className="bg-blue-50 p-3 rounded border border-blue-100">
+                                    <h4 className="font-bold text-blue-800 text-xs mb-1">Status</h4>
+                                    <p className="text-xs text-slate-700 min-h-[2.5rem]">{message}</p>
+                                    {steps.length > 0 && (
+                                        <button
+                                            onClick={reset}
+                                            className="mt-2 w-full bg-white border border-blue-300 text-blue-600 hover:bg-blue-600 hover:text-white transition py-1 rounded text-xs font-bold"
+                                        >
+                                            Reset
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className="bg-blue-50 p-3 rounded border border-blue-100">
-                                <h4 className="font-bold text-blue-800 text-xs mb-1">Status</h4>
-                                <p className="text-xs text-slate-700 min-h-[2.5rem]">{message}</p>
-                                {steps.length > 0 && (
-                                    <button
-                                        onClick={reset}
-                                        className="mt-2 w-full bg-white border border-blue-300 text-blue-600 hover:bg-blue-600 hover:text-white transition py-1 rounded text-xs font-bold"
-                                    >
-                                        Reset
-                                    </button>
+                            <div className="lg:col-span-3 p-4 bg-white relative">
+                                <svg
+                                    ref={svgRef}
+                                    viewBox={`0 0 ${width} ${height}`}
+                                    className="w-full h-auto cursor-crosshair select-none"
+                                    onClick={handleGraphClick}
+                                >
+                                    <line x1={padding} y1={mapY(0)} x2={width - padding} y2={mapY(0)} stroke="#e2e8f0" strokeWidth="2" />
+                                    <line x1={mapX(0)} y1={height - padding} x2={mapX(0)} y2={padding} stroke="#e2e8f0" strokeWidth="2" />
+
+                                    <path d={curvePath} fill="none" stroke="#3b82f6" strokeWidth="3" />
+
+                                    {steps.map((step, i) => {
+                                        const px = mapX(step.x);
+                                        const py = mapY(step.y);
+                                        const pBase = mapY(0);
+
+                                        return (
+                                            <g key={i}>
+                                                {!step.isIntercept && (
+                                                    <line
+                                                        x1={px} y1={pBase} x2={px} y2={py}
+                                                        stroke="#94a3b8" strokeDasharray="4" strokeWidth="1"
+                                                        className="fade-in"
+                                                    />
+                                                )}
+                                                {!step.isIntercept && (
+                                                    <circle cx={px} cy={py} r="4" fill="#3b82f6" className="fade-in" />
+                                                )}
+                                                {step.isTangent && (
+                                                    <line
+                                                        x1={px} y1={py}
+                                                        x2={mapX(step.nextX)} y2={mapY(0)}
+                                                        stroke="#ef4444" strokeWidth="2"
+                                                        className="anim-line"
+                                                    />
+                                                )}
+                                                {step.isIntercept && (
+                                                    <g className="fade-in">
+                                                        <circle cx={px} cy={py} r="4" fill="#22c55e" />
+                                                        <text x={px} y={py + 15} textAnchor="middle" className="text-[10px] font-bold fill-green-700">
+                                                            x{steps.filter(s => s.isIntercept && s.step < step.step).length + 1}
+                                                        </text>
+                                                    </g>
+                                                )}
+                                                {i === 0 && (
+                                                    <text x={px} y={pBase + 15} textAnchor="middle" className="text-[10px] font-bold fill-slate-500">x₀</text>
+                                                )}
+                                            </g>
+                                        );
+                                    })}
+
+                                    {funcData.roots.map((root, i) => (
+                                        <g key={`root-${i}`} opacity="0.4">
+                                            <circle cx={mapX(root)} cy={mapY(0)} r="5" fill="none" stroke="black" strokeWidth="2" />
+                                        </g>
+                                    ))}
+                                </svg>
+
+                                {steps.length === 0 && (
+                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <div className="bg-white/90 px-4 py-2 rounded-full shadow border border-slate-200 text-slate-500 text-xs font-bold animate-pulse">
+                                            👆 Click anywhere on the graph
+                                        </div>
+                                    </div>
                                 )}
                             </div>
                         </div>
-
-                        <div className="lg:col-span-3 p-4 bg-white relative">
-                            <svg
-                                ref={svgRef}
-                                viewBox={`0 0 ${width} ${height}`}
-                                className="w-full h-auto cursor-crosshair select-none"
-                                onClick={handleGraphClick}
-                            >
-                                <line x1={padding} y1={mapY(0)} x2={width - padding} y2={mapY(0)} stroke="#e2e8f0" strokeWidth="2" />
-                                <line x1={mapX(0)} y1={height - padding} x2={mapX(0)} y2={padding} stroke="#e2e8f0" strokeWidth="2" />
-
-                                <path d={curvePath} fill="none" stroke="#3b82f6" strokeWidth="3" />
-
-                                {steps.map((step, i) => {
-                                    const px = mapX(step.x);
-                                    const py = mapY(step.y);
-                                    const pBase = mapY(0);
-
-                                    return (
-                                        <g key={i}>
-                                            {!step.isIntercept && (
-                                                <line
-                                                    x1={px} y1={pBase} x2={px} y2={py}
-                                                    stroke="#94a3b8" strokeDasharray="4" strokeWidth="1"
-                                                    className="fade-in"
-                                                />
-                                            )}
-                                            {!step.isIntercept && (
-                                                <circle cx={px} cy={py} r="4" fill="#3b82f6" className="fade-in" />
-                                            )}
-                                            {step.isTangent && (
-                                                <line
-                                                    x1={px} y1={py}
-                                                    x2={mapX(step.nextX)} y2={mapY(0)}
-                                                    stroke="#ef4444" strokeWidth="2"
-                                                    className="anim-line"
-                                                />
-                                            )}
-                                            {step.isIntercept && (
-                                                <g className="fade-in">
-                                                    <circle cx={px} cy={py} r="4" fill="#22c55e" />
-                                                    <text x={px} y={py + 15} textAnchor="middle" className="text-[10px] font-bold fill-green-700">
-                                                        x{steps.filter(s => s.isIntercept && s.step < step.step).length + 1}
-                                                    </text>
-                                                </g>
-                                            )}
-                                            {i === 0 && (
-                                                <text x={px} y={pBase + 15} textAnchor="middle" className="text-[10px] font-bold fill-slate-500">x₀</text>
-                                            )}
-                                        </g>
-                                    );
-                                })}
-
-                                {funcData.roots.map((root, i) => (
-                                    <g key={`root-${i}`} opacity="0.4">
-                                        <circle cx={mapX(root)} cy={mapY(0)} r="5" fill="none" stroke="black" strokeWidth="2" />
-                                    </g>
-                                ))}
-                            </svg>
-
-                            {steps.length === 0 && (
-                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <div className="bg-white/90 px-4 py-2 rounded-full shadow border border-slate-200 text-slate-500 text-xs font-bold animate-pulse">
-                                        👆 Click anywhere on the graph
-                                    </div>
-                                </div>
-                            )}
-                        </div>
                     </div>
-                </div>
-            );
-        };
+                );
+            };
 
-        const rootNewton = ReactDOM.createRoot(document.getElementById('newton-demo'));
-        rootNewton.render(<NewtonVisualizer />);
+            const rootNewton = ReactDOM.createRoot(document.getElementById('newton-demo'));
+            rootNewton.render(<NewtonVisualizer />);
+        }
     </script>
     // Pyodide and Run Logic
     let pyodide = null;
