@@ -278,16 +278,22 @@ for step in range(50):
                 <div class="code-container">
                     <textarea id="code-02" class="code-editor" spellcheck="false">
 # 1205-example-02a.py (Fail-Safe)
-# ... P, Q calculation ...
+# Mock variables for demo (Conceptual)
+b = 3.0; P = 0.5; Q = 2.0
+a = 2.0; c = 4.0; fa = -1; fb = 0.1; fd = 100 # fd large triggers safeguards
+
+# Parabolic Step
 d = b + P/Q
+print(f"Parabolic guess: {d}")
 
 # Protection: If jump is too wild, use Bisection
 if (d-a)*(d-c) > 0. or abs(fd) > abs(fb):
+    print("Jump too wild! Switching to Bisection...")
     if fa*fb > 0.: d = (b+c)*0.5
     else:          d = (a+b)*0.5
     
+print(f"Final d: {d}")
 # This hybrid approach makes it robust!
-print("Code needs context to run, but concept is key!")
 </textarea>
                     <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[200px]">
                         <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
