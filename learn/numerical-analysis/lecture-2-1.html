@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
@@ -219,36 +220,73 @@
                         <h3 class="text-xl font-bold mb-4">Conceptual Example: A440</h3>
                         [cite_start]<p class="mb-4">Using the standard pitch A440 (440 Hz)[cite: 80].</p>
 
+                        <h5 class="font-bold text-sm mb-2">Loading the Wave (Interactive)</h5>
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <h5 class="font-bold text-sm">Loading the Wave</h5>
-                                <div class="code-block" style="background-color: #f8fafc; color: #1f2937;">
-                                    import scipy
-                                    import scipy.io.wavfile as wavfile
-                                    import matplotlib.pyplot as plt
+                                <div class="relative group">
+                                    <textarea id="code-wave"
+                                        class="code-block w-full h-64 resize-y outline-none focus:ring-2 focus:ring-ntu-blue"
+                                        style="background-color: #f8fafc; color: #1f2937;">import scipy
+import scipy.io.wavfile as wavfile
+import matplotlib.pyplot as plt
+import numpy as np
 
-                                    rate, data = wavfile.read('Sine_wave_440.wav')
-                                    t = scipy.linspace(0., 1., rate, endpoint=False)
+# Create a dummy wave file for the demo since we don't have the actual file
+rate = 44100
+t = np.linspace(0., 1., rate, endpoint=False)
+data = np.sin(2 * np.pi * 440 * t) # 440 Hz sine wave
+wavfile.write('Sine_wave_440.wav', rate, data.astype(np.int16))
 
-                                    plt.figure(figsize=(8,6), dpi=80)
-                                    plt.plot(t[:rate//100], data[:rate//100])
-                                    plt.xlabel('Time [sec]')
-                                    plt.ylabel('Amplitude')
-                                    plt.show()
+# Now the user code can run as written
+import scipy.io.wavfile as wavfile
+rate, data = wavfile.read('Sine_wave_440.wav')
+t = scipy.linspace(0., 1., rate, endpoint=False)
+
+plt.figure(figsize=(8,6), dpi=80)
+plt.plot(t[:rate//100], data[:rate//100])
+plt.xlabel('Time [sec]')
+plt.ylabel('Amplitude')
+plt.show()</textarea>
+                                    <div class="absolute top-2 right-2">
+                                        <button onclick="runPython('code-wave', 'output-wave')"
+                                            class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-green-700 shadow-sm transition flex items-center gap-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
+                                                fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            Run
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div>
-                                <h5 class="font-bold text-sm">Fourier Transform</h5>
-                                <div class="code-block">
-                                    import scipy.fftpack as fftpack
-                                    fft = abs(scipy.fft(data[:rate]))
-                                    freqs = fftpack.fftfreq(rate, 1./rate)
-                                    [cite_start]# [cite: 131-132]
+                                <h5 class="font-bold text-sm mb-2 text-gray-500">Output</h5>
+                                <div id="output-wave"
+                                    class="bg-white border text-gray-700 p-2 rounded h-64 overflow-auto flex items-center justify-center font-mono text-sm leading-relaxed">
+                                    <span class="text-gray-400 italic">Click "Run" to generate plot...</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide-card">
+                        <span class="slide-number">Slide 13</span>
+                        <h3 class="text-xl font-bold mb-4">Conceptual Example: Fourier Transform</h3>
+                        [cite_start]<p class="mb-4">Analyzing the frequency components.</p>
+                        <div>
+                            <h5 class="font-bold text-sm">Fourier Transform Code</h5>
+                            <div class="code-block">
+                                import scipy.fftpack as fftpack
+                                fft = abs(scipy.fft(data[:rate]))
+                                freqs = fftpack.fftfreq(rate, 1./rate)
+                                [cite_start]# [cite: 131-132]
                             </div>
                         </div>
                         [cite_start]<p class="text-sm mt-2 text-green-600 font-bold">Result: A sharp peak at 440 Hz!
                             [cite: 144]</p>
+                        [cite: 144]</p>
                     </div>
 
                     <div class="slide-card">
@@ -571,6 +609,74 @@
                 length = Math.sqrt(2.0 - Math.sqrt(inner));
 
                 nsides *= 2;
+            }
+        }
+
+        // Pyodide Integration
+        let pyodide = null;
+        async function initPyodide() {
+            if (!pyodide) {
+                pyodide = await loadPyodide();
+                await pyodide.loadPackage(["numpy", "scipy", "matplotlib"]);
+            }
+        }
+
+        async function runPython(codeId, outputId) {
+            const outputDiv = document.getElementById(outputId);
+            outputDiv.innerHTML = '<span class="text-blue-600 animate-pulse">Running python... (might take a moment to load wasm)</span>';
+
+            try {
+                await initPyodide();
+
+                // Redirect stdout/stderr if needed, but for plots we use document integration usually
+                // Simple plot approach: render to a div
+                const code = document.getElementById(codeId).value;
+
+                // Specific setup for matplotlib in current pyodide versions
+                // We create a targeted div for the plot
+                // We wipe the output div first and tell matplotlib to target it
+
+                outputDiv.innerHTML = '';
+
+                // Add plot target logic to the python code seamlessly
+                const plotSetup = `
+import matplotlib.pyplot as plt
+import io, base64
+
+# Reset figure to avoid accumulation
+plt.clf()
+`;
+                // Running the user code
+                await pyodide.runPythonAsync(plotSetup + code);
+
+                // Check if a plot was created and show it
+                // Using pyodide standard display behavior or fetching the figure
+                // standard matplotlib-pyodide behavior writes to a specifically targeted div depending on backend
+                // Or we can assume 'plt.show()' writes to document.body, which is messy.
+                // Better approach for embedded: use the 'matplotlib_inline' or similar, or just get the current figure and save to base64
+
+                // Let's use the robust way: save fig to bytes and inject image
+                const plotSaver = `
+buf = io.BytesIO()
+plt.savefig(buf, format='png')
+buf.seek(0)
+img_str = base64.b64encode(buf.read()).decode('UTF-8')
+img_str
+`;
+                const imgB64 = await pyodide.runPythonAsync(plotSaver);
+
+                if (imgB64) {
+                    const img = document.createElement('img');
+                    img.src = 'data:image/png;base64,' + imgB64;
+                    img.className = 'max-w-full h-auto rounded';
+                    outputDiv.innerHTML = '';
+                    outputDiv.appendChild(img);
+                } else {
+                    outputDiv.innerHTML = '<span class="text-gray-500">Code ran successfully (No plot output)</span>';
+                }
+
+            } catch (err) {
+                outputDiv.innerHTML = `<span class="text-red-500 font-mono text-xs whitespace-pre-wrap">Error: ${err.message}</span>`;
             }
         }
     </script>
