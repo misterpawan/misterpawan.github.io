@@ -120,7 +120,7 @@
                 <p class="text-sm font-bold text-ntu-blue tracking-wider uppercase mb-2">Lecture 2-1 [cite:
                     4]</p>
                 <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">The Art of Numerical Analysis</h1>
-                <p class="text-lg text-gray-600">Kai-Feng Chen, National Taiwan University [cite: 6-7]</p>
+                <p class="text-lg text-gray-600">Kai-Feng Chen, National Taiwan University </p>
             </div>
         </header>
 
@@ -134,13 +134,13 @@
                     <h3 class="text-xl font-bold mb-4">What is Numerical Analysis?</h3>
                     <p class="mb-4 text-gray-700">
                         Numerical analysis is the study of algorithms that use numerical approximation (as
-                        opposed to general symbolic manipulations) for problems of mathematical analysis[cite: 10].
+                        opposed to general symbolic manipulations) for problems of mathematical analysis.
                     </p>
                     <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
                         <p class="italic text-yellow-800">
                             "This does not require a very precise calculation. Sometimes the key point is to
                             solve the problems with a (relatively) quick-and-dirty way, comparing to a full analytical
-                            solution." [cite: 11]
+                            solution." 
                         </p>
                     </div>
 
@@ -153,14 +153,14 @@
                             <p class="font-mono text-center my-2 text-blue-700">$$1 + 24/60 + 51/60^2 + 10/60^3$$</p>
                             <p class="text-center font-bold">$= 1.41421296...$</p>
                             <p class="text-xs text-gray-500 mt-2 text-center">(Accurate to 6 decimal
-                                figures) [cite: 12-13]</p>
+                                figures) </p>
                         </div>
                         <div class="bg-gray-100 p-4 rounded">
                             <h4 class="font-bold mb-2">Modern Context</h4>
                             <p class="text-sm">
                                 "The real speciality of computers is repetition." Your computer can perform boring
                                 calculations millions of times. A smarter way provides quick and precise
-                                results; a stupid way produces nothing [cite: 24-27].
+                                results; a stupid way produces nothing .
                             </p>
                         </div>
                     </div>
@@ -171,10 +171,10 @@
                     <h3 class="text-xl font-bold mb-4">The Goal: Have Fun!</h3>
                     <p class="mb-4">
                         Numerical analysis can be entertaining. Sometimes you can do extremely
-                        difficult/fancy things with little effort [cite: 31-32].
+                        difficult/fancy things with little effort .
                     </p>
                     <p class="font-semibold text-ntu-blue">Example Question: Have you ever thought of
-                        converting a nice piece of tune to sheet music? [cite: 37]</p>
+                        converting a nice piece of tune to sheet music? </p>
                 </div>
             </section>
 
@@ -185,15 +185,15 @@
                     <span class="slide-number">Slide 6-8</span>
                     <h3 class="text-xl font-bold mb-4">Converting Audio to Sheet Music</h3>
                     <p class="mb-4">Usually a tough job for musicians. Technically speaking, if you can
-                        analyze a CD (Rip wave -> Analyze -> MIDI -> Sheet), you can automate it [cite: 53-57].</p>
+                        analyze a CD (Rip wave -> Analyze -> MIDI -> Sheet), you can automate it .</p>
 
                     <div class="bg-blue-50 p-4 rounded mb-4">
                         <h4 class="font-bold text-blue-900">The Secret: Catch the Pitch</h4>
                         <p class="text-blue-800">
                             "Find the key of a tune is nothing magical but a Fourier transformation,
-                            right?"[cite: 63].
+                            right?".
                             If one can scan over all possible pitches and find the ones with highest
-                            amplitudes, you can perform wave-to-midi conversion[cite: 66].
+                            amplitudes, you can perform wave-to-midi conversion.
                         </p>
                     </div>
                 </div>
@@ -202,23 +202,23 @@
                     <div class="slide-card">
                         <span class="slide-number">Slide 9</span>
                         <h3 class="text-xl font-bold mb-4">Implementation with Python + SciPy</h3>
-                        <p class="mb-2">It is not difficult to use Python to do this job[cite: 68]. The
+                        <p class="mb-2">It is not difficult to use Python to do this job. The
                             workflow:</p>
                         <ol class="list-decimal ml-6 space-y-1 text-sm font-mono text-gray-700">
-                            <li>Prepare source wave file[cite: 70].</li>
-                            <li>Read wave as NumPy array[cite: 71].</li>
+                            <li>Prepare source wave file.</li>
+                            <li>Read wave as NumPy array.</li>
                             <li>For each time interval, perform Fourier transformation (SciPy) for target
-                                frequencies[cite: 72].</li>
-                            <li>Record amplitudes as a function of pitch and time[cite: 73].</li>
-                            <li>Clean up (remove noise/harmonics)[cite: 74].</li>
-                            <li>Write to MIDI using MidiUtil package[cite: 74].</li>
+                                frequencies.</li>
+                            <li>Record amplitudes as a function of pitch and time.</li>
+                            <li>Clean up (remove noise/harmonics).</li>
+                            <li>Write to MIDI using MidiUtil package.</li>
                         </ol>
                     </div>
 
                     <div class="slide-card">
                         <span class="slide-number">Slide 10-12</span>
                         <h3 class="text-xl font-bold mb-4">Conceptual Example: A440</h3>
-                        <p class="mb-4">Using the standard pitch A440 (440 Hz)[cite: 80].</p>
+                        <p class="mb-4">Using the standard pitch A440 (440 Hz).</p>
 
                         <h5 class="font-bold text-sm mb-2">Loading the Wave (Interactive)</h5>
                         <div class="grid md:grid-cols-2 gap-4">
@@ -327,8 +327,8 @@ plt.show()</textarea>
                             </div>
                         </div>
                         <p class="text-sm mt-2 text-green-600 font-bold">Result: A sharp peak at 440 Hz!
-                            [cite: 144]</p>
-                        [cite: 144]</p>
+                            </p>
+                        </p>
                     </div>
 
                     <div class="slide-card">
@@ -340,7 +340,7 @@ plt.show()</textarea>
                             $$f_{m} = 2^{\frac{m-69}{12}} \times 440 \text{ Hz}$$
                         </div>
                         <p class="text-sm text-gray-600 text-center">We consider range $21 \le m \le 108$
-                            (88 keys) [cite: 179-180].</p>
+                            (88 keys) .</p>
                     </div>
 
                     <div class="slide-card">
@@ -348,19 +348,19 @@ plt.show()</textarea>
                         <h3 class="text-xl font-bold mb-4">Processing the Data</h3>
                         <p class="mb-2 font-bold">1. Spectrogram</p>
                         <p class="mb-4 text-sm">Create a 2D array of amplitudes per key per time step (e.g., 1/16 second
-                            intervals). This generates a lot of noise and harmonics [cite: 275-276].</p>
+                            intervals). This generates a lot of noise and harmonics .</p>
 
                         <p class="mb-2 font-bold">2. Filtering (The "Magic" Step)</p>
                         <ul class="list-disc ml-6 mb-4 text-sm text-gray-700">
                             <li>Sort keys by amplitude for each time interval.</li>
                             <li>Calculate "pedestal" (average of lower-amplitude keys) and subtract it.</li>
                             <li>Apply threshold cut (e.g., 2.50).</li>
-                            <li>Remove isolated notes and nearby harmonics [cite: 309-316].</li>
+                            <li>Remove isolated notes and nearby harmonics .</li>
                         </ul>
 
                         <p class="mb-2 font-bold">3. Output</p>
                         <p class="text-sm">Join the blocks and write to MIDI. Convert MIDI to Sheet Music
-                            using software [cite: 348-349].</p>
+                            using software .</p>
                     </div>
 
                     <div class="slide-card">
@@ -375,17 +375,17 @@ plt.show()</textarea>
                             <div class="border-l-4 border-green-500 pl-4">
                                 <h4 class="font-bold">Test 2: Chords</h4>
                                 <p class="text-sm">C4+E4+G4, etc. Code handles multiple sine waves
-                                    successfully[cite: 409].</p>
+                                    successfully.</p>
                             </div>
                             <div class="border-l-4 border-yellow-500 pl-4">
                                 <h4 class="font-bold">Test 3: Real Song (Dvořák: Humoresque)</h4>
                                 <p class="text-sm">Analyzed recording of Yo-Yo Ma + Itzhak Perlman. Result is "not so
                                     trivial." Code captures the main idea but real audio is messy. Analyzing
-                                    a wave and catching the right pitch is a research-level topic[cite: 439, 469].</p>
+                                    a wave and catching the right pitch is a research-level topic.</p>
                             </div>
                         </div>
                         <p class="mt-4 text-sm font-semibold">"All the work done here is already a nice demo
-                            of numerical analysis (and it is FUN!)." [cite: 474]</p>
+                            of numerical analysis (and it is FUN!)." </p>
                     </div>
                 </section>
             </section>
@@ -399,7 +399,7 @@ plt.show()</textarea>
                     <h3 class="text-xl font-bold mb-4">The Calculator Experiment</h3>
                     <p class="mb-4">
                         If you pick a calculator, insert a number, and press $\sqrt{}$ many times, you reach "1".
-                        This is the simplest show of computation uncertainty [cite: 506-508].
+                        This is the simplest show of computation uncertainty .
                     </p>
                 </div>
 
@@ -410,22 +410,22 @@ plt.show()</textarea>
                         <div class="bg-red-50 p-4 rounded border border-red-100">
                             <h4 class="font-bold text-red-900">1. Blunders / Bugs</h4>
                             <p class="text-sm text-red-800">The #1 cause. Typographical errors, wrong data
-                                files, human error[cite: 511].</p>
+                                files, human error.</p>
                         </div>
                         <div class="bg-orange-50 p-4 rounded border border-orange-100">
                             <h4 class="font-bold text-orange-900">2. Random Errors</h4>
                             <p class="text-sm text-orange-800">Rare but possible. Unstable power, noise,
-                                cosmic rays flipping bits [cite: 514-516].</p>
+                                cosmic rays flipping bits .</p>
                         </div>
                         <div class="bg-blue-50 p-4 rounded border border-blue-100">
                             <h4 class="font-bold text-blue-900">3. Approximation Errors</h4>
                             <p class="text-sm text-blue-800">Due to the selected algorithm (e.g., truncating
-                                higher order terms in a Taylor series) [cite: 520-522].</p>
+                                higher order terms in a Taylor series) .</p>
                         </div>
                         <div class="bg-purple-50 p-4 rounded border border-purple-100">
                             <h4 class="font-bold text-purple-900">4. Roundoff Errors</h4>
                             <p class="text-sm text-purple-800">Floating point numbers have finite precision.
-                                Errors occur at the end of digits [cite: 523-525].</p>
+                                Errors occur at the end of digits .</p>
                         </div>
                     </div>
                 </div>
@@ -440,16 +440,16 @@ plt.show()</textarea>
                     <h3 class="text-xl font-bold mb-4">Bits, Bytes, and IEEE 754</h3>
                     <ul class="list-disc ml-6 mb-4 text-sm">
                         <li><strong>Integers:</strong> In Python, integers have unlimited precision (long
-                            types)[cite: 534].</li>
+                            types).</li>
                         <li><strong>Floats:</strong> Implemented as C doubles (64 bits). Follows IEEE 754
-                            binary64 standard[cite: 541].</li>
+                            binary64 standard.</li>
                     </ul>
 
                     <div class="bg-gray-800 text-white p-4 rounded font-mono text-sm text-center">
                         $$(-1)^{\text{sign}} \times 2^{\text{exponent}-1023} \times (1 + \sum_{i=1}^{52} b_{52-i}
                         2^{-i})$$
                         <div class="mt-2 text-xs text-gray-400">Sign: 1 bit | Exponent: 11 bits | Fraction:
-                            52 bits [cite: 543-549]</div>
+                            52 bits </div>
                     </div>
                 </div>
 
@@ -460,7 +460,7 @@ plt.show()</textarea>
 
                     <div class="bg-yellow-50 p-4 rounded border border-yellow-200 mb-4">
                         <h4 class="font-bold text-sm text-yellow-900 uppercase tracking-wide mb-2">
-                            Interactive Demo [cite: 570]</h4>
+                            Interactive Demo </h4>
                         <p class="mb-2 text-sm">Python/JS Calculation:</p>
                         <div class="font-mono bg-white p-2 border rounded mb-2">
                             >>> 0.1 + 0.2 - 0.3
@@ -490,7 +490,7 @@ plt.show()</textarea>
                         $$\pi \approx \frac{S \times N_{sides}}{2}$$
                     </div>
 
-                    <h4 class="font-bold text-sm mb-2">The Python Code [cite: 608-617]</h4>
+                    <h4 class="font-bold text-sm mb-2">The Python Code </h4>
                     <div class="code-block">
                         import math
                         nsides = 6
@@ -524,7 +524,7 @@ plt.show()</textarea>
                         $$\frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + ...$$
                     </div>
                     <p class="text-sm text-gray-600"><strong>Result:</strong> Very inefficient! 1,000,000
-                        steps to get $\approx 3.141593$ (only 6 decimals)[cite: 723].</p>
+                        steps to get $\approx 3.141593$ (only 6 decimals).</p>
                 </div>
 
                 <div class="slide-card">
@@ -536,7 +536,7 @@ plt.show()</textarea>
                         $$\frac{\pi}{6} = \frac{1}{\sqrt{3}} [ 1 - \frac{1}{3 \cdot 3} + \frac{1}{5 \cdot 9} - ... ]$$
                     </div>
                     <p class="text-sm font-bold text-green-600"><strong>Result:</strong> With only 30 terms,
-                        precision limit is reached! [cite: 760-761].</p>
+                        precision limit is reached! .</p>
                 </div>
 
                 <div class="slide-card bg-gray-900 text-white border-none">
@@ -550,7 +550,7 @@ plt.show()</textarea>
                         $$\epsilon_{total} \approx \frac{\alpha}{N^\beta} + \sqrt{N}\epsilon_{m}$$
                     </div>
                     <p class="text-xs text-gray-400">There is a "sweet spot" ($N \approx 7 \times 10^{10}$)
-                        for minimal error using double precision[cite: 789].</p>
+                        for minimal error using double precision.</p>
                 </div>
             </section>
 
@@ -561,25 +561,25 @@ plt.show()</textarea>
                     <span class="slide-number">Slide 47-49</span>
                     <h3 class="text-xl font-bold mb-4">Tools</h3>
                     <p class="mb-4">Use PythonAnywhere, IPython, or a local environment. Practice importing
-                        `math`, `numpy` [cite: 796-802].</p>
+                        `math`, `numpy` .</p>
                 </div>
 
                 <div class="slide-card">
                     <span class="slide-number">Slide 50-51</span>
                     <h3 class="text-xl font-bold mb-4">Practice 1: The `decimal` Module</h3>
                     <p class="mb-4">Fix the "Spoon is not real" problem using Python's `decimal` module for
-                        arbitrary precision[cite: 884].</p>
+                        arbitrary precision.</p>
                     <div class="code-block">
                         import decimal
                         a = decimal.Decimal('0.1')
                         b = decimal.Decimal('0.2')
                         c = decimal.Decimal('0.3')
-                        print(a + b - c) # Result: 0.0 [cite: 895]
+                        print(a + b - c) # Result: 0.0 
                     </div>
                     <div class="bg-yellow-50 p-4 border-l-4 border-yellow-400 mt-4">
                         <p class="font-bold">Challenge:</p>
                         <p class="text-sm">Modify the Method 1 (Polygon) code to use `Decimal` objects. See
-                            if you can beat the roundoff error![cite: 898].</p>
+                            if you can beat the roundoff error!.</p>
                     </div>
                 </div>
 
