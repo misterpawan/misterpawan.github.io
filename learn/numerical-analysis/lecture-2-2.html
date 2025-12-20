@@ -444,6 +444,95 @@ print(f"Area (Trapezoidal): {area}")
                     10^{-6}$. Smaller step size does NOT always mean better precision due to round-off error
                     accumulation.</p>
             </div>
+
+            <div
+                class="max-w-4xl mx-auto p-8 bg-slate-50 border border-slate-200 rounded-xl shadow-lg font-sans text-slate-800 mt-12 mb-12">
+                <header class="text-center mb-10">
+                    <h1 class="text-4xl font-extrabold text-blue-900 mb-2 uppercase tracking-tight">Trapezoidal Rule
+                    </h1>
+                    <p class="text-lg text-slate-600 italic">Classical Numerical Integration Method</p>
+                    <div class="h-1 w-24 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <section class="space-y-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                            <h2 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                                <span class="mr-2">📐</span> The Core Formula
+                            </h2>
+                            <p class="text-sm mb-4 text-slate-600">This rule approximates the area under a curve by
+                                treating each interval as a trapezoid rather than a rectangle.</p>
+                            <div class="bg-slate-50 p-4 rounded text-center border border-slate-100">
+                                <p class="text-sm font-semibold text-slate-500 mb-2 underline">Area per Interval</p>
+                                <p class="text-2xl font-mono text-blue-700">$\frac{h}{2} [f(x) + f(x+h)]$</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
+                            <h2 class="text-xl font-bold text-emerald-800 mb-4 flex items-center">
+                                <span class="mr-2">🔍</span> Visual Logic
+                            </h2>
+                            <ul class="space-y-3 text-sm">
+                                <li class="flex items-start">
+                                    <span class="text-emerald-500 mr-2">●</span>
+                                    <span><strong>Linear Interpolation:</strong> Connects two points $(x_i, f_i)$ and
+                                        $(x_{i+1}, f_{i+1})$ with a straight line.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-emerald-500 mr-2">●</span>
+                                    <span><strong>Step Size ($h$):</strong> The width of each individual segment used
+                                        for calculation.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-emerald-500 mr-2">●</span>
+                                    <span><strong>Accumulation:</strong> The total area is the sum of all trapezoidal
+                                        segments across the range $[a, b]$.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section class="space-y-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-amber-500">
+                            <h2 class="text-xl font-bold text-amber-800 mb-4 flex items-center">
+                                <span class="mr-2">⚠️</span> Error Dynamics
+                            </h2>
+                            <div class="space-y-4">
+                                <div class="p-3 bg-amber-50 rounded border border-amber-100">
+                                    <p class="text-xs font-bold text-amber-700 uppercase mb-1">Approximation Error</p>
+                                    <p class="text-sm font-mono">$O(h^2)$</p>
+                                    <p class="text-xs text-slate-500 mt-1">Decreases as step size $h$ gets smaller.</p>
+                                </div>
+                                <div class="p-3 bg-red-50 rounded border border-red-100">
+                                    <p class="text-xs font-bold text-red-700 uppercase mb-1">Total Error Behavior</p>
+                                    <p class="text-sm font-mono">$\approx O(\frac{\epsilon_m}{\sqrt{h}}) + O(h^2)$</p>
+                                    <p class="text-xs text-slate-500 mt-1">Represents the balance between algorithm
+                                        error and machine precision ($\epsilon_m$).</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900 text-white p-6 rounded-lg shadow-md">
+                            <h2 class="text-xl font-bold mb-4 flex items-center">
+                                <span class="mr-2">💡</span> Numerical Insight
+                            </h2>
+                            <p class="text-sm leading-relaxed mb-4">
+                                "Precision cannot be improved by simply using a smaller $h$. It's very time consuming
+                                and may eventually lead to round-off error saturation."
+                            </p>
+                            <div class="flex justify-between items-center bg-blue-800 p-3 rounded text-xs font-mono">
+                                <span>Best Precision ($\approx O(10^{-12})$)</span>
+                                <span class="text-amber-300">at $h \approx 10^{-6}$</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <footer class="mt-12 text-center text-xs text-slate-400 border-t pt-6">
+                    <p>Numerical Analysis Lecture 2-2: Numerical Differential & Integration</p>
+                    <p class="mt-1">National Taiwan University • Kai-Feng Chen</p>
+                </footer>
+            </div>
         </section>
 
         <section id="simpson" class="mb-16 scroll-mt-20">
