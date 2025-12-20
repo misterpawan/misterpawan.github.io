@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 2-5: Root Finding & Minimization</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        ntu: {
+                            red: '#c23a3a',
+                            dark: '#1a1a1a',
+                            code: '#282c34',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #fcfcfc;
+            color: #333;
+        }
+
+        .slide-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            border: 1px solid #f0f0f0;
+        }
+
+        .code-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            background: #282c34;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-editor {
+            padding: 1rem;
+            color: #abb2bf;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            border-right: 1px solid #3e4451;
+        }
+
+        .output-panel {
+            padding: 1rem;
+            background: #21252b;
+            color: #98c379;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .math-block {
+            background: #f8fafc;
+            padding: 1rem;
+            border-left: 4px solid #3b82f6;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(45deg, #2563eb, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-bold text-xl tracking-tight text-slate-800">Numerical Analysis <span
+                    class="text-blue-600">2-5</span></span>
+            <div class="space-x-1 hidden md:block text-sm font-medium">
+                <a href="#root-finding" class="px-3 py-1 hover:bg-gray-100 rounded">🌱 Root Finding</a>
+                <a href="#minimization" class="px-3 py-1 hover:bg-gray-100 rounded">📉 Minimization</a>
+                <a href="#genetic" class="px-3 py-1 hover:bg-gray-100 rounded">🧬 Genetic Algo</a>
+                <a href="#fitting" class="px-3 py-1 hover:bg-gray-100 rounded">📊 Fitting</a>
+                <a href="#practice" class="px-3 py-1 bg-blue-100 text-blue-700 rounded">Hands On</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-20 text-center px-4">
+        <h1 class="text-6xl font-bold mb-4 gradient-text">Root Finding & Minimization</h1>
+        <p class="text-xl text-gray-500 max-w-2xl mx-auto">
+            "If $f(x) = 0$, what is $x$?" <br>
+            A journey from high school algebra to the Higgs Boson.
+        </p>
+
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4">
+
+        <section id="root-finding">
+            <div class="flex items-center gap-2 mb-6">
+                <span class="text-4xl">🌱</span>
+                <h2 class="text-3xl font-bold text-slate-800">Part 1: Root Finding</h2>
+            </div>
+
+            <div class="slide-card">
+                <h3 class="text-xl font-bold mb-4">The Classical Problem</h3>
+                <p class="mb-4">You've known this since high school. For a given function $f(x)$, if $f(x)=0$, what is
+                    $x$?</p>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                        <h4 class="font-bold text-blue-800 mb-2">👀 The "Eyeball" Method</h4>
+                        <p class="text-sm text-blue-900 mb-4">
+                            "I'm not talking about peeking at other person's answer sheet..." 🤣
+                        </p>
+                        <ul class="list-disc ml-5 text-sm text-slate-700">
+                            <li>Plot $y = f(x)$.</li>
+                            <li>Look for where it crosses the x-axis.</li>
+                            <li><strong>Theorem:</strong> If $f(a) < 0 < f(b)$, there may exist a root in $(a, b)$.</li>
+                        </ul>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-6xl mb-2">📈</div>
+                        <p class="text-xs text-gray-400">Graph it till you make it.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-card">
+                <h3 class="text-xl font-bold mb-2">Method 1: Bisection 🍰</h3>
+                <p class="text-sm text-gray-500 mb-4">The "chop it in half" strategy. Guaranteed to work (slowly).</p>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div id="bisection-demo"></div>
+
+                    <div>
+                        <div class="code-container">
+                            <div class="code-editor">
+                                <pre><code class="language-python"># 1205-example-01.py
+def f(x):
+    # Roots at 1, 2, 3, 4, 5
+    return (x-1.)*(x-2.)*(x-3.)* \
+           (x-4.)*(x-5.)
+
+a, b = 2.4, 3.4
+fa, fb = f(a), f(b)
+
+for step in range(50):
+    c = (a+b)*0.5 # Middle point
+    fc = f(c)
+    
+    print(f"Step {step}: root={c:.6f}")
+    
+    if abs(a-c) < 1E-14: break
+    
+    if fc*fa > 0.:
+        a, fa = c, fc
+    else:
+        b, fb = c, fc</code></pre>
+                            </div>
+                            <div class="output-panel">
+                                > python 1205-example-01.py
+                                Step: 0, root = 2.900000...
+                                Step: 1, root = 3.150000...
+                                Step: 2, root = 3.025000...
+                                Step: 3, root = 2.962500...
+                                ...
+                                Step: 10, root = 3.000097...
+                                ...
+                                Step: 46, root = 3.000000...
+
+                                Converged!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-card">
+                <h3 class="text-xl font-bold mb-2">Method 2: Brent's Method 🚀</h3>
+                <p class="mb-4 text-gray-600">Why walk when you can run? Use parabolic interpolation (3 points) to guess
+                    the root faster.</p>
+
+                <div class="math-block text-sm">
+                    Formula for next best guess $d$:
+                    $$ d = b + \frac{P}{Q} $$
+                    Where $P, Q$ are derived from Lagrange interpolation of $(a, f_a), (b, f_b), (c, f_c)$.
+                </div>
+
+                <div class="code-container">
+                    <div class="code-editor">
+                        <pre><code class="language-python"># 1205-example-02a.py (Fail-Safe)
+# ... P, Q calculation ...
+d = b + P/Q
+
+# Protection: If jump is too wild, use Bisection
+if (d-a)*(d-c) > 0. or abs(fd) > abs(fb):
+    if fa*fb > 0.: d = (b+c)*0.5
+    else:          d = (a+b)*0.5
+    
+# This hybrid approach makes it robust!</code></pre>
+                    </div>
+                    <div class="output-panel">
+                        Step: 0, root = 2.9500... (Bisection)
+                        Step: 1, root = 3.0169... (Parabolic)
+                        Step: 2, root = 2.9993... (Parabolic)
+                        Step: 3, root = 3.0000...
+                        Step: 4, root = 3.0000... (Done!)
+
+                        Much faster than Bisection!
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-card">
+                <h3 class="text-xl font-bold mb-2">Method 3: Newton-Raphson 🍎</h3>
+                <p class="mb-4 text-gray-600">The calculus darling. Uses the derivative (slope) to shoot towards the
+                    root.</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-4 rounded border">
+                        <div class="math-block">
+                            $$ x_{new} = x_{old} - \frac{f(x_{old})}{f'(x_{old})} $$
+                        </div>
+                        <p class="text-sm"><strong>Pros:</strong> Super fast (Quadratic convergence).</p>
+                        <p class="text-sm"><strong>Cons:</strong> Needs $f'(x)$. Can explode if $f'(x) \approx 0$.</p>
+                    </div>
+                    <div class="code-container m-0">
+                        <div class="code-editor">
+                            <pre><code class="language-python"># 1205-example-03.py
+delta = -fb/fp(b) # fp is derivative
+d = b + delta
+
+# Result:
+# Step 0: 2.95
+# Step 1: 3.0003...
+# Step 2: 3.0000...
+# Step 3: 3.0000000000000000
+# Done in 3 steps! ⚡</code></pre>
+                        </div>
+                        <div class="output-panel text-xs">
+                            Step: 0, root=2.9500000000000000
+                            Step: 1, root=3.0003151394705090
+                            Step: 2, root=2.9999999999217564
+                            Step: 3, root=3.0000000000000000
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-card bg-slate-900 text-white">
+                <h3 class="text-xl font-bold mb-4 text-blue-400">Practical Application & SciPy</h3>
+                <p class="mb-6 text-gray-300">How to calculate $\sqrt{R}$? Find the root of $x^2 - R = 0$.</p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-bold text-sm mb-2 uppercase text-gray-500">The "Hard" Way (Manual Newton)</h4>
+                        <div class="code-container m-0 bg-black">
+                            <div class="code-editor text-xs">
+                                <pre><code class="language-python">def squareroot(R):
+    f   = lambda x: x*x - R
+    fp  = lambda x: 2.*x
+    x = R * 0.5
+    for i in range(50):
+        x = x - f(x)/fp(x)
+    return x</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm mb-2 uppercase text-gray-500">The SciPy Way (Easy)</h4>
+                        <div class="code-container m-0 bg-black">
+                            <div class="code-editor text-xs">
+                                <pre><code class="language-python">import scipy.optimize as opt
+
+# One liner!
+root = opt.newton(lambda x: x**2 - R, 
+                  x0=R*0.5, 
+                  fprime=lambda x: 2*x)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="minimization" class="pt-12">
+            <div class="flex items-center gap-2 mb-6">
+                <span class="text-4xl">📉</span>
+                <h2 class="text-3xl font-bold text-slate-800">Part 2: Minimization</h2>
+            </div>
+
+            <div class="slide-card">
+                <h3 class="text-xl font-bold mb-2">Golden Section Search 🏆</h3>
+                <p class="mb-4">Finding the minimum is harder than finding a root. We need a bracket $(a, b, c)$ where
+                    $f(b) < f(a)$ and $f(b) < f(c)$.</p>
+
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="flex-1 bg-yellow-50 p-6 rounded-lg border border-yellow-200">
+                                <h4 class="font-bold text-yellow-800 mb-2">The Magic Number</h4>
+                                <p class="text-sm mb-4">How do we split the interval optimally? We want the ratio of
+                                    intervals to remain constant.</p>
+                                <div class="math-block text-center text-yellow-900 bg-white">
+                                    $$ w = \frac{3-\sqrt{5}}{2} \approx 0.38197 $$
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2 text-center">Derived from the Golden Ratio $\phi
+                                    \approx 1.618$.</p>
+                                <div class="text-center mt-4 text-4xl">🏛️</div>
+                            </div>
+
+                            <div class="flex-1">
+                                <div class="code-container m-0 h-full">
+                                    <div class="code-editor">
+                                        <pre><code class="language-python"># 1205-example-06.py
+FRAC = 0.38197 # Magic!
+# ... loop ...
+if abs(a-b) > abs(c-b):
+    d = b + (a-b)*FRAC
+else:
+    d = b + (c-b)*FRAC
+    
+# Keep the triplet (a,b,c) 
+# such that f(b) is min</code></pre>
+                                    </div>
+                                    <div class="output-panel">
+                                        Step: 0, root=1.2360...
+                                        Step: 10, root=0.4946...
+                                        ...
+                                        Step: 60, root=0.4999...
+
+                                        Slow but steady.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+
+            <div class="slide-card">
+                <h3 class="text-xl font-bold mb-4">Faster Minimization</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-blue-600">Brent's Method (Min)</h4>
+                        <p class="text-sm mb-2">Fit a parabola to 3 points and jump to its vertex.</p>
+                        <div class="bg-gray-100 p-2 rounded text-xs font-mono">
+                            d = b - 0.5 * P / Q
+                        </div>
+                        <p class="text-xs mt-2 text-green-600">Converges in ~20 steps.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-purple-600">Newton's Method (Min)</h4>
+                        <p class="text-sm mb-2">Find root of $f'(x)=0$. Needs 2nd derivative!</p>
+                        <div class="math-block text-xs p-2">
+                            $$ x_{new} = x_{old} - \frac{f'(x)}{f''(x)} $$
+                        </div>
+                        <p class="text-xs mt-2 text-green-600">Converges in ~5 steps! (But need f'').</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fitting" class="pt-12">
+            <div class="flex items-center gap-2 mb-6">
+                <span class="text-4xl">🧬</span>
+                <h2 class="text-3xl font-bold text-slate-800">Part 3: Fitting & Genetic Algorithms</h2>
+            </div>
+
+            <div class="slide-card">
+                <h3 class="text-xl font-bold mb-4">Real World Example: The Higgs Boson ⚛️</h3>
+                <p class="mb-4">Minimizing $\chi^2$ (Chi-square) to fit data.</p>
+                <div class="math-block text-center">
+                    $$ \chi^2 = \sum \frac{(f_i - \mu_i)^2}{\sigma_i^2} $$
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="bg-white border rounded-lg p-4 flex items-center justify-center relative min-h-[300px]">
+                        <div class="absolute inset-0 flex items-end justify-around px-8 pb-8 pt-12 space-x-1">
+                            <div class="w-1 h-10 bg-blue-500 rounded"></div>
+                            <div class="w-1 h-12 bg-blue-500 rounded"></div>
+                            <div class="w-1 h-20 bg-blue-500 rounded"></div>
+                            <div class="w-1 h-32 bg-blue-500 rounded"></div>
+                            <div class="w-1 h-64 bg-red-500 rounded animate-pulse relative group">
+                                <span
+                                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs p-1 rounded opacity-0 group-hover:opacity-100 transition">Higgs!</span>
+                            </div>
+                            <div class="w-1 h-24 bg-blue-500 rounded"></div>
+                            <div class="w-1 h-16 bg-blue-500 rounded"></div>
+                            <div class="w-1 h-10 bg-blue-500 rounded"></div>
+                        </div>
+                        <div class="absolute bottom-2 text-xs font-bold text-gray-500">Mass (GeV)</div>
+                    </div>
+
+                    <div class="code-container m-0">
+                        <div class="code-editor">
+                            <pre><code class="language-python"># 1205-example-10b.py
+def model(x, ...):
+    # Polynomial Bkg + Gaussian Signal
+    return poly + gaussian
+
+# The magic function
+rx, rcov = opt.curve_fit(model, vx, vy)
+
+print(f"Mass = {rx[1]:.1f} GeV")</code></pre>
+                        </div>
+                        <div class="output-panel">
+                            N(Higgs) = 69.8 events
+                            M(Higgs) = 125.2 GeV
+                            Chi2/ndf = 1.57
+
+                            A good fit!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-card bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2 text-indigo-900">Genetic Algorithm 🧬</h3>
+                        <p class="text-sm text-indigo-700 mb-4 max-w-xl">
+                            When the function is non-smooth, broken, or has many local minima, derivatives fail.
+                            We simulate evolution: <strong>Selection, Crossover, Mutation</strong>.
+                        </p>
+                    </div>
+                    <span class="text-6xl opacity-20">🦍</span>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">The Problem</h4>
+                        <p class="text-xs text-gray-500">Find the best box $[X_{min}, X_{max}, Y_{min}, Y_{max}]$ to
+                            capture maximum red dots (signal) and minimum black dots (background).</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">The Evolution</h4>
+                        <ol class="list-decimal ml-4 text-xs text-gray-600 space-y-1">
+                            <li><strong>Init:</strong> Random boxes.</li>
+                            <li><strong>Fitness:</strong> $N_{sig} / \sqrt{N_{tot}}$.</li>
+                            <li><strong>Crossover:</strong> Mix parents coordinates.</li>
+                            <li><strong>Mutation:</strong> Random jitter.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="code-container bg-indigo-900 border-indigo-800">
+                    <div class="code-editor text-xs">
+                        <pre><code class="language-python"># 1205-example-11b.py
+for gen in range(100):
+    # Crossover & Mutation
+    x = crossover(parent1, parent2)
+    x = mutation(x)
+    
+    # Survival of the fittest
+    rank = argsort(fitness)
+    # Kill the weak...</code></pre>
+                    </div>
+                    <div class="output-panel bg-indigo-950 text-indigo-300 text-xs">
+                        Gen 1: Best Fitness = 24.4
+                        Gen 10: Best Fitness = 25.6
+                        ...
+                        Gen 30: Best Fitness = 25.9 (Converged)
+
+                        Much faster than Brute Force!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="practice" class="py-12 mb-12">
+            <h2 class="text-3xl font-bold mb-6 text-slate-800">👐 Hands-On Session</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="slide-card border-l-8 border-l-blue-500 m-0">
+                    <h3 class="font-bold text-lg mb-2">Practice 1: Inverse Trig</h3>
+                    <p class="text-sm mb-4">Implement `arcsin` and `arccos` using Newton's method.</p>
+                    <div class="bg-gray-100 p-3 rounded text-sm font-mono mb-4">
+                        Root of: sin(x) - R = 0
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        Hint: $f'(x) = \cos(x)$ for sine.
+                    </div>
+                </div>
+
+                <div class="slide-card border-l-8 border-l-purple-500 m-0">
+                    <h3 class="font-bold text-lg mb-2">Practice 2: Polynomial Fit</h3>
+                    <p class="text-sm mb-4">Fit data with 2nd, 3rd, 4th, 5th order polynomials.</p>
+                    <div class="code-block bg-gray-100 text-gray-800 p-2 rounded text-xs font-mono mb-2">
+                        1205-practice-02.py
+                    </div>
+                    <p class="text-xs text-gray-500">
+                        Judge the best model using $\chi^2 / \text{ndf}$.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400">
+        <p>Numerical Analysis Lecture 2-5</p>
+    </footer>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Bisection Demo Component
+        const BisectionDemo = () => {
+            const [history, setHistory] = useState([]);
+            const [running, setRunning] = useState(false);
+            const [step, setStep] = useState(0);
+
+            // Function: (x-1)(x-2)(x-3)(x-4)(x-5)
+            // Let's visualize range [2.4, 3.4] -> Root is 3
+            const f = (x) => (x - 1) * (x - 2) * (x - 3) * (x - 4) * (x - 5);
+
+            const [a, setA] = useState(2.4);
+            const [b, setB] = useState(3.4);
+
+            const nextStep = () => {
+                const c = (a + b) / 2;
+                const fa = f(a);
+                const fc = f(c);
+
+                const newEntry = { step: step + 1, a, b, c, val: c };
+                setHistory(prev => [...prev, newEntry]);
+
+                if (fc * fa > 0) setA(c);
+                else setB(c);
+
+                setStep(s => s + 1);
+            };
+
+            const reset = () => {
+                setA(2.4);
+                setB(3.4);
+                setStep(0);
+                setHistory([]);
+            };
+
+            return (
+                <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm h-full">
+                    <div className="flex justify-between items-center mb-4">
+                        <h4 className="font-bold text-slate-700">Interactive Bisection</h4>
+                        <div className="space-x-2">
+                            <button onClick={nextStep} className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700">Next Step</button>
+                            <button onClick={reset} className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs hover:bg-gray-300">Reset</button>
+                        </div>
+                    </div>
+
+                    <div className="bg-gray-100 rounded p-4 h-48 relative mb-4 flex items-center justify-center">
+                        {/* Visualization Bar */}
+                        <div className="w-full h-2 bg-gray-300 rounded relative">
+                            {/* Current Bracket */}
+                            <div className="absolute h-4 bg-blue-200/50 top-[-4px] border-l-2 border-r-2 border-blue-500 text-xs flex justify-between items-start"
+                                style={{
+                                    left: `${(a - 2.4) * 100}%`,
+                                    width: `${(b - a) * 100}%`
+                                }}>
+                                <span className="-mt-4 text-blue-700 font-mono">{a.toFixed(2)}</span>
+                                <span className="-mt-4 text-blue-700 font-mono">{b.toFixed(2)}</span>
+                            </div>
+
+                            {/* Midpoint */}
+                            <div className="absolute w-1 h-6 bg-red-500 top-[-8px]"
+                                style={{ left: `${((a + b) / 2 - 2.4) * 100}%` }}>
+                            </div>
+
+                            {/* Target */}
+                            <div className="absolute w-1 h-6 bg-green-500 top-[-8px] opacity-30"
+                                style={{ left: `60%` }}>
+                            </div>
+                        </div>
+                        <div className="absolute bottom-2 text-xs text-gray-400">Target: 3.0</div>
+                    </div>
+
+                    <div className="overflow-y-auto h-32 text-xs font-mono border-t pt-2">
+                        <table className="w-full text-left">
+                            <thead className="text-gray-500">
+                                <tr><th>Step</th><th>Midpoint (c)</th><th>Diff</th></tr>
+                            </thead>
+                            <tbody>
+                                {history.map((h, i) => (
+                                    <tr key={i} className="border-b border-gray-100">
+                                        <td>{h.step}</td>
+                                        <td className="text-blue-600">{h.c.toFixed(6)}</td>
+                                        <td className={Math.abs(h.c - 3) < 0.001 ? "text-green-600 font-bold" : ""}>
+                                            {Math.abs(h.c - 3).toFixed(6)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('bisection-demo'));
+        root.render(<BisectionDemo />);
+
+        // Initialize KaTeX
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ]
+            });
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>
