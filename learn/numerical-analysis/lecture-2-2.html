@@ -665,8 +665,11 @@ print(f"Numerical: {quad} +- {quaderr}")
 
         const root = ReactDOM.createRoot(document.getElementById('derivative-demo'));
         root.render(<DerivativeDemo />);
+    </script>
 
-        // --- Trapezoidal Rule Visualization ---
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
         const FUNCTIONS = {
             sin: {
                 label: "f(x) = sin(x)",
