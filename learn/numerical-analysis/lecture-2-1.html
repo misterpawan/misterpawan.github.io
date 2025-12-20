@@ -501,15 +501,40 @@ plt.show()</textarea>
                     </div>
 
                     <h4 class="font-bold text-sm mb-2">The Python Code </h4>
-                    <div class="code-block" style="background-color: #f8fafc; color: #1f2937;">
-                        import math
-                        nsides = 6
-                        length = 1.
-                        for i in range(20):
-                        length = (2. - (4. - length**2)**0.5)**0.5
-                        nsides *= 2
-                        pi = length * nsides / 2.
-                        print(nsides, pi)
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <div class="relative group">
+                                <textarea id="code-pi"
+                                    class="code-block w-full h-64 resize-y outline-none focus:ring-2 focus:ring-ntu-blue"
+                                    style="background-color: #ffffff; color: #1f2937;">import math
+nsides = 6
+length = 1.
+for i in range(20):
+    length = (2. - (4. - length**2)**0.5)**0.5
+    nsides *= 2
+    pi = length * nsides / 2.
+    print(f"Sides: {nsides}, Pi: {pi}")</textarea>
+                                <div class="absolute top-2 right-2">
+                                    <button onclick="runPython('code-pi', 'output-pi')"
+                                        class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-blue-700 shadow-sm transition flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Run
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-sm mb-2 text-gray-500">Output</h5>
+                            <div id="output-pi"
+                                class="bg-gray-50 border text-gray-700 p-2 rounded h-64 overflow-auto font-mono text-xs leading-relaxed whitespace-pre">
+                                <span class="text-gray-400 italic">Click "Run" to see output...</span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="bg-red-50 p-4 rounded mt-4 border border-red-200">
@@ -689,29 +714,36 @@ plt.show()</textarea>
 
                 outputDiv.innerHTML = '';
 
-                // Add plot target logic to the python code seamlessly
+                // Add plot target logic AND stdout capture
                 const plotSetup = `
 import matplotlib.pyplot as plt
-import io, base64
+import io, base64, sys
 
-# Reset figure to avoid accumulation
+# Reset figure and stdout
 plt.clf()
+sys.stdout = io.StringIO()
 `;
                 // Running the user code
                 await pyodide.runPythonAsync(plotSetup + code);
 
-                // Check if a plot was created and show it
-                // Using pyodide standard display behavior or fetching the figure
-                // standard matplotlib-pyodide behavior writes to a specifically targeted div depending on backend
-                // Or we can assume 'plt.show()' writes to document.body, which is messy.
-                // Better approach for embedded: use the 'matplotlib_inline' or similar, or just get the current figure and save to base64
+                // Capture Stdout
+                const stdout = pyodide.runPython("sys.stdout.getvalue()");
+                if (stdout) {
+                    const pre = document.createElement('div');
+                    pre.textContent = stdout;
+                    pre.className = "whitespace-pre font-mono text-xs";
+                    outputDiv.appendChild(pre);
+                }
 
-                // Let's use the robust way: save fig to bytes and inject image
+                // Capture Plot
                 const plotSaver = `
 buf = io.BytesIO()
-plt.savefig(buf, format='png')
-buf.seek(0)
-img_str = base64.b64encode(buf.read()).decode('UTF-8')
+if plt.get_fignums():
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    img_str = base64.b64encode(buf.read()).decode('UTF-8')
+else:
+    img_str = ""
 img_str
 `;
                 const imgB64 = await pyodide.runPythonAsync(plotSaver);
