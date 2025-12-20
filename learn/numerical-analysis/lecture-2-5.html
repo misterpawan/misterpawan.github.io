@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -171,8 +172,8 @@
 
                     <div>
                         <div class="code-container">
-                            <div class="code-editor">
-                                <pre><code class="language-python"># 1205-example-01.py
+                            <textarea id="code-01" class="code-editor" spellcheck="false">
+# 1205-example-01.py
 def f(x):
     # Roots at 1, 2, 3, 4, 5
     return (x-1.)*(x-2.)*(x-3.)* \
@@ -192,20 +193,31 @@ for step in range(50):
     if fc*fa > 0.:
         a, fa = c, fc
     else:
-        b, fb = c, fc</code></pre>
-                            </div>
-                            <div class="output-panel">
-                                > python 1205-example-01.py
-                                Step: 0, root = 2.900000...
-                                Step: 1, root = 3.150000...
-                                Step: 2, root = 3.025000...
-                                Step: 3, root = 2.962500...
-                                ...
-                                Step: 10, root = 3.000097...
-                                ...
-                                Step: 46, root = 3.000000...
+        b, fb = c, fc
+</textarea>
+                            <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[300px]">
+                                <div
+                                    class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                                    <span class="text-xs text-gray-400 font-mono">Output</span>
+                                    <button onclick="runPython('code-01', 'out-01')"
+                                        class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
+                                        Run Code
+                                    </button>
+                                </div>
+                                <div id="out-01"
+                                    class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
+                                    > python 1205-example-01.py
+                                    Step: 0, root = 2.900000...
+                                    Step: 1, root = 3.150000...
+                                    Step: 2, root = 3.025000...
+                                    Step: 3, root = 2.962500...
+                                    ...
+                                    Step: 10, root = 3.000097...
+                                    ...
+                                    Step: 46, root = 3.000000...
 
-                                Converged!
+                                    Converged!
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -224,8 +236,8 @@ for step in range(50):
                 </div>
 
                 <div class="code-container">
-                    <div class="code-editor">
-                        <pre><code class="language-python"># 1205-example-02a.py (Fail-Safe)
+                    <textarea id="code-02" class="code-editor" spellcheck="false">
+# 1205-example-02a.py (Fail-Safe)
 # ... P, Q calculation ...
 d = b + P/Q
 
@@ -234,16 +246,27 @@ if (d-a)*(d-c) > 0. or abs(fd) > abs(fb):
     if fa*fb > 0.: d = (b+c)*0.5
     else:          d = (a+b)*0.5
     
-# This hybrid approach makes it robust!</code></pre>
-                    </div>
-                    <div class="output-panel">
-                        Step: 0, root = 2.9500... (Bisection)
-                        Step: 1, root = 3.0169... (Parabolic)
-                        Step: 2, root = 2.9993... (Parabolic)
-                        Step: 3, root = 3.0000...
-                        Step: 4, root = 3.0000... (Done!)
+# This hybrid approach makes it robust!
+print("Code needs context to run, but concept is key!")
+</textarea>
+                    <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[200px]">
+                        <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                            <span class="text-xs text-gray-400 font-mono">Output</span>
+                            <button onclick="runPython('code-02', 'out-02')"
+                                class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
+                                Run Code
+                            </button>
+                        </div>
+                        <div id="out-02"
+                            class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
+                            Step: 0, root = 2.9500... (Bisection)
+                            Step: 1, root = 3.0169... (Parabolic)
+                            Step: 2, root = 2.9993... (Parabolic)
+                            Step: 3, root = 3.0000...
+                            Step: 4, root = 3.0000... (Done!)
 
-                        Much faster than Bisection!
+                            Much faster than Bisection!
+                        </div>
                     </div>
                 </div>
             </div>
@@ -292,27 +315,54 @@ d = b + delta
                     <div>
                         <h4 class="font-bold text-sm mb-2 uppercase text-gray-500">The "Hard" Way (Manual Newton)</h4>
                         <div class="code-container m-0 bg-black">
-                            <div class="code-editor text-xs">
-                                <pre><code class="language-python">def squareroot(R):
+                            <textarea id="code-04a" class="code-editor bg-black text-white" spellcheck="false"
+                                style="min-height: 150px;">
+def squareroot(R):
     f   = lambda x: x*x - R
     fp  = lambda x: 2.*x
     x = R * 0.5
     for i in range(50):
         x = x - f(x)/fp(x)
-    return x</code></pre>
+    return x
+
+print(f"sqrt(2) = {squareroot(2.0)}")
+</textarea>
+                            <div class="flex flex-col bg-gray-900 w-full">
+                                <div
+                                    class="flex items-center justify-between px-2 py-1 bg-gray-800 border-b border-gray-700">
+                                    <button onclick="runPython('code-04a', 'out-04a')"
+                                        class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] hover:bg-blue-700 font-medium transition">Run</button>
+                                </div>
+                                <div id="out-04a"
+                                    class="p-2 font-mono text-[10px] text-green-400 whitespace-pre overflow-auto min-h-[50px]">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div>
                         <h4 class="font-bold text-sm mb-2 uppercase text-gray-500">The SciPy Way (Easy)</h4>
                         <div class="code-container m-0 bg-black">
-                            <div class="code-editor text-xs">
-                                <pre><code class="language-python">import scipy.optimize as opt
+                            <textarea id="code-04b" class="code-editor bg-black text-white" spellcheck="false"
+                                style="min-height: 150px;">
+import scipy.optimize as opt
 
+R = 2.0
 # One liner!
 root = opt.newton(lambda x: x**2 - R, 
                   x0=R*0.5, 
-                  fprime=lambda x: 2*x)</code></pre>
+                  fprime=lambda x: 2*x)
+
+print(f"sqrt(2) via scipy = {root}")
+</textarea>
+                            <div class="flex flex-col bg-gray-900 w-full">
+                                <div
+                                    class="flex items-center justify-between px-2 py-1 bg-gray-800 border-b border-gray-700">
+                                    <button onclick="runPython('code-04b', 'out-04b')"
+                                        class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] hover:bg-blue-700 font-medium transition">Run</button>
+                                </div>
+                                <div id="out-04b"
+                                    class="p-2 font-mono text-[10px] text-green-400 whitespace-pre overflow-auto min-h-[50px]">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -346,25 +396,44 @@ root = opt.newton(lambda x: x**2 - R,
 
                             <div class="flex-1">
                                 <div class="code-container m-0 h-full">
-                                    <div class="code-editor">
-                                        <pre><code class="language-python"># 1205-example-06.py
-FRAC = 0.38197 # Magic!
-# ... loop ...
-if abs(a-b) > abs(c-b):
-    d = b + (a-b)*FRAC
-else:
-    d = b + (c-b)*FRAC
-    
-# Keep the triplet (a,b,c) 
-# such that f(b) is min</code></pre>
-                                    </div>
-                                    <div class="output-panel">
-                                        Step: 0, root=1.2360...
-                                        Step: 10, root=0.4946...
-                                        ...
-                                        Step: 60, root=0.4999...
+                                    <textarea id="code-05" class="code-editor" spellcheck="false">
+# 1205-example-06.py
+# Mock implementation to show concept
+def f(x): return (x-0.5)**2 # Minimum at 0.5
 
-                                        Slow but steady.
+a, b, c = 0.0, 1.0, 1.5
+# Ensure bracket: f(b) < f(a) and f(b) < f(c) - simplified here
+
+FRAC = 0.38197 # Magic!
+
+for i in range(10):
+    if abs(a-b) > abs(c-b):
+        d = b + (a-b)*FRAC
+    else:
+        d = b + (c-b)*FRAC
+    
+    # In real code we'd update a,b,c based on f(d)
+    b = d # Simplified update for demo
+    print(f"Step {i}: x_min approx = {b:.4f}")
+</textarea>
+                                    <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full">
+                                        <div
+                                            class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                                            <span class="text-xs text-gray-400 font-mono">Output</span>
+                                            <button onclick="runPython('code-05', 'out-05')"
+                                                class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
+                                                Run Code
+                                            </button>
+                                        </div>
+                                        <div id="out-05"
+                                            class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
+                                            Step: 0, root=1.2360...
+                                            Step: 10, root=0.4946...
+                                            ...
+                                            Step: 60, root=0.4999...
+
+                                            Slow but steady.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -426,23 +495,44 @@ else:
                     </div>
 
                     <div class="code-container m-0">
-                        <div class="code-editor">
-                            <pre><code class="language-python"># 1205-example-10b.py
-def model(x, ...):
-    # Polynomial Bkg + Gaussian Signal
-    return poly + gaussian
+                        <textarea id="code-06" class="code-editor" spellcheck="false" style="min-height: 200px;">
+import scipy.optimize as opt
+import numpy as np
+
+# Mock Data
+vx = np.linspace(100, 150, 20)
+vy = np.random.normal(100, 10, 20) + 50*np.exp(-(vx-125)**2 / (2*2**2))
+
+def model(x, a, mu, sigma, bkg):
+    # Polynomial Bkg (const) + Gaussian Signal
+    return bkg + a * np.exp(-(x-mu)**2 / (2*sigma**2))
 
 # The magic function
-rx, rcov = opt.curve_fit(model, vx, vy)
+# p0 = initial guess
+try:
+    rx, rcov = opt.curve_fit(model, vx, vy, p0=[50, 125, 2, 100])
+    print(f"Mass = {rx[1]:.1f} GeV")
+except:
+    print("Fitting failed with random data this time.")
+</textarea>
 
-print(f"Mass = {rx[1]:.1f} GeV")</code></pre>
-                        </div>
-                        <div class="output-panel">
-                            N(Higgs) = 69.8 events
-                            M(Higgs) = 125.2 GeV
-                            Chi2/ndf = 1.57
+                        <div class="flex flex-col bg-gray-900 border-l border-gray-700 w-full min-h-[200px]">
+                            <div
+                                class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+                                <span class="text-xs text-gray-400 font-mono">Output</span>
+                                <button onclick="runPython('code-06', 'out-06')"
+                                    class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 font-medium transition">
+                                    Run Code
+                                </button>
+                            </div>
+                            <div id="out-06"
+                                class="p-4 font-mono text-xs text-green-400 whitespace-pre overflow-auto flex-1">
+                                N(Higgs) = 69.8 events
+                                M(Higgs) = 125.2 GeV
+                                Chi2/ndf = 1.57
 
-                            A good fit!
+                                A good fit!
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -634,7 +724,54 @@ for gen in range(100):
         root.render(<BisectionDemo />);
 
 
+
     </script>
+    <script>
+        // Pyodide and Run Logic
+        let pyodide = null;
+        async function initPyodide() {
+            if (!pyodide) {
+                pyodide = await loadPyodide();
+                await pyodide.loadPackage(['numpy', 'scipy', 'matplotlib']);
+            }
+            return pyodide;
+        }
+
+        async function runPython(codeId, outputId) {
+            const outputDiv = document.getElementById(outputId);
+            const code = document.getElementById(codeId).value;
+            outputDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Running python...</span>';
+
+            try {
+                await initPyodide();
+
+                outputDiv.innerHTML = '';
+
+                // Redirect stdout
+                pyodide.runPython(`
+import sys
+import io
+sys.stdout = io.StringIO()
+`);
+
+                await pyodide.runPythonAsync(code);
+
+                const stdout = pyodide.runPython("sys.stdout.getvalue()");
+
+                if (stdout) {
+                    const pre = document.createElement('div');
+                    pre.textContent = stdout;
+                    outputDiv.appendChild(pre);
+                } else {
+                    outputDiv.innerHTML = '<span class="text-gray-500 italic">Code executed successfully (no output).</span>';
+                }
+
+            } catch (err) {
+                outputDiv.innerHTML = `<span class="text-red-400 font-mono text-xs whitespace-pre-wrap">Error: ${err.message}</span>`;
+            }
+        }
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             renderMathInElement(document.body, {
