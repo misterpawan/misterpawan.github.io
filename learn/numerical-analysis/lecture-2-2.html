@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 2-2: Numerical Differentiation & Integration - Complete Course</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        ntu: {
+                            primary: '#b91c1c', // NTU Red-ish
+                            dark: '#7f1d1d',
+                            blue: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .slide-card {
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide-header {
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .slide-number {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            font-weight: normal;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .math-box {
+            background: #f8fafc;
+            padding: 1rem;
+            border-left: 4px solid #1e3a8a;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        /* Syntax Highlighting Sim */
+        .k {
+            color: #569cd6;
+        }
+
+        /* keyword */
+        .f {
+            color: #dcdcaa;
+        }
+
+        /* function */
+        .s {
+            color: #ce9178;
+        }
+
+        /* string */
+        .c {
+            color: #6a9955;
+        }
+
+        /* comment */
+        .n {
+            color: #b5cea8;
+        }
+
+        /* number */
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 hidden xl:block overflow-y-auto z-40">
+        <div class="p-6">
+            <h2 class="font-bold text-ntu-blue text-xl mb-6">Lecture 2-2</h2>
+            <nav class="space-y-1 text-sm">
+                <a href="#intro" class="block px-3 py-2 rounded hover:bg-slate-100">1. Analytical vs Numerical</a>
+                <a href="#derivatives" class="block px-3 py-2 rounded hover:bg-slate-100">2. Numerical Derivatives</a>
+                <a href="#central-diff" class="block px-3 py-2 rounded hover:bg-slate-100">3. Central Difference</a>
+                <a href="#higher-order" class="block px-3 py-2 rounded hover:bg-slate-100">4. Higher Order Methods</a>
+                <a href="#homemade" class="block px-3 py-2 rounded hover:bg-slate-100">5. Homemade vs Public</a>
+                <a href="#scipy-deriv" class="block px-3 py-2 rounded hover:bg-slate-100">6. SciPy Derivatives</a>
+                <a href="#integration" class="block px-3 py-2 rounded hover:bg-slate-100">7. Numerical Integration</a>
+                <a href="#trapezoidal" class="block px-3 py-2 rounded hover:bg-slate-100">8. Trapezoidal Rule</a>
+                <a href="#simpson" class="block px-3 py-2 rounded hover:bg-slate-100">9. Simpson's Rule</a>
+                <a href="#gaussian" class="block px-3 py-2 rounded hover:bg-slate-100">10. Gaussian Quadrature</a>
+                <a href="#breaking" class="block px-3 py-2 rounded hover:bg-slate-100">11. Breaking the Code</a>
+                <a href="#scipy-int" class="block px-3 py-2 rounded hover:bg-slate-100">12. SciPy Integration</a>
+                <a href="#practice" class="block px-3 py-2 rounded hover:bg-slate-100 font-bold text-ntu-primary">13.
+                    Hands-On Session</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="xl:ml-64 min-h-screen p-6 md:p-10 max-w-5xl mx-auto">
+
+        <header class="mb-12 border-b pb-6">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Numerical Differentiation & Integration</h1>
+            <p class="text-lg text-slate-600">Lecture 2-2 | Kai-Feng Chen | [cite_start]National Taiwan University
+                [cite: 942-948]</p>
+        </header>
+
+        <section id="intro" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">Analytical vs Numerical <span class="slide-number">Slide 2-4</span></div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="mb-4"><strong>General Rule:</strong> If you know the exact form, it's always better to
+                            do the calculus analytically. [cite_start]Precision is a big issue in numerical calculation
+                            [cite: 950-952].</p>
+                        <p class="mb-4">However, numerical calculus is vital for:</p>
+                        <ul class="list-disc ml-5 space-y-2 text-sm">
+                            [cite_start]<li><strong>Black Box Functions:</strong> When $f(x)$ is unknown[cite: 953].
+                            </li>
+                            <li><strong>Debugging:</strong> Checking 50+ analytical derivations for typos.
+                                [cite_start]"Numerical calculus will give you a quick and easy check!" [cite: 974-976].
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-100 p-4 rounded text-center">
+                        <p class="text-sm italic text-slate-500 mb-2">Even if you can use Mathematica/WolframAlpha...
+                        </p>
+                        <div class="math-box text-sm">
+                            $\frac{d}{dx}(x \sin(x)\cos(x)) = -x \sin^2(x) + x \cos^2(x) + \sin(x)\cos(x)$
+                        </div>
+                        [cite_start]<p class="text-xs text-slate-500">Numerical checks are still essential for
+                            verification[cite: 967].</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="derivatives" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">Numerical Derivatives: The Problem <span class="slide-number">Slide 5-8</span>
+                </div>
+                <p class="mb-4">By definition, $f'(x) \approx \frac{f(x+h)-f(x)}{h}$. In theory, $h \to 0$. In practice,
+                    this fails.</p>
+                <div class="math-box">
+                    Example Function: $f(x) = x^2 + e^x + \ln(x) + \sin(x)$<br>
+                    Analytical $f'(x) = 2x + e^x + 1/x + \cos(x)$
+                </div>
+
+                [cite_start]<h3 class="font-bold mt-4 mb-2">A Quick Try (Forward Difference) [cite: 988-1001]</h3>
+                <div class="code-block">
+                    <span class="k">import</span> math
+
+                    <span class="k">def</span> <span class="f">f</span>(x):
+                    <span class="k">return</span> x**2 + math.exp(x) + math.log(x) + math.sin(x)
+
+                    <span class="k">def</span> <span class="f">fp</span>(x):
+                    <span class="k">return</span> 2.*x + math.exp(x) + 1./x + math.cos(x)
+
+                    x, h = 0.5, 1E-2
+                    fp_exact = fp(x)
+
+                    <span class="k">while</span> h > 1E-15:
+                    fp_numeric = (f(x+h) - f(x)) / h
+                    <span class="f">print</span>(f<span class="s">"h={h}, Diff={abs(fp_numeric - fp_exact)}"</span>)
+                    h /= 10.
+                </div>
+
+                <div id="derivative-demo"></div>
+                <div class="bg-red-50 p-4 border-l-4 border-red-500 mt-4">
+                    <p class="font-bold text-red-700">The Problem:</p>
+                    <p class="text-sm text-red-800">
+                        Total Error $\approx O(h) + O(\frac{\epsilon_m}{h})$.<br>
+                        For double precision ($\epsilon_m \approx 10^{-15}$), error saturates at $h \approx 10^{-8}$.
+                        [cite_start]You cannot get better than $10^{-8}$ precision! [cite: 1018-1021].
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="central-diff" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">The Central Difference Trick <span class="slide-number">Slide 10-13</span>
+                </div>
+                <p class="mb-2">Use Taylor expansions to cancel the first-order error:</p>
+                <div class="math-box text-sm">
+                    $f(x+h/2) \approx f(x) + \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) + \dots$<br>
+                    $f(x-h/2) \approx f(x) - \frac{h}{2}f'(x) + \frac{h^2}{8}f''(x) - \dots$<br>
+                    $\implies f'_{num}(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h} + O(h^2)$
+                </div>
+                <p class="text-sm mb-4">The error term is now $O(h^2) + O(\epsilon_m/h)$. [cite_start]The saturation
+                    point moves to $h \approx 10^{-5}$, giving much better precision ($10^{-10}$) [cite: 1025-1026].</p>
+
+                <div class="grid md:grid-cols-2 gap-4 text-sm mt-4">
+                    <div class="bg-green-50 p-4 rounded">
+                        <strong>Forward Difference:</strong><br>
+                        Saturation at $h \approx 10^{-8}$<br>
+                        Error $\approx 10^{-8}$
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded">
+                        <strong>Central Difference:</strong><br>
+                        Saturation at $h \approx 10^{-5}$<br>
+                        [cite_start]Error $\approx 10^{-10}$ [cite: 1047]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="higher-order" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">Further Improvement (Richardson Extrapolation) <span
+                        class="slide-number">Slide 14-17</span></div>
+                <p class="mb-4">Repeat the cancellation trick to remove the $h^2$ term.</p>
+                <div class="math-box text-sm">
+                    Formula: $\frac{8[f(x+h/4)-f(x-h/4)] - [f(x+h/2)-f(x-h/2)]}{3h}$
+                </div>
+                <ul class="list-disc ml-5 text-sm mb-4">
+                    <li>Approximation error becomes $O(h^4)$.</li>
+                    <li>Total error saturates at $O(10^{-13})$ when $h \approx 10^{-3}$.</li>
+                </ul>
+                <div class="code-block">
+                    <span class="c"># Slide 16 Implementation</span>
+                    fp_numeric = (8.*f(x+h/4.) + f(x-h/2.) - 8.*f(x-h/4.) - f(x+h/2.)) / (h*3.)
+                </div>
+                <p class="text-xs text-slate-500">Result: Precision reaches ~$10^{-13}$ with $h=10^{-3}$.
+                    [cite_start]Don't use too small steps! [cite: 1115]</p>
+            </div>
+
+            <div class="slide-card">
+                <div class="slide-header">Second Derivatives <span class="slide-number">Slide 18-20</span></div>
+                <p class="mb-4">Just calculate it twice (apply the difference formula to the first derivative).</p>
+                <div class="math-box text-sm">
+                    $f''(x) \approx \frac{f(x+h) + f(x-h) - 2f(x)}{h^2}$
+                </div>
+                <p class="text-sm">Total error $\approx O(h^2) + O(\epsilon_m/h^2)$. [cite_start]Precision is much
+                    worse, saturating at $O(10^{-8})$[cite: 1122].</p>
+            </div>
+        </section>
+
+        <section id="homemade" class="mb-16 scroll-mt-20">
+            <div class="slide-card bg-slate-900 text-white">
+                <div class="slide-header border-slate-700 text-white">Interlude: Homemade vs Public Code <span
+                        class="slide-number">Slide 21-22</span></div>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center p-4 bg-slate-800 rounded">
+                        <div class="text-4xl mb-2">🦇</div>
+                        <h3 class="font-bold text-lg">Homemade "Bat Car"</h3>
+                        <p class="text-sm text-slate-400 mt-2">Pros: You know the details. Optimized for your specific
+                            case.</p>
+                        <p class="text-sm text-slate-400">Cons: Less tested. May break at extremes.</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-800 rounded">
+                        <div class="text-4xl mb-2">🏎️</div>
+                        <h3 class="font-bold text-lg">Public Code "Porsche"</h3>
+                        <p class="text-sm text-slate-400 mt-2">Pros: Well tested (SciPy). Good protections. Fast.</p>
+                        <p class="text-sm text-slate-400">Cons: Black box. Generic.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="scipy-deriv" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">SciPy Implementation <span class="slide-number">Slide 23-28</span></div>
+                <p class="mb-4">NumPy/SciPy are essentially "bigger math modules." You can use `scipy.misc.derivative`.
+                </p>
+                <div class="code-block">
+                    <span class="k">import</span> scipy.misc <span class="k">as</span> misc
+                    <span class="c"># Central difference formula with spacing dx, n=1st derivative, order=3
+                        points</span>
+                    fp_numeric = misc.derivative(f, x, dx=h, n=1, order=3)
+                </div>
+                <p class="text-sm">This typically gives the best precision ($10^{-10}$) when $h \approx 10^{-6}$.
+                    [cite_start]Higher orders can improve this slightly but diminishing returns[cite: 1251].</p>
+
+                <div class="bg-yellow-50 p-4 mt-4 text-sm border-l-4 border-yellow-400">
+                    <p class="font-bold">Important Comment:</p>
+                    <p>Adaptive Stepping: Some algorithms adjust $h$ dynamically based on estimated error.
+                        [cite_start]$h' = h (\epsilon_R / \epsilon_T)^{1/3}$. [cite: 1268-1272]</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="integration" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">Numerical Integration <span class="slide-number">Slide 31-32</span></div>
+                <div class="flex justify-around mb-6">
+                    <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Rectangle Rule</strong><br><span
+                            class="text-xs">Zero Order</span></div>
+                    <div class="text-center p-2 border rounded w-1/3 mx-1 bg-blue-50"><strong>Trapezoidal
+                            Rule</strong><br><span class="text-xs">First Order</span></div>
+                    <div class="text-center p-2 border rounded w-1/3 mx-1"><strong>Simpson's Rule</strong><br><span
+                            class="text-xs">Second Order</span></div>
+                </div>
+                [cite_start]<p class="mb-4 text-sm">Example: $\int (x - x^2 + x^3 - x^4 + \frac{\sin(13x)}{13}) dx$ from
+                    0 to 1.2[cite: 1333].</p>
+            </div>
+        </section>
+
+        <section id="trapezoidal" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">Trapezoidal Rule <span class="slide-number">Slide 33-36</span></div>
+                <div class="math-box text-sm">
+                    Formula: $\frac{h}{2} [f(x) + f(x+h)]$ per interval.<br>
+                    Total Error $\approx O(h^2) + O(\frac{\epsilon_m}{\sqrt{h}})$
+                </div>
+                <p class="text-sm mb-4">Error per interval is $O(h^3)$, but summing over $L/h$ intervals gives global
+                    error $O(h^2)$.</p>
+                <div class="code-block">
+                    <span class="k">while</span> x < 1.2 - h*0.5: f0, f1=f(x), f(x+h) area +=f0 + f1 x +=h area *=h / 2.
+                        </div>
+                        <p class="text-sm"><strong>Result:</strong> Precision saturates around $10^{-12}$ at $h \approx
+                            10^{-6}$. [cite_start]Smaller step size does NOT always mean better precision due to
+                            round-off error accumulation[cite: 1402].</p>
+                </div>
+        </section>
+
+        <section id="simpson" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">Simpson's Rule <span class="slide-number">Slide 37-41</span></div>
+                <p class="mb-4">Use a parabola (2nd order polynomial) to interpolate 3 points.</p>
+                <div class="math-box text-sm">
+                    $\int_{0}^{2h} f(x) dx \approx \frac{h}{3} [f(0) + 4f(h) + f(2h)]$
+                </div>
+                <p class="text-sm mb-4">
+                    Weights pattern: 1, 4, 2, 4, 2, ..., 4, 1.
+                    Total Error $\approx O(h^4)$.
+                </p>
+                <div class="code-block">
+                    area += f0 + f1*4. + f2
+                    area *= h / 3.
+                </div>
+                [cite_start]<p class="text-xs text-slate-500">Best precision $O(10^{-14})$ when $h \approx
+                    10^{-4}$[cite: 1476].</p>
+            </div>
+        </section>
+
+        <section id="gaussian" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">Gaussian Quadrature <span class="slide-number">Slide 43-49</span></div>
+                <p class="mb-4"><strong>The Trick:</strong> Instead of fixed spacing, can we optimize the locations of
+                    points ($x_i$) and weights ($w_i$) to get *exact* integration for polynomials?</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold mb-2">2-Point Gauss-Legendre</h4>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>Solves exact integration for polynomials up to $x^3$.</li>
+                            <li>Points: $\pm 1/\sqrt{3}$</li>
+                            <li>Weights: 1, 1</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2">3-Point Gauss-Legendre</h4>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li>Solves exact integration for polynomials up to $x^5$.</li>
+                            <li>Points: $0, \pm \sqrt{3/5}$</li>
+                            <li>Weights: $8/9, 5/9, 5/9$</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-sm mt-4 bg-slate-100 p-2 rounded">
+                    [cite_start]General Rule: $n$ points give exact integration up to $x^{2n-1}$[cite: 1580].
+                </p>
+
+                [cite_start]<h4 class="font-bold mt-6 mb-2">Coordinate Transformation [cite: 1589]</h4>
+                <p class="text-sm mb-2">Gaussian quadrature is defined for $[-1, 1]$. For $[a, b]$, transform:</p>
+                <div class="math-box text-xs">
+                    $\int_a^b f(x)dx = \frac{b-a}{2} \int_{-1}^1 f(\frac{b-a}{2}x + \frac{a+b}{2}) dx$
+                </div>
+            </div>
+        </section>
+
+        <section id="breaking" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">When does it break? <span class="slide-number">Slide 52-54</span></div>
+                <p class="mb-4">Testing a 5-point Gauss-Legendre rule (should be exact up to $x^9$).</p>
+                <div class="code-block">
+                    <span class="k">def</span> <span class="f">f</span>(x, n):
+                    <span class="c"># Polynomial 1 + x + ... + x^n</span>
+                    val = 0.
+                    <span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(n+1): val +=
+                    x**i
+                    <span class="k">return</span> val
+
+                    <span class="c"># ... 5-point weights/points setup ...</span>
+                    <span class="c"># Results:</span>
+                    <span class="c"># Power 9: Diff = 0.00000000 (Exact)</span>
+                    <span class="c"># Power 10: Diff = 0.00000143 (Breaks!)</span>
+                </div>
+                [cite_start]<p class="text-sm">The 5-point rule fails exactly at $x^{10}$, as predicted ($2n-1 = 9$).
+                    [cite: 1650-1652]</p>
+            </div>
+        </section>
+
+        <section id="scipy-int" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <div class="slide-header">SciPy Integration <span class="slide-number">Slide 55-57</span></div>
+                <p class="mb-4">Use `scipy.integrate.quad` (uses QUADPACK, Fortran-based, adaptive Gaussian quadrature).
+                </p>
+                <div class="code-block">
+                    <span class="k">import</span> scipy.integrate <span class="k">as</span> integrate
+                    quad, quaderr = integrate.quad(f, 0., 1.2)
+                    <span class="f">print</span>(f<span class="s">"Numerical: {quad} +- {quaderr}"</span>)
+                </div>
+                <p class="text-sm">Result: Precision $10^{-16}$. [cite_start]Extremely precise and fast. [cite: 1699]
+                </p>
+            </div>
+        </section>
+
+        <section id="practice" class="mb-16 scroll-mt-20">
+            <div class="slide-card border-ntu-primary border-l-8">
+                <div class="slide-header text-ntu-primary">Hands-On Session <span class="slide-number">Slide
+                        58-59</span></div>
+
+                <div class="mb-6">
+                    <h3 class="font-bold text-lg mb-2">Practice 1: The 3/8 Rule</h3>
+                    <p class="text-sm mb-2">Implement the 3rd order Newton-Cotes formula:</p>
+                    <div class="math-box text-sm">
+                        $\int_0^{3h} f(x) dx \approx \frac{3h}{8} [f(0) + 3f(h) + 3f(2h) + f(3h)]$
+                    </div>
+                    <p class="text-sm">Modify the Simpson's rule code to implement this and check precision.</p>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Practice 2: Integrating Oscillations</h3>
+                    <p class="text-sm mb-2">Use `quad()` to integrate $\cos(x)$ over large intervals:</p>
+                    <ul class="list-disc ml-5 text-sm font-mono">
+                        <li>[0, π]</li>
+                        <li>[0, 100π]</li>
+                        <li>[0, 1000π]</li>
+                        <li>[0, 1000.5π]</li>
+                    </ul>
+                    <p class="text-sm mt-2"><strong>Question:</strong> Is it always very precise? (Hint: Rapid
+                        oscillations can fool adaptive algorithms if not careful)[cite_start]. [cite: 1724-1725]</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } = Recharts;
+
+        const DerivativeDemo = () => {
+            const [data, setData] = useState([]);
+
+            // Slide 5 Function: f(x) = x^2 + exp(x) + log(x) + sin(x)
+            // f'(x) = 2x + exp(x) + 1/x + cos(x)
+            const x = 0.5;
+            const exact = 2 * x + Math.exp(x) + 1 / x + Math.cos(x);
+
+            useEffect(() => {
+                const newData = [];
+                for (let i = 1; i <= 15; i++) {
+                    const h = Math.pow(10, -i);
+                    // Function evaluation
+                    const f = (v) => Math.pow(v, 2) + Math.exp(v) + Math.log(v) + Math.sin(v);
+
+                    // Forward Diff
+                    const fwd = (f(x + h) - f(x)) / h;
+                    const fwdErr = Math.abs(fwd - exact);
+
+                    // Central Diff
+                    const cen = (f(x + h / 2) - f(x - h / 2)) / h;
+                    const cenErr = Math.abs(cen - exact);
+
+                    newData.push({
+                        logH: -i,
+                        h: h,
+                        fwdErr: Math.max(fwdErr, 1e-16),
+                        cenErr: Math.max(cenErr, 1e-16)
+                    });
+                }
+                setData(newData);
+            }, []);
+
+            return (
+                <div className="bg-white p-4 rounded border shadow-sm mt-4">
+                    <h4 className="font-bold text-center mb-2">Interactive: Derivative Error V-Curve</h4>
+                    <p className="text-xs text-center text-slate-500 mb-4">Calculated for $f(x) = x^2 + e^x + \ln(x) + \sin(x)$ at $x=0.5$</p>
+                    <div style={{ width: '100%', height: 300 }}>
+                        <ResponsiveContainer>
+                            <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="logH" label={{ value: 'Log10(h)', position: 'insideBottom', offset: -5 }} />
+                                <YAxis scale="log" domain={['auto', 'auto']} label={{ value: 'Error', angle: -90, position: 'insideLeft' }} />
+                                <Tooltip formatter={(value) => value.toExponential(2)} labelFormatter={(v) => `h = 10^${v}`} />
+                                <Legend />
+                                <Line type="monotone" dataKey="fwdErr" stroke="#ef4444" name="Forward Diff" strokeWidth={2} dot={{ r: 3 }} />
+                                <Line type="monotone" dataKey="cenErr" stroke="#3b82f6" name="Central Diff" strokeWidth={2} dot={{ r: 3 }} />
+                                <ReferenceLine x={-8} stroke="red" strokeDasharray="3 3" label="Fwd Limit" />
+                                <ReferenceLine x={-5} stroke="blue" strokeDasharray="3 3" label="Cen Limit" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('derivative-demo'));
+        root.render(<DerivativeDemo />);
+
+        // Math Rendering
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ]
+            });
+        });
+    </script>
+</body>
+
+</html>
