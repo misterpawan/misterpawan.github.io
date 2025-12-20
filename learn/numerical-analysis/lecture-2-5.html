@@ -109,6 +109,7 @@
         /* Gradient Text */
         .gradient-text {
             background: linear-gradient(45deg, #2563eb, #9333ea);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -470,9 +471,9 @@ print(f"sqrt(2) via scipy = {root}")
                             </div>
 
                             <div class="flex-1">
-                                <div class="code-container m-0">
+                                <div class="code-container m-0" style="min-height: 250px;">
                                     <textarea id="code-05" class="code-editor" spellcheck="false"
-                                        style="min-height: 250px;">
+                                        style="min-height: 250px; opacity: 1; min-width: 0;">
 # 1205-example-06.py
 # Mock implementation to show concept
 def f(x): return (x-0.5)**2 # Minimum at 0.5
