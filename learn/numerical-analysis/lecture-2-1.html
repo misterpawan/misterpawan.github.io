@@ -234,7 +234,7 @@ import numpy as np
 # Create a dummy wave file for the demo since we don't have the actual file
 rate = 44100
 t = np.linspace(0., 1., rate, endpoint=False)
-data = np.sin(2 * np.pi * 440 * t) # 440 Hz sine wave
+data = np.sin(2 * np.pi * 440 * t) * 30000 # 440 Hz sine wave, scaled for 16-bit PCM
 wavfile.write('Sine_wave_440.wav', rate, data.astype(np.int16))
 
 # Now the user code can run as written
