@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Calculator Experiment - Numerical Analysis</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .calc-btn {
+            transition: all 0.1s;
+        }
+
+        .calc-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const CalculatorExperiment = () => {
+            const [display, setDisplay] = useState("123456789");
+            const [history, setHistory] = useState([]);
+            const [count, setCount] = useState(0);
+            const [isAutoRunning, setIsAutoRunning] = useState(false);
+            const historyEndRef = useRef(null);
+
+            // Auto-scroll history
+            useEffect(() => {
+                if (historyEndRef.current) {
+                    historyEndRef.current.scrollIntoView({ behavior: "smooth" });
+                }
+            }, [history]);
+
+            // Auto-run effect
+            useEffect(() => {
+                let interval;
+                if (isAutoRunning) {
+                    interval = setInterval(() => {
+                        handleSqrt();
+                    }, 100);
+                }
+                return () => clearInterval(interval);
+            }, [isAutoRunning, display]);
+
+            const handleNumber = (num) => {
+                if (display === "0" || display === "1") {
+                    setDisplay(num.toString());
+                } else {
+                    setDisplay(display + num.toString());
+                }
+                // Reset experiment if typing new numbers
+                if (count > 0) {
+                    setHistory([]);
+                    setCount(0);
+                }
+            };
+
+            const handleSqrt = () => {
+                const currentVal = parseFloat(display);
+                const newVal = Math.sqrt(currentVal);
+
+                // Stop auto-run if we hit exactly 1 or if it stops changing (precision limit)
+                if (newVal === 1 || newVal === currentVal) {
+                    setIsAutoRunning(false);
+                }
+
+                setDisplay(newVal.toString());
+                setCount(prev => prev + 1);
+                setHistory(prev => [...prev, { step: count + 1, val: newVal }]);
+            };
+
+            const handleClear = () => {
+                setDisplay("0");
+                setHistory([]);
+                setCount(0);
+                setIsAutoRunning(false);
+            };
+
+            const toggleAuto = () => {
+                setIsAutoRunning(!isAutoRunning);
+            };
+
+            return (
+                <div className="flex flex-col md:flex-row gap-8 items-start max-w-4xl mx-auto">
+
+                    {/* CALCULATOR UI */}
+                    <div className="bg-gray-900 p-6 rounded-2xl shadow-2xl w-full md:w-80 border border-gray-700">
+                        <div className="mb-2 flex justify-between text-xs text-gray-400 font-mono">
+                            <span>CASIO-STYLE</span>
+                            <span>FLOAT64</span>
+                        </div>
+
+                        {/* Display Screen */}
+                        <div className="bg-[#bdc3c7] p-4 rounded mb-6 text-right font-mono border-4 border-gray-600 shadow-inner">
+                            <div className="text-gray-600 text-xs h-4">
+                                {count > 0 ? `√ count: ${count}` : ''}
+                            </div>
+                            <div className="text-gray-900 text-2xl font-bold truncate overflow-hidden">
+                                {display}
+                            </div>
+                        </div>
+
+                        {/* Buttons Grid */}
+                        <div className="grid grid-cols-4 gap-3">
+                            <button onClick={handleClear} className="calc-btn col-span-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded">AC</button>
+                            <button onClick={toggleAuto} className={`calc-btn col-span-2 font-bold py-3 rounded text-white ${isAutoRunning ? 'bg-yellow-600 animate-pulse' : 'bg-gray-600 hover:bg-gray-500'}`}>
+                                {isAutoRunning ? 'STOP' : 'AUTO RUN'}
+                            </button>
+
+                            {[7, 8, 9].map(n => (
+                                <button key={n} onClick={() => handleNumber(n)} className="calc-btn bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded">{n}</button>
+                            ))}
+                            {/* The Main Experiment Button */}
+                            <button onClick={handleSqrt} className="calc-btn row-span-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded flex flex-col items-center justify-center shadow-lg border-b-4 border-blue-800 active:border-b-0 active:mt-1">
+                                <span className="text-lg">√</span>
+                            </button>
+
+                            {[4, 5, 6].map(n => (
+                                <button key={n} onClick={() => handleNumber(n)} className="calc-btn bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded">{n}</button>
+                            ))}
+
+                            {[1, 2, 3].map(n => (
+                                <button key={n} onClick={() => handleNumber(n)} className="calc-btn bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded">{n}</button>
+                            ))}
+                            <button onClick={() => handleNumber(0)} className="calc-btn bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded">0</button>
+                        </div>
+                    </div>
+
+                    {/* EXPLANATION & HISTORY */}
+                    <div className="flex-1 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                        <h2 className="text-2xl font-bold text-blue-900 mb-2">The Calculator Experiment</h2>
+                        <p className="text-gray-700 mb-4 text-sm leading-relaxed border-l-4 border-blue-500 pl-4 bg-blue-50 py-2 rounded-r">
+                            "If you pick a calculator, insert a number, and press [√] many times, you reach '1'. This is the simplest show of computation uncertainty."
+                        </p>
+
+                        <div className="bg-gray-100 rounded-lg p-4 font-mono text-xs h-64 overflow-y-auto border border-gray-300 shadow-inner">
+                            {history.length === 0 ? (
+                                <div className="text-gray-400 text-center mt-20">
+                                    Input a number and press √ to begin the experiment.
+                                </div>
+                            ) : (
+                                <table className="w-full text-left">
+                                    <thead>
+                                        <tr className="text-gray-500 border-b border-gray-300">
+                                            <th className="pb-2">Step</th>
+                                            <th className="pb-2">Value</th>
+                                            <th className="pb-2 text-right">Distance from 1</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {history.map((h, i) => (
+                                            <tr key={i} className={h.val === 1 ? "text-green-600 font-bold bg-green-50" : "text-gray-700"}>
+                                                <td className="py-1 border-b border-gray-200">{h.step}</td>
+                                                <td className="py-1 border-b border-gray-200">{h.val}</td>
+                                                <td className="py-1 border-b border-gray-200 text-right">{(h.val - 1).toExponential(2)}</td>
+                                            </tr>
+                                        ))}
+                                        <tr ref={historyEndRef}></tr>
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                        {display === "1" && (
+                            <div className="mt-4 text-center bg-green-100 text-green-800 p-2 rounded font-bold animate-bounce">
+                                Convergence Reached! 🎉
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<CalculatorExperiment />);
+    </script>
+</body>
+
+</html>
