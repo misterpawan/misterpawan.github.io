@@ -151,10 +151,96 @@
             margin-top: 10px;
             min-height: 250px;
         }
+
+        /* Teach Mode Styles */
+        body.teach-mode {
+            overflow: hidden;
+            background: black;
+        }
+
+        body.teach-mode nav,
+        body.teach-mode header,
+        body.teach-mode footer,
+        body.teach-mode .run-btn {
+            display: none !important;
+        }
+
+        body.teach-mode main {
+            max-width: none;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.teach-mode .slide-card {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            border-radius: 0;
+            padding: 4rem;
+            z-index: 100;
+            overflow-y: auto;
+            align-content: center;
+        }
+
+        body.teach-mode .slide-card.active-slide {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .teach-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e11d48;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
+            cursor: pointer;
+            z-index: 9999;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .teach-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(225, 29, 72, 0.5);
+        }
+
+        body.teach-mode .teach-btn {
+            display: none;
+            /* Hide toggle button in presentation */
+        }
     </style>
 </head>
 
 <body>
+    <button onclick="toggleTeachMode()" class="teach-btn">
+        <span>👨‍🏫</span> Teach Mode
+    </button>
 
     <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -569,6 +655,97 @@ intf_rand = val.sum() / nsamples
             el.innerHTML += text + '<br>';
             el.scrollTop = el.scrollHeight;
         }
+
+        // --- Teach Mode Logic ---
+        let isTeachMode = false;
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-card');
+
+        function toggleTeachMode() {
+            isTeachMode = !isTeachMode;
+            document.body.classList.toggle('teach-mode');
+
+            if (isTeachMode) {
+                // Determine which slide is currently in view to start from there
+                updateCurrentSlideFromScroll();
+                enterFullscreen();
+                showSlide(currentSlide);
+            } else {
+                exitFullscreen();
+                // Scroll back to the slide we were on
+                slides[currentSlide].scrollIntoView({ behavior: 'auto', block: 'start' });
+            }
+        }
+
+        function enterFullscreen() {
+            const el = document.documentElement;
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active-slide', i === index);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function updateCurrentSlideFromScroll() {
+            // Find the slide closest to the top of the viewport
+            let closestIndex = 0;
+            let minDistance = Infinity;
+
+            slides.forEach((slide, i) => {
+                const rect = slide.getBoundingClientRect();
+                const distance = Math.abs(rect.top);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestIndex = i;
+                }
+            });
+            currentSlide = closestIndex;
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (!isTeachMode) return;
+
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                prevSlide();
+            } else if (e.key === 'Escape') {
+                // The browser handles exiting fullscreen on Esc, 
+                // but we need to catch it to sync our state if standard fullscreen exit doesn't fire events we catch well enough
+                if (isTeachMode) toggleTeachMode();
+            }
+        });
+
+        // Listen for fullscreen change (user pressing Esc)
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && isTeachMode) {
+                toggleTeachMode();
+            }
+        });
+
 
         // --- 1. LCG Code ---
         function runLCG() {
