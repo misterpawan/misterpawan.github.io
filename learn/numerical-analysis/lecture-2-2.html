@@ -342,110 +342,124 @@
     </nav>
 
     <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
-        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-            Interpolation
-        </h1>
-        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
-            The art of reading between the lines (literally). 📈
-        </p>
-        <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
-            <span>Lecture 2-2</span>
+        <div class="slide-card">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+                Interpolation
+            </h1>
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+                The art of reading between the lines (literally). 📈
+            </p>
+            <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
+                <span>Lecture 2-2</span>
+            </div>
         </div>
     </header>
 
     <main class="max-w-5xl mx-auto px-4 pb-20">
 
-        <section id="intro" class="slide-card">
-            <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-illini-blue">1. What is Interpolation?</h2>
-                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                    1-7</span>
-            </div>
+        <section id="intro">
+            <div class="slide-card">
+                <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-illini-blue">1. What is Interpolation?</h2>
+                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                        1-7</span>
+                </div>
 
-            <div class="grid md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <h3 class="font-bold text-lg mb-2">The Basic Problem</h3>
-                    <p class="text-slate-600 mb-4">
-                        Given data points $(t_i, y_i)$ for $i=1,\dots,m$, find a function $f: \mathbb{R} \to \mathbb{R}$
-                        such that:
-                    </p>
-                    <div class="math-box text-center">
-                        $$ f(t_i) = y_i \quad \text{for } i=1,\dots,m $$
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">The Basic Problem</h3>
+                        <p class="text-slate-600 mb-4">
+                            Given data points $(t_i, y_i)$ for $i=1,\dots,m$, find a function $f: \mathbb{R} \to
+                            \mathbb{R}$
+                            such that:
+                        </p>
+                        <div class="math-box text-center">
+                            $$ f(t_i) = y_i \quad \text{for } i=1,\dots,m $$
+                        </div>
+                        <p class="text-sm text-slate-500 italic">f is called the interpolant.</p>
                     </div>
-                    <p class="text-sm text-slate-500 italic">f is called the interpolant.</p>
+
+                    <div class="bg-blue-50 p-6 rounded-lg">
+                        <h4 class="font-bold text-illini-blue mb-2">Why do we do this? 🤔</h4>
+                        <ul class="list-disc ml-5 space-y-2 text-sm text-slate-700">
+                            <li><strong>Plotting:</strong> Smooth curves through discrete dots.</li>
+                            <li><strong>Analysis:</strong> Differentiating or integrating tabulated data.</li>
+                            <li><strong>Evaluation:</strong> Replacing a complex function (expensive) with a
+                                simple one (cheap).</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="bg-blue-50 p-6 rounded-lg">
-                    <h4 class="font-bold text-illini-blue mb-2">Why do we do this? 🤔</h4>
-                    <ul class="list-disc ml-5 space-y-2 text-sm text-slate-700">
-                        <li><strong>Plotting:</strong> Smooth curves through discrete dots.</li>
-                        <li><strong>Analysis:</strong> Differentiating or integrating tabulated data.</li>
-                        <li><strong>Evaluation:</strong> Replacing a complex function (expensive) with a
-                            simple one (cheap).</li>
-                    </ul>
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+                    <h4 class="font-bold text-yellow-800">⚠️ Interpolation vs. Approximation</h4>
+                    <p class="text-sm text-yellow-900">
+                        <strong>Interpolation:</strong> Must hit every single point exactly.<br>
+                        <strong>Approximation (e.g., Least Squares):</strong> Gets "close" to points. Better for
+                        noisy data.
+                    </p>
                 </div>
-            </div>
 
-            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
-                <h4 class="font-bold text-yellow-800">⚠️ Interpolation vs. Approximation</h4>
-                <p class="text-sm text-yellow-900">
-                    <strong>Interpolation:</strong> Must hit every single point exactly.<br>
-                    <strong>Approximation (e.g., Least Squares):</strong> Gets "close" to points. Better for
-                    noisy data.
-                </p>
+                <div id="quiz-1-root"></div>
             </div>
-
-            <div id="quiz-1-root"></div>
         </section>
 
-        <section id="monomial" class="slide-card">
-            <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-illini-blue">2. Polynomial Interpolation: Monomial Basis</h2>
-                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                    11-18</span>
+        <section id="monomial">
+            <div class="slide-card">
+                <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-illini-blue">2. Polynomial Interpolation: Monomial Basis</h2>
+                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                        11-18 (Part 1)</span>
+                </div>
+
+                <p class="mb-4">The simplest choice is a polynomial. For $n$ data points, there is a
+                    <strong>unique</strong> polynomial of degree at most $n-1$.
+                </p>
+
+                <h3 class="font-bold text-lg mb-2 text-indigo-600">Monomial Basis</h3>
+                <div class="math-box text-sm">
+                    $$ p_{n-1}(t) = x_1 + x_2 t + x_3 t^2 + \dots + x_n t^{n-1} $$
+                </div>
+
+                <p class="mb-4">Solving for coefficients $x$ involves the <strong>Vandermonde Matrix</strong>:</p>
+                <div class="math-box text-center text-xs">
+                    $$
+                    \begin{bmatrix}
+                    1 & t_1 & \dots & t_1^{n-1} \\
+                    1 & t_2 & \dots & t_2^{n-1} \\
+                    \vdots & \vdots & \ddots & \vdots \\
+                    1 & t_n & \dots & t_n^{n-1}
+                    \end{bmatrix}
+                    \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}
+                    =
+                    \begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix}
+                    $$
+                </div>
             </div>
 
-            <p class="mb-4">The simplest choice is a polynomial. For $n$ data points, there is a
-                <strong>unique</strong> polynomial of degree at most $n-1$.
-            </p>
+            <div class="slide-card">
+                <span class="slide-number">Part 2</span>
+                <h3 class="text-xl font-bold mb-4">The Problem with Monomials</h3>
+                <div class="bg-red-50 p-4 rounded border border-red-100 mb-6">
+                    <p class="font-bold text-red-800">The Problem:</p>
+                    <p class="text-sm text-red-700">The Vandermonde matrix becomes <strong>ill-conditioned</strong> very
+                        quickly as degree increases. Solving it requires $O(n^3)$ work.</p>
+                </div>
 
-            <h3 class="font-bold text-lg mb-2 text-indigo-600">Monomial Basis</h3>
-            <div class="math-box text-sm">
-                $$ p_{n-1}(t) = x_1 + x_2 t + x_3 t^2 + \dots + x_n t^{n-1} $$
+                <div class="mb-6">
+                    <h4 class="font-bold text-sm mb-2">Visualizing Monomials $t^k$ on [0,1]</h4>
+                    <div id="plot-monomial" class="h-64 bg-white border rounded"></div>
+                    <p class="text-xs text-center text-gray-500 mt-1">Notice how they all look similar (crowded) near 1.
+                        This causes linear dependence issues!</p>
+                </div>
             </div>
 
-            <p class="mb-4">Solving for coefficients $x$ involves the <strong>Vandermonde Matrix</strong>:</p>
-            <div class="math-box text-center text-xs">
-                $$
-                \begin{bmatrix}
-                1 & t_1 & \dots & t_1^{n-1} \\
-                1 & t_2 & \dots & t_2^{n-1} \\
-                \vdots & \vdots & \ddots & \vdots \\
-                1 & t_n & \dots & t_n^{n-1}
-                \end{bmatrix}
-                \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}
-                =
-                \begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix}
-                $$
-            </div>
-
-            <div class="bg-red-50 p-4 rounded border border-red-100 mb-6">
-                <p class="font-bold text-red-800">The Problem:</p>
-                <p class="text-sm text-red-700">The Vandermonde matrix becomes <strong>ill-conditioned</strong> very
-                    quickly as degree increases. Solving it requires $O(n^3)$ work.</p>
-            </div>
-
-            <div class="mb-6">
-                <h4 class="font-bold text-sm mb-2">Visualizing Monomials $t^k$ on [0,1]</h4>
-                <div id="plot-monomial" class="h-64 bg-white border rounded"></div>
-                <p class="text-xs text-center text-gray-500 mt-1">Notice how they all look similar (crowded) near 1.
-                    This causes linear dependence issues!</p>
-            </div>
-
-            <div class="code-container">
-                <div class="code-editor">
-                    <button class="run-btn" onclick="runMonomial()">▶ Run Vandermonde</button>
-                    <pre><code class="language-python">import numpy as np
+            <div class="slide-card">
+                <span class="slide-number">Part 3</span>
+                <h3 class="text-xl font-bold mb-4">Implementation (Python)</h3>
+                <div class="code-container">
+                    <div class="code-editor">
+                        <button class="run-btn" onclick="runMonomial()">▶ Run Vandermonde</button>
+                        <pre><code class="language-python">import numpy as np
 import scipy.linalg as la
 
 # Data points: (-2, -27), (0, -1), (1, 0)
@@ -463,51 +477,57 @@ print(A)
 x = la.solve(A, y)
 print("\nCoefficients x:", x)
 print(f"Polynomial: {x[0]} + {x[1]}t + {x[2]}t^2")</code></pre>
+                    </div>
+                    <div id="out-monomial" class="output-panel">Click Run to solve...</div>
                 </div>
-                <div id="out-monomial" class="output-panel">Click Run to solve...</div>
             </div>
         </section>
 
-        <section id="lagrange" class="slide-card">
-            <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-illini-blue">3. Lagrange Interpolation</h2>
-                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                    19-24</span>
-            </div>
-
-            <p class="mb-4">Instead of solving a linear system, we can write the polynomial directly using
-                <strong>Lagrange Basis Functions</strong>.
-            </p>
-
-            <div class="math-box text-center">
-                $$ p_{n-1}(t) = \sum_{j=1}^n y_j \ell_j(t) $$
-            </div>
-
-            <p class="text-sm text-slate-600 mb-4">Where $\ell_j(t)$ are polynomials such that $\ell_j(t_i) = 1$ if
-                $i=j$ and $0$ if $i \neq j$. This means the matrix $A$ becomes the Identity matrix!</p>
-
-            <div class="grid md:grid-cols-2 gap-8 mb-6">
-                <div class="bg-gray-50 p-4 rounded text-sm">
-                    <h4 class="font-bold text-slate-700">Pros</h4>
-                    <ul class="list-disc ml-5">
-                        <li>Easy to write down by hand.</li>
-                        <li>No system to solve (A is Identity).</li>
-                    </ul>
+        <section id="lagrange">
+            <div class="slide-card">
+                <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-illini-blue">3. Lagrange Interpolation</h2>
+                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                        19-24 (Part 1)</span>
                 </div>
-                <div class="bg-gray-50 p-4 rounded text-sm">
-                    <h4 class="font-bold text-slate-700">Cons</h4>
-                    <ul class="list-disc ml-5">
-                        <li>Evaluating at a new point is expensive $O(n^2)$ (naively) or $O(n)$
-                            (barycentric).</li>
-                        <li>Hard to add a new data point (must recompute everything).</li>
-                    </ul>
+
+                <p class="mb-4">Instead of solving a linear system, we can write the polynomial directly using
+                    <strong>Lagrange Basis Functions</strong>.
+                </p>
+
+                <div class="math-box text-center">
+                    $$ p_{n-1}(t) = \sum_{j=1}^n y_j \ell_j(t) $$
+                </div>
+
+                <p class="text-sm text-slate-600 mb-4">Where $\ell_j(t)$ are polynomials such that $\ell_j(t_i) = 1$ if
+                    $i=j$ and $0$ if $i \neq j$. This means the matrix $A$ becomes the Identity matrix!</p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-6">
+                    <div class="bg-gray-50 p-4 rounded text-sm">
+                        <h4 class="font-bold text-slate-700">Pros</h4>
+                        <ul class="list-disc ml-5">
+                            <li>Easy to write down by hand.</li>
+                            <li>No system to solve (A is Identity).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded text-sm">
+                        <h4 class="font-bold text-slate-700">Cons</h4>
+                        <ul class="list-disc ml-5">
+                            <li>Evaluating at a new point is expensive $O(n^2)$ (naively) or $O(n)$
+                                (barycentric).</li>
+                            <li>Hard to add a new data point (must recompute everything).</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <div class="code-container">
-                <div class="code-editor">
-                    <button class="run-btn" onclick="runLagrange()">▶ Run Lagrange</button>
-                    <pre><code class="language-python">from scipy.interpolate import lagrange
+            <div class="slide-card">
+                <span class="slide-number">Part 2</span>
+                <h3 class="text-xl font-bold mb-4">Lagrange Implementation</h3>
+                <div class="code-container">
+                    <div class="code-editor">
+                        <button class="run-btn" onclick="runLagrange()">▶ Run Lagrange</button>
+                        <pre><code class="language-python">from scipy.interpolate import lagrange
 import numpy as np
 
 t = [-2, 0, 1]
@@ -519,108 +539,119 @@ poly = lagrange(t, y)
 print("Lagrange Polynomial coefficients:")
 print(poly)
 # Expected: -4t^2 + 5t - 1</code></pre>
+                    </div>
+                    <div id="out-lagrange" class="output-panel">Click Run...</div>
                 </div>
-                <div id="out-lagrange" class="output-panel">Click Run...</div>
             </div>
         </section>
 
-        <section id="newton" class="slide-card">
-            <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-illini-blue">4. Newton Interpolation</h2>
-                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                    25-30</span>
-            </div>
+        <section id="newton">
+            <div class="slide-card">
+                <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-illini-blue">4. Newton Interpolation</h2>
+                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                        25-30</span>
+                </div>
 
-            <p class="mb-4">Newton's form allows us to build the polynomial incrementally. It uses a
-                <strong>triangular</strong> basis matrix.
-            </p>
-
-            <div class="math-box text-sm">
-                $$ p_j(t) = p_{j-1}(t) + x_{j+1} \prod_{k=1}^j (t - t_k) $$
-            </div>
-
-            <div class="bg-green-50 p-4 rounded border border-green-200 mb-6">
-                <h4 class="font-bold text-green-800">The Power of Divided Differences</h4>
-                <p class="text-sm text-green-700">
-                    We compute coefficients using a recursive table of <strong>Divided Differences</strong> $f[t_1,
-                    \dots, t_k]$.
-                    <br>
-                    <strong>Cost:</strong> $O(n^2)$ to compute coeffs, $O(n)$ to evaluate (Horner's-like).
-                    Adding a point is cheap!
+                <p class="mb-4">Newton's form allows us to build the polynomial incrementally. It uses a
+                    <strong>triangular</strong> basis matrix.
                 </p>
-            </div>
 
-            <div id="quiz-2-root"></div>
-        </section>
-
-        <section id="splines" class="slide-card">
-            <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-illini-blue">5. The "Wiggle" Problem & Splines</h2>
-                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                    41-57</span>
-            </div>
-
-            <h3 class="font-bold text-lg mb-2">Runge's Phenomenon 〰️</h3>
-            <p class="mb-4">
-                High-degree polynomials oscillate wildly near the edges, especially with equally spaced points. This is
-                <strong>Runge's Phenomenon</strong>.
-            </p>
-
-            <div class="grid md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <div id="plot-runge" class="h-64 bg-white border rounded"></div>
-                    <button onclick="plotRunge()"
-                        class="mt-2 w-full py-2 bg-illini-orange text-white rounded font-bold hover:bg-red-700 transition">Show
-                        Runge's Wiggle</button>
+                <div class="math-box text-sm">
+                    $$ p_j(t) = p_{j-1}(t) + x_{j+1} \prod_{k=1}^j (t - t_k) $$
                 </div>
-                <div>
-                    <h4 class="font-bold text-sm mb-2">The Solution: Splines</h4>
-                    <p class="text-sm text-slate-600 mb-4">Instead of one giant polynomial, use many small ones
-                        connected together.</p>
-                    <ul class="list-disc ml-5 text-sm">
-                        <li><strong>Piecewise Linear:</strong> Connect dots with lines (not smooth).</li>
-                        <li><strong>Cubic Spline:</strong> Piecewise cubic. Smooth ($C^2$ continuous).</li>
-                        <li><strong>Hermite Cubic:</strong> Matches value and derivative. ($C^1$
-                            continuous).</li>
-                    </ul>
-                </div>
-            </div>
 
-            <div class="bg-gray-100 p-4 rounded font-mono text-sm">
-                <strong>Natural Cubic Spline:</strong> Forces second derivative to be 0 at endpoints.<br>
-                <strong>Not-a-knot:</strong> Forces 3rd derivative continuity at first/last internal knots.
+                <div class="bg-green-50 p-4 rounded border border-green-200 mb-6">
+                    <h4 class="font-bold text-green-800">The Power of Divided Differences</h4>
+                    <p class="text-sm text-green-700">
+                        We compute coefficients using a recursive table of <strong>Divided Differences</strong> $f[t_1,
+                        \dots, t_k]$.
+                        <br>
+                        <strong>Cost:</strong> $O(n^2)$ to compute coeffs, $O(n)$ to evaluate (Horner's-like).
+                        Adding a point is cheap!
+                    </p>
+                </div>
+
+                <div id="quiz-2-root"></div>
             </div>
         </section>
 
-        <section id="bsplines" class="slide-card">
-            <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-illini-blue">6. B-Splines</h2>
-                <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                    58-64</span>
-            </div>
-
-            <p class="mb-4">B-Splines (Basis Splines) are the modern standard for representing piecewise polynomials.
-            </p>
-
-            <div class="math-box text-sm">
-                $$ B_i^k(t) = v_i^k(t) B_i^{k-1}(t) + (1-v_{i+1}^k(t)) B_{i+1}^{k-1}(t) $$
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8 mt-6">
-                <div>
-                    <h4 class="font-bold text-blue-700 mb-2">Key Properties</h4>
-                    <ul class="list-decimal ml-5 text-sm space-y-1">
-                        <li><strong>Local Support:</strong> Zero everywhere except a small interval.
-                            Changing one point only affects a local area.</li>
-                        <li><strong>Positivity:</strong> $B_i^k(t) > 0$ inside support.</li>
-                        <li><strong>Partition of Unity:</strong> $\sum B_i^k(t) = 1$.</li>
-                    </ul>
+        <section id="splines">
+            <div class="slide-card">
+                <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-illini-blue">5. The "Wiggle" Problem & Splines</h2>
+                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                        41-57 (Part 1)</span>
                 </div>
-                <div>
-                    <div id="plot-bspline" class="h-48 bg-white border rounded"></div>
-                    <button onclick="plotBSpline()"
-                        class="mt-2 w-full py-2 bg-illini-blue text-white rounded font-bold text-sm">Visualize Basis
-                        Functions</button>
+
+                <h3 class="font-bold text-lg mb-2">Runge's Phenomenon 〰️</h3>
+                <p class="mb-4">
+                    High-degree polynomials oscillate wildly near the edges, especially with equally spaced points. This
+                    is
+                    <strong>Runge's Phenomenon</strong>.
+                </p>
+
+                <div id="plot-runge" class="h-64 bg-white border rounded"></div>
+                <button onclick="plotRunge()"
+                    class="mt-2 w-full py-2 bg-illini-orange text-white rounded font-bold hover:bg-red-700 transition">Show
+                    Runge's Wiggle</button>
+            </div>
+
+            <div class="slide-card">
+                <span class="slide-number">Part 2</span>
+                <h3 class="text-xl font-bold mb-4">The Solution: Splines</h3>
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <p class="text-sm text-slate-600 mb-4">Instead of one giant polynomial, use many small ones
+                            connected together.</p>
+                        <ul class="list-disc ml-5 text-sm">
+                            <li><strong>Piecewise Linear:</strong> Connect dots with lines (not smooth).</li>
+                            <li><strong>Cubic Spline:</strong> Piecewise cubic. Smooth ($C^2$ continuous).</li>
+                            <li><strong>Hermite Cubic:</strong> Matches value and derivative. ($C^1$
+                                continuous).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded font-mono text-sm">
+                    <strong>Natural Cubic Spline:</strong> Forces second derivative to be 0 at endpoints.<br>
+                    <strong>Not-a-knot:</strong> Forces 3rd derivative continuity at first/last internal knots.
+                </div>
+            </div>
+        </section>
+
+        <section id="bsplines">
+            <div class="slide-card">
+                <div class="slide-header flex justify-between border-b pb-4 mb-6">
+                    <h2 class="text-3xl font-bold text-illini-blue">6. B-Splines</h2>
+                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
+                        58-64</span>
+                </div>
+
+                <p class="mb-4">B-Splines (Basis Splines) are the modern standard for representing piecewise
+                    polynomials.
+                </p>
+
+                <div class="math-box text-sm">
+                    $$ B_i^k(t) = v_i^k(t) B_i^{k-1}(t) + (1-v_{i+1}^k(t)) B_{i+1}^{k-1}(t) $$
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mt-6">
+                    <div>
+                        <h4 class="font-bold text-blue-700 mb-2">Key Properties</h4>
+                        <ul class="list-decimal ml-5 text-sm space-y-1">
+                            <li><strong>Local Support:</strong> Zero everywhere except a small interval.
+                                Changing one point only affects a local area.</li>
+                            <li><strong>Positivity:</strong> $B_i^k(t) > 0$ inside support.</li>
+                            <li><strong>Partition of Unity:</strong> $\sum B_i^k(t) = 1$.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div id="plot-bspline" class="h-48 bg-white border rounded"></div>
+                        <button onclick="plotBSpline()"
+                            class="mt-2 w-full py-2 bg-illini-blue text-white rounded font-bold text-sm">Visualize Basis
+                            Functions</button>
+                    </div>
                 </div>
             </div>
         </section>

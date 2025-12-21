@@ -289,107 +289,103 @@
 
         <main class="max-w-4xl mx-auto px-6 py-10">
 
-            <section id="intro" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <span class="slide-number">Slide 2-3</span>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Introduction</h2>
-
-                <div class="slide-card">
-                    <span class="slide-number">Slide 2-3</span>
-                    <h3 class="text-xl font-bold mb-4">What is Numerical Analysis?</h3>
-                    <p class="mb-4 text-gray-700">
-                        Numerical analysis is the study of algorithms that use numerical approximation (as
-                        opposed to general symbolic manipulations) for problems of mathematical analysis.
+                <h3 class="text-xl font-bold mb-4">What is Numerical Analysis?</h3>
+                <p class="mb-4 text-gray-700">
+                    Numerical analysis is the study of algorithms that use numerical approximation (as
+                    opposed to general symbolic manipulations) for problems of mathematical analysis.
+                </p>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                    <p class="italic text-yellow-800">
+                        "This does not require a very precise calculation. Sometimes the key point is to
+                        solve the problems with a (relatively) quick-and-dirty way, comparing to a full analytical
+                        solution."
                     </p>
-                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                        <p class="italic text-yellow-800">
-                            "This does not require a very precise calculation. Sometimes the key point is to
-                            solve the problems with a (relatively) quick-and-dirty way, comparing to a full analytical
-                            solution."
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-gray-100 p-4 rounded">
+                        <h4 class="font-bold mb-2">Historical Example: Babylonian Tablet</h4>
+                        <img src="assets/baby.png" alt="Babylonian Tablet"
+                            class="w-full rounded mb-2 border border-gray-300">
+                        <p class="text-sm mb-2">Dated 1800-1600 BC. Approximation of $\sqrt{2}$:</p>
+                        <p class="font-mono text-center my-2 text-blue-700">$$1 + 24/60 + 51/60^2 + 10/60^3$$</p>
+                        <p class="text-center font-bold">$= 1.41421296...$</p>
+                        <p class="text-xs text-gray-500 mt-2 text-center">(Accurate to 6 decimal
+                            figures) </p>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded">
+                        <h4 class="font-bold mb-2">Modern Context</h4>
+                        <p class="text-sm">
+                            "The real speciality of computers is repetition." Your computer can perform boring
+                            calculations millions of times. A smarter way provides quick and precise
+                            results; a stupid way produces nothing .
                         </p>
                     </div>
-
-                    <div class="grid md:grid-cols-2 gap-6 mt-6">
-                        <div class="bg-gray-100 p-4 rounded">
-                            <h4 class="font-bold mb-2">Historical Example: Babylonian Tablet</h4>
-                            <img src="assets/baby.png" alt="Babylonian Tablet"
-                                class="w-full rounded mb-2 border border-gray-300">
-                            <p class="text-sm mb-2">Dated 1800-1600 BC. Approximation of $\sqrt{2}$:</p>
-                            <p class="font-mono text-center my-2 text-blue-700">$$1 + 24/60 + 51/60^2 + 10/60^3$$</p>
-                            <p class="text-center font-bold">$= 1.41421296...$</p>
-                            <p class="text-xs text-gray-500 mt-2 text-center">(Accurate to 6 decimal
-                                figures) </p>
-                        </div>
-                        <div class="bg-gray-100 p-4 rounded">
-                            <h4 class="font-bold mb-2">Modern Context</h4>
-                            <p class="text-sm">
-                                "The real speciality of computers is repetition." Your computer can perform boring
-                                calculations millions of times. A smarter way provides quick and precise
-                                results; a stupid way produces nothing .
-                            </p>
-                        </div>
-                    </div>
                 </div>
+            </div>
 
-                <div class="slide-card">
-                    <span class="slide-number">Slide 4-5</span>
-                    <h3 class="text-xl font-bold mb-4">The Goal: Have Fun!</h3>
-                    <p class="mb-4">
-                        Numerical analysis can be entertaining. Sometimes you can do extremely
-                        difficult/fancy things with little effort .
-                    </p>
-                    <p class="font-semibold text-ntu-blue">Example Question: Have you ever thought of
-                        converting a nice piece of tune to sheet music? </p>
-                </div>
+            <div class="slide-card">
+                <span class="slide-number">Slide 4-5</span>
+                <h3 class="text-xl font-bold mb-4">The Goal: Have Fun!</h3>
+                <p class="mb-4">
+                    Numerical analysis can be entertaining. Sometimes you can do extremely
+                    difficult/fancy things with little effort .
+                </p>
+                <p class="font-semibold text-ntu-blue">Example Question: Have you ever thought of
+                    converting a nice piece of tune to sheet music? </p>
+            </div>
             </section>
 
-            <section id="music" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <span class="slide-number">Slide 6-8</span>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">The Art of Music</h2>
+                <h3 class="text-xl font-bold mb-4">Converting Audio to Sheet Music</h3>
+                <p class="mb-4">Usually a tough job for musicians. Technically speaking, if you can
+                    analyze a CD (Rip wave -> Analyze -> MIDI -> Sheet), you can automate it .</p>
 
+                <div class="bg-blue-50 p-4 rounded mb-4">
+                    <h4 class="font-bold text-blue-900">The Secret: Catch the Pitch</h4>
+                    <p class="text-blue-800">
+                        "Find the key of a tune is nothing magical but a Fourier transformation,
+                        right?".
+                        If one can scan over all possible pitches and find the ones with highest
+                        amplitudes, you can perform wave-to-midi conversion.
+                    </p>
+                </div>
+            </div>
+
+            <section id="tech-music">
                 <div class="slide-card">
-                    <span class="slide-number">Slide 6-8</span>
-                    <h3 class="text-xl font-bold mb-4">Converting Audio to Sheet Music</h3>
-                    <p class="mb-4">Usually a tough job for musicians. Technically speaking, if you can
-                        analyze a CD (Rip wave -> Analyze -> MIDI -> Sheet), you can automate it .</p>
-
-                    <div class="bg-blue-50 p-4 rounded mb-4">
-                        <h4 class="font-bold text-blue-900">The Secret: Catch the Pitch</h4>
-                        <p class="text-blue-800">
-                            "Find the key of a tune is nothing magical but a Fourier transformation,
-                            right?".
-                            If one can scan over all possible pitches and find the ones with highest
-                            amplitudes, you can perform wave-to-midi conversion.
-                        </p>
-                    </div>
+                    <span class="slide-number">Slide 9</span>
+                    <h3 class="text-xl font-bold mb-4">Implementation with Python + SciPy</h3>
+                    <p class="mb-2">It is not difficult to use Python to do this job. The
+                        workflow:</p>
+                    <ol class="list-decimal ml-6 space-y-1 text-sm font-mono text-gray-700">
+                        <li>Prepare source wave file.</li>
+                        <li>Read wave as NumPy array.</li>
+                        <li>For each time interval, perform Fourier transformation (SciPy) for target
+                            frequencies.</li>
+                        <li>Record amplitudes as a function of pitch and time.</li>
+                        <li>Clean up (remove noise/harmonics).</li>
+                        <li>Write to MIDI using MidiUtil package.</li>
+                    </ol>
                 </div>
 
-                <section id="tech-music">
-                    <div class="slide-card">
-                        <span class="slide-number">Slide 9</span>
-                        <h3 class="text-xl font-bold mb-4">Implementation with Python + SciPy</h3>
-                        <p class="mb-2">It is not difficult to use Python to do this job. The
-                            workflow:</p>
-                        <ol class="list-decimal ml-6 space-y-1 text-sm font-mono text-gray-700">
-                            <li>Prepare source wave file.</li>
-                            <li>Read wave as NumPy array.</li>
-                            <li>For each time interval, perform Fourier transformation (SciPy) for target
-                                frequencies.</li>
-                            <li>Record amplitudes as a function of pitch and time.</li>
-                            <li>Clean up (remove noise/harmonics).</li>
-                            <li>Write to MIDI using MidiUtil package.</li>
-                        </ol>
-                    </div>
+                <div class="slide-card">
+                    <span class="slide-number">Slide 10-12</span>
+                    <h3 class="text-xl font-bold mb-4">Conceptual Example: A440</h3>
+                    <p class="mb-4">Using the standard pitch A440 (440 Hz).</p>
 
-                    <div class="slide-card">
-                        <span class="slide-number">Slide 10-12</span>
-                        <h3 class="text-xl font-bold mb-4">Conceptual Example: A440</h3>
-                        <p class="mb-4">Using the standard pitch A440 (440 Hz).</p>
-
-                        <h5 class="font-bold text-sm mb-2">Loading the Wave (Interactive)</h5>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <div class="relative group">
-                                    <textarea id="code-wave"
-                                        class="code-block w-full h-64 resize-y outline-none focus:ring-2 focus:ring-ntu-blue"
-                                        style="background-color: #f8fafc; color: #1f2937;">import scipy
+                    <h5 class="font-bold text-sm mb-2">Loading the Wave (Interactive)</h5>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <div class="relative group">
+                                <textarea id="code-wave"
+                                    class="code-block w-full h-64 resize-y outline-none focus:ring-2 focus:ring-ntu-blue"
+                                    style="background-color: #f8fafc; color: #1f2937;">import scipy
 import scipy.io.wavfile as wavfile
 import matplotlib.pyplot as plt
 import numpy as np
@@ -410,40 +406,40 @@ plt.plot(t[:rate//100], data[:rate//100])
 plt.xlabel('Time [sec]')
 plt.ylabel('Amplitude')
 plt.show()</textarea>
-                                    <div class="absolute top-2 right-2">
-                                        <button onclick="runPython('code-wave', 'output-wave')"
-                                            class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-green-700 shadow-sm transition flex items-center gap-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
-                                                fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            Run
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h5 class="font-bold text-sm mb-2 text-gray-500">Output</h5>
-                                <div id="output-wave"
-                                    class="bg-white border text-gray-700 p-2 rounded h-64 overflow-auto flex items-center justify-center font-mono text-sm leading-relaxed">
-                                    <span class="text-gray-400 italic">Click "Run" to generate plot...</span>
+                                <div class="absolute top-2 right-2">
+                                    <button onclick="runPython('code-wave', 'output-wave')"
+                                        class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-green-700 shadow-sm transition flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Run
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <h5 class="font-bold text-sm mb-2 text-gray-500">Output</h5>
+                            <div id="output-wave"
+                                class="bg-white border text-gray-700 p-2 rounded h-64 overflow-auto flex items-center justify-center font-mono text-sm leading-relaxed">
+                                <span class="text-gray-400 italic">Click "Run" to generate plot...</span>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="slide-card">
-                        <span class="slide-number">Slide 13</span>
-                        <h3 class="text-xl font-bold mb-4">Conceptual Example: Fourier Transform</h3>
-                        <p class="mb-4">Analyzing the frequency components.</p>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <div class="relative group">
-                                    <textarea id="code-fft"
-                                        class="code-block w-full h-64 resize-y outline-none focus:ring-2 focus:ring-ntu-blue"
-                                        style="background-color: #f8fafc; color: #1f2937;">import scipy
+                <div class="slide-card">
+                    <span class="slide-number">Slide 13</span>
+                    <h3 class="text-xl font-bold mb-4">Conceptual Example: Fourier Transform</h3>
+                    <p class="mb-4">Analyzing the frequency components.</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <div class="relative group">
+                                <textarea id="code-fft"
+                                    class="code-block w-full h-64 resize-y outline-none focus:ring-2 focus:ring-ntu-blue"
+                                    style="background-color: #f8fafc; color: #1f2937;">import scipy
 import scipy.fftpack as fftpack
 import scipy.io.wavfile as wavfile
 import matplotlib.pyplot as plt
@@ -467,140 +463,137 @@ plt.plot(freqs[:1200], scipy.log10(fft[:1200]))
 plt.xlabel('Frequency [Hz]')
 plt.ylabel('log10(Amplitude)')
 plt.show()</textarea>
-                                    <div class="absolute top-2 right-2">
-                                        <button onclick="runPython('code-fft', 'output-fft')"
-                                            class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-green-700 shadow-sm transition flex items-center gap-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
-                                                fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            Run
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h5 class="font-bold text-sm mb-2 text-gray-500">Output</h5>
-                                <div id="output-fft"
-                                    class="bg-white border text-gray-700 p-2 rounded h-64 overflow-auto flex items-center justify-center font-mono text-sm leading-relaxed">
-                                    <span class="text-gray-400 italic">Click "Run" to view spectrum...</span>
+                                <div class="absolute top-2 right-2">
+                                    <button onclick="runPython('code-fft', 'output-fft')"
+                                        class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-green-700 shadow-sm transition flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Run
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <p class="text-sm mt-2 text-green-600 font-bold">Result: A sharp peak at 440 Hz!
-                        </p>
-                        </p>
-                    </div>
-
-                    <div class="slide-card">
-                        <span class="slide-number">Slide 14</span>
-                        <h3 class="text-xl font-bold mb-4">Music Theory: Frequencies</h3>
-                        <p class="mb-4">We need to know which frequencies to analyze. We use the MIDI number formula:
-                        </p>
-                        <div class="bg-gray-100 p-4 rounded text-center mb-4">
-                            $$f_{m} = 2^{\frac{m-69}{12}} \times 440 \text{ Hz}$$
-                        </div>
-                        <p class="text-sm text-gray-600 text-center">We consider range $21 \le m \le 108$
-                            (88 keys) .</p>
-                    </div>
-
-                    <div class="slide-card">
-                        <span class="slide-number">Slide 15-17</span>
-                        <h3 class="text-xl font-bold mb-4">Processing the Data</h3>
-                        <p class="mb-2 font-bold">1. Spectrogram</p>
-                        <p class="mb-4 text-sm">Create a 2D array of amplitudes per key per time step (e.g., 1/16 second
-                            intervals). This generates a lot of noise and harmonics .</p>
-
-                        <p class="mb-2 font-bold">2. Filtering (The "Magic" Step)</p>
-                        <ul class="list-disc ml-6 mb-4 text-sm text-gray-700">
-                            <li>Sort keys by amplitude for each time interval.</li>
-                            <li>Calculate "pedestal" (average of lower-amplitude keys) and subtract it.</li>
-                            <li>Apply threshold cut (e.g., 2.50).</li>
-                            <li>Remove isolated notes and nearby harmonics .</li>
-                        </ul>
-
-                        <p class="mb-2 font-bold">3. Output</p>
-                        <p class="text-sm">Join the blocks and write to MIDI. Convert MIDI to Sheet Music
-                            using software .</p>
-                    </div>
-
-                    <div class="slide-card">
-                        <span class="slide-number">Slide 18-22</span>
-                        <h3 class="text-xl font-bold mb-4">Performance Tests</h3>
-                        <div class="space-y-4">
-                            <div class="border-l-4 border-green-500 pl-4">
-                                <h4 class="font-bold">Test 1: Simple Scales</h4>
-                                <p class="text-sm">8 single notes, C4 to C5. Code works perfectly.</p>
-                            </div>
-                            <div class="border-l-4 border-green-500 pl-4">
-                                <h4 class="font-bold">Test 2: Chords</h4>
-                                <p class="text-sm">C4+E4+G4, etc. Code handles multiple sine waves
-                                    successfully.</p>
-                            </div>
-                            <div class="border-l-4 border-yellow-500 pl-4">
-                                <h4 class="font-bold">Test 3: Real Song (Dvořák: Humoresque)</h4>
-                                <p class="text-sm">Analyzed recording of Yo-Yo Ma + Itzhak Perlman. Result is "not so
-                                    trivial." Code captures the main idea but real audio is messy. Analyzing
-                                    a wave and catching the right pitch is a research-level topic.</p>
+                        <div>
+                            <h5 class="font-bold text-sm mb-2 text-gray-500">Output</h5>
+                            <div id="output-fft"
+                                class="bg-white border text-gray-700 p-2 rounded h-64 overflow-auto flex items-center justify-center font-mono text-sm leading-relaxed">
+                                <span class="text-gray-400 italic">Click "Run" to view spectrum...</span>
                             </div>
                         </div>
-                        <p class="mt-4 text-sm font-semibold">"All the work done here is already a nice demo
-                            of numerical analysis (and it is FUN!)." </p>
                     </div>
-                </section>
+                    <p class="text-sm mt-2 text-green-600 font-bold">Result: A sharp peak at 440 Hz!
+                    </p>
+                    </p>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 14</span>
+                    <h3 class="text-xl font-bold mb-4">Music Theory: Frequencies</h3>
+                    <p class="mb-4">We need to know which frequencies to analyze. We use the MIDI number formula:
+                    </p>
+                    <div class="bg-gray-100 p-4 rounded text-center mb-4">
+                        $$f_{m} = 2^{\frac{m-69}{12}} \times 440 \text{ Hz}$$
+                    </div>
+                    <p class="text-sm text-gray-600 text-center">We consider range $21 \le m \le 108$
+                        (88 keys) .</p>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 15-17</span>
+                    <h3 class="text-xl font-bold mb-4">Processing the Data</h3>
+                    <p class="mb-2 font-bold">1. Spectrogram</p>
+                    <p class="mb-4 text-sm">Create a 2D array of amplitudes per key per time step (e.g., 1/16 second
+                        intervals). This generates a lot of noise and harmonics .</p>
+
+                    <p class="mb-2 font-bold">2. Filtering (The "Magic" Step)</p>
+                    <ul class="list-disc ml-6 mb-4 text-sm text-gray-700">
+                        <li>Sort keys by amplitude for each time interval.</li>
+                        <li>Calculate "pedestal" (average of lower-amplitude keys) and subtract it.</li>
+                        <li>Apply threshold cut (e.g., 2.50).</li>
+                        <li>Remove isolated notes and nearby harmonics .</li>
+                    </ul>
+
+                    <p class="mb-2 font-bold">3. Output</p>
+                    <p class="text-sm">Join the blocks and write to MIDI. Convert MIDI to Sheet Music
+                        using software .</p>
+                </div>
+
+                <div class="slide-card">
+                    <span class="slide-number">Slide 18-22</span>
+                    <h3 class="text-xl font-bold mb-4">Performance Tests</h3>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-bold">Test 1: Simple Scales</h4>
+                            <p class="text-sm">8 single notes, C4 to C5. Code works perfectly.</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-bold">Test 2: Chords</h4>
+                            <p class="text-sm">C4+E4+G4, etc. Code handles multiple sine waves
+                                successfully.</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-4">
+                            <h4 class="font-bold">Test 3: Real Song (Dvořák: Humoresque)</h4>
+                            <p class="text-sm">Analyzed recording of Yo-Yo Ma + Itzhak Perlman. Result is "not so
+                                trivial." Code captures the main idea but real audio is messy. Analyzing
+                                a wave and catching the right pitch is a research-level topic.</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm font-semibold">"All the work done here is already a nice demo
+                        of numerical analysis (and it is FUN!)." </p>
+                </div>
+            </section>
             </section>
 
-            <section id="errors" class="mb-16 scroll-mt-20">
+            <div class="slide-card">
+                <span class="slide-number">Slide 24</span>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Errors in Computation
                 </h2>
+                <h3 class="text-xl font-bold mb-4">The Calculator Experiment</h3>
+                <p class="mb-4">
+                    If you pick a calculator, insert a number, and press $\sqrt{}$ many times, you reach "1".
+                    This is the simplest show of computation uncertainty .
+                </p>
+                <iframe src="calculator-experiment.html"
+                    class="w-full h-[500px] border-none rounded-lg shadow-sm"></iframe>
+            </div>
 
-                <div class="slide-card">
-                    <span class="slide-number">Slide 24</span>
-                    <h3 class="text-xl font-bold mb-4">The Calculator Experiment</h3>
-                    <p class="mb-4">
-                        If you pick a calculator, insert a number, and press $\sqrt{}$ many times, you reach "1".
-                        This is the simplest show of computation uncertainty .
-                    </p>
-                    <iframe src="calculator-experiment.html"
-                        class="w-full h-[600px] border-none rounded-lg shadow-sm"></iframe>
-                </div>
-
-                <div class="slide-card">
-                    <span class="slide-number">Slide 25-26</span>
-                    <h3 class="text-xl font-bold mb-4">Types of Errors</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-red-50 p-4 rounded border border-red-100">
-                            <h4 class="font-bold text-red-900">1. Blunders / Bugs</h4>
-                            <p class="text-sm text-red-800">The #1 cause. Typographical errors, wrong data
-                                files, human error.</p>
-                        </div>
-                        <div class="bg-orange-50 p-4 rounded border border-orange-100">
-                            <h4 class="font-bold text-orange-900">2. Random Errors</h4>
-                            <p class="text-sm text-orange-800">Rare but possible. Unstable power, noise,
-                                cosmic rays flipping bits .</p>
-                        </div>
-                        <div class="bg-blue-50 p-4 rounded border border-blue-100">
-                            <h4 class="font-bold text-blue-900">3. Approximation Errors</h4>
-                            <p class="text-sm text-blue-800">Due to the selected algorithm (e.g., truncating
-                                higher order terms in a Taylor series) .</p>
-                        </div>
-                        <div class="bg-purple-50 p-4 rounded border border-purple-100">
-                            <h4 class="font-bold text-purple-900">4. Roundoff Errors</h4>
-                            <p class="text-sm text-purple-800">Floating point numbers have finite precision.
-                                Errors occur at the end of digits .</p>
-                        </div>
+            <div class="slide-card">
+                <span class="slide-number">Slide 25-26</span>
+                <h3 class="text-xl font-bold mb-4">Types of Errors</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-red-50 p-4 rounded border border-red-100">
+                        <h4 class="font-bold text-red-900">1. Blunders / Bugs</h4>
+                        <p class="text-sm text-red-800">The #1 cause. Typographical errors, wrong data
+                            files, human error.</p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded border border-orange-100">
+                        <h4 class="font-bold text-orange-900">2. Random Errors</h4>
+                        <p class="text-sm text-orange-800">Rare but possible. Unstable power, noise,
+                            cosmic rays flipping bits .</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded border border-blue-100">
+                        <h4 class="font-bold text-blue-900">3. Approximation Errors</h4>
+                        <p class="text-sm text-blue-800">Due to the selected algorithm (e.g., truncating
+                            higher order terms in a Taylor series) .</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded border border-purple-100">
+                        <h4 class="font-bold text-purple-900">4. Roundoff Errors</h4>
+                        <p class="text-sm text-purple-800">Floating point numbers have finite precision.
+                            Errors occur at the end of digits .</p>
                     </div>
                 </div>
+            </div>
             </section>
 
             <section id="floating-point" class="mb-16 scroll-mt-20">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Floating Point
-                    Arithmetic</h2>
-
                 <div class="slide-card">
                     <span class="slide-number">Slide 27-28</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Floating Point
+                        Arithmetic</h2>
                     <h3 class="text-xl font-bold mb-4">Bits, Bytes, and IEEE 754</h3>
                     <ul class="list-disc ml-6 mb-4 text-sm">
                         <li><strong>Integers:</strong> In Python, integers have unlimited precision (long
@@ -650,12 +643,13 @@ plt.show()</textarea>
             </section>
 
             <section id="calc-pi" class="mb-16 scroll-mt-20">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Calculating $\pi$</h2>
-                <p class="mb-6 text-gray-700">A classic exercise in numerical analysis to demonstrate error behavior.
-                </p>
-
                 <div class="slide-card">
                     <span class="slide-number">Slide 32-37</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-ntu-blue">Calculating $\pi$
+                    </h2>
+                    <p class="mb-6 text-gray-700">A classic exercise in numerical analysis to demonstrate error
+                        behavior.
+                    </p>
                     <h3 class="text-xl font-bold mb-4 text-ntu-blue">Method 1: Polygon Approximation (Liu Hui)</h3>
                     <p class="mb-2">Approximating a circle by polygons. Start with a hexagon ($S=1$). Use recursive
                         formula:</p>
@@ -738,55 +732,52 @@ for i in range(20):
                         precision limit is reached! .</p>
                 </div>
 
-                <div
-                    style="max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin: 2rem auto;">
-                    <div style="background-color: #1e40af; color: white; padding: 16px; text-align: center;">
-                        <h2 style="margin: 0; font-size: 1.25rem;">Convergence of Arctan Series</h2>
-                    </div>
-
-                    <div style="padding: 24px; background-color: #ffffff; line-height: 1.6;">
-
-                        <div
-                            style="background-color: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                            <p style="margin-top: 0; font-weight: bold; color: #475569;">Taylor Expansion for
-                                $\arctan(x)$</p>
-                            <p style="font-size: 1.1rem; color: #1e293b; margin: 0;">
-                                $$\arctan(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \dots = \sum_{n=0}^{\infty}
-                                \frac{(-1)^n x^{2n+1}}{2n+1}$$
-                            </p>
+                <div class="slide-card">
+                    <span class="slide-number">Slide 44</span>
+                    <div
+                        style="max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin: 0 auto;">
+                        <div style="background-color: #1e40af; color: white; padding: 16px; text-align: center;">
+                            <h2 style="margin: 0; font-size: 1.25rem;">Convergence of Arctan Series</h2>
                         </div>
 
-                        <h3
-                            style="font-size: 1rem; color: #1e40af; border-bottom: 2px solid #eff6ff; padding-bottom: 8px;">
-                            Series Comparison</h3>
-
-                        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;">
-                                <span style="font-weight: 600;">Standard ($x=1$)</span>
-                                <span style="font-family: 'Courier New', monospace;">Terms: $\frac{1}{2n+1}$</span>
-                            </div>
+                        <div style="padding: 24px; background-color: #ffffff; line-height: 1.6;">
 
                             <div
-                                style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #1e40af; border-radius: 6px; background-color: #f0f9ff;">
-                                <span style="font-weight: 600; color: #1e40af;">Improved ($x=1/\sqrt{3}$)</span>
-                                <span style="font-family: 'Courier New', monospace; color: #1e40af;">Terms:
-                                    $\frac{1}{\sqrt{3} \cdot (2n+1) \cdot 3^n}$</span>
+                                style="background-color: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                                <p style="margin-top: 0; font-weight: bold; color: #475569;">Taylor Expansion for
+                                    $\arctan(x)$</p>
+                                <p style="font-size: 1.1rem; color: #1e293b; margin: 0;">
+                                    $$\arctan(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \dots = \sum_{n=0}^{\infty}
+                                    \frac{(-1)^n x^{2n+1}}{2n+1}$$
+                                </p>
                             </div>
-                        </div>
 
-                        <div style="margin-top: 24px;">
-                            <h3 style="font-size: 1rem; color: #1e40af; margin-bottom: 8px;">Why is it faster?</h3>
-                            <p style="margin: 0; font-size: 0.95rem; color: #475569;">
-                                <strong>Convergence near $x=0$:</strong> Taylor expansions are most accurate and
-                                converge fastest near the point of expansion.
-                            </p>
-                            <ul style="margin-top: 10px; font-size: 0.9rem; color: #64748b; padding-left: 20px;">
-                                <li>When $x=1$, terms decrease slowly ($1/3, 1/5, 1/7 \dots$).</li>
-                                <li>When $x=1/\sqrt{3}$, the $3^n$ in the denominator forces terms to vanish
-                                    exponentially.</li>
-                                <li>With only 30 terms, the precision limit of the computer is reached.</li>
-                            </ul>
+                            <h3
+                                style="font-size: 1rem; color: #1e40af; border-bottom: 2px solid #eff6ff; padding-bottom: 8px;">
+                                Series Comparison</h3>
+
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                    <span style="font-weight: 600;">Standard ($x=1$)</span>
+                                    <span style="font-family: 'Courier New', monospace;">Terms: $\frac{1}{2n+1}$</span>
+                                </div>
+
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #1e40af; border-radius: 6px; background-color: #f0f9ff;">
+                                    <span style="font-weight: 600; color: #1e40af;">Improved ($x=1/\sqrt{3}$)</span>
+                                    <span style="font-family: 'Courier New', monospace; color: #1e40af;">Terms:
+                                        $\frac{1}{\sqrt{3} \cdot (2n+1) \cdot 3^n}$</span>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 24px;">
+                                <h3 style="font-size: 1rem; color: #1e40af; margin-bottom: 8px;">Why is it faster?</h3>
+                                <p style="margin: 0; font-size: 0.95rem; color: #475569;">
+                                    <strong>Convergence near $x=0$:</strong> Taylor expansions are most accurate and
+                                    converge fastest near the point of expansion.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

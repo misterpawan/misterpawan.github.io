@@ -337,23 +337,24 @@
     </nav>
 
     <header class="pt-32 pb-20 text-center px-4">
-        <h1 class="text-6xl font-bold mb-4 gradient-text">Root Finding & Minimization</h1>
-        <p class="text-xl text-gray-500 max-w-2xl mx-auto">
-            "If $f(x) = 0$, what is $x$?" <br>
-            A journey from high school algebra to the Higgs Boson.
-        </p>
-
+        <div class="slide-card">
+            <h1 class="text-6xl font-bold mb-4 gradient-text">Root Finding & Minimization</h1>
+            <p class="text-xl text-gray-500 max-w-2xl mx-auto">
+                "If $f(x) = 0$, what is $x$?" <br>
+                A journey from high school algebra to the Higgs Boson.
+            </p>
+            <div class="mt-8 text-sm text-gray-400 font-mono">Lecture 2-5</div>
+        </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4">
 
         <section id="root-finding">
-            <div class="flex items-center gap-2 mb-6">
-                <span class="text-4xl">🌱</span>
-                <h2 class="text-3xl font-bold text-slate-800">Part 1: Root Finding</h2>
-            </div>
-
             <div class="slide-card">
+                <div class="flex items-center gap-2 mb-6 border-b pb-4">
+                    <span class="text-4xl">🌱</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Part 1: Root Finding</h2>
+                </div>
                 <h3 class="text-xl font-bold mb-4">The Classical Problem</h3>
                 <p class="mb-4">You've known this since high school. For a given function $f(x)$, if $f(x)=0$, what is
                     $x$?</p>
@@ -610,12 +611,11 @@ print(f"sqrt(2) via scipy = {root}")
         </section>
 
         <section id="minimization" class="pt-12">
-            <div class="flex items-center gap-2 mb-6">
-                <span class="text-4xl">📉</span>
-                <h2 class="text-3xl font-bold text-slate-800">Part 2: Minimization</h2>
-            </div>
-
             <div class="slide-card">
+                <div class="flex items-center gap-2 mb-6 border-b pb-4">
+                    <span class="text-4xl">📉</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Part 2: Minimization</h2>
+                </div>
                 <h3 class="text-xl font-bold mb-2">Golden Section Search 🏆</h3>
                 <p class="mb-4">Finding the minimum is harder than finding a root. We need a bracket $(a, b, c)$ where
                     $f(b) < f(a)$ and $f(b) < f(c)$.</p>
@@ -705,12 +705,11 @@ for i in range(10):
         </section>
 
         <section id="fitting" class="pt-12">
-            <div class="flex items-center gap-2 mb-6">
-                <span class="text-4xl">🧬</span>
-                <h2 class="text-3xl font-bold text-slate-800">Part 3: Fitting & Genetic Algorithms</h2>
-            </div>
-
             <div class="slide-card">
+                <div class="flex items-center gap-2 mb-6 border-b pb-4">
+                    <span class="text-4xl">🧬</span>
+                    <h2 class="text-3xl font-bold text-slate-800">Part 3: Fitting & Genetic Algorithms</h2>
+                </div>
                 <h3 class="text-xl font-bold mb-4">Real World Example: The Higgs Boson ⚛️</h3>
                 <p class="mb-4">Minimizing $\chi^2$ (Chi-square) to fit data.</p>
                 <div class="math-block text-center">
