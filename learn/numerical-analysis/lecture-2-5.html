@@ -247,9 +247,10 @@
         // --- Teach Mode Logic ---
         let isTeachMode = false;
         let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide-card');
+        let slides = [];
 
         function toggleTeachMode() {
+            if (slides.length === 0) slides = document.querySelectorAll('.slide-card');
             isTeachMode = !isTeachMode;
             document.body.classList.toggle('teach-mode');
 
