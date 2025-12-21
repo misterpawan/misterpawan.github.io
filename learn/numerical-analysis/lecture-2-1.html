@@ -310,7 +310,7 @@
                     <div class="bg-gray-100 p-4 rounded">
                         <h4 class="font-bold mb-2">Historical Example: Babylonian Tablet</h4>
                         <img src="assets/baby.png" alt="Babylonian Tablet"
-                            class="w-full rounded mb-2 border border-gray-300">
+                            class="max-h-[50vh] w-auto object-contain mx-auto rounded mb-2 border border-gray-300">
                         <p class="text-sm mb-2">Dated 1800-1600 BC. Approximation of $\sqrt{2}$:</p>
                         <p class="font-mono text-center my-2 text-blue-700">$$1 + 24/60 + 51/60^2 + 10/60^3$$</p>
                         <p class="text-center font-bold">$= 1.41421296...$</p>
@@ -925,6 +925,8 @@ for i in range(20):
 
                 // Add plot target logic AND stdout capture
                 const plotSetup = `
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import io, base64, sys
 
