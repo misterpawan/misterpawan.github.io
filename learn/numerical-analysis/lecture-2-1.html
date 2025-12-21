@@ -896,6 +896,104 @@ print(a + b - c) # Result: 0.0</textarea>
                     </div>
                 </div>
 
+                <div class="slide-card p-0 overflow-hidden bg-slate-900">
+                    <section class="py-20 px-4 bg-slate-900 relative overflow-hidden w-full h-full">
+                        <div
+                            class="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2">
+                        </div>
+
+                        <div class="max-w-5xl mx-auto relative z-10">
+                            <div class="text-center mb-16">
+                                <div
+                                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 text-xs font-bold uppercase tracking-wider mb-4">
+                                    <span>🔗</span> The Connection
+                                </div>
+                                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
+                                    Euler's <span
+                                        class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">Golden
+                                        Bridge</span>
+                                </h2>
+                                <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+                                    Before Riemann, there was Euler. In 1737, he discovered a magical identity that
+                                    connected continuous analysis to discrete number theory.
+                                </p>
+                            </div>
+
+                            <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+                                <div
+                                    class="bg-slate-800/50 backdrop-blur-md border border-slate-700 p-8 rounded-2xl shadow-2xl relative group hover:border-yellow-500/50 transition-all duration-500">
+                                    <div
+                                        class="absolute -top-6 -left-6 text-6xl opacity-10 group-hover:opacity-20 transition-opacity">
+                                        ∑</div>
+                                    <h3 class="text-2xl font-bold text-white mb-6">The Euler Product Formula</h3>
+
+                                    <div
+                                        class="bg-slate-900/80 p-6 rounded-xl border border-slate-700 text-center mb-6 overflow-x-auto">
+                                        <span class="text-2xl md:text-3xl text-white font-serif">
+                                            $$ \zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s} = \prod_{p \text{ prime}}
+                                            \frac{1}{1-p^{-s}} $$
+                                        </span>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div class="flex items-start gap-4">
+                                            <div
+                                                class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl shrink-0">
+                                                ∑</div>
+                                            <div>
+                                                <h4 class="text-white font-bold">The Sum</h4>
+                                                <p class="text-slate-400 text-sm">A sum over <strong>all
+                                                        integers</strong> (n = 1, 2, 3...). This represents the
+                                                    analytical "wave" behavior of the function.</p>
+                                            </div>
+                                        </div>
+                                        <div class="w-px h-8 bg-slate-700 mx-6"></div>
+                                        <div class="flex items-start gap-4">
+                                            <div
+                                                class="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-xl shrink-0">
+                                                ∏</div>
+                                            <div>
+                                                <h4 class="text-white font-bold">The Product</h4>
+                                                <p class="text-slate-400 text-sm">A product over <strong>all prime
+                                                        numbers</strong> (p = 2, 3, 5...). This represents the
+                                                    arithmetic "atomic" structure of numbers.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-6">
+                                    <div
+                                        class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border-l-4 border-blue-500 shadow-lg">
+                                        <h4 class="text-xl font-bold text-white mb-2">Why is this Significant?</h4>
+                                        <p class="text-slate-300 leading-relaxed">
+                                            This identity establishes a fundamental bridge. It proves that the behavior
+                                            of the zeta function is <strong>entirely determined</strong> by the
+                                            distribution of prime numbers.
+                                            <br><br>
+                                            <span class="text-sm text-slate-400 italic">Valid for $Re(s) > 1$.</span>
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border-l-4 border-yellow-500 shadow-lg">
+                                        <h4 class="text-xl font-bold text-white mb-2">The 1737 Proof</h4>
+                                        <p class="text-slate-300 leading-relaxed">
+                                            Euler proved this using the <strong>Fundamental Theorem of
+                                                Arithmetic</strong> (every integer has a unique prime factorization).
+                                            <br><br>
+                                            He effectively "sieved" out composite numbers from the infinite sum, showing
+                                            that summing the integers is mathematically identical to multiplying the
+                                            primes.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
                 <div class="slide-card">
                     <span class="slide-number">Infographic</span>
                     <h3 class="text-xl font-bold mb-4">The Riemann Hypothesis</h3>
