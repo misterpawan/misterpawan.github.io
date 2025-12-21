@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Data Representation Visualizer</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        bit: {
+                            sign: '#ef4444',     // Red
+                            exp: '#22c55e',      // Green
+                            mant: '#3b82f6',     // Blue
+                            int: '#f59e0b',      // Amber
+                            off: '#e2e8f0',      // Slate-200
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+        }
+
+        .bit-box {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bit-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Scrollbar for bit container */
+        .bit-scroller::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .bit-scroller::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .bit-scroller::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .bit-scroller::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8 text-slate-800">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // --- UTILITIES FOR CONVERSION ---
+
+        // Helper to get binary string from standard Float32/64
+        const getStandardFloatBits = (val, type) => {
+            if (type === 'float64') {
+                const buffer = new ArrayBuffer(8);
+                new Float64Array(buffer)[0] = val;
+                const view = new DataView(buffer);
+                let bin = "";
+                for (let i = 0; i < 8; i++) {
+                    bin += view.getUint8(i).toString(2).padStart(8, '0');
+                }
+                return bin;
+            } else { // float32
+                const buffer = new ArrayBuffer(4);
+                new Float32Array(buffer)[0] = val;
+                const view = new DataView(buffer);
+                let bin = "";
+                for (let i = 0; i < 4; i++) {
+                    bin += view.getUint8(i).toString(2).padStart(8, '0');
+                }
+                return bin;
+            }
+        };
+
+        // Helper for "Mini Floats" (Educational 16, 8, 4 bits)
+        // Note: This is a simulation for educational purposes, mapping JS float to smaller formats
+        const getMiniFloatBits = (val, totalBits, expBits) => {
+            if (val === 0) return "0".repeat(totalBits);
+
+            const sign = val < 0 ? 1 : 0;
+            val = Math.abs(val);
+
+            // Bias formula: 2^(k-1) - 1
+            const bias = Math.pow(2, expBits - 1) - 1;
+
+            // Log2 to find exponent
+            let exponent = Math.floor(Math.log2(val));
+            let mantissaVal = val / Math.pow(2, exponent) - 1;
+
+            // Adjust exponent with bias
+            let storedExp = exponent + bias;
+
+            // Handle Subnormal / Zero / Infinity conceptually for visualizer limits
+            // (Simplified logic for demo)
+            const maxExp = Math.pow(2, expBits) - 1;
+            if (storedExp >= maxExp) {
+                storedExp = maxExp; // Infinity
+                mantissaVal = 0;
+            } else if (storedExp <= 0) {
+                storedExp = 0; // Subnormal (simplified)
+            }
+
+            const mantissaBits = totalBits - 1 - expBits;
+
+            // Convert to binary strings
+            const signStr = sign.toString();
+            const expStr = storedExp.toString(2).padStart(expBits, '0');
+
+            // Mantissa: multiply fractional part by 2^bits
+            const mantInt = Math.floor(mantissaVal * Math.pow(2, mantissaBits));
+            const mantStr = mantInt.toString(2).padStart(mantissaBits, '0').substring(0, mantissaBits);
+
+            return signStr + expStr + mantStr;
+        };
+
+        // --- COMPONENTS ---
+
+        const BitDisplay = ({ bits, schema, label }) => {
+            // bits: string of "0" and "1"
+            // schema: array of objects { label, color, count, id }
+
+            let currentIndex = 0;
+
+            return (
+                <div className="flex flex-col gap-2">
+                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">{label}</h3>
+                    <div className="bit-scroller flex overflow-x-auto pb-4 gap-1 select-none">
+                        {schema.map((group, groupIdx) => {
+                            const groupBits = bits.substring(currentIndex, currentIndex + group.count).split('');
+                            const startIdx = currentIndex;
+                            currentIndex += group.count;
+
+                            return (
+                                <div key={groupIdx} className="flex flex-col items-center">
+                                    <div className="flex gap-[1px]">
+                                        {groupBits.map((bit, i) => (
+                                            <div
+                                                key={i}
+                                                className={`bit-box w-8 h-10 flex items-center justify-center font-mono text-lg font-bold rounded-sm border-b-4 ${bit === '1' ? 'bg-white text-slate-800' : 'bg-slate-100 text-slate-400'
+                                                    }`}
+                                                style={{ borderColor: group.color }}
+                                                title={`${group.label} bit ${startIdx + i}`}
+                                            >
+                                                {bit}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <span className="text-[10px] font-bold mt-1 uppercase" style={{ color: group.color }}>{group.label}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const FormulaDisplay = ({ bits, typeConfig, decimalValue }) => {
+            const { signBits, expBits, mantBits, bias } = typeConfig;
+
+            const signBit = bits[0];
+            const expStr = bits.substring(1, 1 + expBits);
+            const mantStr = bits.substring(1 + expBits);
+
+            const signVal = signBit === '1' ? -1 : 1;
+            const expInt = parseInt(expStr, 2);
+
+            // Calculate Mantissa Value (1 + sum(b * 2^-i))
+            let mantFrac = 0;
+            let mantMathStr = "1";
+            for (let i = 0; i < mantStr.length; i++) {
+                if (mantStr[i] === '1') {
+                    mantFrac += Math.pow(2, -(i + 1));
+                    if (mantStr.length < 12) mantMathStr += ` + 2<sup>-${i + 1}</sup>`; // Only show detail for small bit counts
+                }
+            }
+            if (mantStr.length >= 12 && mantFrac > 0) mantMathStr += " + ...";
+            const mantVal = 1 + mantFrac;
+
+            const finalExp = expInt - bias;
+            const computedVal = signVal * Math.pow(2, finalExp) * mantVal;
+
+            return (
+                <div className="bg-slate-900 text-slate-200 p-6 rounded-xl font-mono text-sm md:text-base shadow-inner overflow-x-auto">
+                    <div className="mb-4 text-xs text-slate-500 uppercase font-bold">Decoding IEEE 754 ({typeConfig.label})</div>
+
+                    {/* Formula Template */}
+                    <div className="flex items-center gap-2 mb-6 text-lg md:text-xl">
+                        <span>Val = </span>
+                        <span className="text-red-400">(-1)<sup>{signBit}</sup></span>
+                        <span> × </span>
+                        <span className="text-green-400">2<sup>{expInt} - {bias}</sup></span>
+                        <span> × </span>
+                        <span className="text-blue-400">(1.<span>{mantStr.substring(0, 6)}{mantStr.length > 6 ? '...' : ''}</span>)<sub>2</sub></span>
+                    </div>
+
+                    {/* Breakdown */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs md:text-sm">
+                        <div className="border-l-2 border-red-500 pl-3">
+                            <strong className="text-red-400 block mb-1">Sign Bit</strong>
+                            Bit: {signBit}<br />
+                            Value: {signVal > 0 ? '+1' : '-1'}
+                        </div>
+                        <div className="border-l-2 border-green-500 pl-3">
+                            <strong className="text-green-400 block mb-1">Exponent</strong>
+                            Raw: {expStr} = {expInt}<br />
+                            Bias: {bias}<br />
+                            Actual: {expInt} - {bias} = <strong>{finalExp}</strong>
+                        </div>
+                        <div className="border-l-2 border-blue-500 pl-3">
+                            <strong className="text-blue-400 block mb-1">Mantissa (Fraction)</strong>
+                            Bits: {mantStr}<br />
+                            Value: <span dangerouslySetInnerHTML={{ __html: mantMathStr }}></span><br />
+                            Decimal: ≈ {mantVal.toFixed(6)}
+                        </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-slate-700 flex justify-between items-center">
+                        <span className="text-slate-400">Calculated Result:</span>
+                        <span className="text-xl md:text-2xl font-bold text-white">{computedVal.toPrecision(7)}</span>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [mode, setMode] = useState('float'); // float, int, char, bool
+            const [subType, setSubType] = useState('double'); // varies by mode
+            const [inputVal, setInputVal] = useState("3.14159");
+            const [bits, setBits] = useState("");
+
+            // Configuration for Floating Point Types
+            const FLOAT_CONFIGS = {
+                double: { label: "Double (64-bit)", bits: 64, signBits: 1, expBits: 11, mantBits: 52, bias: 1023 },
+                single: { label: "Single (32-bit)", bits: 32, signBits: 1, expBits: 8, mantBits: 23, bias: 127 },
+                half: { label: "Half (16-bit)", bits: 16, signBits: 1, expBits: 5, mantBits: 10, bias: 15 },
+                quarter: { label: "Mini (8-bit)", bits: 8, signBits: 1, expBits: 4, mantBits: 3, bias: 7 },
+                tiny: { label: "Tiny (4-bit)", bits: 4, signBits: 1, expBits: 2, mantBits: 1, bias: 1 }
+            };
+
+            const INT_CONFIGS = {
+                i32: { label: "32-bit Signed", bits: 32 },
+                i16: { label: "16-bit Signed", bits: 16 },
+                i8: { label: "8-bit Signed", bits: 8 },
+                u8: { label: "8-bit Unsigned", bits: 8 }
+            };
+
+            // Calculate Bits when input changes
+            useEffect(() => {
+                let val = parseFloat(inputVal);
+                if (isNaN(val) && mode !== 'char' && mode !== 'bool') val = 0;
+
+                let binStr = "";
+
+                if (mode === 'float') {
+                    const cfg = FLOAT_CONFIGS[subType];
+                    if (subType === 'double' || subType === 'single') {
+                        binStr = getStandardFloatBits(val, subType === 'double' ? 'float64' : 'float32');
+                    } else {
+                        binStr = getMiniFloatBits(val, cfg.bits, cfg.expBits);
+                    }
+                }
+                else if (mode === 'int') {
+                    const cfg = INT_CONFIGS[subType];
+                    let intVal = parseInt(inputVal) || 0;
+
+                    // Handle negative numbers (Two's complement simulation)
+                    if (intVal < 0) {
+                        intVal = (1 << cfg.bits) + intVal;
+                    }
+                    binStr = intVal.toString(2).padStart(cfg.bits, '0');
+                    // Clip if overflow
+                    if (binStr.length > cfg.bits) binStr = binStr.slice(binStr.length - cfg.bits);
+                }
+                else if (mode === 'char') {
+                    // Just take first char
+                    const charCode = inputVal.length > 0 ? inputVal.charCodeAt(0) : 0;
+                    // UTF-16 usually
+                    binStr = charCode.toString(2).padStart(16, '0');
+                }
+                else if (mode === 'bool') {
+                    // Check for common truthy values
+                    const isTrue = ["true", "1", "yes", "t"].includes(inputVal.toLowerCase());
+                    binStr = isTrue ? "00000001" : "00000000"; // Usually stored as a byte
+                }
+
+                setBits(binStr);
+            }, [inputVal, mode, subType]);
+
+
+            // --- Render Logic ---
+
+            const renderFloatVisualizer = () => {
+                const cfg = FLOAT_CONFIGS[subType];
+                const schema = [
+                    { label: "Sign", color: "#ef4444", count: cfg.signBits },
+                    { label: "Exponent", color: "#22c55e", count: cfg.expBits },
+                    { label: "Fraction", color: "#3b82f6", count: cfg.mantBits },
+                ];
+
+                return (
+                    <div className="space-y-6">
+                        <BitDisplay bits={bits} schema={schema} label={`IEEE 754 ${cfg.label} Layout`} />
+                        <FormulaDisplay bits={bits} typeConfig={cfg} decimalValue={inputVal} />
+                    </div>
+                );
+            };
+
+            const renderIntVisualizer = () => {
+                const cfg = INT_CONFIGS[subType];
+                const schema = [
+                    { label: "Integer Bits", color: "#f59e0b", count: cfg.bits }
+                ];
+                return (
+                    <div className="space-y-6">
+                        <BitDisplay bits={bits} schema={schema} label={`Integer ${cfg.label} Binary`} />
+                        <div className="p-4 bg-slate-100 rounded text-sm text-slate-600">
+                            <strong>Note:</strong> Integers in Python have arbitrary precision (they grow as needed), but in C/Java/Hardware they are fixed width. This visualizer shows fixed width representation (Two's Complement for negative numbers).
+                        </div>
+                    </div>
+                );
+            };
+
+            const renderSimpleVisualizer = (color, labelText) => {
+                const schema = [{ label: labelText, color: color, count: bits.length }];
+                return <BitDisplay bits={bits} schema={schema} label="Memory Layout" />;
+            };
+
+            return (
+                <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden min-h-[600px] flex flex-col md:flex-row">
+
+                    {/* LEFT PANEL: CONTROLS */}
+                    <div className="bg-slate-50 border-r border-slate-200 p-6 md:w-1/3 flex flex-col gap-6">
+                        <div>
+                            <h1 className="text-2xl font-extrabold text-slate-800 mb-1">Data Vis 🔍</h1>
+                            <p className="text-xs text-slate-500">Explore how computers store numbers</p>
+                        </div>
+
+                        {/* Mode Select */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Data Type</label>
+                            <div className="grid grid-cols-2 gap-2">
+                                {['float', 'int', 'char', 'bool'].map(m => (
+                                    <button
+                                        key={m}
+                                        onClick={() => { setMode(m); if (m === 'int') setSubType('i32'); if (m === 'float') setSubType('double'); }}
+                                        className={`px-3 py-2 rounded text-sm font-semibold capitalize border ${mode === m ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                                            }`}
+                                    >
+                                        {m}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Subtype Select (Conditional) */}
+                        {mode === 'float' && (
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Precision</label>
+                                <select
+                                    className="w-full p-2 border border-slate-300 rounded bg-white text-sm"
+                                    value={subType}
+                                    onChange={(e) => setSubType(e.target.value)}
+                                >
+                                    {Object.entries(FLOAT_CONFIGS).map(([k, v]) => (
+                                        <option key={k} value={k}>{v.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
+                        {mode === 'int' && (
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Bit Width</label>
+                                <select
+                                    className="w-full p-2 border border-slate-300 rounded bg-white text-sm"
+                                    value={subType}
+                                    onChange={(e) => setSubType(e.target.value)}
+                                >
+                                    {Object.entries(INT_CONFIGS).map(([k, v]) => (
+                                        <option key={k} value={k}>{v.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
+                        {/* Input Field */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
+                                Input Value {mode === 'char' ? '(Character)' : '(Number)'}
+                            </label>
+                            <input
+                                type="text"
+                                value={inputVal}
+                                onChange={(e) => setInputVal(e.target.value)}
+                                className="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none font-mono text-lg"
+                            />
+                            <p className="text-[10px] text-slate-400 mt-2">
+                                {mode === 'float' ? 'Try: 3.14, -0.005, 1e10, or Infinity' :
+                                    mode === 'int' ? 'Try: 42, -1, 255' :
+                                        mode === 'bool' ? 'Try: true, false' : 'Type a single character'}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* RIGHT PANEL: VISUALIZATION */}
+                    <div className="p-6 md:p-10 md:w-2/3 bg-white">
+                        {mode === 'float' ? renderFloatVisualizer() :
+                            mode === 'int' ? renderIntVisualizer() :
+                                mode === 'char' ? renderSimpleVisualizer('#8b5cf6', 'UTF-16 Code Unit') :
+                                    renderSimpleVisualizer('#ec4899', 'Boolean Byte (1=True)')}
+                    </div>
+
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
