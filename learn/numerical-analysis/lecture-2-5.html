@@ -1303,6 +1303,9 @@ print("Converged! Evolution works.")
                 pyodide.runPython(`
     import sys
     import io
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
     sys.stdout = io.StringIO()
     `);
 
