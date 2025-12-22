@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS 450: Interpolation - The Art of Connecting Dots</title>
+    <title>Lecture 2-2: Interpolation 📈</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -13,24 +13,27 @@
 
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        illini: {
-                            orange: '#E84A27',
-                            blue: '#13294B',
+                        ntu: {
+                            red: '#e11d48',
+                            blue: '#1e3a8a',
+                            light: '#eff6ff',
+                            accent: '#f59e0b',
                         }
                     },
                     fontFamily: {
@@ -44,8 +47,8 @@
 
     <style>
         body {
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #f3f4f6;
+            color: #1f2937;
         }
 
         .slide-card {
@@ -54,112 +57,128 @@
             padding: 2.5rem;
             margin-bottom: 3rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e5e7eb;
         }
 
-        .code-container {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 0;
-            background: #282c34;
+        /* Editor & Output Styles */
+        .editor-container {
+            position: relative;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
+            background: #ffffff;
+            margin-bottom: 0.5rem;
             overflow: hidden;
-            margin: 1.5rem 0;
-            min-height: 300px;
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        @media (max-width: 1024px) {
-            .code-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .code-editor {
-            padding: 1rem;
-            color: #abb2bf;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            border-right: 1px solid #3e4451;
+        .editor-wrapper {
             position: relative;
+            min-height: 250px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            background-color: #ffffff;
         }
 
-        .output-panel {
+        .editor-wrapper textarea,
+        .editor-wrapper pre {
+            margin: 0;
             padding: 1rem;
-            background: #21252b;
-            color: #98c379;
-            font-family: 'Consolas', monospace;
-            font-size: 0.85rem;
-            overflow-y: auto;
-            max-height: 400px;
-            position: relative;
+            border: none;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            white-space: pre;
+            overflow: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            tab-size: 4;
+        }
+
+        .editor-wrapper textarea {
+            z-index: 2;
+            color: transparent;
+            background: transparent;
+            caret-color: #000;
+            resize: none;
+            outline: none;
+        }
+
+        .editor-wrapper pre {
+            z-index: 1;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .run-bar {
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .run-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #E84A27;
+            background: #1e3a8a;
             color: white;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
             cursor: pointer;
-            z-index: 10;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
             transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .run-btn:hover {
-            background: #c23b1b;
+            background: #1e40af;
+        }
+
+        .run-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .output-box {
+            margin-top: 0.5rem;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            min-height: 100px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .output-img {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
         }
 
         .math-box {
-            background: #f1f5f9;
-            border-left: 4px solid #13294B;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            overflow-x: auto;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .quiz-container {
             background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
+            border-left: 4px solid #1e3a8a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+            overflow-x: auto;
         }
 
-        .quiz-option {
-            display: block;
-            padding: 10px;
-            margin: 5px 0;
-            background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .quiz-option:hover {
-            background: #f3f4f6;
-        }
-
-        .quiz-option.correct {
-            background: #dcfce7;
-            border-color: #22c55e;
-            color: #166534;
-        }
-
-        .quiz-option.wrong {
-            background: #fee2e2;
-            border-color: #ef4444;
-            color: #991b1b;
-        }
-    </style>
-    <style>
         /* Teach Mode Styles */
         body.teach-mode {
             overflow: hidden;
@@ -243,18 +262,165 @@
     </style>
 </head>
 
-<body>
+<body class="antialiased">
+
     <button onclick="toggleTeachMode()" class="teach-btn">
         <span>👨‍🏫</span> Teach Mode
     </button>
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-bold text-xl text-slate-800">Numerical Analysis <span
+                    class="text-ntu-blue">2-2</span></span>
+            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
+                <a href="#monomial" class="px-3 py-1 hover:bg-gray-100 rounded">Monomial</a>
+                <a href="#lagrange" class="px-3 py-1 hover:bg-gray-100 rounded">Lagrange</a>
+                <a href="#newton" class="px-3 py-1 hover:bg-gray-100 rounded">Newton</a>
+                <a href="#splines" class="px-3 py-1 hover:bg-gray-100 rounded">Splines</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Interpolation 📈
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            Connecting the dots... ideally without the wiggle. <br>
+            <span class="text-sm text-blue-600 font-mono">y = f(x)</span>
+        </p>
+        <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
+            <span>Lecture 2-2</span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+
+        <section id="intro" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">1. The Interpolation Problem</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 4-10</span>
+            </div>
+
+            <p class="mb-4">Given a set of data points $(t_1, y_1), (t_2, y_2), \dots, (t_n, y_n)$, find a function
+                $y=f(t)$ such that:</p>
+            <div class="math-box text-center">
+                $$ f(t_i) = y_i \quad \text{for all } i=1,\dots,n $$
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+                <div class="bg-blue-50 p-4 rounded text-sm">
+                    <h4 class="font-bold text-blue-800">Interpolation 🎯</h4>
+                    <p>Passing exactly through every data point. Used when data is precise (e.g., table values).</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded text-sm">
+                    <h4 class="font-bold text-slate-800">Approximation (Fitting) 📏</h4>
+                    <p>Getting "close" to points. Used when data is noisy (e.g., experimental measurements).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="monomial" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">2. Monomial Basis</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 11-18</span>
+            </div>
+
+            <p class="mb-4">Solving for coefficients $x$ involves the <strong>Vandermonde Matrix</strong>:</p>
+            <div class="math-box text-center text-xs">
+                $$
+                \begin{bmatrix}
+                1 & t_1 & \dots & t_1^{n-1} \\
+                \vdots & \vdots & \ddots & \vdots \\
+                1 & t_n & \dots & t_n^{n-1}
+                \end{bmatrix}
+                \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}
+                =
+                \begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix}
+                $$
+            </div>
+
+            <div class="mb-8">
+                <h3 class="font-bold text-lg mb-2">Algorithm & Implementation</h3>
+                <div id="code-01"></div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold text-lg mb-2">The Problem: Ill-Conditioning</h3>
+                <p class="text-sm text-gray-600 mb-2">The basis functions $t^k$ look very similar as $k$ increases.</p>
+                <div id="code-03"></div>
+            </div>
+        </section>
+
+        <section id="lagrange" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">3. Lagrange Interpolation</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 19-24</span>
+            </div>
+
+            <p class="mb-4">Instead of solving a linear system, we can write the polynomial directly:</p>
+            <div class="math-box text-center">
+                $$ p_{n-1}(t) = \sum_{j=1}^n y_j \ell_j(t) $$
+            </div>
+
+            <div class="mb-8">
+                <h3 class="font-bold text-lg mb-2">SciPy Implementation</h3>
+                <div id="code-02"></div>
+            </div>
+        </section>
+
+        <section id="newton" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">4. Newton Interpolation</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 25-30</span>
+            </div>
+
+            <p class="mb-4">Uses <strong>Divided Differences</strong> to build the polynomial incrementally.</p>
+            <div class="math-box text-sm mb-6">
+                $$ p_j(t) = p_{j-1}(t) + c_j \prod_{k=1}^j (t - t_k) $$
+            </div>
+
+            <div class="bg-green-50 p-4 rounded border border-green-200">
+                <p class="text-green-800 font-bold text-sm">
+                    Benefit: Adding a new data point is cheap ($O(n)$) compared to Lagrange or Monomial ($O(n^2)$ or
+                    $O(n^3)$).
+                </p>
+            </div>
+        </section>
+
+        <section id="splines" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">5. Splines & The Wiggle</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 41+</span>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="font-bold text-lg mb-2">Runge's Phenomenon 〰️</h3>
+                <p class="mb-4 text-sm">High-degree polynomials oscillate wildly near the edges.</p>
+                <div id="code-04"></div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="font-bold text-lg mb-2">B-Splines (Basis Splines)</h3>
+                <p class="mb-4 text-sm">Local basis functions ("hat functions") prevent global oscillation.</p>
+                <div id="code-05"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
+        <p>Numerical Analysis Lecture 2-2</p>
+    </footer>
+
     <script>
         // --- Teach Mode Logic ---
         let isTeachMode = false;
         let currentSlide = 0;
-        let slides = [];
+        const slides = document.querySelectorAll('.slide-card');
 
         function toggleTeachMode() {
-            if (slides.length === 0) slides = document.querySelectorAll('.slide-card');
             isTeachMode = !isTeachMode;
             document.body.classList.toggle('teach-mode');
 
@@ -325,142 +491,139 @@
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement && isTeachMode) toggleTeachMode();
         });
+
+
+        // --- Pyodide Setup ---
+        let pyodide = null;
+        async function initPyodideEnvironment() {
+            if (pyodide) return pyodide;
+            pyodide = await loadPyodide();
+            await pyodide.loadPackage(['numpy', 'matplotlib', 'scipy']);
+            return pyodide;
+        }
+
+        async function runPythonCode(code) {
+            await initPyodideEnvironment();
+            const setupCode = `
+import sys
+import io
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+plt.close('all')
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+`;
+            const cleanupCode = `
+stdout_val = sys.stdout.getvalue()
+stderr_val = sys.stdout.getvalue()
+`;
+            const plotSaver = `
+import base64
+buf = io.BytesIO()
+if plt.get_fignums() and len(plt.gcf().axes) > 0:
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    img_str = base64.b64encode(buf.read()).decode('UTF-8')
+else:
+    img_str = ""
+img_str
+`;
+            try {
+                await pyodide.runPythonAsync(setupCode + code + cleanupCode);
+                const stdout = pyodide.runPython("stdout_val");
+                const stderr = pyodide.runPython("stderr_val");
+                const imgB64 = pyodide.runPython(plotSaver);
+                return { stdout, stderr, image: imgB64 ? 'data:image/png;base64,' + imgB64 : null };
+            } catch (err) {
+                return { error: err.message };
+            }
+        }
     </script>
 
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <span class="font-bold text-xl text-slate-800">Numerical Analysis <span
-                    class="text-illini-orange">2-2</span></span>
-            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
-                <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
-                <a href="#monomial" class="px-3 py-1 hover:bg-gray-100 rounded">Monomial</a>
-                <a href="#lagrange" class="px-3 py-1 hover:bg-gray-100 rounded">Lagrange</a>
-                <a href="#newton" class="px-3 py-1 hover:bg-gray-100 rounded">Newton</a>
-                <a href="#splines" class="px-3 py-1 hover:bg-gray-100 rounded">Splines</a>
-                <a href="#bsplines" class="px-3 py-1 hover:bg-gray-100 rounded">B-Splines</a>
-            </div>
-        </div>
-    </nav>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-    <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
-        <div class="slide-card">
-            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-                Interpolation
-            </h1>
-            <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
-                The art of reading between the lines (literally). 📈
-            </p>
-            <div class="flex justify-center gap-4 text-sm text-gray-500 font-mono">
-                <span>Lecture 2-2</span>
-            </div>
-        </div>
-    </header>
+        const CodeRunner = ({ id, filename, initialCode }) => {
+            const [code, setCode] = useState(initialCode);
+            const [output, setOutput] = useState("");
+            const [imageSrc, setImageSrc] = useState(null);
+            const [status, setStatus] = useState("idle");
+            const textareaRef = useRef(null);
+            const preRef = useRef(null);
 
-    <main class="max-w-5xl mx-auto px-4 pb-20">
+            useEffect(() => {
+                if (preRef.current) {
+                    preRef.current.removeAttribute('data-highlighted');
+                    hljs.highlightElement(preRef.current);
+                }
+            }, [code]);
 
-        <section id="intro">
-            <div class="slide-card">
-                <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-illini-blue">1. What is Interpolation?</h2>
-                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                        1-7</span>
-                </div>
+            const handleRun = async () => {
+                setStatus("running");
+                setOutput("");
+                setImageSrc(null);
+                const result = await runPythonCode(code);
+                if (result.error) {
+                    setStatus("error");
+                    setOutput(result.error);
+                } else {
+                    setStatus("success");
+                    setOutput(result.stdout || (result.image ? "" : "Done (no output)"));
+                    if (result.image) setImageSrc(result.image);
+                }
+            };
 
-                <div class="grid md:grid-cols-2 gap-8 mb-8">
-                    <div>
-                        <h3 class="font-bold text-lg mb-2">The Basic Problem</h3>
-                        <p class="text-slate-600 mb-4">
-                            Given data points $(t_i, y_i)$ for $i=1,\dots,m$, find a function $f: \mathbb{R} \to
-                            \mathbb{R}$
-                            such that:
-                        </p>
-                        <div class="math-box text-center">
-                            $$ f(t_i) = y_i \quad \text{for } i=1,\dots,m $$
+            const handleScroll = () => {
+                if (textareaRef.current && preRef.current) {
+                    preRef.current.scrollTop = textareaRef.current.scrollTop;
+                    preRef.current.scrollLeft = textareaRef.current.scrollLeft;
+                }
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    setCode(code.substring(0, start) + "    " + code.substring(end));
+                    setTimeout(() => { e.target.selectionStart = e.target.selectionEnd = start + 4; }, 0);
+                }
+            };
+
+            return (
+                <div className="mb-6">
+                    <div className="editor-container">
+                        <div className="run-bar">
+                            <span className="text-xs font-mono text-gray-500 font-bold">{filename}</span>
+                            <button onClick={handleRun} disabled={status === 'running'} className="run-btn">
+                                {status === 'running' ? 'Running...' : '▶ Run Code'}
+                            </button>
                         </div>
-                        <p class="text-sm text-slate-500 italic">f is called the interpolant.</p>
+                        <div className="editor-wrapper">
+                            <textarea
+                                ref={textareaRef}
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                onScroll={handleScroll}
+                                onKeyDown={handleKeyDown}
+                                spellCheck="false"
+                            />
+                            <pre ref={preRef}><code className="language-python">{code}</code></pre>
+                        </div>
                     </div>
-
-                    <div class="bg-blue-50 p-6 rounded-lg">
-                        <h4 class="font-bold text-illini-blue mb-2">Why do we do this? 🤔</h4>
-                        <ul class="list-disc ml-5 space-y-2 text-sm text-slate-700">
-                            <li><strong>Plotting:</strong> Smooth curves through discrete dots.</li>
-                            <li><strong>Analysis:</strong> Differentiating or integrating tabulated data.</li>
-                            <li><strong>Evaluation:</strong> Replacing a complex function (expensive) with a
-                                simple one (cheap).</li>
-                        </ul>
+                    <div className="output-box">
+                        {status === 'idle' && <div className="text-gray-400 italic">Click run to start...</div>}
+                        {status === 'running' && <div className="text-blue-500 animate-pulse">Running simulation...</div>}
+                        {status === 'error' && <div className="text-red-500 font-bold">Error Traceback:</div>}
+                        <div>{output}</div>
+                        {imageSrc && <img src={imageSrc} className="output-img" />}
                     </div>
                 </div>
+            );
+        };
 
-                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
-                    <h4 class="font-bold text-yellow-800">⚠️ Interpolation vs. Approximation</h4>
-                    <p class="text-sm text-yellow-900">
-                        <strong>Interpolation:</strong> Must hit every single point exactly.<br>
-                        <strong>Approximation (e.g., Least Squares):</strong> Gets "close" to points. Better for
-                        noisy data.
-                    </p>
-                </div>
-
-                <div id="quiz-1-root"></div>
-            </div>
-        </section>
-
-        <section id="monomial">
-            <div class="slide-card">
-                <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-illini-blue">2. Polynomial Interpolation: Monomial Basis</h2>
-                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                        11-18 (Part 1)</span>
-                </div>
-
-                <p class="mb-4">The simplest choice is a polynomial. For $n$ data points, there is a
-                    <strong>unique</strong> polynomial of degree at most $n-1$.
-                </p>
-
-                <h3 class="font-bold text-lg mb-2 text-indigo-600">Monomial Basis</h3>
-                <div class="math-box text-sm">
-                    $$ p_{n-1}(t) = x_1 + x_2 t + x_3 t^2 + \dots + x_n t^{n-1} $$
-                </div>
-
-                <p class="mb-4">Solving for coefficients $x$ involves the <strong>Vandermonde Matrix</strong>:</p>
-                <div class="math-box text-center text-xs">
-                    $$
-                    \begin{bmatrix}
-                    1 & t_1 & \dots & t_1^{n-1} \\
-                    1 & t_2 & \dots & t_2^{n-1} \\
-                    \vdots & \vdots & \ddots & \vdots \\
-                    1 & t_n & \dots & t_n^{n-1}
-                    \end{bmatrix}
-                    \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}
-                    =
-                    \begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix}
-                    $$
-                </div>
-            </div>
-
-            <div class="slide-card">
-                <span class="slide-number">Part 2</span>
-                <h3 class="text-xl font-bold mb-4">The Problem with Monomials</h3>
-                <div class="bg-red-50 p-4 rounded border border-red-100 mb-6">
-                    <p class="font-bold text-red-800">The Problem:</p>
-                    <p class="text-sm text-red-700">The Vandermonde matrix becomes <strong>ill-conditioned</strong> very
-                        quickly as degree increases. Solving it requires $O(n^3)$ work.</p>
-                </div>
-
-                <div class="mb-6">
-                    <h4 class="font-bold text-sm mb-2">Visualizing Monomials $t^k$ on [0,1]</h4>
-                    <div id="plot-monomial" class="h-64 bg-white border rounded"></div>
-                    <p class="text-xs text-center text-gray-500 mt-1">Notice how they all look similar (crowded) near 1.
-                        This causes linear dependence issues!</p>
-                </div>
-            </div>
-
-            <div class="slide-card">
-                <span class="slide-number">Part 3</span>
-                <h3 class="text-xl font-bold mb-4">Implementation (Python)</h3>
-                <div class="code-container">
-                    <div class="code-editor">
-                        <button class="run-btn" onclick="runMonomial()">▶ Run Vandermonde</button>
-                        <pre><code class="language-python">import numpy as np
+        const code01 = `import numpy as np
 import scipy.linalg as la
 
 # Data points: (-2, -27), (0, -1), (1, 0)
@@ -468,7 +631,7 @@ t = np.array([-2, 0, 1])
 y = np.array([-27, -1, 0])
 
 # Construct Vandermonde Matrix
-# Columns are t^0, t^1, t^2
+# Columns are t^0, t^1, t^2 ...
 A = np.vander(t, increasing=True)
 
 print("Vandermonde Matrix A:")
@@ -476,70 +639,10 @@ print(A)
 
 # Solve Ax = y
 x = la.solve(A, y)
-print("\nCoefficients x:", x)
-print(f"Polynomial: {x[0]} + {x[1]}t + {x[2]}t^2")</code></pre>
-                    </div>
-                    <div id="out-monomial" class="output-panel">Click Run to solve...</div>
-                </div>
-            </div>
-        </section>
+print("\\nCoefficients x:", x)
+print(f"Polynomial: {x[0]:.1f} + {x[1]:.1f}t + {x[2]:.1f}t^2")`;
 
-        <section id="lagrange-intro">
-            <div class="slide-card p-0 flex items-center justify-center bg-white overflow-hidden">
-                <img src="assets/lag-interpolation-1.png" alt="Lagrange Interpolation Overview 1"
-                    class="w-full h-auto object-contain">
-            </div>
-            <div class="slide-card p-0 flex items-center justify-center bg-white overflow-hidden">
-                <img src="assets/lag-interpolation-2.png" alt="Lagrange Interpolation Overview 2"
-                    class="w-full h-auto object-contain">
-            </div>
-        </section>
-
-        <section id="lagrange">
-            <div class="slide-card">
-                <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-illini-blue">3. Lagrange Interpolation</h2>
-                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                        19-24 (Part 1)</span>
-                </div>
-
-                <p class="mb-4">Instead of solving a linear system, we can write the polynomial directly using
-                    <strong>Lagrange Basis Functions</strong>.
-                </p>
-
-                <div class="math-box text-center">
-                    $$ p_{n-1}(t) = \sum_{j=1}^n y_j \ell_j(t) $$
-                </div>
-
-                <p class="text-sm text-slate-600 mb-4">Where $\ell_j(t)$ are polynomials such that $\ell_j(t_i) = 1$ if
-                    $i=j$ and $0$ if $i \neq j$. This means the matrix $A$ becomes the Identity matrix!</p>
-
-                <div class="grid md:grid-cols-2 gap-8 mb-6">
-                    <div class="bg-gray-50 p-4 rounded text-sm">
-                        <h4 class="font-bold text-slate-700">Pros</h4>
-                        <ul class="list-disc ml-5">
-                            <li>Easy to write down by hand.</li>
-                            <li>No system to solve (A is Identity).</li>
-                        </ul>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded text-sm">
-                        <h4 class="font-bold text-slate-700">Cons</h4>
-                        <ul class="list-disc ml-5">
-                            <li>Evaluating at a new point is expensive $O(n^2)$ (naively) or $O(n)$
-                                (barycentric).</li>
-                            <li>Hard to add a new data point (must recompute everything).</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="slide-card">
-                <span class="slide-number">Part 2</span>
-                <h3 class="text-xl font-bold mb-4">Lagrange Implementation</h3>
-                <div class="code-container">
-                    <div class="code-editor">
-                        <button class="run-btn" onclick="runLagrange()">▶ Run Lagrange</button>
-                        <pre><code class="language-python">from scipy.interpolate import lagrange
+        const code02 = `from scipy.interpolate import lagrange
 import numpy as np
 
 t = [-2, 0, 1]
@@ -550,285 +653,77 @@ poly = lagrange(t, y)
 
 print("Lagrange Polynomial coefficients:")
 print(poly)
-# Expected: -4t^2 + 5t - 1</code></pre>
-                    </div>
-                    <div id="out-lagrange" class="output-panel">Click Run...</div>
-                </div>
-            </div>
-        </section>
+# Expected: -4t^2 + 5t - 1`;
 
-        <section id="newton">
-            <div class="slide-card">
-                <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-illini-blue">4. Newton Interpolation</h2>
-                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                        25-30</span>
-                </div>
+        const code03 = `import numpy as np
+import matplotlib.pyplot as plt
 
-                <p class="mb-4">Newton's form allows us to build the polynomial incrementally. It uses a
-                    <strong>triangular</strong> basis matrix.
-                </p>
+t = np.linspace(0, 1, 100)
+plt.figure(figsize=(6, 4))
 
-                <div class="math-box text-sm">
-                    $$ p_j(t) = p_{j-1}(t) + x_{j+1} \prod_{k=1}^j (t - t_k) $$
-                </div>
+for k in range(6):
+    plt.plot(t, t**k, label=f'$t^{k}$')
 
-                <div class="bg-green-50 p-4 rounded border border-green-200 mb-6">
-                    <h4 class="font-bold text-green-800">The Power of Divided Differences</h4>
-                    <p class="text-sm text-green-700">
-                        We compute coefficients using a recursive table of <strong>Divided Differences</strong> $f[t_1,
-                        \dots, t_k]$.
-                        <br>
-                        <strong>Cost:</strong> $O(n^2)$ to compute coeffs, $O(n)$ to evaluate (Horner's-like).
-                        Adding a point is cheap!
-                    </p>
-                </div>
+plt.title('Monomial Basis Functions on [0,1]')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()`;
 
-                <div id="quiz-2-root"></div>
-            </div>
-        </section>
+        const code04 = `import numpy as np
+import matplotlib.pyplot as plt
+from scipy.interpolate import lagrange
 
-        <section id="splines">
-            <div class="slide-card">
-                <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-illini-blue">5. The "Wiggle" Problem & Splines</h2>
-                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                        41-57 (Part 1)</span>
-                </div>
+def f(x):
+    return 1 / (1 + 25 * x**2)
 
-                <h3 class="font-bold text-lg mb-2">Runge's Phenomenon 〰️</h3>
-                <p class="mb-4">
-                    High-degree polynomials oscillate wildly near the edges, especially with equally spaced points. This
-                    is
-                    <strong>Runge's Phenomenon</strong>.
-                </p>
+# Equispaced nodes cause oscillation
+x_nodes = np.linspace(-1, 1, 11) # 11 points = degree 10
+y_nodes = f(x_nodes)
 
-                <div id="plot-runge" class="h-64 bg-white border rounded"></div>
-                <button onclick="plotRunge()"
-                    class="mt-2 w-full py-2 bg-illini-orange text-white rounded font-bold hover:bg-red-700 transition">Show
-                    Runge's Wiggle</button>
-            </div>
+poly = lagrange(x_nodes, y_nodes)
 
-            <div class="slide-card">
-                <span class="slide-number">Part 2</span>
-                <h3 class="text-xl font-bold mb-4">The Solution: Splines</h3>
-                <div class="grid md:grid-cols-2 gap-8 mb-8">
-                    <div>
-                        <p class="text-sm text-slate-600 mb-4">Instead of one giant polynomial, use many small ones
-                            connected together.</p>
-                        <ul class="list-disc ml-5 text-sm">
-                            <li><strong>Piecewise Linear:</strong> Connect dots with lines (not smooth).</li>
-                            <li><strong>Cubic Spline:</strong> Piecewise cubic. Smooth ($C^2$ continuous).</li>
-                            <li><strong>Hermite Cubic:</strong> Matches value and derivative. ($C^1$
-                                continuous).</li>
-                        </ul>
-                    </div>
-                </div>
+x_plot = np.linspace(-1, 1, 200)
+plt.figure(figsize=(8, 5))
+plt.plot(x_plot, f(x_plot), 'k-', label='True Function')
+plt.plot(x_plot, poly(x_plot), 'r--', label='Polynomial (Deg 10)')
+plt.plot(x_nodes, y_nodes, 'bo', label='Nodes')
 
-                <div class="bg-gray-100 p-4 rounded font-mono text-sm">
-                    <strong>Natural Cubic Spline:</strong> Forces second derivative to be 0 at endpoints.<br>
-                    <strong>Not-a-knot:</strong> Forces 3rd derivative continuity at first/last internal knots.
-                </div>
-            </div>
-        </section>
+plt.ylim(-0.2, 1.2)
+plt.title("Runge's Phenomenon: Wiggle at the edges")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()`;
 
-        <section id="bsplines">
-            <div class="slide-card">
-                <div class="slide-header flex justify-between border-b pb-4 mb-6">
-                    <h2 class="text-3xl font-bold text-illini-blue">6. B-Splines</h2>
-                    <span class="slide-number bg-gray-100 px-3 py-1 rounded text-sm font-bold text-gray-600">Slides
-                        58-64</span>
-                </div>
+        const code05 = `import numpy as np
+import matplotlib.pyplot as plt
 
-                <p class="mb-4">B-Splines (Basis Splines) are the modern standard for representing piecewise
-                    polynomials.
-                </p>
+t = np.linspace(0, 4, 200)
 
-                <div class="math-box text-sm">
-                    $$ B_i^k(t) = v_i^k(t) B_i^{k-1}(t) + (1-v_{i+1}^k(t)) B_{i+1}^{k-1}(t) $$
-                </div>
+# "Hat" functions (Linear B-Splines)
+def b1(x): return np.where((x>=0)&(x<2), np.where(x<1, x, 2-x), 0)
+def b2(x): return np.where((x>=1)&(x<3), np.where(x<2, x-1, 3-x), 0)
+def b3(x): return np.where((x>=2)&(x<4), np.where(x<3, x-2, 4-x), 0)
 
-                <div class="grid md:grid-cols-2 gap-8 mt-6">
-                    <div>
-                        <h4 class="font-bold text-blue-700 mb-2">Key Properties</h4>
-                        <ul class="list-decimal ml-5 text-sm space-y-1">
-                            <li><strong>Local Support:</strong> Zero everywhere except a small interval.
-                                Changing one point only affects a local area.</li>
-                            <li><strong>Positivity:</strong> $B_i^k(t) > 0$ inside support.</li>
-                            <li><strong>Partition of Unity:</strong> $\sum B_i^k(t) = 1$.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div id="plot-bspline" class="h-48 bg-white border rounded"></div>
-                        <button onclick="plotBSpline()"
-                            class="mt-2 w-full py-2 bg-illini-blue text-white rounded font-bold text-sm">Visualize Basis
-                            Functions</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+plt.figure(figsize=(8, 3))
+plt.fill_between(t, b1(t), alpha=0.5, label='$B_1$')
+plt.fill_between(t, b2(t), alpha=0.5, label='$B_2$')
+plt.fill_between(t, b3(t), alpha=0.5, label='$B_3$')
 
-    </main>
+plt.title('Linear B-Splines ($1^{st}$ order)')
+plt.legend()
+plt.show()`;
 
-    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
-        <p>Numerical Analysis Lecture 2-2</p>
-    </footer>
+        ReactDOM.createRoot(document.getElementById('code-01')).render(<CodeRunner filename="l202-interp-01.py" initialCode={code01} />);
+        ReactDOM.createRoot(document.getElementById('code-02')).render(<CodeRunner filename="l202-interp-02.py" initialCode={code02} />);
+        ReactDOM.createRoot(document.getElementById('code-03')).render(<CodeRunner filename="l202-interp-03.py" initialCode={code03} />);
+        ReactDOM.createRoot(document.getElementById('code-04')).render(<CodeRunner filename="l202-interp-04.py" initialCode={code04} />);
+        ReactDOM.createRoot(document.getElementById('code-05')).render(<CodeRunner filename="l202-interp-05.py" initialCode={code05} />);
 
-    <script type="text/babel">
-        const { useState } = React;
-
-        const Quiz = ({ id, question, options, correctIdx }) => {
-            const [selected, setSelected] = useState(null);
-
-            return (
-                <div className="quiz-container">
-                    <h4 className="font-bold text-lg mb-4">📝 Quiz: {question}</h4>
-                    <div className="space-y-2">
-                        {options.map((opt, i) => (
-                            <div
-                                key={i}
-                                onClick={() => setSelected(i)}
-                                className={`quiz-option ${selected === i ? (i === correctIdx ? 'correct' : 'wrong') : ''}`}
-                            >
-                                {opt} {selected === i && (i === correctIdx ? '✅' : '❌')}
-                            </div>
-                        ))}
-                    </div>
-                    {selected !== null && (
-                        <div className="mt-4 text-sm text-slate-600">
-                            {selected === correctIdx
-                                ? "Correct! Well done."
-                                : "Not quite. Review the definitions above."}
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        const q1Data = {
-            question: "Which of these is TRUE about Interpolation vs. Approximation?",
-            options: [
-                "Approximation must pass through every data point exactly.",
-                "Interpolation is better for very noisy data.",
-                "Interpolation passes through every data point exactly.",
-                "They are exactly the same thing."
-            ],
-            correctIdx: 2
-        };
-
-        const q2Data = {
-            question: "Why is the Newton form often preferred over Monomial?",
-            options: [
-                "It produces a smoother curve.",
-                "It allows adding new data points easily without re-solving the whole system.",
-                "It uses the Identity matrix.",
-                "It uses sine and cosine functions."
-            ],
-            correctIdx: 1
-        };
-
-        ReactDOM.createRoot(document.getElementById('quiz-1-root')).render(<Quiz {...q1Data} />);
-        ReactDOM.createRoot(document.getElementById('quiz-2-root')).render(<Quiz {...q2Data} />);
-    </script>
-
-    <script>
-        // --- Monomial Plot ---
-        document.addEventListener("DOMContentLoaded", () => {
-            const t = Array.from({ length: 100 }, (_, i) => i / 99);
-            const traces = [];
-            for (let k = 1; k <= 5; k++) {
-                traces.push({
-                    x: t, y: t.map(v => Math.pow(v, k)),
-                    name: `t^${k}`, mode: 'lines'
-                });
-            }
-            Plotly.newPlot('plot-monomial', traces, {
-                margin: { t: 60, b: 30, l: 30, r: 10 },
-                title: 'Monomial Basis on [0,1]',
-                height: 300
-            });
-        });
-
-        // --- Runge Plot ---
-        function plotRunge() {
-            const f = x => 1 / (1 + 25 * x * x);
-            const x = [];
-            for (let i = -1; i <= 1.01; i += 0.02) x.push(i);
-            const y_true = x.map(f);
-
-            // Interpolation points (equispaced)
-            const x_nodes = [-1, -0.5, 0, 0.5, 1];
-            // Simple Lagrange logic for visualization (hardcoded fit for demo visual)
-            // Ideally we'd solve it, but for a visual demo we approximate the oscillation
-            const y_poly = x.map(v => {
-                // A fake high-degree polynomial look
-                return f(v) + 0.5 * Math.pow(v, 10) * Math.sin(10 * v);
-            });
-
-            const trace1 = { x: x, y: y_true, name: 'True f(t)', line: { color: 'black' } };
-            const trace2 = { x: x, y: y_poly, name: 'Poly (High Degree)', line: { color: 'red', dash: 'dot' } };
-            const trace3 = { x: x_nodes, y: x_nodes.map(f), mode: 'markers', name: 'Nodes', marker: { color: 'blue', size: 8 } };
-
-            Plotly.newPlot('plot-runge', [trace1, trace2, trace3], {
-                title: "Runge's Phenomenon",
-                margin: { t: 30, b: 30, l: 30, r: 10 },
-                height: 250
-            });
-        }
-
-        // --- B-Spline Plot ---
-        function plotBSpline() {
-            const t = [];
-            for (let i = 0; i <= 4; i += 0.05) t.push(i);
-
-            // Visual representation of localized basis functions
-            const b1 = t.map(v => (v >= 0 && v < 2) ? (v < 1 ? v : 2 - v) : 0);
-            const b2 = t.map(v => (v >= 1 && v < 3) ? (v < 2 ? v - 1 : 3 - v) : 0);
-            const b3 = t.map(v => (v >= 2 && v < 4) ? (v < 3 ? v - 2 : 4 - v) : 0);
-
-            const traces = [
-                { x: t, y: b1, name: 'B_1', fill: 'tozeroy' },
-                { x: t, y: b2, name: 'B_2', fill: 'tozeroy' },
-                { x: t, y: b3, name: 'B_3', fill: 'tozeroy' }
-            ];
-
-            Plotly.newPlot('plot-bspline', traces, {
-                title: 'Linear B-Splines (Hat Functions)',
-                margin: { t: 30, b: 30, l: 30, r: 10 },
-                height: 200
-            });
-        }
-
-        // --- Code Runners ---
-        function printOutput(id, text) {
-            document.getElementById(id).innerText = text;
-        }
-
-        function runMonomial() {
-            printOutput('out-monomial', `Vandermonde Matrix A:
-[[ 1 -2  4]
- [ 1  0  0]
- [ 1  1  1]]
-
-Coefficients x: [-1.  5. -4.]
-Polynomial: -1.0 + 5.0t + -4.0t^2`);
-        }
-
-        function runLagrange() {
-            printOutput('out-lagrange', `Lagrange Polynomial:
-   2
--4 x + 5 x - 1`);
-        }
-
-        // Math Rendering
-        document.addEventListener("DOMContentLoaded", function () {
-            hljs.highlightAll();
-            renderMathInElement(document.body, {
-                delimiters: [
-                    { left: "$$", right: "$$", display: true },
-                    { left: "$", right: "$", display: false }
-                ]
-            });
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false }
+            ]
         });
     </script>
 </body>
