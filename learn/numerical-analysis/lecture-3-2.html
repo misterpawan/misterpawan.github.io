@@ -59,15 +59,13 @@
         }
 
         .code-container {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 0;
+            display: flex;
+            flex-direction: column;
             background: #ffffff;
             border-radius: 8px;
             overflow: hidden;
             margin: 1.5rem 0;
             border: 1px solid #e2e8f0;
-            min-height: 400px;
         }
 
         @media (max-width: 1024px) {
@@ -84,8 +82,9 @@
             color: #24292e;
             font-size: 0.85rem;
             overflow: auto;
-            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
             position: relative;
+            min-height: 200px;
         }
 
         .output-panel {
@@ -98,8 +97,9 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 150px;
         }
 
         .run-btn {
@@ -422,23 +422,23 @@
             </p>
         </section>
 
-        <section id="keras" class="slide-card bg-slate-900 text-white">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-4 mb-6">
-                <h2 class="text-3xl font-bold text-white">6. The Future: Keras & TensorFlow 🚀</h2>
-                <span class="bg-gray-800 px-3 py-1 rounded text-xs font-mono text-gray-400">Slides 57-58</span>
+        <section id="keras" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">6. The Future: Keras & TensorFlow 🚀</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 57-58</span>
             </div>
 
             <div class="flex items-center gap-6 mb-6">
                 <div class="text-5xl">📦</div>
                 <div>
-                    <p class="text-lg text-gray-300">
+                    <p class="text-lg text-gray-600">
                         We built a Neural Network from scratch to understand it.
                         In practice, we use libraries like <strong>TensorFlow</strong> and <strong>Keras</strong>.
                     </p>
                 </div>
             </div>
 
-            <div class="bg-black p-4 rounded-lg font-mono text-sm text-green-400">
+            <div class="bg-gray-800 p-4 rounded-lg font-mono text-sm text-green-400">
                 pip install tensorflow keras
             </div>
 
@@ -574,7 +574,6 @@
         ReactDOM.createRoot(document.getElementById('code-01')).render(
             <CodeRunner
                 filename="l302-example-01.py"
-                plotId="Doughnut_RBF"
                 code={`import numpy as np
 from sklearn import svm
 
@@ -589,8 +588,7 @@ clf = svm.SVC(kernel='rbf', C=1.)
 clf.fit(x_train, y_train)
 
 print('Performance (training):', clf.score(x_train, y_train))
-
-# Plotting...`}
+`}
                 outputText={`Performance (training): 0.9754`}
             />
         );
@@ -732,7 +730,19 @@ Scaled Init converges faster!`}
         // Init Syntax Highlight
         document.addEventListener("DOMContentLoaded", function () {
             hljs.highlightAll();
-            renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+        });
+
+        window.addEventListener("load", function () {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ]
+                });
+            }
         });
     </script>
 </body>
