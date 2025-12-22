@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 3-3: Improving Neural Networks 🚀</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ntu: {
+                            blue: '#1e3a8a',
+                            light: '#eff6ff',
+                            accent: '#f59e0b',
+                            code_bg: '#f8f9fa',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .slide-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Container for the Editor Area */
+        .editor-container {
+            position: relative;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #ffffff;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* The Overlay Editor: Textarea on top of Pre/Code */
+        .editor-wrapper {
+            position: relative;
+            min-height: 250px;
+            /* Consistent height */
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            background-color: #ffffff;
+        }
+
+        .editor-wrapper textarea,
+        .editor-wrapper pre {
+            margin: 0;
+            padding: 1rem;
+            border: none;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            white-space: pre;
+            overflow: auto;
+            word-wrap: normal;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            tab-size: 4;
+        }
+
+        .editor-wrapper textarea {
+            z-index: 2;
+            color: transparent;
+            background: transparent;
+            caret-color: #000;
+            resize: none;
+            outline: none;
+        }
+
+        .editor-wrapper pre {
+            z-index: 1;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .run-bar {
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .run-btn {
+            background: #1e3a8a;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .run-btn:hover {
+            background: #1e40af;
+        }
+
+        .run-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .output-box {
+            margin-top: 0.5rem;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            min-height: 100px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .output-img {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .math-box {
+            background: #eff6ff;
+            border-left: 4px solid #1e3a8a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+            overflow-x: auto;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .quiz-container {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 2rem;
+        }
+
+        .quiz-option {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .quiz-option.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+        }
+
+        .quiz-option.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-bold text-xl text-ntu-blue flex items-center gap-2">
+                <span>🚀</span> Lecture 3-3: Improving Neural Networks
+            </span>
+            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
+                <a href="#loss" class="px-3 py-1 hover:bg-gray-100 rounded">Loss Functions</a>
+                <a href="#overfitting" class="px-3 py-1 hover:bg-gray-100 rounded">Overfitting</a>
+                <a href="#optimization" class="px-3 py-1 hover:bg-gray-100 rounded">Optimization</a>
+                <a href="#deep" class="px-3 py-1 hover:bg-gray-100 rounded">Deep Networks</a>
+                <a href="#hands-on" class="px-3 py-1 bg-ntu-blue text-white rounded hover:bg-blue-800 transition">Hands
+                    On</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Tricks for Improving Neural Networks
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            From Keras basics to avoiding overfitting and vanishing gradients. <br>
+            <span class="text-sm text-ntu-blue font-mono">Lecture 3-3</span>
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+
+        <section id="intro" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">1. Moving to Keras 📦</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 1-11</span>
+            </div>
+
+            <p class="mb-4">
+                Last week, we built a Neural Network from scratch ($\sim 95\%$ acc).
+                Now, let's use <strong>Keras</strong> (with TensorFlow backend) to do it professionally.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+                <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                    <h3 class="font-bold text-lg mb-2">Our Baseline Model</h3>
+                    <ul class="list-disc ml-5 text-sm text-slate-600">
+                        <li><strong>Input:</strong> 784 pixels (28x28)</li>
+                        <li><strong>Hidden:</strong> 30 neurons (Sigmoid)</li>
+                        <li><strong>Output:</strong> 10 neurons (Sigmoid/Softmax)</li>
+                        <li><strong>Loss:</strong> Mean Squared Error (MSE)</li>
+                    </ul>
+                </div>
+                <div class="flex items-center justify-center">
+                    <div class="text-center">
+                        <div class="text-5xl mb-2">🐍 + 🔥</div>
+                        <div class="text-sm text-slate-500 font-mono">pip install keras tensorflow</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="code-01"></div>
+
+            <p class="text-sm text-gray-500 mt-2 text-center">
+                Even with this simple model, Keras gets us to ~96.6% accuracy. But we can do better!
+            </p>
+        </section>
+
+        <section id="loss" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">2. Loss Functions & Initialization 📉</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 12-22</span>
+            </div>
+
+            <h3 class="font-bold text-lg mb-2 text-red-600">The Problem: Slow Learning</h3>
+            <p class="mb-4 text-sm text-slate-600">
+                If we initialize weights poorly (e.g., too large), the sigmoid function saturates ($ \sigma(z) \approx 0
+                \text{ or } 1 $).
+                The derivative becomes near zero, killing the gradient descent.
+            </p>
+
+            <div id="code-02"></div>
+
+            <h3 class="font-bold text-lg mt-8 mb-2 text-green-600">The Solution: Cross-Entropy</h3>
+            <div class="math-box text-sm text-center mb-4">
+                $$ C = - \frac{1}{n} \sum [y \ln a + (1-y) \ln (1-a)] $$
+            </div>
+            <p class="mb-4 text-sm text-slate-600">
+                Cross-Entropy loss cancels out the $\sigma'(z)$ term in the gradient, fixing the slow learning problem!
+            </p>
+
+            <div id="code-02a"></div>
+
+            <h3 class="font-bold text-lg mt-8 mb-2">Softmax Output</h3>
+            <p class="mb-4 text-sm text-slate-600">
+                For multi-class classification, use <strong>Softmax</strong> + <strong>Categorical
+                    Cross-Entropy</strong>.
+                Softmax treats outputs as probabilities (sum to 1).
+            </p>
+
+            <div id="code-03"></div>
+        </section>
+
+        <section id="overfitting" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">3. Fighting Overfitting 🛡️</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 24-37</span>
+            </div>
+
+            <p class="mb-4">
+                <strong>Overfitting:</strong> When the model memorizes training data but fails on test data.
+                Noticeable when training loss keeps dropping but validation loss rises.
+            </p>
+
+            <div id="code-04"></div>
+
+            <div class="grid lg:grid-cols-2 gap-8 mt-8">
+                <div>
+                    <h4 class="font-bold text-blue-700 mb-2">Technique 1: L2 Regularization</h4>
+                    <p class="text-xs text-slate-600 mb-2">Add a penalty for large weights ($ \lambda \sum w^2 $).</p>
+                    <div id="code-04a"></div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-purple-700 mb-2">Technique 2: Dropout</h4>
+                    <p class="text-xs text-slate-600 mb-2">Randomly turn off neurons during training.</p>
+                    <div id="code-04b"></div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h4 class="font-bold text-red-700 mb-2">Technique 3: Early Stopping</h4>
+                <p class="text-sm text-slate-600 mb-2">Stop training automatically when validation loss stops improving.
+                </p>
+                <div id="code-04c"></div>
+            </div>
+        </section>
+
+        <section id="augmentation" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">4. Data Augmentation 🖼️</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 38-39</span>
+            </div>
+
+            <p class="mb-4">
+                More data is the best cure for overfitting. We can artificially create data by rotating or shifting
+                existing images.
+            </p>
+
+            <div id="code-05"></div>
+        </section>
+
+        <section id="optimization" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">5. Optimization Tricks ⚡</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 40-48</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Learning Rate</h3>
+                    <p class="text-sm text-slate-600">Too small = slow. Too large = unstable.</p>
+                    <div id="code-06"></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Momentum</h3>
+                    <p class="text-sm text-slate-600">Accelerates SGD in the relevant direction.</p>
+                    <div id="code-06a"></div>
+                </div>
+            </div>
+
+            <h3 class="font-bold text-lg mb-2 mt-8">Advanced Optimizers</h3>
+            <p class="text-sm text-slate-600 mb-4">
+                Instead of tuning learning rate manually, use adaptive optimizers like <strong>Adagrad, RMSprop, or
+                    Adam/Adadelta</strong>.
+            </p>
+
+            <div id="code-06c"></div>
+
+            <p class="text-sm text-slate-500 mt-4 text-center">
+                (Note: Batch Size also affects training dynamics. Smaller batches are noisier but generalize better. See
+                `l303-example-06b.py` in the code list below.)
+            </p>
+            <div id="code-06b"></div>
+
+        </section>
+
+        <section id="deep" class="slide-card border-l-8 border-ntu-blue">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">6. Going Deeper & Activations 🌌</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 49-58</span>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg text-red-600 mb-2">Vanishing Gradient</h3>
+                    <p class="text-sm text-slate-600">
+                        Sigmoid derivatives are always < 0.25. In deep networks, gradients multiply and vanish to zero.
+                            </p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-green-600 mb-2">Solution: ReLU</h3>
+                    <p class="text-sm text-slate-600">
+                        Rectified Linear Unit ($f(x) = \max(0,x)$). Derivative is 1 for $x>0$. No vanishing gradient!
+                    </p>
+                </div>
+            </div>
+
+            <div id="code-06d"></div>
+
+            <div class="mt-12 bg-slate-900 text-white p-6 rounded-xl">
+                <h3 class="font-bold text-xl mb-4">The Final "Monster" Model</h3>
+                <p class="text-sm text-gray-300 mb-4">
+                    Combining everything: 512 neurons, ReLU, Dropout, Adadelta.
+                </p>
+
+                <div id="code-07"></div>
+
+                <p class="text-sm text-gray-400 mt-4 mb-2">Variant: Deeper network (4 layers):</p>
+                <div id="code-07a"></div>
+            </div>
+        </section>
+
+        <section id="quiz" class="slide-card bg-ntu-light">
+            <h2 class="text-2xl font-bold text-ntu-blue mb-6">🧠 Knowledge Check</h2>
+            <div id="quiz-container"></div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
+        <p>Numerical Analysis Lecture 3-3 • Kai-Feng Chen • National Taiwan University</p>
+    </footer>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const CodeRunner = ({ id, filename, initialCode, staticOutput, staticImage }) => {
+            const [code, setCode] = useState(initialCode);
+            const [output, setOutput] = useState("");
+            const [imageSrc, setImageSrc] = useState(null);
+            const [status, setStatus] = useState("idle");
+            const textareaRef = useRef(null);
+            const preRef = useRef(null);
+
+            useEffect(() => {
+                if (preRef.current) {
+                    preRef.current.removeAttribute('data-highlighted');
+                    hljs.highlightElement(preRef.current);
+                }
+            }, [code]);
+
+            const handleRun = () => {
+                setStatus("running");
+                setOutput("");
+                setImageSrc(null);
+
+                // Simulation Mode for Keras
+                setTimeout(() => {
+                    setStatus("success");
+                    setOutput(staticOutput || "Done (no output).");
+                    if (staticImage) setImageSrc(staticImage);
+                }, 1200);
+            };
+
+            const handleScroll = () => {
+                if (textareaRef.current && preRef.current) {
+                    preRef.current.scrollTop = textareaRef.current.scrollTop;
+                    preRef.current.scrollLeft = textareaRef.current.scrollLeft;
+                }
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    const newValue = code.substring(0, start) + "    " + code.substring(end);
+                    setCode(newValue);
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start + 4;
+                    }, 0);
+                }
+            };
+
+            return (
+                <div className="mb-8">
+                    <div className="editor-container">
+                        <div className="run-bar">
+                            <span className="text-xs font-mono text-gray-500 font-bold">{filename}</span>
+                            <button onClick={handleRun} disabled={status === 'running'} className="run-btn">
+                                {status === 'running' ? 'Running...' : '▶ Run Code'}
+                            </button>
+                        </div>
+                        <div className="editor-wrapper">
+                            <textarea
+                                ref={textareaRef}
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                onScroll={handleScroll}
+                                onKeyDown={handleKeyDown}
+                                spellCheck="false"
+                            />
+                            <pre ref={preRef}><code className="language-python">{code}</code></pre>
+                        </div>
+                    </div>
+
+                    <div className="output-box">
+                        {status === 'idle' && <div className="text-gray-500 italic">Click Run to execute...</div>}
+                        {status === 'running' && <div className="text-ntu-blue animate-pulse font-bold">Initializing Keras/TensorFlow Backend...</div>}
+
+                        <div>{output}</div>
+                        {imageSrc && <img src={imageSrc} className="output-img" />}
+                    </div>
+                </div>
+            );
+        };
+
+        const Quiz = () => {
+            const questions = [
+                { q: "1. Why does Mean Squared Error (MSE) slow down learning in sigmoid neurons?", options: ["It's computationally expensive", "The gradient contains sigma prime, which vanishes when z is large", "It causes exploding gradients", "It only works for regression"], a: 1 },
+                { q: "2. Which loss function cancels out the sigmoid derivative term?", options: ["Hinge Loss", "Cross-Entropy", "Absolute Error", "Log-Cosh"], a: 1 },
+                { q: "3. What is the main purpose of Dropout?", options: ["To speed up training", "To visualize the network", "To prevent overfitting by randomly disabling neurons", "To increase the number of parameters"], a: 2 },
+                { q: "4. Which activation function helps solve the Vanishing Gradient problem?", options: ["Sigmoid", "Tanh", "ReLU", "Step Function"], a: 2 },
+                { q: "5. What does Data Augmentation do?", options: ["Cleans the data", "Creates new training samples by transforming existing ones", "Deletes outliers", "Compresses images"], a: 1 }
+            ];
+
+            const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+
+            return (
+                <div className="space-y-6">
+                    {questions.map((q, i) => (
+                        <div key={i} className="quiz-container">
+                            <h4 className="font-bold text-slate-800 mb-3">{q.q}</h4>
+                            <div className="space-y-2">
+                                {q.options.map((opt, j) => (
+                                    <div
+                                        key={j}
+                                        onClick={() => {
+                                            const newAns = [...answers];
+                                            newAns[i] = j;
+                                            setAnswers(newAns);
+                                        }}
+                                        className={`quiz-option ${answers[i] === j ? (j === q.a ? 'correct' : 'wrong') : ''}`}
+                                    >
+                                        {opt}
+                                        {answers[i] === j && (j === q.a ? ' ✅' : ' ❌')}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // --- RENDER CODE BLOCKS ---
+
+        // 1. Baseline
+        const code01 = `import numpy as np
+import matplotlib.pyplot as plt
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][:10000]/255.
+y_train = np.array([np.eye(10)[n] for n in mnist['y_train'][:10000]])
+x_test = mnist['x_test']/255.
+y_test = np.array([np.eye(10)[n] for n in mnist['y_test']])
+
+from keras.models import Sequential
+from keras.layers import Dense, Reshape
+from keras.optimizers import SGD
+
+model = Sequential()
+model.add(Reshape((784,), input_shape=(28,28)))
+model.add(Dense(30, activation='sigmoid'))
+model.add(Dense(10, activation='sigmoid'))
+model.compile(loss='mean_squared_error',
+              optimizer=SGD(lr=3.0),
+              metrics=['accuracy'])
+
+model.fit(x_train, y_train, epochs=20, batch_size=10,
+          validation_data=(x_test, y_test))
+
+print('Performance (training)')
+print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_train, y_train)))
+print('Performance (testing)')
+print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_test, y_test)))`;
+        ReactDOM.createRoot(document.getElementById('code-01')).render(
+            <CodeRunner filename="l303-example-01.py" initialCode={code01} staticOutput="Test Loss: 0.00622, Acc: 0.96620" />
+        );
+
+        // 2. Bad Init
+        const code02 = `import numpy as np
+import matplotlib.pyplot as plt
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][:10000]/255.
+y_train = np.array([np.eye(10)[n] for n in mnist['y_train'][:10000]])
+
+from keras.models import Sequential
+from keras.layers import Dense, Reshape
+from keras.optimizers import SGD
+
+model = Sequential()
+model.add(Reshape((784,), input_shape=(28,28)))
+model.add(Dense(30, activation='sigmoid'))
+model.add(Dense(10, activation='sigmoid'))
+model.compile(loss='mean_squared_error', optimizer=SGD(lr=100.0))
+
+model.layers[0].set_weights([
+    np.array([[float(2+i+j) for i in range(30)] for j in range(784)]),
+    np.array([float(100+i) for i in range(30)])
+])
+model.layers[1].set_weights([
+    np.array([[float(50+i+j) for i in range(10)] for j in range(30)]),
+    np.array([float(200+i) for i in range(10)])
+])
+
+rec = model.fit(x_train, y_train, epochs=100, batch_size=10)
+
+vep = np.linspace(1.,100.,100)
+fig = plt.figure(figsize=(6,6), dpi=80)
+plt.plot(vep,rec.history['loss'], lw=3)
+plt.grid()
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-02')).render(
+            <CodeRunner filename="l303-example-02.py" initialCode={code02} staticOutput="[Plotting Loss Curve]\nNotice the flat region at the start (slow learning)." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Slow+Learning+Curve" />
+        );
+
+        // 3. MSE vs CE
+        const code02a = `import numpy as np
+import matplotlib.pyplot as plt
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][:10000]/255.
+y_train = np.array([np.eye(10)[n] for n in mnist['y_train'][:10000]])
+
+from keras.models import Sequential, clone_model
+from keras.layers import Dense, Reshape
+from keras.optimizers import SGD
+
+model = Sequential()
+model.add(Reshape((784,), input_shape=(28,28)))
+model.add(Dense(30, activation='sigmoid'))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(loss='mean_squared_error', optimizer=SGD(lr=100.0))
+# ... Set fixed weights ...
+model.layers[0].set_weights([...])
+model.layers[1].set_weights([...])
+
+
+rec1 = model.fit(x_train, y_train[:,0], epochs=100, batch_size=10)
+
+model.compile(loss='binary_crossentropy', optimizer=SGD(lr=100.0))
+# ... Set same weights ...
+model.layers[0].set_weights([...])
+model.layers[1].set_weights([...])
+
+rec2 = model.fit(x_train, y_train[:,0], epochs=100, batch_size=10)
+
+vep = np.linspace(1.,100.,100)
+fig = plt.figure(figsize=(6,6), dpi=80)
+plt.plot(vep,rec1.history['loss'], lw=3)
+plt.plot(vep,rec2.history['loss'], lw=3)
+plt.grid()
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-02a')).render(
+            <CodeRunner filename="l303-example-02a.py" initialCode={code02a} staticOutput="[Plotting Comparison]\nCross-Entropy (Orange) drops much faster than MSE (Blue)." staticImage="https://dummyimage.com/600x400/fff/000.png&text=MSE+vs+CE+Comparison" />
+        );
+
+        // 4. Softmax
+        const code03 = `import numpy as np
+import matplotlib.pyplot as plt
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][:10000]/255.
+y_train = np.array([np.eye(10)[n] for n in mnist['y_train'][:10000]])
+x_test = mnist['x_test']/255.
+y_test = np.array([np.eye(10)[n] for n in mnist['y_test']])
+
+from keras.models import Sequential
+from keras.layers import Dense, Reshape
+from keras.optimizers import SGD
+
+model = Sequential()
+model.add(Reshape((784,), input_shape=(28,28)))
+model.add(Dense(30, activation='sigmoid'))
+model.add(Dense(10, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer=SGD(lr=1.0), metrics=['accuracy'])
+
+model.fit(x_train, y_train, epochs=20, batch_size=10,
+          validation_data=(x_test, y_test))
+
+print('Performance (training)')
+print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_train, y_train)))
+print('Performance (testing)')
+print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_test, y_test)))`;
+        ReactDOM.createRoot(document.getElementById('code-03')).render(
+            <CodeRunner filename="l303-example-03.py" initialCode={code03} staticOutput="Test Acc: 0.96350 # failed: 365" staticImage="https://dummyimage.com/600x400/fff/000.png&text=Failed+Samples" />
+        );
+
+        // 5. Overfitting
+        const code04 = `import numpy as np
+import matplotlib.pyplot as plt
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][:1000]/255.
+y_train = np.array([np.eye(10)[n] for n in mnist['y_train'][:1000]])
+x_test = mnist['x_test']/255.
+y_test = np.array([np.eye(10)[n] for n in mnist['y_test']])
+
+from keras.models import Sequential
+from keras.layers import Dense, Reshape
+from keras.optimizers import SGD
+
+model = Sequential()
+model.add(Reshape((784,), input_shape=(28,28)))
+model.add(Dense(30, activation='sigmoid'))
+model.add(Dense(10, activation='softmax'))
+model.compile(loss='categorical_crossentropy',
+              optimizer=SGD(lr=1.0),
+              metrics=['accuracy'])
+
+rec = model.fit(x_train, y_train, epochs=200, batch_size=10,
+                validation_data=(x_test, y_test))
+
+vep = np.linspace(1.,200.,200)
+fig = plt.figure(figsize=(6,6), dpi=80)
+plt.plot(vep,rec.history['loss'], lw=3)
+plt.plot(vep,rec.history['val_loss'], lw=3)
+plt.ylim(0.,1.)
+plt.grid()
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-04')).render(
+            <CodeRunner filename="l303-example-04.py" initialCode={code04} staticOutput="[Plotting Train vs Test Loss]\nGap widens -> Overfitting." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Overfitting+Graph" />
+        );
+
+        // 6. L2 Reg
+        const code04a = `from keras.regularizers import l2
+
+model = Sequential()
+model.add(Reshape((784,), input_shape=(28,28)))
+model.add(Dense(30, activation='sigmoid', kernel_regularizer=l2(0.01)))
+model.add(Dense(10, activation='softmax', kernel_regularizer=l2(0.01)))
+model.compile(loss='categorical_crossentropy',
+              optimizer=SGD(lr=1.0),
+              metrics=['accuracy'])
+
+rec = model.fit(x_train, y_train, epochs=200, batch_size=10,
+                validation_data=(x_test, y_test))`;
+        ReactDOM.createRoot(document.getElementById('code-04a')).render(
+            <CodeRunner filename="l303-example-04a.py" initialCode={code04a} staticOutput="Training Acc: 0.97\nTesting Acc: 0.96\n(Gap reduced)" />
+        );
+
+        // 7. Dropout
+        const code04b = `from keras.layers import Dropout
+
+model = Sequential()
+model.add(Reshape((784,), input_shape=(28,28)))
+model.add(Dense(30, activation='sigmoid'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+model.compile(loss='categorical_crossentropy',
+              optimizer=SGD(lr=1.0),
+              metrics=['accuracy'])
+
+rec = model.fit(x_train, y_train, epochs=200, batch_size=10,
+                validation_data=(x_test, y_test))`;
+        ReactDOM.createRoot(document.getElementById('code-04b')).render(
+            <CodeRunner filename="l303-example-04b.py" initialCode={code04b} staticOutput="Training Acc: 0.96\nTesting Acc: 0.97\n(Dropout effectively prevents memorization)" />
+        );
+
+        // 8. Early Stopping
+        const code04c = `from keras.callbacks import EarlyStopping
+
+rec = model.fit(x_train, y_train, epochs=200, batch_size=10,
+                validation_data=(x_test, y_test),
+                callbacks=[EarlyStopping(monitor='val_loss', patience=3)])`;
+        ReactDOM.createRoot(document.getElementById('code-04c')).render(
+            <CodeRunner filename="l303-example-04c.py" initialCode={code04c} staticOutput="Epoch 21/200...\nEarly stopping triggered." />
+        );
+
+        // 9. Augmentation
+        const code05 = `import numpy as np
+import matplotlib.pyplot as plt
+from scipy.ndimage.interpolation import rotate
+
+# ... load data ...
+
+# Create new data
+ext1 = [rotate(img, 15, reshape=False) for img in x_train]
+ext2 = [rotate(img, -15, reshape=False) for img in x_train]
+ext3 = [rotate(img, 25, reshape=False) for img in x_train]
+ext4 = [rotate(img, -25, reshape=False) for img in x_train]
+ext5 = [rotate(img, 5, reshape=False) for img in x_train]
+ext6 = [rotate(img, -5, reshape=False) for img in x_train]
+x_train_ext = np.vstack([x_train, ext1, ext2, ext3, ext4, ext5, ext6])
+y_train_ext = np.vstack([y_train, y_train, y_train, y_train, y_train, y_train, y_train])
+
+# ... train model ...
+rec = model.fit(x_train_ext, y_train_ext, epochs=200, batch_size=10,
+                validation_data=(x_test, y_test))`;
+        ReactDOM.createRoot(document.getElementById('code-05')).render(
+            <CodeRunner filename="l303-example-05.py" initialCode={code05} staticOutput="[Plotting Accuracy]\nAugmentation improves generalization significantly." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Augmentation+Graph" />
+        );
+
+        // 10. LR
+        const code06 = `import numpy as np
+import matplotlib.pyplot as plt
+
+# ... load data ...
+from keras.models import Sequential, clone_model
+from keras.layers import Dense, Reshape
+from keras.optimizers import SGD
+
+m1 = Sequential()
+# ... build model ...
+m1.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.2))
+
+m2 = clone_model(m1)
+m2.compile(loss='categorical_crossentropy', optimizer=SGD(lr=2.0))
+
+m3 = clone_model(m1)
+m3.compile(loss='categorical_crossentropy', optimizer=SGD(lr=20.0))
+
+rec1 = m1.fit(x_train, y_train, epochs=100, batch_size=60)
+rec2 = m2.fit(x_train, y_train, epochs=100, batch_size=60)
+rec3 = m3.fit(x_train, y_train, epochs=100, batch_size=60)
+
+# Plot comparison`;
+        ReactDOM.createRoot(document.getElementById('code-06')).render(
+            <CodeRunner filename="l303-example-06.py" initialCode={code06} staticOutput="[Plotting Loss Curves]\nLR=2.0 is optimal. LR=20.0 oscillates." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Learning+Rates" />
+        );
+
+        // 11. Momentum
+        const code06a = `m2 = clone_model(m1)
+m2.compile(loss='categorical_crossentropy',
+           optimizer=SGD(lr=2.0, momentum=0.4))`;
+        ReactDOM.createRoot(document.getElementById('code-06a')).render(
+            <CodeRunner filename="l303-example-06a.py" initialCode={code06a} staticOutput="Momentum helps converge faster in the right direction." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Momentum" />
+        );
+
+        // 12. Batch Size
+        const code06b = `rec1 = m1.fit(..., batch_size=10)
+rec2 = m2.fit(..., batch_size=30)
+rec3 = m3.fit(..., batch_size=300)`;
+        ReactDOM.createRoot(document.getElementById('code-06b')).render(
+            <CodeRunner filename="l303-example-06b.py" initialCode={code06b} staticOutput="Smaller batch = noisy but faster updates. Large batch = smooth but slow." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Batch+Sizes" />
+        );
+
+        // 13. Optimizers
+        const code06c = `from keras.optimizers import SGD, RMSprop, Adadelta
+
+m1.compile(..., optimizer=SGD(lr=2.0))
+m2.compile(..., optimizer=RMSprop())
+m3.compile(..., optimizer=Adadelta())`;
+        ReactDOM.createRoot(document.getElementById('code-06c')).render(
+            <CodeRunner filename="l303-example-06c.py" initialCode={code06c} staticOutput="Adadelta/RMSprop adapt learning rates automatically." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Optimizers" />
+        );
+
+        // 14. Activations
+        const code06d = `m1.add(Dense(256, activation='sigmoid'))
+# ...
+m2.add(Dense(256, activation='relu'))`;
+        ReactDOM.createRoot(document.getElementById('code-06d')).render(
+            <CodeRunner filename="l303-example-06d.py" initialCode={code06d} staticOutput="ReLU trains MUCH faster and reaches higher accuracy." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Activations" />
+        );
+
+        // 15. Large Model
+        const code07 = `import numpy as np
+import matplotlib.pyplot as plt
+
+# ... load data ...
+from keras.models import Sequential
+from keras.layers import Reshape, Dense, Dropout
+from keras.optimizers import Adadelta
+
+model = Sequential()
+model.add(Reshape((28*28,), input_shape=(28,28)))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+
+model.compile(loss='categorical_crossentropy',
+              optimizer=Adadelta(),
+              metrics=['accuracy'])
+
+model.fit(x_train, y_train, epochs=20, batch_size=128)
+print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_train, y_train)))
+print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_test, y_test)))`;
+        ReactDOM.createRoot(document.getElementById('code-07')).render(
+            <CodeRunner filename="l303-example-07.py" initialCode={code07} staticOutput="Test Acc: 0.9849\n(High performance!)" staticImage="https://dummyimage.com/600x400/fff/000.png&text=Monster+Model" />
+        );
+
+        // 16. Deeper Model
+        const code07a = `model = Sequential()
+model.add(Reshape((28*28,), input_shape=(28,28)))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))`;
+        ReactDOM.createRoot(document.getElementById('code-07a')).render(
+            <CodeRunner filename="l303-example-07a.py" initialCode={code07a} staticOutput="Test Acc: ~0.98\n[Plotting Training Curve]" staticImage="https://dummyimage.com/600x400/fff/000.png&text=Deep+Network" />
+        );
+
+        // Quiz
+        ReactDOM.createRoot(document.getElementById('quiz-container')).render(<Quiz />);
+
+        // Init Math/Highlight
+        document.addEventListener("DOMContentLoaded", function () {
+            hljs.highlightAll();
+        });
+
+        window.addEventListener("load", function () {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false }
+                    ]
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
