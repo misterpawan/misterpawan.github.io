@@ -815,7 +815,7 @@ model.compile(loss='categorical_crossentropy',
 rec = model.fit(x_train, y_train, epochs=200, batch_size=10,
                 validation_data=(x_test, y_test))`;
         ReactDOM.createRoot(document.getElementById('code-04a')).render(
-            <CodeRunner filename="l303-example-04a.py" initialCode={code04a} staticOutput="Training Acc: 0.97\nTesting Acc: 0.96\n(Gap reduced)" />
+            <CodeRunner filename="l303-example-04a.py" initialCode={code04a} staticOutput={`Training Acc: 0.97\nTesting Acc: 0.96\n(Gap reduced)`} />
         );
 
         // 7. Dropout
@@ -833,7 +833,7 @@ model.compile(loss='categorical_crossentropy',
 rec = model.fit(x_train, y_train, epochs=200, batch_size=10,
                 validation_data=(x_test, y_test))`;
         ReactDOM.createRoot(document.getElementById('code-04b')).render(
-            <CodeRunner filename="l303-example-04b.py" initialCode={code04b} staticOutput="Training Acc: 0.96\nTesting Acc: 0.97\n(Dropout effectively prevents memorization)" />
+            <CodeRunner filename="l303-example-04b.py" initialCode={code04b} staticOutput={`Training Acc: 0.96\nTesting Acc: 0.97\n(Dropout effectively prevents memorization)`} />
         );
 
         // 8. Early Stopping
@@ -843,7 +843,7 @@ rec = model.fit(x_train, y_train, epochs=200, batch_size=10,
                 validation_data=(x_test, y_test),
                 callbacks=[EarlyStopping(monitor='val_loss', patience=3)])`;
         ReactDOM.createRoot(document.getElementById('code-04c')).render(
-            <CodeRunner filename="l303-example-04c.py" initialCode={code04c} staticOutput="Epoch 21/200...\nEarly stopping triggered." />
+            <CodeRunner filename="l303-example-04c.py" initialCode={code04c} staticOutput={`Epoch 21/200...\nEarly stopping triggered.`} />
         );
 
         // 9. Augmentation
@@ -1001,7 +1001,7 @@ model.fit(x_train, y_train, epochs=20, batch_size=128)
 print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_train, y_train)))
 print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_test, y_test)))`;
         ReactDOM.createRoot(document.getElementById('code-07')).render(
-            <CodeRunner filename="l303-example-07.py" initialCode={code07} staticOutput="Test Acc: 0.9849\n(High performance!)" />
+            <CodeRunner filename="l303-example-07.py" initialCode={code07} staticOutput={`Test Acc: 0.9849\n(High performance!)`} />
         );
 
         // 16. Deeper Model
