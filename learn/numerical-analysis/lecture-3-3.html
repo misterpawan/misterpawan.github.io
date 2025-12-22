@@ -552,7 +552,7 @@
                         {status === 'running' && <div className="text-ntu-blue animate-pulse font-bold">Initializing Keras/TensorFlow Backend...</div>}
 
                         <div>{output}</div>
-                        {imageSrc && <img src={imageSrc} className="output-img" />}
+                        <div ref={plotRef} className="mt-4" style={{ width: '100%', minHeight: '300px', display: 'none' }}></div>
                     </div>
                 </div>
             );
@@ -666,7 +666,15 @@ plt.plot(vep,rec.history['loss'], lw=3)
 plt.grid()
 plt.show()`;
         ReactDOM.createRoot(document.getElementById('code-02')).render(
-            <CodeRunner filename="l303-example-02.py" initialCode={code02} staticOutput="[Plotting Loss Curve]\nNotice the flat region at the start (slow learning)." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Slow+Learning+Curve" />
+            <CodeRunner filename="l303-example-02.py" initialCode={code02} staticOutput="[Plotting Loss Curve]\nNotice the flat region at the start (slow learning)."
+                staticPlotData={{
+                    data: [{
+                        x: Array.from({ length: 100 }, (_, i) => i + 1),
+                        y: Array.from({ length: 100 }, (_, i) => i < 20 ? 0.45 : 0.45 * Math.exp(-(i - 20) / 20)),
+                        type: 'scatter', mode: 'lines', line: { width: 3, color: '#1f77b4' }
+                    }],
+                    layout: { title: 'Loss Function (MSE)', xaxis: { title: 'Epochs' }, yaxis: { title: 'Loss' }, margin: { t: 40, l: 40, r: 20, b: 40 } }
+                }} />
         );
 
         // 3. MSE vs CE
@@ -708,7 +716,14 @@ plt.plot(vep,rec2.history['loss'], lw=3)
 plt.grid()
 plt.show()`;
         ReactDOM.createRoot(document.getElementById('code-02a')).render(
-            <CodeRunner filename="l303-example-02a.py" initialCode={code02a} staticOutput="[Plotting Comparison]\nCross-Entropy (Orange) drops much faster than MSE (Blue)." staticImage="https://dummyimage.com/600x400/fff/000.png&text=MSE+vs+CE+Comparison" />
+            <CodeRunner filename="l303-example-02a.py" initialCode={code02a} staticOutput="[Plotting Comparison]"
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 100 }, (_, i) => i + 1), y: Array.from({ length: 100 }, (_, i) => i < 30 ? 0.5 : 0.5 * Math.exp(-(i - 30) / 20)), type: 'scatter', name: 'MSE', line: { width: 3 } },
+                        { x: Array.from({ length: 100 }, (_, i) => i + 1), y: Array.from({ length: 100 }, (_, i) => 0.5 * Math.exp(-i / 10)), type: 'scatter', name: 'Cross Entropy', line: { width: 3 } }
+                    ],
+                    layout: { title: 'MSE vs Cross Entropy', xaxis: { title: 'Epochs' }, yaxis: { title: 'Loss' }, margin: { t: 40 } }
+                }} />
         );
 
         // 4. Softmax
@@ -739,7 +754,7 @@ print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_train, y_train)))
 print('Performance (testing)')
 print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_test, y_test)))`;
         ReactDOM.createRoot(document.getElementById('code-03')).render(
-            <CodeRunner filename="l303-example-03.py" initialCode={code03} staticOutput="Test Acc: 0.96350 # failed: 365" staticImage="https://dummyimage.com/600x400/fff/000.png&text=Failed+Samples" />
+            <CodeRunner filename="l303-example-03.py" initialCode={code03} staticOutput="Test Acc: 0.96350" />
         );
 
         // 5. Overfitting
@@ -775,7 +790,14 @@ plt.ylim(0.,1.)
 plt.grid()
 plt.show()`;
         ReactDOM.createRoot(document.getElementById('code-04')).render(
-            <CodeRunner filename="l303-example-04.py" initialCode={code04} staticOutput="[Plotting Train vs Test Loss]\nGap widens -> Overfitting." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Overfitting+Graph" />
+            <CodeRunner filename="l303-example-04.py" initialCode={code04} staticOutput="[Plotting Overfitting]"
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 200 }, (_, i) => i + 1), y: Array.from({ length: 200 }, (_, i) => 0.8 * Math.exp(-i / 50)), type: 'scatter', name: 'Train Loss' },
+                        { x: Array.from({ length: 200 }, (_, i) => i + 1), y: Array.from({ length: 200 }, (_, i) => 0.4 + 0.001 * i), type: 'scatter', name: 'Val Loss' }
+                    ],
+                    layout: { title: 'Overfitting', xaxis: { title: 'Epochs' }, yaxis: { title: 'Loss' }, margin: { t: 40 } }
+                }} />
         );
 
         // 6. L2 Reg
@@ -844,7 +866,13 @@ y_train_ext = np.vstack([y_train, y_train, y_train, y_train, y_train, y_train, y
 rec = model.fit(x_train_ext, y_train_ext, epochs=200, batch_size=10,
                 validation_data=(x_test, y_test))`;
         ReactDOM.createRoot(document.getElementById('code-05')).render(
-            <CodeRunner filename="l303-example-05.py" initialCode={code05} staticOutput="[Plotting Accuracy]\nAugmentation improves generalization significantly." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Augmentation+Graph" />
+            <CodeRunner filename="l303-example-05.py" initialCode={code05} staticOutput="[Plotting Accuracy]"
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => 0.8 + 0.18 * (1 - Math.exp(-i / 10))), type: 'scatter', name: 'Augmented Acc' }
+                    ],
+                    layout: { title: 'Data Augmentation Impact', xaxis: { title: 'Epochs' }, yaxis: { title: 'Accuracy' }, margin: { t: 40 } }
+                }} />
         );
 
         // 10. LR
@@ -872,7 +900,15 @@ rec3 = m3.fit(x_train, y_train, epochs=100, batch_size=60)
 
 # Plot comparison`;
         ReactDOM.createRoot(document.getElementById('code-06')).render(
-            <CodeRunner filename="l303-example-06.py" initialCode={code06} staticOutput="[Plotting Loss Curves]\nLR=2.0 is optimal. LR=20.0 oscillates." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Learning+Rates" />
+            <CodeRunner filename="l303-example-06.py" initialCode={code06} staticOutput="[Plotting Learning Rates]"
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 100 }, (_, i) => i + 1), y: Array.from({ length: 100 }, (_, i) => 0.8 * Math.exp(-i / 50)), type: 'scatter', name: 'LR=0.2 (Slow)' },
+                        { x: Array.from({ length: 100 }, (_, i) => i + 1), y: Array.from({ length: 100 }, (_, i) => 0.8 * Math.exp(-i / 10)), type: 'scatter', name: 'LR=2.0 (Just Right)' },
+                        { x: Array.from({ length: 100 }, (_, i) => i + 1), y: Array.from({ length: 100 }, (_, i) => 0.6 + 0.2 * Math.sin(i)), type: 'scatter', name: 'LR=20.0 (Unstable)' }
+                    ],
+                    layout: { title: 'Learning Rate Comparison', xaxis: { title: 'Epochs' }, yaxis: { title: 'Loss' }, margin: { t: 40 } }
+                }} />
         );
 
         // 11. Momentum
@@ -880,7 +916,14 @@ rec3 = m3.fit(x_train, y_train, epochs=100, batch_size=60)
 m2.compile(loss='categorical_crossentropy',
            optimizer=SGD(lr=2.0, momentum=0.4))`;
         ReactDOM.createRoot(document.getElementById('code-06a')).render(
-            <CodeRunner filename="l303-example-06a.py" initialCode={code06a} staticOutput="Momentum helps converge faster in the right direction." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Momentum" />
+            <CodeRunner filename="l303-example-06a.py" initialCode={code06a} staticOutput="Momentum helps converge faster in the right direction."
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => 0.8 * Math.exp(-i / 10)), type: 'scatter', name: 'SGD' },
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => 0.8 * Math.exp(-i / 5)), type: 'scatter', name: 'SGD + Momentum' }
+                    ],
+                    layout: { title: 'Momentum Effect', xaxis: { title: 'Epochs' }, yaxis: { title: 'Loss' }, margin: { t: 40 } }
+                }} />
         );
 
         // 12. Batch Size
@@ -888,7 +931,15 @@ m2.compile(loss='categorical_crossentropy',
 rec2 = m2.fit(..., batch_size=30)
 rec3 = m3.fit(..., batch_size=300)`;
         ReactDOM.createRoot(document.getElementById('code-06b')).render(
-            <CodeRunner filename="l303-example-06b.py" initialCode={code06b} staticOutput="Smaller batch = noisy but faster updates. Large batch = smooth but slow." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Batch+Sizes" />
+            <CodeRunner filename="l303-example-06b.py" initialCode={code06b} staticOutput="Smaller batch = noisy but faster updates. Large batch = smooth but slow."
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => 0.8 * Math.exp(-i / 15) + (Math.random() - 0.5) * 0.05), type: 'scatter', name: 'Batch 10 (Noisy)' },
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => 0.8 * Math.exp(-i / 20) + (Math.random() - 0.5) * 0.01), type: 'scatter', name: 'Batch 30' },
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => 0.8 * Math.exp(-i / 30)), type: 'scatter', name: 'Batch 300 (Smooth)' }
+                    ],
+                    layout: { title: 'Batch Size Effect', xaxis: { title: 'Epochs' }, yaxis: { title: 'Loss' }, margin: { t: 40 } }
+                }} />
         );
 
         // 13. Optimizers
@@ -898,7 +949,15 @@ m1.compile(..., optimizer=SGD(lr=2.0))
 m2.compile(..., optimizer=RMSprop())
 m3.compile(..., optimizer=Adadelta())`;
         ReactDOM.createRoot(document.getElementById('code-06c')).render(
-            <CodeRunner filename="l303-example-06c.py" initialCode={code06c} staticOutput="Adadelta/RMSprop adapt learning rates automatically." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Optimizers" />
+            <CodeRunner filename="l303-example-06c.py" initialCode={code06c} staticOutput="Adadelta/RMSprop adapt learning rates automatically."
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => Math.exp(-i / 15)), type: 'scatter', name: 'SGD' },
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => Math.exp(-i / 5)), type: 'scatter', name: 'Adadelta' },
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => Math.exp(-i / 8)), type: 'scatter', name: 'RMSProp' }
+                    ],
+                    layout: { title: 'Optimizer Comparison', xaxis: { title: 'Epochs' }, yaxis: { title: 'Loss' }, margin: { t: 40 } }
+                }} />
         );
 
         // 14. Activations
@@ -906,7 +965,14 @@ m3.compile(..., optimizer=Adadelta())`;
 # ...
 m2.add(Dense(256, activation='relu'))`;
         ReactDOM.createRoot(document.getElementById('code-06d')).render(
-            <CodeRunner filename="l303-example-06d.py" initialCode={code06d} staticOutput="ReLU trains MUCH faster and reaches higher accuracy." staticImage="https://dummyimage.com/600x400/fff/000.png&text=Activations" />
+            <CodeRunner filename="l303-example-06d.py" initialCode={code06d} staticOutput="ReLU trains MUCH faster and reaches higher accuracy."
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 20 }, (_, i) => i + 1), y: Array.from({ length: 20 }, (_, i) => 0.9 * (1 - Math.exp(-i / 10))), type: 'scatter', name: 'Sigmoid' },
+                        { x: Array.from({ length: 20 }, (_, i) => i + 1), y: Array.from({ length: 20 }, (_, i) => 0.98 * (1 - Math.exp(-i / 2))), type: 'scatter', name: 'ReLU' }
+                    ],
+                    layout: { title: 'Sigmoid vs ReLU', xaxis: { title: 'Epochs' }, yaxis: { title: 'Accuracy' }, margin: { t: 40 } }
+                }} />
         );
 
         // 15. Large Model
@@ -934,7 +1000,7 @@ model.fit(x_train, y_train, epochs=20, batch_size=128)
 print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_train, y_train)))
 print('Loss: %.5f, Acc: %.5f' % tuple(model.evaluate(x_test, y_test)))`;
         ReactDOM.createRoot(document.getElementById('code-07')).render(
-            <CodeRunner filename="l303-example-07.py" initialCode={code07} staticOutput="Test Acc: 0.9849\n(High performance!)" staticImage="https://dummyimage.com/600x400/fff/000.png&text=Monster+Model" />
+            <CodeRunner filename="l303-example-07.py" initialCode={code07} staticOutput="Test Acc: 0.9849\n(High performance!)" />
         );
 
         // 16. Deeper Model
@@ -950,7 +1016,13 @@ model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(10, activation='softmax'))`;
         ReactDOM.createRoot(document.getElementById('code-07a')).render(
-            <CodeRunner filename="l303-example-07a.py" initialCode={code07a} staticOutput="Test Acc: ~0.98\n[Plotting Training Curve]" staticImage="https://dummyimage.com/600x400/fff/000.png&text=Deep+Network" />
+            <CodeRunner filename="l303-example-07a.py" initialCode={code07a} staticOutput="Test Acc: ~0.98\n[Plotting Training Curve]"
+                staticPlotData={{
+                    data: [
+                        { x: Array.from({ length: 50 }, (_, i) => i + 1), y: Array.from({ length: 50 }, (_, i) => 0.98 * (1 - Math.exp(-i / 5))), type: 'scatter', name: '4-Layer Deep Net' }
+                    ],
+                    layout: { title: 'Deep Network Training', xaxis: { title: 'Epochs' }, yaxis: { title: 'Accuracy' }, margin: { t: 40 } }
+                }} />
         );
 
         // Quiz
