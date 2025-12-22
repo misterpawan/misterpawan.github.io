@@ -21,7 +21,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     <script>
@@ -60,85 +60,94 @@
             border: 1px solid #e2e8f0;
         }
 
-        .code-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            /* 50/50 split */
-            gap: 2px;
-            background: #282c34;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 1.5rem 0;
-            min-height: 450px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            border: 1px solid #3e4451;
-        }
-
-        @media (max-width: 1024px) {
-            .code-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 400px;
-            }
-        }
-
-        .code-editor {
-            padding: 0;
-            color: #abb2bf;
-            font-size: 0.8rem;
-            overflow: hidden;
-            border-right: 1px solid #3e4451;
+        /* Container for the Editor Area */
+        .editor-container {
             position: relative;
-            background: #282c34;
-            display: flex;
-            flex-direction: column;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #ffffff;
+            /* Light background */
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        .code-input-area {
-            flex-grow: 1;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            color: #e5c07b;
+        /* The Overlay Editor: Textarea on top of Pre/Code */
+        .editor-wrapper {
+            position: relative;
+            min-height: 250px;
             font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            background-color: #ffffff;
+        }
+
+        /* Common styles for both textarea and pre to ensure perfect alignment */
+        .editor-wrapper textarea,
+        .editor-wrapper pre {
+            margin: 0;
             padding: 1rem;
             border: none;
-            resize: none;
-            outline: none;
-            font-size: 0.85rem;
-            line-height: 1.5;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            white-space: pre;
+            overflow: auto;
+            word-wrap: normal;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            tab-size: 4;
         }
 
-        .output-panel {
-            padding: 1rem;
-            background: #21252b;
-            color: #98c379;
-            font-family: 'Consolas', monospace;
-            font-size: 0.8rem;
-            overflow: auto;
-            position: relative;
+        /* The Textarea: Transparent, caret visible, handles input */
+        .editor-wrapper textarea {
+            z-index: 2;
+            color: transparent;
+            background: transparent;
+            caret-color: #000;
+            /* Dark caret */
+            resize: none;
+            outline: none;
+        }
+
+        /* The Pre/Code: Visible syntax highlighting, sits below */
+        .editor-wrapper pre {
+            z-index: 1;
+            background: transparent;
+            pointer-events: none;
+            /* Let clicks pass through to textarea */
+        }
+
+        .editor-wrapper code {
+            font-family: inherit;
+        }
+
+        .run-bar {
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            white-space: pre-wrap;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .run-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
             background: #e11d48;
             color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
             cursor: pointer;
-            z-index: 10;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
             transition: background 0.2s;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
         .run-btn:hover {
@@ -146,8 +155,34 @@
         }
 
         .run-btn:disabled {
-            background: #64748b;
+            background: #94a3b8;
             cursor: not-allowed;
+        }
+
+        /* Output Box: Separated */
+        .output-box {
+            margin-top: 0.5rem;
+            background: #1e293b;
+            /* Keep output dark for contrast/terminal feel */
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            min-height: 100px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .output-img {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #4b5263;
+            background: white;
+            /* Images often need white bg */
         }
 
         .math-box {
@@ -159,13 +194,6 @@
             overflow-x: auto;
         }
 
-        .output-img {
-            max-width: 100%;
-            border-radius: 4px;
-            margin-top: 10px;
-            border: 1px solid #4b5263;
-        }
-
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -173,16 +201,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #282c34;
+            background: #f1f1f1;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #5c6370;
+            background: #cbd5e1;
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #4b5263;
+            background: #94a3b8;
         }
     </style>
 </head>
@@ -262,18 +290,18 @@
                 take a few seconds.
             </div>
 
-            <div id="code-01" class="code-container"></div>
+            <div id="code-01"></div>
 
             <div class="grid md:grid-cols-2 gap-6 mt-8">
                 <div>
                     <h3 class="text-lg font-bold mb-2">Visualizing a Single Digit</h3>
                     <p class="text-sm text-gray-600 mb-2">Let's plot the first sample to verify it's a digit.</p>
-                    <div id="code-01a" class="code-container" style="min-height: 480px;"></div>
+                    <div id="code-01a"></div>
                 </div>
                 <div>
                     <h3 class="text-lg font-bold mb-2">Separating 0 and 1</h3>
                     <p class="text-sm text-gray-600 mb-2">We filter the dataset to keep only zeros and ones.</p>
-                    <div id="code-01b" class="code-container" style="min-height: 480px;"></div>
+                    <div id="code-01b"></div>
                 </div>
             </div>
         </section>
@@ -290,14 +318,14 @@
             </p>
 
             <p class="text-sm italic text-gray-500 mb-2">Calculating mean intensities...</p>
-            <div id="code-02a" class="code-container"></div>
+            <div id="code-02a"></div>
 
             <div class="mt-8 mb-4">
                 <h3 class="text-xl font-bold text-slate-800">Calculating AUC (Area Under Curve)</h3>
                 <p class="text-gray-600">The AUC tells us which feature is better. 1.0 is perfect.</p>
             </div>
 
-            <div id="code-02b" class="code-container"></div>
+            <div id="code-02b"></div>
 
         </section>
 
@@ -318,13 +346,13 @@
                     </div>
                 </div>
                 <div>
-                    <div id="code-03" class="code-container" style="min-height: 300px; margin-top: 0;"></div>
+                    <div id="code-03" style="margin-top: 0;"></div>
                 </div>
             </div>
 
             <div class="mb-8">
                 <h4 class="font-bold text-gray-700 mb-2">Visualizing Fisher's Separation</h4>
-                <div id="code-03a" class="code-container"></div>
+                <div id="code-03a"></div>
             </div>
 
             <hr class="my-8 border-gray-200">
@@ -335,8 +363,8 @@
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
-                <div id="code-04" class="code-container"></div>
-                <div id="code-04b" class="code-container"></div>
+                <div id="code-04"></div>
+                <div id="code-04b"></div>
             </div>
         </section>
 
@@ -351,21 +379,21 @@
                 Vectors).
             </p>
 
-            <div id="code-05" class="code-container"></div>
+            <div id="code-05"></div>
 
             <div class="mt-8 mb-4">
                 <h3 class="text-xl font-bold text-slate-800">Visualizing the Decision Boundary</h3>
                 <p class="text-gray-600">The hyperplane that separates 0s and 1s.</p>
             </div>
 
-            <div id="code-05a" class="code-container"></div>
+            <div id="code-05a"></div>
 
             <div class="mt-8 mb-4">
                 <h3 class="text-xl font-bold text-slate-800">The Grand Finale: Full MNIST Classification</h3>
                 <p class="text-gray-600">This might take a few seconds...</p>
             </div>
 
-            <div id="code-06" class="code-container"></div>
+            <div id="code-06"></div>
         </section>
 
         <section id="nonlinear" class="slide-card">
@@ -379,16 +407,16 @@
                     Trick</strong>.
             </p>
 
-            <div id="code-07" class="code-container"></div>
+            <div id="code-07"></div>
 
             <div class="grid md:grid-cols-2 gap-6 mt-8">
                 <div>
                     <h4 class="font-bold text-red-600 mb-2">Linear Kernel (Fail)</h4>
-                    <div id="code-07a" class="code-container" style="min-height: 480px;"></div>
+                    <div id="code-07a"></div>
                 </div>
                 <div>
                     <h4 class="font-bold text-green-600 mb-2">RBF Kernel (Success)</h4>
-                    <div id="code-07b" class="code-container" style="min-height: 480px;"></div>
+                    <div id="code-07b"></div>
                 </div>
             </div>
         </section>
@@ -416,8 +444,11 @@
                 // Load local MNIST data
                 const response = await fetch('assets/mnist.npz');
                 const buffer = await response.arrayBuffer();
-                pyodide.FS.writeFile('mnist.npz', new Uint8Array(buffer));
-                console.log("MNIST dataset loaded into virtual filesystem.");
+
+                // Create assets directory and write file
+                pyodide.FS.mkdir('assets');
+                pyodide.FS.writeFile('assets/mnist.npz', new Uint8Array(buffer));
+                console.log("MNIST dataset loaded into virtual filesystem at assets/mnist.npz");
 
                 return pyodide;
             })();
@@ -473,13 +504,24 @@ img_str
     </script>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         const CodeRunner = ({ id, filename, initialCode }) => {
             const [code, setCode] = useState(initialCode);
             const [output, setOutput] = useState("");
             const [imageSrc, setImageSrc] = useState(null);
             const [status, setStatus] = useState("idle"); // idle, running, error
+            const textareaRef = useRef(null);
+            const preRef = useRef(null);
+
+            // Highlight logic
+            useEffect(() => {
+                if (preRef.current) {
+                    // Reset and highlight
+                    preRef.current.removeAttribute('data-highlighted');
+                    hljs.highlightElement(preRef.current);
+                }
+            }, [code]);
 
             const handleRun = async () => {
                 setStatus("running");
@@ -494,36 +536,64 @@ img_str
                 } else {
                     setStatus("success");
                     setOutput(result.stdout || (result.image ? "" : "Done (no output)"));
-                    // Append stderr if any useful? usually pyodide errors go to catch block
+                    if (result.stdout && result.stdout.trim().length === 0 && !result.image) {
+                        setOutput("Done (no output). Did you forget print()?");
+                    }
                     if (result.image) setImageSrc(result.image);
                 }
             };
 
+            // Sync scrolling
+            const handleScroll = () => {
+                if (textareaRef.current && preRef.current) {
+                    preRef.current.scrollTop = textareaRef.current.scrollTop;
+                    preRef.current.scrollLeft = textareaRef.current.scrollLeft;
+                }
+            };
+
+            // Tab handling
+            const handleKeyDown = (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    const newValue = code.substring(0, start) + "    " + code.substring(end);
+                    setCode(newValue);
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start + 4;
+                    }, 0);
+                }
+            };
+
             return (
-                <div>
-                    <div className="flex justify-between items-end mb-1 px-1">
-                        <span className="text-xs font-mono text-gray-500">{filename}</span>
-                    </div>
-                    <div className="code-container">
-                        <div className="code-editor">
+                <div className="mb-8">
+                    <div className="editor-container">
+                        <div className="run-bar">
+                            <span className="text-xs font-mono text-gray-500 font-bold">{filename}</span>
                             <button onClick={handleRun} disabled={status === 'running'} className="run-btn">
                                 {status === 'running' ? 'Running...' : '▶ Run Code'}
                             </button>
+                        </div>
+                        <div className="editor-wrapper">
                             <textarea
-                                className="code-input-area"
+                                ref={textareaRef}
                                 value={code}
                                 onChange={(e) => setCode(e.target.value)}
+                                onScroll={handleScroll}
+                                onKeyDown={handleKeyDown}
                                 spellCheck="false"
                             />
+                            <pre ref={preRef}><code className="language-python">{code}</code></pre>
                         </div>
-                        <div className="output-panel">
-                            {status === 'idle' && <div className="text-gray-500 italic">Click Run to execute</div>}
-                            {status === 'running' && <div className="text-ntu-accent animate-pulse">Running Python...</div>}
-                            {status === 'error' && <div className="text-red-500 font-bold">Error:</div>}
+                    </div>
 
-                            <div className="text-xs">{output}</div>
-                            {imageSrc && <img src={imageSrc} className="output-img" />}
-                        </div>
+                    <div className="output-box">
+                        {status === 'idle' && <div className="text-gray-500 italic">Output will appear here...</div>}
+                        {status === 'running' && <div className="text-blue-400 animate-pulse">Executing...</div>}
+                        {status === 'error' && <div className="text-red-400 font-bold mb-2">Error Traceback:</div>}
+
+                        <div>{output}</div>
+                        {imageSrc && <img src={imageSrc} className="output-img" />}
                     </div>
                 </div>
             );
@@ -534,7 +604,7 @@ img_str
         // 1. Data Loading
         const code01 = `import numpy as np
 # Loading local mnist.npz
-data = np.load('mnist.npz')
+data = np.load('assets/mnist.npz')
 x_train = data['x_train']
 y_train = data['y_train']
 x_test = data['x_test']
@@ -551,7 +621,7 @@ print('First label:', y_train[0])
         // 2. Plot One
         const code01a = `import matplotlib.pyplot as plt
 import numpy as np
-data = np.load('mnist.npz')
+data = np.load('assets/mnist.npz')
 x_train = data['x_train']
 
 # Plot the first digit
@@ -567,7 +637,7 @@ plt.show()`;
         // 3. Grid
         const code01b = `import matplotlib.pyplot as plt
 import numpy as np
-data = np.load('mnist.npz')
+data = np.load('assets/mnist.npz')
 x, y = data['x_train'], data['y_train']
 
 # Keep only 0 and 1
@@ -594,7 +664,7 @@ plt.show()`;
 import matplotlib.pyplot as plt
 
 # Load & Prep
-data = np.load('mnist.npz')
+data = np.load('assets/mnist.npz')
 x, y = data['x_train'], data['y_train']
 mask = (y == 0) | (y == 1)
 x01, y01 = x[mask], y[mask]
