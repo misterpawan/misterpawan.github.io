@@ -471,13 +471,13 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const CodeRunner = ({ id, filename, initialCode, staticOutput, staticImage }) => {
+        const CodeRunner = ({ id, filename, initialCode, staticOutput, staticPlotData }) => {
             const [code, setCode] = useState(initialCode);
             const [output, setOutput] = useState("");
-            const [imageSrc, setImageSrc] = useState(null);
             const [status, setStatus] = useState("idle");
             const textareaRef = useRef(null);
             const preRef = useRef(null);
+            const plotRef = useRef(null);
 
             useEffect(() => {
                 if (preRef.current) {
@@ -489,13 +489,19 @@
             const handleRun = () => {
                 setStatus("running");
                 setOutput("");
-                setImageSrc(null);
+                if (plotRef.current) {
+                    plotRef.current.innerHTML = "";
+                    plotRef.current.style.display = 'none';
+                }
 
                 // Simulation Mode for Keras
                 setTimeout(() => {
                     setStatus("success");
                     setOutput(staticOutput || "Done (no output).");
-                    if (staticImage) setImageSrc(staticImage);
+                    if (staticPlotData && plotRef.current) {
+                        plotRef.current.style.display = 'block';
+                        Plotly.newPlot(plotRef.current, staticPlotData.data, staticPlotData.layout, { staticPlot: true, displayModeBar: false });
+                    }
                 }, 1200);
             };
 
