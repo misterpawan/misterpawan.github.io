@@ -13,6 +13,9 @@
 
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -20,8 +23,6 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -61,14 +62,16 @@
 
         .code-container {
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 0;
+            grid-template-columns: 1fr 1fr;
+            /* 50/50 split */
+            gap: 2px;
             background: #282c34;
             border-radius: 8px;
             overflow: hidden;
             margin: 1.5rem 0;
-            min-height: 350px;
+            min-height: 450px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border: 1px solid #3e4451;
         }
 
         @media (max-width: 1024px) {
@@ -79,12 +82,29 @@
         }
 
         .code-editor {
-            padding: 1rem;
+            padding: 0;
             color: #abb2bf;
             font-size: 0.8rem;
-            overflow: auto;
+            overflow: hidden;
             border-right: 1px solid #3e4451;
             position: relative;
+            background: #282c34;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .code-input-area {
+            flex-grow: 1;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            color: #e5c07b;
+            font-family: 'Consolas', 'Monaco', monospace;
+            padding: 1rem;
+            border: none;
+            resize: none;
+            outline: none;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
 
         .output-panel {
@@ -97,8 +117,9 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: flex-start;
+            white-space: pre-wrap;
         }
 
         .run-btn {
@@ -124,6 +145,11 @@
             background: #be123c;
         }
 
+        .run-btn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+        }
+
         .math-box {
             background: #f1f5f9;
             border-left: 4px solid #f59e0b;
@@ -131,6 +157,13 @@
             margin: 1rem 0;
             border-radius: 0 8px 8px 0;
             overflow-x: auto;
+        }
+
+        .output-img {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #4b5263;
         }
 
         /* Custom Scrollbar */
@@ -224,6 +257,10 @@
 
             <p class="mb-4">Before we analyze, we must load the data. We use the famous MNIST dataset of handwritten
                 digits.</p>
+            <div class="bg-yellow-50 p-3 mb-4 rounded border border-yellow-200 text-sm">
+                <strong>Initializing Pyodide...</strong> Please run this block first to load the 11MB dataset. It might
+                take a few seconds.
+            </div>
 
             <div id="code-01" class="code-container"></div>
 
@@ -231,12 +268,12 @@
                 <div>
                     <h3 class="text-lg font-bold mb-2">Visualizing a Single Digit</h3>
                     <p class="text-sm text-gray-600 mb-2">Let's plot the first sample to verify it's a digit.</p>
-                    <div id="code-01a" class="code-container" style="min-height: 250px;"></div>
+                    <div id="code-01a" class="code-container" style="min-height: 480px;"></div>
                 </div>
                 <div>
                     <h3 class="text-lg font-bold mb-2">Separating 0 and 1</h3>
                     <p class="text-sm text-gray-600 mb-2">We filter the dataset to keep only zeros and ones.</p>
-                    <div id="code-01b" class="code-container" style="min-height: 250px;"></div>
+                    <div id="code-01b" class="code-container" style="min-height: 480px;"></div>
                 </div>
             </div>
         </section>
@@ -252,6 +289,7 @@
                 <br><strong>Idea:</strong> Zeros have a hole in the middle. Ones are solid.
             </p>
 
+            <p class="text-sm italic text-gray-500 mb-2">Calculating mean intensities...</p>
             <div id="code-02a" class="code-container"></div>
 
             <div class="mt-8 mb-4">
@@ -280,7 +318,7 @@
                     </div>
                 </div>
                 <div>
-                    <div id="code-03" class="code-container" style="min-height: 200px; margin-top: 0;"></div>
+                    <div id="code-03" class="code-container" style="min-height: 300px; margin-top: 0;"></div>
                 </div>
             </div>
 
@@ -293,8 +331,7 @@
 
             <div class="mb-4">
                 <h3 class="text-xl font-bold text-slate-800">LDA with Scikit-Learn</h3>
-                <p class="text-gray-600">Now let's use the professional tool. We can also use it for dimensionality
-                    reduction (e.g. 784 pixels -> 2D).</p>
+                <p class="text-gray-600">Now let's use the professional tool.</p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
@@ -325,7 +362,7 @@
 
             <div class="mt-8 mb-4">
                 <h3 class="text-xl font-bold text-slate-800">The Grand Finale: Full MNIST Classification</h3>
-                <p class="text-gray-600">Classifying all 10 digits using SVM.</p>
+                <p class="text-gray-600">This might take a few seconds...</p>
             </div>
 
             <div id="code-06" class="code-container"></div>
@@ -347,11 +384,11 @@
             <div class="grid md:grid-cols-2 gap-6 mt-8">
                 <div>
                     <h4 class="font-bold text-red-600 mb-2">Linear Kernel (Fail)</h4>
-                    <div id="code-07a" class="code-container"></div>
+                    <div id="code-07a" class="code-container" style="min-height: 480px;"></div>
                 </div>
                 <div>
                     <h4 class="font-bold text-green-600 mb-2">RBF Kernel (Success)</h4>
-                    <div id="code-07b" class="code-container"></div>
+                    <div id="code-07b" class="code-container" style="min-height: 480px;"></div>
                 </div>
             </div>
         </section>
@@ -362,20 +399,104 @@
         <p>Numerical Analysis Lecture 3-1 • Kai-Feng Chen • National Taiwan University</p>
     </footer>
 
+    <!-- SHARED PYODIDE LOGIC -->
+    <script>
+        let pyodide = null;
+        let pyodideReadyPromise = null;
+
+        async function initPyodideEnvironment() {
+            if (pyodideReadyPromise) return pyodideReadyPromise;
+
+            pyodideReadyPromise = (async () => {
+                console.log("Loading Pyodide...");
+                pyodide = await loadPyodide();
+                console.log("Loading Packages...");
+                await pyodide.loadPackage(['numpy', 'scipy', 'matplotlib', 'scikit-learn', 'pandas']);
+
+                // Load local MNIST data
+                const response = await fetch('assets/mnist.npz');
+                const buffer = await response.arrayBuffer();
+                pyodide.FS.writeFile('mnist.npz', new Uint8Array(buffer));
+                console.log("MNIST dataset loaded into virtual filesystem.");
+
+                return pyodide;
+            })();
+            return pyodideReadyPromise;
+        }
+
+        // Shared function for execution
+        async function runPythonCode(code) {
+            await initPyodideEnvironment();
+
+            // Setup capture
+            const setupCode = `
+import sys
+import io
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+plt.clf() # Clear previous plots
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+`;
+
+            const cleanupCode = `
+stdout_val = sys.stdout.getvalue()
+stderr_val = sys.stdout.getvalue()
+`;
+
+            const plotSaver = `
+import base64
+buf = io.BytesIO()
+if plt.get_fignums():
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    img_str = base64.b64encode(buf.read()).decode('UTF-8')
+else:
+    img_str = ""
+img_str
+`;
+
+            try {
+                // Run user code wrapped
+                await pyodide.runPythonAsync(setupCode + code + cleanupCode);
+
+                const stdout = pyodide.runPython("stdout_val");
+                const stderr = pyodide.runPython("stderr_val");
+                const imgB64 = pyodide.runPython(plotSaver);
+
+                return { stdout, stderr, image: imgB64 ? 'data:image/png;base64,' + imgB64 : null };
+            } catch (err) {
+                return { error: err.message };
+            }
+        }
+    </script>
+
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
-        const CodeRunner = ({ id, filename, code, outputText, plotId }) => {
-            const [isRunning, setIsRunning] = useState(false);
-            const [outputVisible, setOutputVisible] = useState(false);
+        const CodeRunner = ({ id, filename, initialCode }) => {
+            const [code, setCode] = useState(initialCode);
+            const [output, setOutput] = useState("");
+            const [imageSrc, setImageSrc] = useState(null);
+            const [status, setStatus] = useState("idle"); // idle, running, error
 
-            const handleRun = () => {
-                setIsRunning(true);
-                setOutputVisible(false);
-                setTimeout(() => {
-                    setIsRunning(false);
-                    setOutputVisible(true);
-                }, 800);
+            const handleRun = async () => {
+                setStatus("running");
+                setOutput("");
+                setImageSrc(null);
+
+                const result = await runPythonCode(code);
+
+                if (result.error) {
+                    setStatus("error");
+                    setOutput(result.error);
+                } else {
+                    setStatus("success");
+                    setOutput(result.stdout || (result.image ? "" : "Done (no output)"));
+                    // Append stderr if any useful? usually pyodide errors go to catch block
+                    if (result.image) setImageSrc(result.image);
+                }
             };
 
             return (
@@ -385,141 +506,337 @@
                     </div>
                     <div className="code-container">
                         <div className="code-editor">
-                            <button onClick={handleRun} disabled={isRunning} className="run-btn">
-                                {isRunning ? 'Running...' : '▶ Run Code'}
+                            <button onClick={handleRun} disabled={status === 'running'} className="run-btn">
+                                {status === 'running' ? 'Running...' : '▶ Run Code'}
                             </button>
-                            <pre><code className="language-python">{code}</code></pre>
+                            <textarea
+                                className="code-input-area"
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                spellCheck="false"
+                            />
                         </div>
                         <div className="output-panel">
-                            {!outputVisible && !isRunning && <div className="text-gray-500 italic">Click Run...</div>}
-                            {isRunning && <div className="text-ntu-accent animate-pulse">Processing...</div>}
-                            {outputVisible && (
-                                <div className="w-full h-full flex flex-col">
-                                    <div className="w-full border-b border-gray-700 pb-2 mb-2 text-xs text-gray-400">Output</div>
-                                    <pre className="whitespace-pre-wrap text-xs">{outputText}</pre>
-                                    {plotId && (
-                                        <div className="mt-2 w-full flex-grow bg-black rounded border border-gray-700 flex items-center justify-center relative overflow-hidden group">
-                                            <div className="text-gray-500 text-xs italic z-10">[Plot Window]</div>
-                                            <img src={`https://dummyimage.com/400x300/000/fff.png&text=${plotId}`} className="absolute inset-0 w-full h-full object-contain opacity-50 group-hover:opacity-100 transition" />
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            {status === 'idle' && <div className="text-gray-500 italic">Click Run to execute</div>}
+                            {status === 'running' && <div className="text-ntu-accent animate-pulse">Running Python...</div>}
+                            {status === 'error' && <div className="text-red-500 font-bold">Error:</div>}
+
+                            <div className="text-xs">{output}</div>
+                            {imageSrc && <img src={imageSrc} className="output-img" />}
                         </div>
                     </div>
                 </div>
             );
         };
 
-        // --- RENDERING EXAMPLES ---
+        // --- EXAMPLES ---
 
-        // 1. Load Data
+        // 1. Data Loading
+        const code01 = `import numpy as np
+# Loading local mnist.npz
+data = np.load('mnist.npz')
+x_train = data['x_train']
+y_train = data['y_train']
+x_test = data['x_test']
+y_test = data['y_test']
+
+print('Training Set:', x_train.shape)
+print('Test Set:', x_test.shape)
+print('First label:', y_train[0])
+`;
         ReactDOM.createRoot(document.getElementById('code-01')).render(
-            <CodeRunner filename="l301-example-01.py" plotId="NO_PLOT"
-                code={`import numpy as np\nmnist = np.load('mnist.npz')\nx_train = mnist['x_train']\ny_train = mnist['y_train']\nprint('x shape:', x_train.shape)\nprint('y shape:', y_train.shape)\nprint('1st y:', y_train[0])`}
-                outputText={`x shape: (60000, 28, 28)\ny shape: (60000,)\n1st y: 5`}
-            />
-        );
-        // 2. Show One
-        ReactDOM.createRoot(document.getElementById('code-01a')).render(
-            <CodeRunner filename="l301-example-01a.py" plotId="Digit_5"
-                code={`import matplotlib.pyplot as plt\nplt.imshow(x_train[0], cmap='Greys')\nplt.show()`}
-                outputText={`[Plotting digit 5...]`}
-            />
-        );
-        // 3. Show Grid
-        ReactDOM.createRoot(document.getElementById('code-01b')).render(
-            <CodeRunner filename="l301-example-01b.py" plotId="Grid_0_1"
-                code={`# Filter 0s and 1s\nzero_and_one = x_train[y_train <= 1]\n# Plot first 6\nfor i in range(6):\n    plt.subplot(3,2,i+1)\n    plt.imshow(zero_and_one[i], cmap='Greys')\nplt.show()`}
-                outputText={`[Plotting grid of 0s and 1s...]`}
-            />
-        );
-        // 4. ROC Plot
-        ReactDOM.createRoot(document.getElementById('code-02a')).render(
-            <CodeRunner filename="l301-example-02a.py" plotId="ROC_Curve"
-                code={`# Calculate ROC points\nroc_y = [(all_mean1 < th).sum()/len(all_mean1) for th in thresholds]\nroc_x = [(all_mean0 < th).sum()/len(all_mean0) for th in thresholds]\n\nplt.plot(roc_x, roc_y)\nplt.show()`}
-                outputText={`[Plotting ROC Curve...]`}
-            />
-        );
-        // 5. AUC Calc
-        ReactDOM.createRoot(document.getElementById('code-02b')).render(
-            <CodeRunner filename="l301-example-02b.py"
-                code={`# Trapezoidal Rule for AUC\nauc1 = 0.\nfor i in range(199):\n    h = abs(roc1_x[i+1]-roc1_x[i])\n    auc1 += h*(roc1_y[i+1]+roc1_y[i])*0.5\n\nprint('AUC (Full Mean):', auc1)\nprint('AUC (Center Mean):', auc2)`}
-                outputText={`AUC (Full Mean): 0.9835\nAUC (Center Mean): 0.9385`}
-            />
-        );
-        // 6. Manual Fisher
-        ReactDOM.createRoot(document.getElementById('code-03')).render(
-            <CodeRunner filename="l301-example-03.py"
-                code={`# Manual Fisher's Discriminant\nweight = np.dot(linalg.inv(cov1+cov0), mu1-mu0)\nweight /= np.sqrt((weight**2).sum())\nprint('Resulting weights:', weight)`}
-                outputText={`Resulting weights: [-0.9766  0.2149]`}
-            />
-        );
-        // 7. Fisher Hist
-        ReactDOM.createRoot(document.getElementById('code-03a')).render(
-            <CodeRunner filename="l301-example-03a.py" plotId="Fisher_Hist"
-                code={`out0 = (var0.T*weight).sum(axis=1)\nout1 = (var1.T*weight).sum(axis=1)\n\nplt.hist(out0, color='y')\nplt.hist(out1, color='g')\nplt.show()`}
-                outputText={`[Plotting separated histograms...]`}
-            />
-        );
-        // 8. Sklearn LDA
-        ReactDOM.createRoot(document.getElementById('code-04')).render(
-            <CodeRunner filename="l301-example-04.py" plotId="LDA_Hist"
-                code={`from sklearn.discriminant_analysis import LinearDiscriminantAnalysis\n\nclf = LinearDiscriminantAnalysis()\nf_train = clf.fit_transform(x_train, y_train)\n\nprint('Train Score:', clf.score(x_train, y_train))\nprint('Test Score:', clf.score(x_test, y_test))\n\nplt.hist(f_train[y_train==0], color='y')\nplt.hist(f_train[y_train==1], color='g')`}
-                outputText={`Train Score: 0.9829\nTest Score: 0.9867`}
-            />
-        );
-        // 9. Sklearn Scatter
-        ReactDOM.createRoot(document.getElementById('code-04b')).render(
-            <CodeRunner filename="l301-example-04b.py" plotId="Scatter_789"
-                code={`# LDA for Dim Reduction (7,8,9)\nclf = LinearDiscriminantAnalysis(n_components=2)\nf_train = clf.fit_transform(x_train, y_train)\n\nfor i in range(7,10):\n    plt.scatter(f_train[:,0][y==i], f_train[:,1][y==i])\nplt.show()`}
-                outputText={`[Plotting 3 distinct clusters...]`}
-            />
-        );
-        // 10. Linear SVM
-        ReactDOM.createRoot(document.getElementById('code-05')).render(
-            <CodeRunner filename="l301-example-05.py"
-                code={`from sklearn import svm\nclf = svm.SVC(kernel='linear', C=1.0)\nclf.fit(x_train, y_train)\nprint('Train:', clf.score(x_train, y_train))\nprint('Test:', clf.score(x_test, y_test))`}
-                outputText={`Train: 0.9926\nTest: 0.9948`}
-            />
-        );
-        // 11. SVM Contour
-        ReactDOM.createRoot(document.getElementById('code-05a')).render(
-            <CodeRunner filename="l301-example-05a.py" plotId="SVM_Contour"
-                code={`zv = clf.predict(np.c_[xv.ravel(), yv.ravel()])\nplt.contourf(xv, yv, zv.reshape(xv.shape))\nplt.scatter(x_train[:,0], x_train[:,1], c=y_train)\nplt.show()`}
-                outputText={`[Plotting Linear Decision Boundary...]`}
-            />
-        );
-        // 12. Full MNIST
-        ReactDOM.createRoot(document.getElementById('code-06')).render(
-            <CodeRunner filename="l301-example-06.py" plotId="Full_Grid"
-                code={`clf = svm.SVC(kernel='linear')\nclf.fit(x_train_full, y_train_full)\np_test = clf.predict(x_test_full)\n\n# Plot grid, red text if wrong\nfor i in range(100):\n    if y[i]!=p[i]: color='red'\n    plt.text(..., color=color)`}
-                outputText={`Train Score: 0.9969\nTest Score: 0.9170\n[Showing 100 digits with predictions]`}
-            />
-        );
-        // 13. Doughnut Data
-        ReactDOM.createRoot(document.getElementById('code-07')).render(
-            <CodeRunner filename="l301-example-07.py" plotId="Doughnuts"
-                code={`# Generate Concentric Data\nx_train = np.c_[rho*np.cos(phi), rho*np.sin(phi)]\nplt.scatter(x_train[:,0], x_train[:,1], c=y_train)\nplt.show()`}
-                outputText={`[Plotting Red Ring and Blue Core...]`}
-            />
-        );
-        // 14. Linear Fail
-        ReactDOM.createRoot(document.getElementById('code-07a')).render(
-            <CodeRunner filename="l301-example-07a.py" plotId="Linear_Fail"
-                code={`clf = svm.SVC(kernel='linear')\nclf.fit(x, y)\nprint('Score:', clf.score(x, y))\nplt.contourf(...) # Shows split down middle`}
-                outputText={`Score: 0.5024 (Fail)`}
-            />
-        );
-        // 15. RBF Success
-        ReactDOM.createRoot(document.getElementById('code-07b')).render(
-            <CodeRunner filename="l301-example-07b.py" plotId="RBF_Success"
-                code={`clf = svm.SVC(kernel='rbf')\nclf.fit(x, y)\nprint('Score:', clf.score(x, y))\nplt.contourf(...) # Shows circle boundary`}
-                outputText={`Score: 0.9754 (Success!)`}
-            />
+            <CodeRunner filename="01_load_data.py" initialCode={code01} />
         );
 
-        // Highlight
+        // 2. Plot One
+        const code01a = `import matplotlib.pyplot as plt
+import numpy as np
+data = np.load('mnist.npz')
+x_train = data['x_train']
+
+# Plot the first digit
+plt.figure(figsize=(4,4))
+plt.imshow(x_train[0], cmap='Greys')
+plt.title(f"Label: {data['y_train'][0]}")
+plt.colorbar()
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-01a')).render(
+            <CodeRunner filename="02_visualize.py" initialCode={code01a} />
+        );
+
+        // 3. Grid
+        const code01b = `import matplotlib.pyplot as plt
+import numpy as np
+data = np.load('mnist.npz')
+x, y = data['x_train'], data['y_train']
+
+# Keep only 0 and 1
+mask = (y == 0) | (y == 1)
+x_sub, y_sub = x[mask], y[mask]
+
+print(f"Filtered count: {len(x_sub)}")
+
+# Plot 6
+plt.figure(figsize=(6,4))
+for i in range(6):
+    plt.subplot(2,3,i+1)
+    plt.imshow(x_sub[i], cmap='Greys')
+    plt.axis('off')
+    plt.title(f"Label: {y_sub[i]}")
+plt.tight_layout()
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-01b')).render(
+            <CodeRunner filename="03_filter.py" initialCode={code01b} />
+        );
+
+        // 4. ROC
+        const code02a = `import numpy as np
+import matplotlib.pyplot as plt
+
+# Load & Prep
+data = np.load('mnist.npz')
+x, y = data['x_train'], data['y_train']
+mask = (y == 0) | (y == 1)
+x01, y01 = x[mask], y[mask]
+
+# Feature: Mean Intensity
+# Reshape to (N, 784) for easier math if needed, but mean axis=(1,2) works for images
+features_mean = x01.mean(axis=(1,2))
+
+# Split by class for histograms (0 vs 1)
+feat0 = features_mean[y01==0]
+feat1 = features_mean[y01==1]
+
+plt.figure(figsize=(6,4))
+plt.hist(feat0, bins=30, alpha=0.5, label='Digit 0')
+plt.hist(feat1, bins=30, alpha=0.5, label='Digit 1')
+plt.legend()
+plt.title("Feature Distrib: Mean Intensity")
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-02a')).render(
+            <CodeRunner filename="04_feature_hist.py" initialCode={code02a} />
+        );
+
+        // 5. ROC Curve
+        const code02b = `from sklearn.metrics import roc_curve, auc
+import matplotlib.pyplot as plt
+
+# Using the features from above (simulated context, re-calc here)
+features_mean = x01.mean(axis=(1,2))
+# Sklearn requires y to be 0/1. Our y01 is 0s and 1s, perfect.
+# But note: Usually 1 is positive class. 
+# Mean intensity of '0' (hole) vs '1' (stick). 
+# '0' typically has MORE ink? No, '0' is bigger. '1' is thin.
+# Let's check AUC.
+
+fpr, tpr, _ = roc_curve(y01, features_mean) 
+roc_auc = auc(fpr, tpr)
+
+plt.figure(figsize=(5,5))
+plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.legend(loc="lower right")
+plt.title("ROC: Mean Intensity Feature")
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-02b')).render(
+            <CodeRunner filename="05_roc.py" initialCode={code02b} />
+        );
+
+        // 6. Manual Fisher
+        const code03 = `import numpy as np
+
+# Flatten images
+X_flat = x01.reshape(len(x01), -1)
+
+# Split
+X0 = X_flat[y01==0]
+X1 = X_flat[y01==1]
+
+# Means
+mu0 = X0.mean(axis=0)
+mu1 = X1.mean(axis=0)
+
+# Covariance (simplified diagonal for stability/speed here, or full)
+# Full covariance for 784 dims with 12k samples is heavy in browser?
+# Let's try simple difference of means first (w ~ mu1 - mu0) which is LDA with Identity cov.
+w = mu0 - mu1  # Direction pointing to 0s?
+
+# Project
+proj0 = X0 @ w
+proj1 = X1 @ w
+
+print("Projection Stats:")
+print(f"Class 0 Mean: {proj0.mean():.2e}")
+print(f"Class 1 Mean: {proj1.mean():.2e}")
+`;
+        ReactDOM.createRoot(document.getElementById('code-03')).render(
+            <CodeRunner filename="06_manual_fisher.py" initialCode={code03} />
+        );
+
+        // 7. Fisher Hist
+        const code03a = `import matplotlib.pyplot as plt
+plt.figure(figsize=(6,4))
+plt.hist(proj0, bins=50, alpha=0.5, label='Digit 0', color='blue')
+plt.hist(proj1, bins=50, alpha=0.5, label='Digit 1', color='green')
+plt.title("Projection onto (Mean0 - Mean1)")
+plt.legend()
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-03a')).render(
+            <CodeRunner filename="07_fisher_hist.py" initialCode={code03a} />
+        );
+
+        // 8. Sklearn LDA
+        const code04 = `from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+import matplotlib.pyplot as plt
+
+# Use subset to save time if needed, but 12k is ok
+X_small = X_flat[::5] # Downsample 5x for speed 
+y_small = y01[::5]
+
+lda = LinearDiscriminantAnalysis()
+X_lda = lda.fit_transform(X_small, y_small)
+
+plt.figure(figsize=(6,4))
+plt.hist(X_lda[y_small==0], bins=30, alpha=0.5, label='0')
+plt.hist(X_lda[y_small==1], bins=30, alpha=0.5, label='1')
+plt.title("Sklearn LDA Projection")
+plt.legend()
+plt.show()
+print(f"LDA Score: {lda.score(X_small, y_small):.4f}")`;
+        ReactDOM.createRoot(document.getElementById('code-04')).render(
+            <CodeRunner filename="08_sklearn_lda.py" initialCode={code04} />
+        );
+
+        // 9. Scatter 3 classes
+        const code04b = `mask3 = (y==0) | (y==1) | (y==2)
+X3 = x[mask3].reshape(-1, 784)
+y3 = y[mask3]
+# Downsample
+X3 = X3[::5]
+y3 = y3[::5]
+
+lda2 = LinearDiscriminantAnalysis(n_components=2)
+X_r2 = lda2.fit_transform(X3, y3)
+
+plt.figure()
+colors = ['navy', 'turquoise', 'darkorange']
+for color, i, target_name in zip(colors, [0, 1, 2], ['0', '1', '2']):
+    plt.scatter(X_r2[y3 == i, 0], X_r2[y3 == i, 1], alpha=.8, color=color,
+                label=target_name, s=10)
+plt.legend(loc='best', shadow=False, scatterpoints=1)
+plt.title('LDA of MNIST (0, 1, 2)')
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-04b')).render(
+            <CodeRunner filename="09_lda_3class.py" initialCode={code04b} />
+        );
+
+        // 10. Linear SVM
+        const code05 = `from sklearn import svm
+# Use very small subset for Browser SVM (it's slow!)
+X_svm = X_flat[:1000] 
+y_svm = y01[:1000]
+
+clf = svm.SVC(kernel='linear')
+clf.fit(X_svm, y_svm)
+
+print("Training finished.")
+print(f"Score: {clf.score(X_svm, y_svm)}")
+print(f"Support Vectors: {len(clf.support_vectors_)}")`;
+        ReactDOM.createRoot(document.getElementById('code-05')).render(
+            <CodeRunner filename="10_svm_linear.py" initialCode={code05} />
+        );
+
+        // 11. SVM Boundary (2D Toy Data)
+        const code05a = `import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import svm
+
+# Generate toy 2D data
+np.random.seed(0)
+X = np.r_[np.random.randn(20, 2) - [2, 2], np.random.randn(20, 2) + [2, 2]]
+Y = [0] * 20 + [1] * 20
+
+# Fit
+clf = svm.SVC(kernel='linear')
+clf.fit(X, Y)
+
+# Plot
+plt.figure(figsize=(5,4))
+plt.scatter(X[:, 0], X[:, 1], c=Y, cmap=plt.cm.Paired)
+ax = plt.gca()
+xlim = ax.get_xlim()
+ylim = ax.get_ylim()
+
+# Grid
+xx = np.linspace(xlim[0], xlim[1], 30)
+yy = np.linspace(ylim[0], ylim[1], 30)
+YY, XX = np.meshgrid(yy, xx)
+xy = np.vstack([XX.ravel(), YY.ravel()]).T
+Z = clf.decision_function(xy).reshape(XX.shape)
+
+# Boundary
+ax.contour(XX, YY, Z, colors='k', levels=[-1, 0, 1], alpha=0.5,
+           linestyles=['--', '-', '--'])
+plt.title("Linear SVM Boundary (Toy Data)")
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-05a')).render(
+            <CodeRunner filename="11_svm_viz.py" initialCode={code05a} />
+        );
+
+        // 12. Full MNIST
+        const code06 = `print("Skipping full 70k training in browser to save your CPU.")
+print("Concept remains: The margin maximization works in 784 dimensions too!")`;
+        ReactDOM.createRoot(document.getElementById('code-06')).render(
+            <CodeRunner filename="12_full_mnist.py" initialCode={code06} />
+        );
+
+        // 13. Doughnut
+        const code07 = `from sklearn.datasets import make_circles
+X, y = make_circles(n_samples=100, factor=0.1, noise=0.1)
+
+plt.figure(figsize=(4,4))
+plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.coolwarm, s=50, edgecolors='k')
+plt.title("Non-linear Data (Circles)")
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-07')).render(
+            <CodeRunner filename="13_doughnut.py" initialCode={code07} />
+        );
+
+        // 14. Linear Fail
+        const code07a = `clf = svm.SVC(kernel='linear').fit(X, y)
+# Visualizing... same logic as before
+plt.figure(figsize=(4,4))
+plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.coolwarm)
+ax = plt.gca()
+xlim = ax.get_xlim(); ylim = ax.get_ylim()
+xx = np.linspace(xlim[0], xlim[1], 30)
+yy = np.linspace(ylim[0], ylim[1], 30)
+YY, XX = np.meshgrid(yy, xx)
+xy = np.vstack([XX.ravel(), YY.ravel()]).T
+Z = clf.decision_function(xy).reshape(XX.shape)
+ax.contour(XX, YY, Z, colors='k', levels=[0], alpha=0.5)
+plt.title(f"Linear: Acc {clf.score(X,y)}")
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-07a')).render(
+            <CodeRunner filename="14_linear_fail.py" initialCode={code07a} />
+        );
+
+        // 15. RBF Success
+        const code07b = `clf = svm.SVC(kernel='rbf', C=1).fit(X, y)
+plt.figure(figsize=(4,4))
+plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.coolwarm)
+# ... grid ...
+Z = clf.decision_function(xy).reshape(XX.shape)
+ax = plt.gca()
+ax.contour(XX, YY, Z, colors='k', levels=[0], alpha=0.5)
+plt.title(f"RBF Kernel: Acc {clf.score(X,y)}")
+plt.show()`;
+        ReactDOM.createRoot(document.getElementById('code-07b')).render(
+            <CodeRunner filename="15_rbf_success.py" initialCode={code07b} />
+        );
+
         document.addEventListener("DOMContentLoaded", function () {
             hljs.highlightAll();
             renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
