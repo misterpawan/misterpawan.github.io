@@ -806,61 +806,88 @@ plt.show()`;
         );
 
         // 10. Linear SVM
-        const code05 = `from sklearn import svm
-# Use very small subset for Browser SVM (it's slow!)
-X_svm = X_flat[:1000] 
-y_svm = y01[:1000]
+        const code05 = `import numpy as np
+from sklearn import svm
 
-clf = svm.SVC(kernel='linear')
-clf.fit(X_svm, y_svm)
+mnist = np.load('assets/mnist.npz')
+x_train = mnist['x_train'][mnist['y_train']<=1]/255.
+y_train = mnist['y_train'][mnist['y_train']<=1]
+x_test = mnist['x_test'][mnist['y_test']<=1]/255.
+y_test = mnist['y_test'][mnist['y_test']<=1]
 
-print("Training finished.")
-print(f"Score: {clf.score(X_svm, y_svm)}")
-print(f"Support Vectors: {len(clf.support_vectors_)}")`;
+x_train = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_train])
+x_test = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_test])
+
+clf = svm.SVC(kernel='linear', C=1.0)
+clf.fit(x_train, y_train)
+
+s_train = clf.score(x_train, y_train)
+s_test = clf.score(x_test, y_test)
+print('Performance (training):', s_train)
+print('Performance (testing):', s_test)`;
         ReactDOM.createRoot(document.getElementById('code-05')).render(
             <CodeRunner filename="10_svm_linear.py" initialCode={code05} />
         );
 
-        // 11. SVM Boundary (2D Toy Data)
+        // 11. Visualize SVM Boundary
         const code05a = `import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import svm
 
-# Generate toy 2D data
-np.random.seed(0)
-X = np.r_[np.random.randn(20, 2) - [2, 2], np.random.randn(20, 2) + [2, 2]]
-Y = [0] * 20 + [1] * 20
+mnist = np.load('assets/mnist.npz')
+x_train = mnist['x_train'][mnist['y_train']<=1]/255.
+y_train = mnist['y_train'][mnist['y_train']<=1]
+x_train = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_train])
 
-# Fit
-clf = svm.SVC(kernel='linear')
-clf.fit(X, Y)
+clf = svm.SVC(kernel='linear', C=1.0)
+clf.fit(x_train, y_train)
 
-# Plot
-plt.figure(figsize=(5,4))
-plt.scatter(X[:, 0], X[:, 1], c=Y, cmap=plt.cm.Paired)
-ax = plt.gca()
-xlim = ax.get_xlim()
-ylim = ax.get_ylim()
+fig = plt.figure(figsize=(6,6), dpi=80)
 
-# Grid
-xx = np.linspace(xlim[0], xlim[1], 30)
-yy = np.linspace(ylim[0], ylim[1], 30)
-YY, XX = np.meshgrid(yy, xx)
-xy = np.vstack([XX.ravel(), YY.ravel()]).T
-Z = clf.decision_function(xy).reshape(XX.shape)
+xv, yv = np.meshgrid(np.linspace(0.,0.45,100),np.linspace(-0.05,1.05,100))
+zv = clf.predict(np.c_[xv.ravel(), yv.ravel()])
+plt.contourf(xv, yv, zv.reshape(xv.shape), alpha=.3, cmap='Blues')
 
-# Boundary
-ax.contour(XX, YY, Z, colors='k', levels=[-1, 0, 1], alpha=0.5,
-           linestyles=['--', '-', '--'])
-plt.title("Linear SVM Boundary (Toy Data)")
+plt.scatter(x_train[:,0][y_train==0], x_train[:,1][y_train==0], c = 'y', s=5, alpha=0.8)
+plt.scatter(x_train[:,0][y_train==1], x_train[:,1][y_train==1], c = 'g', s=5, alpha=0.8)
 plt.show()`;
         ReactDOM.createRoot(document.getElementById('code-05a')).render(
             <CodeRunner filename="11_svm_viz.py" initialCode={code05a} />
         );
 
         // 12. Full MNIST
-        const code06 = `print("Skipping full 70k training in browser to save your CPU.")
-print("Concept remains: The margin maximization works in 784 dimensions too!")`;
+        const code06 = `import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import svm
+
+mnist = np.load('assets/mnist.npz')
+x_train = mnist['x_train'][:10000]/255.
+y_train = mnist['y_train'][:10000]
+x_test = mnist['x_test']/255.
+y_test = mnist['y_test']
+
+x_train = np.array([img.reshape((784,)) for img in x_train])
+x_test = np.array([img.reshape((784,)) for img in x_test])
+
+clf = svm.SVC(kernel='linear', verbose=True)
+clf.fit(x_train, y_train)
+
+s_train = clf.score(x_train, y_train)
+s_test = clf.score(x_test, y_test)
+print('Performance (training):', s_train)
+print('Performance (testing):', s_test)
+
+p_test = clf.predict(x_test)
+
+fig = plt.figure(figsize=(10,10), dpi=80)
+for i in range(100):
+    plt.subplot(10,10,i+1)
+    plt.axis('off')
+    plt.imshow(mnist['x_test'][i], cmap='Greys')
+    c='Green'
+    if y_test[i]!=p_test[i]: c='Red'
+    plt.text(0.,0.,'$%d\\to%d$' % (y_test[i],p_test[i]),color=c,fontsize=15)
+plt.show()`;
         ReactDOM.createRoot(document.getElementById('code-06')).render(
             <CodeRunner filename="12_full_mnist.py" initialCode={code06} />
         );

@@ -13,14 +13,16 @@
 
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -58,69 +60,116 @@
             border: 1px solid #e5e7eb;
         }
 
-        .code-container {
-            display: flex;
-            flex-direction: column;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 1.5rem 0;
+        /* Container for the Editor Area */
+        .editor-container {
+            position: relative;
             border: 1px solid #e2e8f0;
-        }
-
-        @media (max-width: 1024px) {
-            .code-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 300px;
-            }
-        }
-
-        .code-editor {
-            padding: 1rem;
-            background-color: #f8f9fa;
-            /* Light background */
-            color: #24292e;
-            font-size: 0.85rem;
-            overflow: auto;
-            border-bottom: 1px solid #e2e8f0;
-            position: relative;
-            min-height: 200px;
-        }
-
-        .output-panel {
-            padding: 1rem;
+            border-radius: 8px;
             background: #ffffff;
-            color: #374151;
-            font-family: 'Consolas', monospace;
-            font-size: 0.85rem;
-            overflow: auto;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* The Overlay Editor: Textarea on top of Pre/Code */
+        .editor-wrapper {
             position: relative;
+            min-height: 250px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            background-color: #ffffff;
+        }
+
+        .editor-wrapper textarea,
+        .editor-wrapper pre {
+            margin: 0;
+            padding: 1rem;
+            border: none;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            white-space: pre;
+            overflow: auto;
+            word-wrap: normal;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            tab-size: 4;
+        }
+
+        .editor-wrapper textarea {
+            z-index: 2;
+            color: transparent;
+            background: transparent;
+            caret-color: #000;
+            resize: none;
+            outline: none;
+        }
+
+        .editor-wrapper pre {
+            z-index: 1;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .run-bar {
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            min-height: 150px;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .run-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
             background: #1e3a8a;
             color: white;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
             cursor: pointer;
-            z-index: 10;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
             transition: background 0.2s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .run-btn:hover {
             background: #1e40af;
+        }
+
+        .run-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .output-box {
+            margin-top: 0.5rem;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            min-height: 100px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .output-img {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
         }
 
         .math-box {
@@ -258,7 +307,7 @@
                 classifiers.
             </p>
 
-            <div id="code-01" class="code-container"></div>
+            <div id="code-01"></div>
 
             <div class="mt-8 mb-4">
                 <h3 class="text-xl font-bold text-slate-800">Hyperparameter Tuning</h3>
@@ -271,7 +320,7 @@
                 </p>
             </div>
 
-            <div id="code-02a" class="code-container"></div>
+            <div id="code-02a"></div>
 
             <div class="mt-8 mb-4">
                 <h3 class="text-xl font-bold text-slate-800">Back to MNIST</h3>
@@ -280,7 +329,7 @@
                 </p>
             </div>
 
-            <div id="code-03" class="code-container"></div>
+            <div id="code-03"></div>
 
             <div class="p-4 bg-green-50 border border-green-200 rounded mt-4">
                 <p class="text-green-800 font-bold">Result:</p>
@@ -328,29 +377,77 @@
             </ul>
             </p>
 
-            <div class="bg-gray-100 p-4 rounded text-xs font-mono mb-6 overflow-auto max-h-64">
+            <div class="bg-gray-100 p-4 rounded text-xs font-mono mb-6 overflow-auto max-h-96">
                 <div class="font-bold text-gray-500 mb-2">neurons.py (Core Logic)</div>
-                <pre><code class="language-python">class neurons(object):
+                <pre><code class="language-python">import random
+import numpy as np
+
+def sigma(z):
+    return 0.5*(np.tanh(0.5*z)+1.)
+def sigma_p(z):
+    return sigma(z)*(1.-sigma(z))
+
+class neurons(object):
     def __init__(self, shape):
         self.shape = shape
-        # Initialize weights/biases with random Gaussian values
+        self.v = [np.zeros((n,1)) for n in shape]
+        self.z = [np.zeros((n,1)) for n in shape[1:]]
         self.w = [np.random.randn(n,m) for n,m in zip(shape[1:],shape[:-1])]
         self.b = [np.random.randn(n,1) for n in shape[1:]]
-        # ... (buffers for gradients)
+        self.delw = [np.zeros(w.shape) for w in self.w]
+        self.delb = [np.zeros(b.shape) for b in self.b]
 
     def predict(self, x):
-        # Feedforward
         self.v[0] = x.reshape(self.v[0].shape)
         for l in range(len(self.shape)-1):
-            self.z[l] = np.dot(self.w[l], self.v[l]) + self.b[l]
+            self.z[l] = np.dot(self.w[l],self.v[l])+self.b[l]
             self.v[l+1] = sigma(self.z[l])
         return self.v[-1]
-    
-    # ... (gradient calculation via backprop) ...
+
+    def gradient(self, y):
+        for l in range(len(self.shape)-2,-1,-1):
+            if l==len(self.shape)-2:
+                  delta = (self.v[-1]-y.reshape(self.v[-1].shape))*sigma_p(self.z[l])
+            else: delta = np.dot(self.w[l+1].T,self.delb[l+1])*sigma_p(self.z[l])
+            self.delb[l] = delta
+            self.delw[l] = np.dot(delta,self.v[l].T)
+
+    def fit(self, x_data, y_data, epochs, batch_size, eta):
+        samples = list(zip(x_data, y_data))
+        for ep in range(epochs):
+            print('Epoch: %d/%d' % (ep+1,epochs))
+            random.shuffle(samples)
+            sum_delw = [np.zeros(w.shape) for w in self.w]
+            sum_delb = [np.zeros(b.shape) for b in self.b]
+            batch_count = 0
+            for x,y in samples:
+                self.predict(x)
+                self.gradient(y)
+                for l in range(len(self.shape)-1):
+                    sum_delw[l] += self.delw[l]
+                    sum_delb[l] += self.delb[l]
+                batch_count += 1
+                if batch_count>=batch_size or (x is samples[-1][0]):
+                    for l in range(len(self.shape)-1):
+                        self.w[l] -= eta/batch_count*sum_delw[l]
+                        self.b[l] -= eta/batch_count*sum_delb[l]
+                        sum_delw[l],sum_delb[l] = 0.,0.
+                    batch_count = 0
+            ret = self.evaluate(x_data, y_data)
+            print('Loss: %.4f, Acc: %.4f' % ret)
+
+    def evaluate(self, x_data, y_data):
+        loss, cnt = 0., 0.
+        for x,y in zip(x_data, y_data):
+            self.predict(x)
+            loss += ((self.v[-1]-y.reshape(self.v[-1].shape))**2).sum()
+            if np.argmax(self.v[-1])==np.argmax(y): cnt += 1.
+        loss /= 2.*len(x_data)
+        return loss, cnt/len(x_data)
 </code></pre>
             </div>
 
-            <div id="code-04" class="code-container"></div>
+            <div id="code-04"></div>
 
             <p class="text-sm text-gray-500 mt-2 text-center">
                 Before training, the network output is random noise. The histograms of "0" and "1" predictions overlap
@@ -377,14 +474,14 @@
                 </p>
             </div>
 
-            <div id="code-04a" class="code-container"></div>
+            <div id="code-04a"></div>
 
             <div class="mt-8 mb-4">
                 <h3 class="font-bold text-lg text-slate-800">Training on Full MNIST (All Pixels)</h3>
                 <p class="text-gray-600">Let's connect 784 inputs -> 30 hidden -> 10 outputs.</p>
             </div>
 
-            <div id="code-05" class="code-container"></div>
+            <div id="code-05"></div>
 
             <div id="quiz-1-root"></div>
         </section>
@@ -415,7 +512,7 @@
                 </div>
             </div>
 
-            <div id="code-05b" class="code-container"></div>
+            <div id="code-05b"></div>
 
             <p class="text-sm text-center text-gray-500 mt-4">
                 Notice how the scaled initialization converges much faster!
@@ -456,52 +553,182 @@
         <p>Numerical Analysis Lecture 3-2</p>
     </footer>
 
+    <!-- SHARED PYODIDE LOGIC -->
+    <script>
+        let pyodide = null;
+        let pyodideReadyPromise = null;
+
+        async function initPyodideEnvironment() {
+            if (pyodideReadyPromise) return pyodideReadyPromise;
+
+            pyodideReadyPromise = (async () => {
+                console.log("Loading Pyodide...");
+                pyodide = await loadPyodide();
+                console.log("Loading Packages...");
+                await pyodide.loadPackage(['numpy', 'scipy', 'matplotlib', 'scikit-learn', 'pandas']);
+
+                // Load local MNIST data
+                const response = await fetch('assets/mnist.npz');
+                const buffer = await response.arrayBuffer();
+
+                // Create assets directory and write file to both locations to be safe
+                pyodide.FS.mkdir('assets');
+                pyodide.FS.writeFile('assets/mnist.npz', new Uint8Array(buffer));
+                pyodide.FS.writeFile('mnist.npz', new Uint8Array(buffer));
+                console.log("MNIST dataset loaded into virtual filesystem.");
+
+                // Load neurons.py
+                const neuronsResponse = await fetch('assets/neurons.py');
+                const neuronsText = await neuronsResponse.text();
+                pyodide.FS.writeFile('neurons.py', neuronsText);
+                console.log("neurons.py loaded.");
+
+                return pyodide;
+            })();
+            return pyodideReadyPromise;
+        }
+
+        // Shared function for execution
+        async function runPythonCode(code) {
+            await initPyodideEnvironment();
+
+            // Setup capture
+            const setupCode = `
+import sys
+import io
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+plt.close('all') # Close previous plots to avoid empty figure capture
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+`;
+
+            const cleanupCode = `
+stdout_val = sys.stdout.getvalue()
+stderr_val = sys.stdout.getvalue()
+`;
+
+            const plotSaver = `
+import base64
+buf = io.BytesIO()
+# Check if there are any figures AND if the current figure has axes (content)
+if plt.get_fignums() and len(plt.gcf().axes) > 0:
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    img_str = base64.b64encode(buf.read()).decode('UTF-8')
+else:
+    img_str = ""
+img_str
+`;
+
+            try {
+                // Run user code wrapped
+                await pyodide.runPythonAsync(setupCode + code + cleanupCode);
+
+                const stdout = pyodide.runPython("stdout_val");
+                const stderr = pyodide.runPython("stderr_val");
+                const imgB64 = pyodide.runPython(plotSaver);
+
+                return { stdout, stderr, image: imgB64 ? 'data:image/png;base64,' + imgB64 : null };
+            } catch (err) {
+                return { error: err.message };
+            }
+        }
+    </script>
+
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect, useRef } = React;
 
-        // Code Runner Component
-        const CodeRunner = ({ filename, code, outputText, plotId }) => {
-            const [isRunning, setIsRunning] = useState(false);
-            const [outputVisible, setOutputVisible] = useState(false);
+        const CodeRunner = ({ id, filename, initialCode }) => {
+            const [code, setCode] = useState(initialCode);
+            const [output, setOutput] = useState("");
+            const [imageSrc, setImageSrc] = useState(null);
+            const [status, setStatus] = useState("idle"); // idle, running, error
+            const textareaRef = useRef(null);
+            const preRef = useRef(null);
 
-            const handleRun = () => {
-                setIsRunning(true);
-                setOutputVisible(false);
-                setTimeout(() => {
-                    setIsRunning(false);
-                    setOutputVisible(true);
-                }, 800); // Simulate processing time
+            // Highlight logic
+            useEffect(() => {
+                if (preRef.current) {
+                    // Reset and highlight
+                    preRef.current.removeAttribute('data-highlighted');
+                    hljs.highlightElement(preRef.current);
+                }
+            }, [code]);
+
+            const handleRun = async () => {
+                setStatus("running");
+                setOutput("");
+                setImageSrc(null);
+
+                const result = await runPythonCode(code);
+
+                if (result.error) {
+                    setStatus("error");
+                    setOutput(result.error);
+                } else {
+                    setStatus("success");
+                    setOutput(result.stdout || (result.image ? "" : "Done (no output)"));
+                    // Optional: hint if empty
+                    if (result.stdout && result.stdout.trim().length === 0 && !result.image) {
+                        setOutput("Done (no output). Did you forget print()?");
+                    }
+                    if (result.image) setImageSrc(result.image);
+                }
+            };
+
+            // Sync scrolling
+            const handleScroll = () => {
+                if (textareaRef.current && preRef.current) {
+                    preRef.current.scrollTop = textareaRef.current.scrollTop;
+                    preRef.current.scrollLeft = textareaRef.current.scrollLeft;
+                }
+            };
+
+            // Tab handling
+            const handleKeyDown = (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    const newValue = code.substring(0, start) + "    " + code.substring(end);
+                    setCode(newValue);
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start + 4;
+                    }, 0);
+                }
             };
 
             return (
-                <div>
-                    <div className="flex justify-between items-end mb-1 px-1">
-                        <span className="text-xs font-mono text-gray-500">{filename}</span>
-                    </div>
-                    <div className="code-container">
-                        <div className="code-editor">
-                            <button onClick={handleRun} disabled={isRunning} className="run-btn">
-                                {isRunning ? 'Running...' : '▶ Run Code'}
+                <div className="mb-8">
+                    <div className="editor-container">
+                        <div className="run-bar">
+                            <span className="text-xs font-mono text-gray-500 font-bold">{filename}</span>
+                            <button onClick={handleRun} disabled={status === 'running'} className="run-btn">
+                                {status === 'running' ? 'Running...' : '▶ Run Code'}
                             </button>
-                            <pre><code className="language-python">{code}</code></pre>
                         </div>
-                        <div className="output-panel">
-                            {!outputVisible && !isRunning && <div className="text-gray-400 italic">Click Run to execute...</div>}
-                            {isRunning && <div className="text-ntu-accent animate-pulse font-bold">Processing...</div>}
-                            {outputVisible && (
-                                <div className="w-full h-full flex flex-col">
-                                    <div className="w-full border-b border-gray-200 pb-2 mb-2 text-xs text-gray-400 uppercase font-bold">Console Output</div>
-                                    <pre className="whitespace-pre-wrap text-xs text-slate-700 flex-grow">{outputText}</pre>
-                                    {plotId && (
-                                        <div className="mt-2 w-full h-48 bg-white border border-gray-200 rounded flex items-center justify-center relative overflow-hidden group shadow-sm">
-                                            <div className="text-gray-400 text-xs italic z-10">[Matplotlib Plot]</div>
-                                            {/* Simulated Plot Image */}
-                                            <img src={`https://dummyimage.com/400x300/ffffff/000000.png&text=${plotId}`} className="absolute inset-0 w-full h-full object-contain opacity-80 group-hover:opacity-100 transition" />
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                        <div className="editor-wrapper">
+                            <textarea
+                                ref={textareaRef}
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                onScroll={handleScroll}
+                                onKeyDown={handleKeyDown}
+                                spellCheck="false"
+                            />
+                            <pre ref={preRef}><code className="language-python">{code}</code></pre>
                         </div>
+                    </div>
+
+                    <div className="output-box">
+                        {status === 'idle' && <div className="text-gray-500 italic">Output will appear here...</div>}
+                        {status === 'running' && <div className="text-blue-600 animate-pulse">Executing...</div>}
+                        {status === 'error' && <div className="text-red-600 font-bold mb-2">Error Traceback:</div>}
+
+                        <div>{output}</div>
+                        {imageSrc && <img src={imageSrc} className="output-img" />}
                     </div>
                 </div>
             );
@@ -571,158 +798,239 @@
         // --- RENDER CODE BLOCKS ---
 
         // 1. Double Doughnut SVM (l302-example-01.py)
-        ReactDOM.createRoot(document.getElementById('code-01')).render(
-            <CodeRunner
-                filename="l302-example-01.py"
-                code={`import numpy as np
+        const code01 = `import numpy as np
+import matplotlib.pyplot as plt
 from sklearn import svm
 
-# Generate Doughnut Data
 y_train = np.random.randint(0,2,5000)
-rho = np.abs(np.random.randn(5000)/4. + 1. + y_train)
+rho = np.abs(np.random.randn(5000)/4.+1.+y_train)
 phi = np.random.rand(5000)*np.pi*2.
-x_train = np.c_[rho*np.cos(phi), rho*np.sin(phi)]
+x_train = np.c_[rho*np.cos(phi),rho*np.sin(phi)]
 
-# Train RBF SVM
 clf = svm.SVC(kernel='rbf', C=1.)
 clf.fit(x_train, y_train)
 
-print('Performance (training):', clf.score(x_train, y_train))
-`}
-                outputText={`Performance (training): 0.9754`}
-            />
+s_train = clf.score(x_train, y_train)
+print('Performance (training):', s_train)
+
+fig = plt.figure(figsize=(6,6), dpi=80)
+
+xv, yv = np.meshgrid(np.linspace(-3.,3.,100),np.linspace(-3.,3.,100))
+zv = clf.predict(np.c_[xv.ravel(), yv.ravel()])
+plt.contourf(xv, yv, zv.reshape(xv.shape), alpha=.3, cmap='Blues')
+
+plt.scatter(x_train[:,0][y_train==0], x_train[:,1][y_train==0], c = 'y', s=5, alpha=0.8)
+plt.scatter(x_train[:,0][y_train==1], x_train[:,1][y_train==1], c = 'g', s=5, alpha=0.8)
+plt.show()
+`;
+        ReactDOM.createRoot(document.getElementById('code-01')).render(
+            <CodeRunner filename="l302-example-01.py" initialCode={code01} />
         );
 
         // 2. Grid Search (l302-example-02a.py)
-        ReactDOM.createRoot(document.getElementById('code-02a')).render(
-            <CodeRunner
-                filename="l302-example-02a.py"
-                code={`from sklearn.model_selection import GridSearchCV
-# ... load data ...
+        const code02a = `import numpy as np
+from sklearn import svm
+from sklearn.model_selection import GridSearchCV
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][mnist['y_train']<=1]/255.
+y_train = mnist['y_train'][mnist['y_train']<=1]
+x_test = mnist['x_test'][mnist['y_test']<=1]/255.
+y_test = mnist['y_test'][mnist['y_test']<=1]
+
+x_train = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_train])
+x_test = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_test])
 
 clf = svm.SVC(kernel='rbf')
-param = {'C':[0.5, 5., 50., 500.], 
-         'gamma':[2.0, 1.0, 0.5, 0.25]}
 
+param = {'C':[0.5,5.,50.,500.], 'gamma':[2.0,1.0,0.5,0.25]}
 grid = GridSearchCV(clf, param, verbose=3)
 grid.fit(x_train, y_train)
 
-print('Best SVM:', grid.best_estimator_)
-print('Training Acc:', grid.score(x_train, y_train))`}
-                outputText={`Fitting 3 folds for each of 16 candidates...
-Best SVM: SVC(C=50.0, gamma=0.5)
-Training Acc: 0.9936`}
-            />
+print('Best SVM:')
+print(grid.best_estimator_)
+
+s_train = grid.score(x_train, y_train)
+s_test = grid.score(x_test, y_test)
+print('Performance (training):', s_train)
+print('Performance (testing):', s_test)
+`;
+        ReactDOM.createRoot(document.getElementById('code-02a')).render(
+            <CodeRunner filename="l302-example-02a.py" initialCode={code02a} />
         );
 
         // 3. MNIST SVM (l302-example-03.py)
-        ReactDOM.createRoot(document.getElementById('code-03')).render(
-            <CodeRunner
-                filename="l302-example-03.py"
-                plotId="MNIST_Grid"
-                code={`# SVM on MNIST with RBF Kernel
+        const code03 = `import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import svm
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][:10000]/255.
+y_train = mnist['y_train'][:10000]
+x_test = mnist['x_test']/255.
+y_test = mnist['y_test']
+
+x_train = np.array([img.reshape((784,)) for img in x_train])
+x_test = np.array([img.reshape((784,)) for img in x_test])
+
 clf = svm.SVC(C=5., gamma=0.05, verbose=True)
 clf.fit(x_train, y_train)
 
-print('Train Acc:', clf.score(x_train, y_train))
-print('Test Acc:', clf.score(x_test, y_test))
+s_train = clf.score(x_train, y_train)
+s_test = clf.score(x_test, y_test)
+print('Performance (training):', s_train)
+print('Performance (testing):', s_test)
 
-# Predict and Plot
 p_test = clf.predict(x_test)
-# ... plotting code ...`}
-                outputText={`[LibSVM] ...
-Train Acc: 1.0
-Test Acc: 0.9664`}
-            />
+
+fig = plt.figure(figsize=(10,10), dpi=80)
+for i in range(100):
+    plt.subplot(10,10,i+1)
+    plt.axis('off')
+    plt.imshow(mnist['x_test'][i], cmap='Greys')
+    c='Green'
+    if y_test[i]!=p_test[i]: c='Red'
+    plt.text(0.,0.,'$%d\\to%d$' % (y_test[i],p_test[i]),color=c,fontsize=15)
+plt.show()
+`;
+        ReactDOM.createRoot(document.getElementById('code-03')).render(
+            <CodeRunner filename="l302-example-03.py" initialCode={code03} />
         );
 
         // 4. NN Prediction (l302-example-04.py)
-        ReactDOM.createRoot(document.getElementById('code-04')).render(
-            <CodeRunner
-                filename="l302-example-04.py"
-                plotId="Untrained_NN_Hist"
-                code={`from neurons import neurons
+        const code04 = `import numpy as np
+import matplotlib.pyplot as plt
 
-# Prepare Data (0 and 1 only)
-# ... 
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][mnist['y_train']<=1]/255.
+y_train = mnist['y_train'][mnist['y_train']<=1]
 
-model = neurons([2, 5, 2]) # 2 input, 5 hidden, 2 output
+x_train = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_train])
+y_train = np.array([[[1,0],[0,1]][n] for n in y_train])
+
+from neurons import neurons
+model = neurons([2,5,2])
 out = np.array([model.predict(x) for x in x_train])
 
-# Plot histograms of outputs
-# ...`}
-                outputText={`[Plotting Output Distributions...]
-(Notice overlapping histograms - random weights!)`}
-            />
+fig = plt.figure(figsize=(6,6), dpi=80)
+plt.subplot(2,1,1)
+plt.hist(out[:,0][y_train[:,0]==1], bins=50, color='y')
+plt.hist(out[:,0][y_train[:,1]==1], bins=50, color='g', alpha=0.5)
+plt.subplot(2,1,2)
+plt.hist(out[:,1][y_train[:,0]==1], bins=50, color='y')
+plt.hist(out[:,1][y_train[:,1]==1], bins=50, color='g', alpha=0.5)
+plt.show()
+`;
+        ReactDOM.createRoot(document.getElementById('code-04')).render(
+            <CodeRunner filename="l302-example-04.py" initialCode={code04} />
         );
 
         // 5. NN Training 2 Features (l302-example-04a.py)
-        ReactDOM.createRoot(document.getElementById('code-04a')).render(
-            <CodeRunner
-                filename="l302-example-04a.py"
-                plotId="Trained_NN_Hist"
-                code={`model = neurons([2, 5, 5, 2]) # Deeper network
+        const code04a = `import numpy as np
+import matplotlib.pyplot as plt
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][mnist['y_train']<=1]/255.
+y_train = mnist['y_train'][mnist['y_train']<=1]
+x_test = mnist['x_test'][mnist['y_test']<=1]/255.
+y_test = mnist['y_test'][mnist['y_test']<=1]
+
+x_train = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_train])
+y_train = np.array([[[1,0],[0,1]][n] for n in y_train])
+x_test = np.array([[img.mean(),img[10:18,11:17].mean()] for img in x_test])
+y_test = np.array([[[1,0],[0,1]][n] for n in y_test])
+
+from neurons import neurons
+model = neurons([2,5,5,2])
 model.fit(x_train, y_train, 20, 30, 1.0)
 
-print('Training Acc:', model.evaluate(x_train, y_train)[1])
-print('Testing Acc:', model.evaluate(x_test, y_test)[1])
+print('Performance (training)')
+print('Loss: %.5f, Acc: %.5f' % model.evaluate(x_train, y_train))
+print('Performance (testing)')
+print('Loss: %.5f, Acc: %.5f' % model.evaluate(x_test, y_test))
 
-# Plot Result
-# ...`}
-                outputText={`Epoch 1/20...
-...
-Epoch 20/20...
-Training Acc: 0.9928
-Testing Acc: 0.9957`}
-            />
+out = np.array([model.predict(x) for x in x_train])
+
+fig = plt.figure(figsize=(6,6), dpi=80)
+plt.subplot(2,1,1)
+plt.hist(out[:,0][y_train[:,0]==1], bins=50, color='y')
+plt.hist(out[:,0][y_train[:,1]==1], bins=50, color='g', alpha=0.5)
+plt.subplot(2,1,2)
+plt.hist(out[:,1][y_train[:,0]==1], bins=50, color='y')
+plt.hist(out[:,1][y_train[:,1]==1], bins=50, color='g', alpha=0.5)
+plt.show()
+`;
+        ReactDOM.createRoot(document.getElementById('code-04a')).render(
+            <CodeRunner filename="l302-example-04a.py" initialCode={code04a} />
         );
 
         // 6. Full MNIST Training (l302-example-05.py)
-        ReactDOM.createRoot(document.getElementById('code-05')).render(
-            <CodeRunner
-                filename="l302-example-05.py"
-                plotId="NN_Full_MNIST"
-                code={`# Full MNIST (784 inputs -> 30 hidden -> 10 outputs)
-model = neurons([784, 30, 10])
+        const code05 = `import numpy as np
+import matplotlib.pyplot as plt
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train']/255.
+y_train = np.array([np.eye(10)[n] for n in mnist['y_train']])
+x_test = mnist['x_test']/255.
+y_test = np.array([np.eye(10)[n] for n in mnist['y_test']])
+
+from neurons import neurons
+model = neurons([784,30,10])
 model.fit(x_train, y_train, 20, 10, 3.0)
 
-print('Training Acc:', model.evaluate(x_train, y_train)[1])
-print('Testing Acc:', model.evaluate(x_test, y_test)[1])`}
-                outputText={`Epoch 20/20... Loss: 0.0317
-Training Acc: 0.9636
-Testing Acc: 0.9486`}
-            />
+print('Performance (training)')
+print('Loss: %.5f, Acc: %.5f' % model.evaluate(x_train, y_train))
+print('Performance (testing)')
+print('Loss: %.5f, Acc: %.5f' % model.evaluate(x_test, y_test))
+
+p_test = np.array([model.predict(x) for x in x_test])
+
+fig = plt.figure(figsize=(10,10), dpi=80)
+for i in range(100):
+    plt.subplot(10,10,i+1)
+    plt.axis('off')
+    plt.imshow(mnist['x_test'][i], cmap='Greys')
+    c='Green'
+    if y_test[i].argmax()!=p_test[i].argmax(): c='Red'
+    plt.text(0.,0.,'$%d\\to%d$' % (y_test[i].argmax(),p_test[i].argmax()),color=c,fontsize=15)
+plt.show()
+`;
+        ReactDOM.createRoot(document.getElementById('code-05')).render(
+            <CodeRunner filename="l302-example-05.py" initialCode={code05} />
         );
 
-        // 7. Weight Init Comparison (l302-example-05b.py) - New File
-        ReactDOM.createRoot(document.getElementById('code-05b')).render(
-            <CodeRunner
-                filename="l302-example-05b.py"
-                plotId="Learning_Curves_Init"
-                code={`import copy
+        // 7. Weight Init Comparison (l302-example-05b.py)
+        const code05b = `import numpy as np
+import matplotlib.pyplot as plt
+import copy
+
+mnist = np.load('mnist.npz')
+x_train = mnist['x_train'][:10000]/255.
+y_train = np.array([np.eye(10)[n] for n in mnist['y_train'][:10000]])
+
+scores = np.zeros((2,50))
+
 from neurons import neurons
 m1 = neurons([784,30,10])
 m2 = copy.deepcopy(m1)
-
-# Scale m2 weights
 for w in m2.w:
     w /= (w.shape[1])**0.5
 
-# Train both loops...
 for ep in range(50):
-    m1.fit(...)
-    m2.fit(...)
-    
-# Plot loss comparison`}
-                outputText={`[Plotting Learning Curves...]
-(Comparing Original vs Scaled Initialization)
-Scaled Init converges faster!`}
-            />
-        );
+    m1.fit(x_train, y_train, 1, 10, 3.0)
+    m2.fit(x_train, y_train, 1, 10, 3.0)
+    scores[0][ep],acc = m1.evaluate(x_train, y_train)
+    scores[1][ep],acc = m2.evaluate(x_train, y_train)
 
-        // 8. Learning Curves (l302-example-05a.py) - Previously referenced
-        // (This code was provided in the context, used for basic learning curve plotting)
-        // We can integrate it if needed or assume it's covered by 05b for the specific "Optimization" section.
+vep = np.linspace(1.,50.,50)
+fig = plt.figure(figsize=(6,6), dpi=80)
+plt.plot(vep,scores[0], lw=3)
+plt.plot(vep,scores[1], lw=3)
+plt.show()
+`;
+        ReactDOM.createRoot(document.getElementById('code-05b')).render(
+            <CodeRunner filename="l302-example-05b.py" initialCode={code05b} />
+        );
 
         // Render Quiz
         ReactDOM.createRoot(document.getElementById('quiz-container')).render(<Quiz />);
