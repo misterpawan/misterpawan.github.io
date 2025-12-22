@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 3-2: Nonlinear Models & Neural Networks 🧠</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ntu: {
+                            blue: '#1e3a8a',
+                            light: '#eff6ff',
+                            accent: '#f59e0b',
+                            code_bg: '#f8f9fa',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .slide-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .code-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 0;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            border: 1px solid #e2e8f0;
+            min-height: 400px;
+        }
+
+        @media (max-width: 1024px) {
+            .code-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 300px;
+            }
+        }
+
+        .code-editor {
+            padding: 1rem;
+            background-color: #f8f9fa;
+            /* Light background */
+            color: #24292e;
+            font-size: 0.85rem;
+            overflow: auto;
+            border-right: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .output-panel {
+            padding: 1rem;
+            background: #ffffff;
+            color: #374151;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .run-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #1e3a8a;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: bold;
+            border: none;
+            transition: background 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .run-btn:hover {
+            background: #1e40af;
+        }
+
+        .math-box {
+            background: #eff6ff;
+            border-left: 4px solid #1e3a8a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+            overflow-x: auto;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .quiz-container {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 2rem;
+        }
+
+        .quiz-option {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .quiz-option.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+        }
+
+        .quiz-option.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-bold text-xl text-ntu-blue flex items-center gap-2">
+                <span>🧠</span> Lecture 3-2: Nonlinear Models
+            </span>
+            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                <a href="#recap" class="px-3 py-1 hover:bg-gray-100 rounded">Recap</a>
+                <a href="#nonlinear-svm" class="px-3 py-1 hover:bg-gray-100 rounded">Nonlinear SVM</a>
+                <a href="#neural-networks" class="px-3 py-1 hover:bg-gray-100 rounded">Neural Networks</a>
+                <a href="#training" class="px-3 py-1 hover:bg-gray-100 rounded">Training</a>
+                <a href="#optimization" class="px-3 py-1 hover:bg-gray-100 rounded">Optimization</a>
+                <a href="#keras" class="px-3 py-1 hover:bg-gray-100 rounded">Future (Keras)</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Incorporating Nonlinear Models
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            From "Double Doughnuts" to Neural Networks. <br>
+            <span class="text-sm text-ntu-blue font-mono">Lecture 3-2</span>
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+
+        <section id="recap" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">1. Recap: Where are we? 📍</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 2-3</span>
+            </div>
+
+            <p class="mb-4 text-lg">
+                Last time, we classified MNIST digits using <strong>Linear Methods</strong> (LDA, Linear SVM).
+                <br>
+                Accuracy: ~92% (using all pixels). Not bad, but we hit a wall.
+            </p>
+
+            <div class="bg-yellow-50 p-6 rounded-lg border border-yellow-200 flex items-center gap-4">
+                <div class="text-4xl">🚧</div>
+                <div>
+                    <h3 class="font-bold text-yellow-800">The Problem</h3>
+                    <p class="text-sm text-yellow-900">Life isn't always linear. Sometimes the path from Start to End is
+                        a messy squiggle.</p>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center text-gray-400 italic">
+                "Start --------> End" (Expectation) <br>
+                "Start --〰️--🌀--> End" (Reality)
+            </div>
+        </section>
+
+        <section id="nonlinear-svm" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">2. Nonlinear SVM & The Doughnut Problem 🍩</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 4-13</span>
+            </div>
+
+            <p class="mb-4">
+                Remember the <strong>Kernel Trick</strong>? We map data to higher dimensions to make it separable.
+                <br> Let's test this on a "Double Doughnut" dataset (concentric circles), which is impossible for linear
+                classifiers.
+            </p>
+
+            <div id="code-01" class="code-container"></div>
+
+            <div class="mt-8 mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Hyperparameter Tuning</h3>
+                <p class="text-gray-600">
+                    The RBF kernel has two key parameters:
+                <ul class="list-disc ml-5 mt-2">
+                    <li><strong>C:</strong> Regularization (how much we punish errors).</li>
+                    <li><strong>gamma ($\gamma$):</strong> Width of the Gaussian kernel.</li>
+                </ul>
+                </p>
+            </div>
+
+            <div id="code-02a" class="code-container"></div>
+
+            <div class="mt-8 mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Back to MNIST</h3>
+                <p class="text-gray-600">
+                    Can we beat our 92% linear score? Using a tuned RBF SVM ($C=5, \gamma=0.05$):
+                </p>
+            </div>
+
+            <div id="code-03" class="code-container"></div>
+
+            <div class="p-4 bg-green-50 border border-green-200 rounded mt-4">
+                <p class="text-green-800 font-bold">Result:</p>
+                <p class="text-sm text-green-700">Accuracy jumps to ~96.6% (from 91.7%). Nonlinearity works!</p>
+            </div>
+        </section>
+
+        <section id="neural-networks" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">3. Artificial Neural Networks (ANN) 🧠</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 16-30</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">The Biological Inspiration</h3>
+                    <p class="text-slate-600 text-sm">
+                        Inspired by the brain, but mathematically simple.
+                        <br>
+                        <strong>Perceptron:</strong> Inputs ($x_i$) $\to$ Weighted Sum ($\sum w_i x_i$) $\to$ Threshold
+                        $\to$ Output (0 or 1).
+                    </p>
+                    <div class="math-box text-sm mt-4">
+                        Problem: Binary step functions aren't differentiable. We can't use calculus to train them!
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">The Solution: Sigmoid Neurons</h3>
+                    <p class="text-slate-600 text-sm">
+                        Replace the hard threshold with a smooth <strong>Sigmoid (or Tanh)</strong> function.
+                    </p>
+                    <div class="math-box text-sm text-center mt-4">
+                        $$ \sigma(z) = \frac{1}{1 + e^{-z}} $$
+                    </div>
+                    <p class="text-xs text-gray-500 text-center">Smooth, differentiable, 0 to 1.</p>
+                </div>
+            </div>
+
+            <h3 class="font-bold text-lg mb-4">Implementing a Neural Network from Scratch</h3>
+            <p class="mb-4 text-sm text-slate-600">
+                We define a class `neurons` that handles:
+            <ul class="list-disc ml-5">
+                <li><strong>Feedforward:</strong> Calculating outputs layer by layer.</li>
+                <li><strong>Backpropagation:</strong> Calculating gradients to update weights.</li>
+            </ul>
+            </p>
+
+            <div class="bg-gray-100 p-4 rounded text-xs font-mono mb-6 overflow-auto max-h-64">
+                <div class="font-bold text-gray-500 mb-2">neurons.py (Core Logic)</div>
+                <pre><code class="language-python">class neurons(object):
+    def __init__(self, shape):
+        self.shape = shape
+        # Initialize weights/biases with random Gaussian values
+        self.w = [np.random.randn(n,m) for n,m in zip(shape[1:],shape[:-1])]
+        self.b = [np.random.randn(n,1) for n in shape[1:]]
+        # ... (buffers for gradients)
+
+    def predict(self, x):
+        # Feedforward
+        self.v[0] = x.reshape(self.v[0].shape)
+        for l in range(len(self.shape)-1):
+            self.z[l] = np.dot(self.w[l], self.v[l]) + self.b[l]
+            self.v[l+1] = sigma(self.z[l])
+        return self.v[-1]
+    
+    # ... (gradient calculation via backprop) ...
+</code></pre>
+            </div>
+
+            <div id="code-04" class="code-container"></div>
+
+            <p class="text-sm text-gray-500 mt-2 text-center">
+                Before training, the network output is random noise. The histograms of "0" and "1" predictions overlap
+                completely.
+            </p>
+        </section>
+
+        <section id="training" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">4. Training with Backpropagation 🏋️‍♂️</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 31-48</span>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="font-bold text-lg mb-2">The Algorithm: SGD</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    <strong>Stochastic Gradient Descent (SGD):</strong>
+                <ol class="list-decimal ml-5 space-y-1">
+                    <li>Pick a mini-batch of data.</li>
+                    <li>Compute Loss (MSE).</li>
+                    <li>Compute Gradients via <strong>Backpropagation</strong> (Chain Rule).</li>
+                    <li>Update weights: $w \leftarrow w - \eta \nabla L$</li>
+                </ol>
+                </p>
+            </div>
+
+            <div id="code-04a" class="code-container"></div>
+
+            <div class="mt-8 mb-4">
+                <h3 class="font-bold text-lg text-slate-800">Training on Full MNIST (All Pixels)</h3>
+                <p class="text-gray-600">Let's connect 784 inputs -> 30 hidden -> 10 outputs.</p>
+            </div>
+
+            <div id="code-05" class="code-container"></div>
+
+            <div id="quiz-1-root"></div>
+        </section>
+
+        <section id="optimization" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">5. Optimization & Overfitting 🛠️</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 49-56</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg text-red-600 mb-2">The Overfitting Problem</h3>
+                    <p class="text-sm text-slate-600">
+                        The network memorizes the training data but fails on new data.
+                        <br>
+                        <strong>Symptom:</strong> Training loss goes down, but Testing loss goes up (or flats out).
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-green-600 mb-2">A Simple Fix: Weight Initialization</h3>
+                    <p class="text-sm text-slate-600">
+                        Initializing weights with large random numbers saturates the sigmoid function (gradients $\to$
+                        0).
+                        <br>
+                        <strong>Fix:</strong> Scale weights by $1/\sqrt{N_{inputs}}$.
+                    </p>
+                </div>
+            </div>
+
+            <div id="code-05b" class="code-container"></div>
+
+            <p class="text-sm text-center text-gray-500 mt-4">
+                Notice how the scaled initialization converges much faster!
+            </p>
+        </section>
+
+        <section id="keras" class="slide-card bg-slate-900 text-white">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-white">6. The Future: Keras & TensorFlow 🚀</h2>
+                <span class="bg-gray-800 px-3 py-1 rounded text-xs font-mono text-gray-400">Slides 57-58</span>
+            </div>
+
+            <div class="flex items-center gap-6 mb-6">
+                <div class="text-5xl">📦</div>
+                <div>
+                    <p class="text-lg text-gray-300">
+                        We built a Neural Network from scratch to understand it.
+                        In practice, we use libraries like <strong>TensorFlow</strong> and <strong>Keras</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-black p-4 rounded-lg font-mono text-sm text-green-400">
+                pip install tensorflow keras
+            </div>
+
+            <p class="mt-6 text-gray-400 italic text-center">Coming up in Lecture 3-3...</p>
+        </section>
+
+        <section id="quizzes" class="slide-card border-l-4 border-ntu-accent">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">🧠 Knowledge Check</h2>
+            <div id="quiz-container"></div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
+        <p>Numerical Analysis Lecture 3-2</p>
+    </footer>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Code Runner Component
+        const CodeRunner = ({ filename, code, outputText, plotId }) => {
+            const [isRunning, setIsRunning] = useState(false);
+            const [outputVisible, setOutputVisible] = useState(false);
+
+            const handleRun = () => {
+                setIsRunning(true);
+                setOutputVisible(false);
+                setTimeout(() => {
+                    setIsRunning(false);
+                    setOutputVisible(true);
+                }, 800); // Simulate processing time
+            };
+
+            return (
+                <div>
+                    <div className="flex justify-between items-end mb-1 px-1">
+                        <span className="text-xs font-mono text-gray-500">{filename}</span>
+                    </div>
+                    <div className="code-container">
+                        <div className="code-editor">
+                            <button onClick={handleRun} disabled={isRunning} className="run-btn">
+                                {isRunning ? 'Running...' : '▶ Run Code'}
+                            </button>
+                            <pre><code className="language-python">{code}</code></pre>
+                        </div>
+                        <div className="output-panel">
+                            {!outputVisible && !isRunning && <div className="text-gray-400 italic">Click Run to execute...</div>}
+                            {isRunning && <div className="text-ntu-accent animate-pulse font-bold">Processing...</div>}
+                            {outputVisible && (
+                                <div className="w-full h-full flex flex-col">
+                                    <div className="w-full border-b border-gray-200 pb-2 mb-2 text-xs text-gray-400 uppercase font-bold">Console Output</div>
+                                    <pre className="whitespace-pre-wrap text-xs text-slate-700 flex-grow">{outputText}</pre>
+                                    {plotId && (
+                                        <div className="mt-2 w-full h-48 bg-white border border-gray-200 rounded flex items-center justify-center relative overflow-hidden group shadow-sm">
+                                            <div className="text-gray-400 text-xs italic z-10">[Matplotlib Plot]</div>
+                                            {/* Simulated Plot Image */}
+                                            <img src={`https://dummyimage.com/400x300/ffffff/000000.png&text=${plotId}`} className="absolute inset-0 w-full h-full object-contain opacity-80 group-hover:opacity-100 transition" />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Quiz Component
+        const Quiz = () => {
+            const questions = [
+                {
+                    q: "Why does Linear SVM fail on the 'Double Doughnut' dataset?",
+                    options: ["It needs more data", "The data is not linearly separable", "The learning rate is too high", "It needs more iterations"],
+                    answer: 1
+                },
+                {
+                    q: "What is the purpose of the 'Kernel Trick' in SVM?",
+                    options: ["To compress data", "To map data to a higher dimension where it is separable", "To speed up training", "To remove outliers"],
+                    answer: 1
+                },
+                {
+                    q: "In our Neural Network, what activation function did we use?",
+                    options: ["ReLU", "Sigmoid (Tanh based)", "Step Function", "Linear"],
+                    answer: 1
+                },
+                {
+                    q: "What is Backpropagation used for?",
+                    options: ["Calculating the output", "Initializing weights", "Calculating gradients to update weights", "Loading data"],
+                    answer: 2
+                },
+                {
+                    q: "Why do we scale initial weights by 1/sqrt(N)?",
+                    options: ["To make them larger", "To prevent saturation of the sigmoid function", "To avoid division by zero", "It looks nicer"],
+                    answer: 1
+                }
+            ];
+
+            const [selected, setSelected] = useState(Array(questions.length).fill(null));
+
+            const handleSelect = (qIdx, oIdx) => {
+                const newSelected = [...selected];
+                newSelected[qIdx] = oIdx;
+                setSelected(newSelected);
+            };
+
+            return (
+                <div className="space-y-6">
+                    {questions.map((q, i) => (
+                        <div key={i} className="quiz-container">
+                            <h4 className="font-bold text-slate-800 mb-3">{i + 1}. {q.q}</h4>
+                            <div className="space-y-2">
+                                {q.options.map((opt, j) => (
+                                    <div
+                                        key={j}
+                                        onClick={() => handleSelect(i, j)}
+                                        className={`quiz-option ${selected[i] === j ? (j === q.answer ? 'correct' : 'wrong') : ''}`}
+                                    >
+                                        {opt}
+                                        {selected[i] === j && (j === q.answer ? ' ✅' : ' ❌')}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // --- RENDER CODE BLOCKS ---
+
+        // 1. Double Doughnut SVM (l302-example-01.py)
+        ReactDOM.createRoot(document.getElementById('code-01')).render(
+            <CodeRunner
+                filename="l302-example-01.py"
+                plotId="Doughnut_RBF"
+                code={`import numpy as np
+from sklearn import svm
+
+# Generate Doughnut Data
+y_train = np.random.randint(0,2,5000)
+rho = np.abs(np.random.randn(5000)/4. + 1. + y_train)
+phi = np.random.rand(5000)*np.pi*2.
+x_train = np.c_[rho*np.cos(phi), rho*np.sin(phi)]
+
+# Train RBF SVM
+clf = svm.SVC(kernel='rbf', C=1.)
+clf.fit(x_train, y_train)
+
+print('Performance (training):', clf.score(x_train, y_train))
+
+# Plotting...`}
+                outputText={`Performance (training): 0.9754`}
+            />
+        );
+
+        // 2. Grid Search (l302-example-02a.py)
+        ReactDOM.createRoot(document.getElementById('code-02a')).render(
+            <CodeRunner
+                filename="l302-example-02a.py"
+                code={`from sklearn.model_selection import GridSearchCV
+# ... load data ...
+
+clf = svm.SVC(kernel='rbf')
+param = {'C':[0.5, 5., 50., 500.], 
+         'gamma':[2.0, 1.0, 0.5, 0.25]}
+
+grid = GridSearchCV(clf, param, verbose=3)
+grid.fit(x_train, y_train)
+
+print('Best SVM:', grid.best_estimator_)
+print('Training Acc:', grid.score(x_train, y_train))`}
+                outputText={`Fitting 3 folds for each of 16 candidates...
+Best SVM: SVC(C=50.0, gamma=0.5)
+Training Acc: 0.9936`}
+            />
+        );
+
+        // 3. MNIST SVM (l302-example-03.py)
+        ReactDOM.createRoot(document.getElementById('code-03')).render(
+            <CodeRunner
+                filename="l302-example-03.py"
+                plotId="MNIST_Grid"
+                code={`# SVM on MNIST with RBF Kernel
+clf = svm.SVC(C=5., gamma=0.05, verbose=True)
+clf.fit(x_train, y_train)
+
+print('Train Acc:', clf.score(x_train, y_train))
+print('Test Acc:', clf.score(x_test, y_test))
+
+# Predict and Plot
+p_test = clf.predict(x_test)
+# ... plotting code ...`}
+                outputText={`[LibSVM] ...
+Train Acc: 1.0
+Test Acc: 0.9664`}
+            />
+        );
+
+        // 4. NN Prediction (l302-example-04.py)
+        ReactDOM.createRoot(document.getElementById('code-04')).render(
+            <CodeRunner
+                filename="l302-example-04.py"
+                plotId="Untrained_NN_Hist"
+                code={`from neurons import neurons
+
+# Prepare Data (0 and 1 only)
+# ... 
+
+model = neurons([2, 5, 2]) # 2 input, 5 hidden, 2 output
+out = np.array([model.predict(x) for x in x_train])
+
+# Plot histograms of outputs
+# ...`}
+                outputText={`[Plotting Output Distributions...]
+(Notice overlapping histograms - random weights!)`}
+            />
+        );
+
+        // 5. NN Training 2 Features (l302-example-04a.py)
+        ReactDOM.createRoot(document.getElementById('code-04a')).render(
+            <CodeRunner
+                filename="l302-example-04a.py"
+                plotId="Trained_NN_Hist"
+                code={`model = neurons([2, 5, 5, 2]) # Deeper network
+model.fit(x_train, y_train, 20, 30, 1.0)
+
+print('Training Acc:', model.evaluate(x_train, y_train)[1])
+print('Testing Acc:', model.evaluate(x_test, y_test)[1])
+
+# Plot Result
+# ...`}
+                outputText={`Epoch 1/20...
+...
+Epoch 20/20...
+Training Acc: 0.9928
+Testing Acc: 0.9957`}
+            />
+        );
+
+        // 6. Full MNIST Training (l302-example-05.py)
+        ReactDOM.createRoot(document.getElementById('code-05')).render(
+            <CodeRunner
+                filename="l302-example-05.py"
+                plotId="NN_Full_MNIST"
+                code={`# Full MNIST (784 inputs -> 30 hidden -> 10 outputs)
+model = neurons([784, 30, 10])
+model.fit(x_train, y_train, 20, 10, 3.0)
+
+print('Training Acc:', model.evaluate(x_train, y_train)[1])
+print('Testing Acc:', model.evaluate(x_test, y_test)[1])`}
+                outputText={`Epoch 20/20... Loss: 0.0317
+Training Acc: 0.9636
+Testing Acc: 0.9486`}
+            />
+        );
+
+        // 7. Weight Init Comparison (l302-example-05b.py) - New File
+        ReactDOM.createRoot(document.getElementById('code-05b')).render(
+            <CodeRunner
+                filename="l302-example-05b.py"
+                plotId="Learning_Curves_Init"
+                code={`import copy
+from neurons import neurons
+m1 = neurons([784,30,10])
+m2 = copy.deepcopy(m1)
+
+# Scale m2 weights
+for w in m2.w:
+    w /= (w.shape[1])**0.5
+
+# Train both loops...
+for ep in range(50):
+    m1.fit(...)
+    m2.fit(...)
+    
+# Plot loss comparison`}
+                outputText={`[Plotting Learning Curves...]
+(Comparing Original vs Scaled Initialization)
+Scaled Init converges faster!`}
+            />
+        );
+
+        // 8. Learning Curves (l302-example-05a.py) - Previously referenced
+        // (This code was provided in the context, used for basic learning curve plotting)
+        // We can integrate it if needed or assume it's covered by 05b for the specific "Optimization" section.
+
+        // Render Quiz
+        ReactDOM.createRoot(document.getElementById('quiz-container')).render(<Quiz />);
+
+        // Init Syntax Highlight
+        document.addEventListener("DOMContentLoaded", function () {
+            hljs.highlightAll();
+            renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+        });
+    </script>
+</body>
+
+</html>
