@@ -390,15 +390,7 @@
             <div class="mb-8">
                 <h4 class="font-bold text-sm mb-2 text-green-700">Step 3: LSTM Model & Generation</h4>
                 <div id="code-04a"></div>
-                <div class="mt-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm flex items-center gap-4">
-                    <div class="bg-green-100 text-green-600 p-2 rounded-full">🔊</div>
-                    <div class="flex-grow">
-                        <div class="text-xs font-bold text-gray-500 uppercase mb-1">Generated Output Preview</div>
-                        <audio controls
-                            src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg"
-                            class="w-full h-8"></audio>
-                    </div>
-                </div>
+            </div>
             </div>
 
             <hr class="border-gray-200 my-8">
@@ -465,7 +457,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const CodeRunner = ({ filename, initialCode, staticOutput, staticPlotData }) => {
+        const CodeRunner = ({ filename, initialCode, staticOutput, staticPlotData, generatedAudio }) => {
             const [code, setCode] = useState(initialCode);
             const [output, setOutput] = useState("");
             const [status, setStatus] = useState("idle");
@@ -546,6 +538,17 @@
                         {status === 'running' && <div className="text-ntu-secondary animate-pulse font-bold">Initializing Keras/TensorFlow Backend...</div>}
 
                         <div>{output}</div>
+
+                        {status === 'success' && generatedAudio && (
+                            <div className="mt-4 p-3 bg-green-50 rounded border border-green-200 flex items-center gap-3">
+                                <span className="bg-green-200 text-green-700 p-1.5 rounded-full text-xs">🎵</span>
+                                <div className="flex-grow">
+                                    <div className="text-xs font-bold text-green-700 uppercase mb-1">Generated Output Audio</div>
+                                    <audio controls src={generatedAudio} className="w-full h-8"></audio>
+                                </div>
+                            </div>
+                        )}
+
                         <div ref={plotRef} className="mt-4" style={{ width: '100%', minHeight: '300px', display: 'none' }}></div>
                     </div>
                 </div>
@@ -690,7 +693,8 @@ model.add(LSTM(128))
 model.fit(x, y)
 # Generate music ...`}
                 staticOutput={`Generated sequence (512 notes):
-c3.e4 a2.c3.a3 c3.e4 ... (Music string output)`} />
+c3.e4 a2.c3.a3 c3.e4 ... (Music string output)`}
+                generatedAudio="https://upload.wikimedia.org/wikipedia/commons/e/e0/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg" />
         );
 
         // 8. Mozart Data
