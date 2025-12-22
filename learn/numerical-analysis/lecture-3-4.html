@@ -457,11 +457,70 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const CodeRunner = ({ filename, initialCode, staticOutput, staticPlotData, generatedAudio }) => {
+        // --- Simple Synthesizer ---
+        class SimpleSynth {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            getNoteFreq(note) {
+                const notes = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
+                const match = note.toLowerCase().match(/([a-g]#?)([0-9])/);
+                if (!match) return 0;
+                const noteName = match[1];
+                const octave = parseInt(match[2]);
+                const noteIndex = notes.indexOf(noteName);
+                if (noteIndex === -1) return 0;
+
+                // MIDI note calculation
+                const midiNum = (octave + 1) * 12 + noteIndex;
+                return 440 * Math.pow(2, (midiNum - 69) / 12);
+            }
+
+            playTone(freq, startTime, duration) {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(startTime);
+
+                // Simple Envelope
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+                osc.stop(startTime + duration);
+            }
+
+            async playSequence(seqString) {
+                if (this.ctx.state === 'suspended') {
+                    await this.ctx.resume();
+                }
+                const now = this.ctx.currentTime;
+                const step = 0.3; // seconds per beat
+
+                const chords = seqString.trim().split(/\s+/);
+
+                chords.forEach((chordStr, i) => {
+                    const notes = chordStr.split('.');
+                    notes.forEach(note => {
+                        const freq = this.getNoteFreq(note);
+                        if (freq > 0) {
+                            this.playTone(freq, now + i * step, step * 1.2);
+                        }
+                    });
+                });
+            }
+        }
+        const synth = new SimpleSynth();
+
+        const CodeRunner = ({ filename, initialCode, staticOutput, staticPlotData, generatedSequence }) => {
             const [code, setCode] = useState(initialCode);
             const [output, setOutput] = useState("");
             const [status, setStatus] = useState("idle");
-            const [audioError, setAudioError] = useState(false);
             const textareaRef = useRef(null);
             const preRef = useRef(null);
             const plotRef = useRef(null);
@@ -476,7 +535,6 @@
             const handleRun = () => {
                 setStatus("running");
                 setOutput("");
-                setAudioError(false);
                 if (plotRef.current) {
                     plotRef.current.innerHTML = "";
                     plotRef.current.style.display = 'none';
@@ -541,24 +599,18 @@
 
                         <div>{output}</div>
 
-                        {status === 'success' && generatedAudio && (
+                        {status === 'success' && generatedSequence && (
                             <div className="mt-4 p-3 bg-green-50 rounded border border-green-200 flex items-center gap-3">
-                                {audioError ? (
-                                    <div className="text-red-500 text-xs">⚠️ Audio failed to load. Browser may block external media.</div>
-                                ) : (
-                                    <>
-                                        <span className="bg-green-200 text-green-700 p-1.5 rounded-full text-xs">🎵</span>
-                                        <div className="flex-grow">
-                                            <div className="text-xs font-bold text-green-700 uppercase mb-1">Generated Output Audio</div>
-                                            <audio
-                                                controls
-                                                src={generatedAudio}
-                                                className="w-full h-8"
-                                                onError={() => setAudioError(true)}
-                                            ></audio>
-                                        </div>
-                                    </>
-                                )}
+                                <span className="bg-green-200 text-green-700 p-1.5 rounded-full text-xs">🎹</span>
+                                <div className="flex-grow flex justify-between items-center">
+                                    <div className="text-xs font-bold text-green-700 uppercase">Generated Sequence Output</div>
+                                    <button
+                                        onClick={() => synth.playSequence(generatedSequence)}
+                                        className="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition shadow-sm font-bold flex items-center gap-1"
+                                    >
+                                        <span>▶</span> Play Audio
+                                    </button>
+                                </div>
                             </div>
                         )}
 
@@ -707,7 +759,7 @@ model.fit(x, y)
 # Generate music ...`}
                 staticOutput={`Generated sequence (512 notes):
 c3.e4 a2.c3.a3 c3.e4 ... (Music string output)`}
-                generatedAudio="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
+                generatedSequence="c3.e4 a2.c3.a3 c3.e4 c3.e4 a2.c3.a3 c3.e4 g3.b3.d4 g3.b3.d4 c3.e4" />
         );
 
         // 8. Mozart Data
