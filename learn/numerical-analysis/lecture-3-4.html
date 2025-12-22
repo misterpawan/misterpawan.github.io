@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 3-4: Deep Structured Learning 🧠</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ntu: {
+                            primary: '#E84A27',
+                            secondary: '#13294B',
+                            code: '#282c34',
+                            light: '#f8fafc'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .slide-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .slide-tag {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: monospace;
+        }
+
+        /* IDE Styles */
+        .code-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 0;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            min-height: 400px;
+        }
+
+        @media (max-width: 1024px) {
+            .code-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 300px;
+            }
+        }
+
+        .code-editor {
+            padding: 1rem;
+            background-color: #f8fafc;
+            color: #24292e;
+            font-size: 0.8rem;
+            overflow: auto;
+            border-right: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .output-panel {
+            padding: 1rem;
+            background-color: #ffffff;
+            color: #334155;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8rem;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .run-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #13294B;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: bold;
+            border: none;
+            transition: background 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .run-btn:hover {
+            background: #E84A27;
+        }
+
+        /* Diagram Boxes */
+        .diagram-box {
+            border: 2px dashed #cbd5e1;
+            background: #f8fafc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Quiz */
+        .quiz-option {
+            transition: all 0.2s;
+            border: 2px solid #e2e8f0;
+        }
+
+        .quiz-option:hover {
+            border-color: #bfdbfe;
+            background: #eff6ff;
+        }
+
+        .quiz-option.correct {
+            border-color: #22c55e;
+            background: #dcfce7;
+            color: #14532d;
+        }
+
+        .quiz-option.wrong {
+            border-color: #ef4444;
+            background: #fee2e2;
+            color: #7f1d1d;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-bold text-xl text-ntu-secondary flex items-center gap-2">
+                <span>🕸️</span> Lecture 3-4
+            </span>
+            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
+                <a href="#cnn" class="px-3 py-1 hover:bg-gray-100 rounded">CNN</a>
+                <a href="#rnn" class="px-3 py-1 hover:bg-gray-100 rounded">RNN/LSTM</a>
+                <a href="#music" class="px-3 py-1 hover:bg-gray-100 rounded">AI Composer</a>
+                <a href="#gan" class="px-3 py-1 hover:bg-gray-100 rounded">GANs</a>
+                <a href="#quiz"
+                    class="px-3 py-1 bg-ntu-secondary text-white rounded hover:bg-ntu-primary transition">Quiz</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+        <div
+            class="inline-block px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-bold text-ntu-primary mb-4 shadow-sm">
+            NUMERICAL ANALYSIS
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Deep Structured Learning
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            Going deeper with Convolutional Networks, Music Generation, and GANs.
+            <br>
+            <span class="text-sm font-mono text-ntu-secondary">Kai-Feng Chen • National Taiwan University</span>
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+
+        <section id="intro" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-ntu-secondary">1. Why Go Deeper? 🤔</h2>
+                <span class="slide-tag">Slides 1-3</span>
+            </div>
+
+            <p class="mb-4">
+                Last time, we reached <strong>98.5%</strong> accuracy on MNIST using a standard Neural Network (MLP)
+                with many tricks.
+                However, simply adding more layers makes training difficult due to <strong>unstable gradients</strong>.
+            </p>
+
+            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400 mb-4">
+                <p class="text-sm text-yellow-800">
+                    <strong>The Challenge:</strong> Standard networks ignore the spatial structure of images (we
+                    flattened 28x28 into 784).
+                    To go further, we need architectures that understand structure.
+                </p>
+            </div>
+        </section>
+
+        <section id="cnn" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-ntu-secondary">2. Convolutional Neural Networks (CNN) 🖼️</h2>
+                <span class="slide-tag">Slides 4-13</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Key Concepts</h3>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li>
+                            <strong class="text-indigo-600">Local Receptive Fields:</strong>
+                            Neurons only look at a small window (e.g., 5x5) of the input, not the whole image.
+                        </li>
+                        <li>
+                            <strong class="text-indigo-600">Shared Weights:</strong>
+                            The same filter is used across the entire image to detect features (edges, curves) anywhere.
+                        </li>
+                        <li>
+                            <strong class="text-indigo-600">Pooling:</strong>
+                            Simplifies the information (e.g., Max Pooling takes the largest value in a 2x2 grid).
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="diagram-box h-48 bg-white">
+                        <div class="grid grid-cols-4 gap-1 p-2 border border-gray-300">
+                            <div class="w-8 h-8 bg-blue-100"></div>
+                            <div class="w-8 h-8 bg-blue-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                            <div class="w-8 h-8 bg-blue-100"></div>
+                            <div class="w-8 h-8 bg-blue-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                            <div class="w-8 h-8 bg-gray-100"></div>
+                        </div>
+                        <div class="text-2xl mx-4">→</div>
+                        <div
+                            class="w-16 h-16 bg-indigo-100 border border-indigo-300 flex items-center justify-center text-xs">
+                            Feature Map</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="font-bold text-lg mb-4 mt-8">Implementation: CNN on MNIST</h3>
+
+            <div id="code-01" class="code-container"></div>
+
+            <h3 class="font-bold text-lg mb-4 mt-8">Variations</h3>
+
+            <div id="code-01a" class="code-container"></div>
+
+            <div id="code-01b" class="code-container"></div>
+        </section>
+
+        <section id="rnn" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-ntu-secondary">3. Recurrent Neural Networks (RNN) 🔁</h2>
+                <span class="slide-tag">Slides 14-25</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">The Problem with Time</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Standard networks have no memory. They process inputs individually.
+                        RNNs have loops, allowing information to persist.
+                    </p>
+                    <div class="bg-red-50 p-4 rounded border border-red-100">
+                        <p class="text-xs text-red-800 font-bold">Issue: Vanishing Gradient</p>
+                        <p class="text-xs text-red-700">
+                            As information loops back over many time steps, gradients multiply by small weights and
+                            vanish.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">The Solution: LSTM</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        <strong>Long Short-Term Memory</strong> units have gates to control information flow:
+                    </p>
+                    <ul class="list-disc ml-5 text-sm text-slate-600">
+                        <li><strong>Forget Gate:</strong> What to throw away.</li>
+                        <li><strong>Input Gate:</strong> What to store.</li>
+                        <li><strong>Output Gate:</strong> What to output.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="music" class="slide-card bg-slate-900 text-white">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-white">4. The AI Composer 🎵</h2>
+                <span class="slide-tag bg-gray-800 text-gray-400">Slides 26-44</span>
+            </div>
+
+            <p class="mb-6 text-gray-300">
+                Can we train an LSTM on MIDI files to compose new music?
+                The model predicts the <strong>next note/chord</strong> given a sequence of previous notes.
+            </p>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-green-400">Utility: midi_phraser.py</h4>
+                <div id="code-midi" class="code-container bg-black border-none text-white" style="min-height: 250px;">
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-green-400">Step 1: Decoding MIDI Files</h4>
+                <div id="code-02" class="code-container bg-black border-none text-white"></div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-green-400">Step 2: Preparing Data (Final Fantasy 7)</h4>
+                <div id="code-04" class="code-container bg-black border-none text-white"></div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-green-400">Step 3: LSTM Model & Generation</h4>
+                <div id="code-04a" class="code-container bg-black border-none text-white"></div>
+            </div>
+
+            <hr class="border-gray-700 my-8">
+
+            <div class="mb-8">
+                <h3 class="font-bold text-xl mb-2">Mozart Violin Concertos 🎻</h3>
+
+                <div id="code-05" class="code-container bg-black border-none text-white"></div>
+
+                <div id="code-05a" class="code-container bg-black border-none text-white"></div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-gray-500">Utility: Checking Chords</h4>
+                <div id="code-03" class="code-container bg-black border-none text-white"></div>
+            </div>
+        </section>
+
+        <section id="gan" class="slide-card border-l-8 border-purple-500">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">5. Generative Adversarial Networks (GANs) 🎨</h2>
+                <span class="slide-tag">Slides 45-56</span>
+            </div>
+
+            <p class="mb-4">
+                Two networks competing against each other:
+                <br>
+                <strong>Generator:</strong> Tries to create fake data to fool the discriminator.
+                <br>
+                <strong>Discriminator:</strong> Tries to tell real data from fake data.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold text-sm text-purple-700 mb-2">The Data: Font Characters</h4>
+                    <div id="code-06" class="code-container" style="min-height: 250px;"></div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-sm text-purple-700 mb-2">Simple GAN (Dense Layers)</h4>
+                    <div id="code-07" class="code-container" style="min-height: 250px;"></div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h4 class="font-bold text-lg text-purple-800 mb-2">Deep Convolutional GAN (DCGAN)</h4>
+                <p class="text-sm text-slate-600 mb-4">Using Conv2D Transpose (UpSampling) to generate images from
+                    noise.</p>
+                <div id="code-08" class="code-container"></div>
+            </div>
+        </section>
+
+        <section id="quiz" class="slide-card bg-ntu-light">
+            <h2 class="text-2xl font-bold text-ntu-secondary mb-6">🧠 Knowledge Check</h2>
+            <div id="quiz-container"></div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
+        <p>Numerical Analysis Lecture 3-4 • Kai-Feng Chen • National Taiwan University</p>
+    </footer>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Code Runner Component
+        const CodeRunner = ({ filename, code, outputText }) => {
+            const [isRunning, setIsRunning] = useState(false);
+            const [outputVisible, setOutputVisible] = useState(false);
+
+            const handleRun = () => {
+                setIsRunning(true);
+                setOutputVisible(false);
+                setTimeout(() => {
+                    setIsRunning(false);
+                    setOutputVisible(true);
+                }, 1000);
+            };
+
+            return (
+                <div className="w-full">
+                    <div className="flex justify-between items-end mb-1 px-1">
+                        <span className="text-xs font-mono text-gray-500 opacity-80">{filename}</span>
+                    </div>
+                    <div className="code-container">
+                        <div className="code-editor">
+                            <button onClick={handleRun} disabled={isRunning} className="run-btn">
+                                {isRunning ? 'Running...' : '▶ Run Code'}
+                            </button>
+                            <pre><code className="language-python">{code}</code></pre>
+                        </div>
+                        <div className="output-panel">
+                            {!outputVisible && !isRunning && <div className="text-gray-400 italic">Click Run to execute...</div>}
+                            {isRunning && <div className="text-ntu-secondary animate-pulse font-bold">Processing...</div>}
+                            {outputVisible && (
+                                <div className="w-full h-full flex flex-col">
+                                    <div className="w-full border-b border-gray-200 pb-2 mb-2 text-xs text-gray-400 uppercase font-bold">Console Output</div>
+                                    <pre className="whitespace-pre-wrap text-xs flex-grow">{outputText}</pre>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Quiz Component
+        const Quiz = () => {
+            const questions = [
+                { q: "1. What is the main feature of Convolutional Neural Networks (CNNs)?", options: ["They use fully connected layers only", "They use shared weights and local receptive fields", "They are only used for text", "They have no weights"], a: 1 },
+                { q: "2. What does 'Pooling' do in a CNN?", options: ["Increases image size", "Adds color", "Simplifies information by downsampling", "Inverts the image"], a: 2 },
+                { q: "3. Why do standard RNNs struggle with long sequences?", options: ["They run out of memory", "Vanishing Gradient problem", "They are too fast", "They only accept images"], a: 1 },
+                { q: "4. What component of LSTM allows it to keep information for a long time?", options: ["The Convolution Layer", "The Sigmoid Function", "The Gates (Input, Output, Forget)", "The Max Pooling"], a: 2 },
+                { q: "5. In our GAN example, what is the Discriminator trying to do?", options: ["Generate fake images", "Classify images as Real or Fake", "Compress images", "Play music"], a: 1 }
+            ];
+
+            const [selected, setSelected] = useState(Array(questions.length).fill(null));
+
+            return (
+                <div className="space-y-6">
+                    {questions.map((q, i) => (
+                        <div key={i} className="quiz-container bg-white p-6 rounded-lg border border-gray-200">
+                            <h4 className="font-bold text-slate-800 mb-3">{q.q}</h4>
+                            <div className="space-y-2">
+                                {q.options.map((opt, j) => (
+                                    <div
+                                        key={j}
+                                        onClick={() => {
+                                            const newAns = [...selected];
+                                            newAns[i] = j;
+                                            setSelected(newAns);
+                                        }}
+                                        className={`quiz-option p-3 rounded cursor-pointer border-2 transition-all ${selected[i] === j
+                                                ? (j === q.a ? 'border-green-500 bg-green-50 text-green-800' : 'border-red-500 bg-red-50 text-red-800')
+                                                : 'border-gray-200 hover:bg-gray-50'
+                                            }`}
+                                    >
+                                        {opt}
+                                        {selected[i] === j && (j === q.a ? ' ✅' : ' ❌')}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // --- RENDER CALLS ---
+
+        // 1. Basic CNN
+        ReactDOM.createRoot(document.getElementById('code-01')).render(
+            <CodeRunner filename="l304-example-01.py"
+                code={`model = Sequential()
+model.add(Reshape((28,28,1), input_shape=(28,28)))
+model.add(Conv2D(16, kernel_size=(5,5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Flatten())
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+
+model.fit(...)`}
+                outputText={`Epoch 20/20
+Test Loss: 0.03842, Test Acc: 0.98820`} />
+        );
+
+        // 2. CNN Variation 1
+        ReactDOM.createRoot(document.getElementById('code-01a')).render(
+            <CodeRunner filename="l304-example-01a.py"
+                code={`# Two Conv Layers
+model.add(Conv2D(32, kernel_size=(5,5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Conv2D(32, kernel_size=(5,5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Flatten())...`}
+                outputText={`Epoch 20/20
+Test Acc: 0.99360 (Excellent!)`} />
+        );
+
+        // 3. CNN Variation 2
+        ReactDOM.createRoot(document.getElementById('code-01b')).render(
+            <CodeRunner filename="l304-example-01b.py"
+                code={`# 16 filters vs 16 filters (smaller model)
+model.add(Conv2D(16, kernel_size=(5,5), activation='relu'))
+# ...
+model.add(Conv2D(16, kernel_size=(5,5), activation='relu'))
+# ...`}
+                outputText={`Test Acc: 0.99220`} />
+        );
+
+        // 4. MIDI Decode
+        ReactDOM.createRoot(document.getElementById('code-02')).render(
+            <CodeRunner filename="l304-example-02.py"
+                code={`from midi_phraser import *
+data = decode_midi('mozk219a.mid')
+
+for idx, chord in enumerate(data):
+    print('#%d: %s' % (idx,chord))
+    if idx > 5: break`}
+                outputText={`#0: c3.e3.g3
+#1: c3.e3.g3
+#2: c3.e3.g3
+...`} />
+        );
+
+        // 5. Utility
+        ReactDOM.createRoot(document.getElementById('code-03')).render(
+            <CodeRunner filename="l304-example-03.py"
+                code={`all_chords = sorted(set(data))
+chords_to_idx = dict(...)
+
+print('Total # of chords:', n_chords)
+print('Encoded data:', [chords_to_idx[p] for p in data[:10]])`}
+                outputText={`Total # of chords: 68
+Encoded data: [12, 12, 12, 45, 23, ...]`} />
+        );
+
+        // 6. FF7 Data
+        ReactDOM.createRoot(document.getElementById('code-04')).render(
+            <CodeRunner filename="l304-example-04.py"
+                code={`data = decode_midi('ff7prelu.mid')
+length = 128
+x_train, y_train = [], []
+
+# Create sequences
+for idx in range(len(data)-length):
+    sequence = data[idx:idx+length]
+    next = data[idx+length]
+    # ... append to train list ...`}
+                outputText={`Total # of chords: 52
+Total # of notes: 2548`} />
+        );
+
+        // 7. FF7 Model
+        ReactDOM.createRoot(document.getElementById('code-04a')).render(
+            <CodeRunner filename="l304-example-04a.py"
+                code={`model.add(Embedding(n_chords, 128, input_length=length))
+model.add(LSTM(128, return_sequences=True))
+model.add(Dropout(0.3))
+model.add(LSTM(128))
+# ...
+model.fit(x, y)
+# Generate music ...`}
+                outputText={`Generated sequence (512 notes):
+c3.e4 a2.c3.a3 c3.e4 ... (Music string output)`} />
+        );
+
+        // 8. Mozart Data
+        ReactDOM.createRoot(document.getElementById('code-05')).render(
+            <CodeRunner filename="l304-example-05.py"
+                code={`sources = ['mozk216a.mid', 'mozk216b.mid', ...]
+all_data = []
+for src in sources:
+    data = decode_midi(src, 2)
+    all_data.append(data)
+# ... prepare big dataset ...`}
+                outputText={`Total # of chords: 419
+Total # of training samples: 14215`} />
+        );
+
+        // 9. Mozart Gen
+        ReactDOM.createRoot(document.getElementById('code-05a')).render(
+            <CodeRunner filename="l304-example-05a.py"
+                code={`# Larger LSTM for Mozart
+model.add(LSTM(256, return_sequences=True))
+model.add(LSTM(256))
+# ...
+model.load_weights('weights-ex05.h5')
+# Generate with temperature=0.5`}
+                outputText={`Generated Mozart-style sequence:
+d4.f#4.a4 g4.b4 d3.f#3.a3 ...`} />
+        );
+
+        // 10. MIDI Phraser
+        ReactDOM.createRoot(document.getElementById('code-midi')).render(
+            <CodeRunner filename="midi_phraser.py"
+                code={`# Utility functions for MIDI processing
+def decode_midi(filename, maxnotes=0):
+    mid_in = MidiFile(filename)
+    # ... logic to parse notes ...
+    return pack
+
+def encode_midi(filename, data, tempo_set=500000):
+    # ... logic to write MIDI ...`}
+                outputText={`(Utility Module Loaded)`} />
+        );
+
+        // 11. Font Data Vis
+        ReactDOM.createRoot(document.getElementById('code-06')).render(
+            <CodeRunner filename="l304-example-06.py"
+                code={`data = np.load('font_data.npy')
+# Plot random font characters
+plt.imshow(data[np.random.randint(4808)], cmap='Greys')
+# ... plotting loop ...`}
+                outputText={`[Plotting 10x10 Grid of Characters]`} />
+        );
+
+        // 12. Simple GAN
+        ReactDOM.createRoot(document.getElementById('code-07')).render(
+            <CodeRunner filename="l304-example-07.py"
+                code={`# Discriminator (Dense)
+discriminator.add(Dense(512))
+# ...
+# Generator (Dense)
+generator.add(Dense(256, input_dim=128))
+# ...
+# Training Loop
+for epoch in range(20000):
+    # Train D on real & fake
+    # Train G via combined model`}
+                outputText={`Epoch: 20000
+D loss: 0.61, G loss: 0.95
+(Generates blurry but recognizable characters)`} />
+        );
+
+        // 13. DCGAN
+        ReactDOM.createRoot(document.getElementById('code-08')).render(
+            <CodeRunner filename="l304-example-08.py"
+                code={`# DCGAN (Convolutional)
+discriminator.add(Conv2D(64, kernel_size=4, strides=2))
+# ...
+generator.add(UpSampling2D())
+generator.add(Conv2D(64, ...))
+# ...
+# Training
+for epoch in range(3000):
+    # ...`}
+                outputText={`Epoch: 3000
+D loss: 0.55, G loss: 1.20
+(Generates sharp, high-quality characters)`} />
+        );
+
+        // Render Quiz
+        ReactDOM.createRoot(document.getElementById('quiz-container')).render(<Quiz />);
+
+        // Init Highlighting
+        document.addEventListener("DOMContentLoaded", function () {
+            hljs.highlightAll();
+            renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+        });
+    </script>
+</body>
+
+</html>
