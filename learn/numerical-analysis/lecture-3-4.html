@@ -67,68 +67,110 @@
             font-family: monospace;
         }
 
-        /* IDE Styles */
-        .code-container {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 0;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 1.5rem 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        /* Container for the Editor Area */
+        .editor-container {
+            position: relative;
             border: 1px solid #e2e8f0;
-            min-height: 400px;
+            border-radius: 8px;
+            background: #ffffff;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        @media (max-width: 1024px) {
-            .code-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 300px;
-            }
-        }
-
-        .code-editor {
-            padding: 1rem;
-            background-color: #f8fafc;
-            color: #24292e;
-            font-size: 0.8rem;
-            overflow: auto;
-            border-right: 1px solid #e2e8f0;
+        /* The Overlay Editor: Textarea on top of Pre/Code */
+        .editor-wrapper {
             position: relative;
-        }
-
-        .output-panel {
-            padding: 1rem;
+            min-height: 250px;
+            /* Consistent height */
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
             background-color: #ffffff;
-            color: #334155;
-            font-family: 'Consolas', monospace;
-            font-size: 0.8rem;
+        }
+
+        .editor-wrapper textarea,
+        .editor-wrapper pre {
+            margin: 0;
+            padding: 1rem;
+            border: none;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            white-space: pre;
             overflow: auto;
-            position: relative;
+            word-wrap: normal;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            tab-size: 4;
+        }
+
+        .editor-wrapper textarea {
+            z-index: 2;
+            color: transparent;
+            background: transparent;
+            caret-color: #000;
+            resize: none;
+            outline: none;
+        }
+
+        .editor-wrapper pre {
+            z-index: 1;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .run-bar {
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .run-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
             background: #13294B;
             color: white;
-            padding: 6px 12px;
+            padding: 6px 16px;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            z-index: 10;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
             transition: background 0.2s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .run-btn:hover {
             background: #E84A27;
+        }
+
+        .run-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .output-box {
+            margin-top: 0.5rem;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            min-height: 100px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         /* Diagram Boxes */
@@ -321,51 +363,57 @@
             </div>
         </section>
 
-        <section id="music" class="slide-card bg-slate-900 text-white">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-4 mb-6">
-                <h2 class="text-2xl font-bold text-white">4. The AI Composer 🎵</h2>
-                <span class="slide-tag bg-gray-800 text-gray-400">Slides 26-44</span>
+        <section id="music" class="slide-card bg-gray-50 border-l-8 border-ntu-secondary">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-ntu-secondary">4. The AI Composer 🎵</h2>
+                <span class="slide-tag bg-white border border-gray-200 text-gray-400">Slides 26-44</span>
             </div>
 
-            <p class="mb-6 text-gray-300">
+            <p class="mb-6 text-slate-700">
                 Can we train an LSTM on MIDI files to compose new music?
                 The model predicts the <strong>next note/chord</strong> given a sequence of previous notes.
             </p>
 
             <div class="mb-8">
-                <h4 class="font-bold text-sm mb-2 text-green-400">Utility: midi_phraser.py</h4>
-                <div id="code-midi" class="code-container bg-black border-none text-white" style="min-height: 250px;">
+                <h4 class="font-bold text-sm mb-2 text-green-700">Utility: midi_phraser.py</h4>
+                <div id="code-midi"></div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-green-700">Step 1: Decoding MIDI Files</h4>
+                <div id="code-02"></div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-green-700">Step 2: Preparing Data (Final Fantasy 7)</h4>
+                <div id="code-04"></div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-sm mb-2 text-green-700">Step 3: LSTM Model & Generation</h4>
+                <div id="code-04a"></div>
+                <div class="mt-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm flex items-center gap-4">
+                    <div class="bg-green-100 text-green-600 p-2 rounded-full">🔊</div>
+                    <div class="flex-grow">
+                        <div class="text-xs font-bold text-gray-500 uppercase mb-1">Generated Output Preview</div>
+                        <audio controls src="#" class="w-full h-8"></audio>
+                    </div>
                 </div>
             </div>
 
+            <hr class="border-gray-200 my-8">
+
             <div class="mb-8">
-                <h4 class="font-bold text-sm mb-2 text-green-400">Step 1: Decoding MIDI Files</h4>
-                <div id="code-02" class="code-container bg-black border-none text-white"></div>
+                <h3 class="font-bold text-xl mb-2 text-slate-800">Mozart Violin Concertos 🎻</h3>
+
+                <div id="code-05"></div>
+
+                <div id="code-05a"></div>
             </div>
 
             <div class="mb-8">
-                <h4 class="font-bold text-sm mb-2 text-green-400">Step 2: Preparing Data (Final Fantasy 7)</h4>
-                <div id="code-04" class="code-container bg-black border-none text-white"></div>
-            </div>
-
-            <div class="mb-8">
-                <h4 class="font-bold text-sm mb-2 text-green-400">Step 3: LSTM Model & Generation</h4>
-                <div id="code-04a" class="code-container bg-black border-none text-white"></div>
-            </div>
-
-            <hr class="border-gray-700 my-8">
-
-            <div class="mb-8">
-                <h3 class="font-bold text-xl mb-2">Mozart Violin Concertos 🎻</h3>
-
-                <div id="code-05" class="code-container bg-black border-none text-white"></div>
-
-                <div id="code-05a" class="code-container bg-black border-none text-white"></div>
-            </div>
-
-            <div class="mb-8">
-                <h4 class="font-bold text-sm mb-2 text-gray-500">Utility: Checking Chords</h4>
-                <div id="code-03" class="code-container bg-black border-none text-white"></div>
+                <h4 class="font-bold text-sm mb-2 text-slate-500">Utility: Checking Chords</h4>
+                <div id="code-03"></div>
             </div>
         </section>
 
@@ -415,44 +463,90 @@
     </footer>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect, useRef } = React;
 
-        // Code Runner Component
-        const CodeRunner = ({ filename, code, outputText }) => {
-            const [isRunning, setIsRunning] = useState(false);
-            const [outputVisible, setOutputVisible] = useState(false);
+        const CodeRunner = ({ filename, initialCode, staticOutput, staticPlotData }) => {
+            const [code, setCode] = useState(initialCode);
+            const [output, setOutput] = useState("");
+            const [status, setStatus] = useState("idle");
+            const textareaRef = useRef(null);
+            const preRef = useRef(null);
+            const plotRef = useRef(null);
+
+            useEffect(() => {
+                if (preRef.current) {
+                    preRef.current.removeAttribute('data-highlighted');
+                    hljs.highlightElement(preRef.current);
+                }
+            }, [code]);
 
             const handleRun = () => {
-                setIsRunning(true);
-                setOutputVisible(false);
+                setStatus("running");
+                setOutput("");
+                if (plotRef.current) {
+                    plotRef.current.innerHTML = "";
+                    plotRef.current.style.display = 'none';
+                }
+
+                // Simulation Mode
                 setTimeout(() => {
-                    setIsRunning(false);
-                    setOutputVisible(true);
-                }, 1000);
+                    setStatus("success");
+                    setOutput(staticOutput || "Done (no output).");
+                    if (staticPlotData && plotRef.current) {
+                        plotRef.current.style.display = 'block';
+                        // Plotly logic would go here
+                    }
+                }, 1200);
+            };
+
+            const handleScroll = () => {
+                if (textareaRef.current && preRef.current) {
+                    preRef.current.scrollTop = textareaRef.current.scrollTop;
+                    preRef.current.scrollLeft = textareaRef.current.scrollLeft;
+                }
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    const newValue = code.substring(0, start) + "    " + code.substring(end);
+                    setCode(newValue);
+                    setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = start + 4;
+                    }, 0);
+                }
             };
 
             return (
-                <div className="w-full">
-                    <div className="flex justify-between items-end mb-1 px-1">
-                        <span className="text-xs font-mono text-gray-500 opacity-80">{filename}</span>
-                    </div>
-                    <div className="code-container">
-                        <div className="code-editor">
-                            <button onClick={handleRun} disabled={isRunning} className="run-btn">
-                                {isRunning ? 'Running...' : '▶ Run Code'}
+                <div className="mb-0">
+                    <div className="editor-container">
+                        <div className="run-bar">
+                            <span className="text-xs font-mono text-gray-500 font-bold">{filename}</span>
+                            <button onClick={handleRun} disabled={status === 'running'} className="run-btn">
+                                {status === 'running' ? 'Running...' : '▶ Run Code'}
                             </button>
-                            <pre><code className="language-python">{code}</code></pre>
                         </div>
-                        <div className="output-panel">
-                            {!outputVisible && !isRunning && <div className="text-gray-400 italic">Click Run to execute...</div>}
-                            {isRunning && <div className="text-ntu-secondary animate-pulse font-bold">Processing...</div>}
-                            {outputVisible && (
-                                <div className="w-full h-full flex flex-col">
-                                    <div className="w-full border-b border-gray-200 pb-2 mb-2 text-xs text-gray-400 uppercase font-bold">Console Output</div>
-                                    <pre className="whitespace-pre-wrap text-xs flex-grow">{outputText}</pre>
-                                </div>
-                            )}
+                        <div className="editor-wrapper">
+                            <textarea
+                                ref={textareaRef}
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                onScroll={handleScroll}
+                                onKeyDown={handleKeyDown}
+                                spellCheck="false"
+                            />
+                            <pre ref={preRef}><code className="language-python">{code}</code></pre>
                         </div>
+                    </div>
+
+                    <div className="output-box">
+                        {status === 'idle' && <div className="text-gray-500 italic">Click Run to execute...</div>}
+                        {status === 'running' && <div className="text-ntu-secondary animate-pulse font-bold">Initializing Keras/TensorFlow Backend...</div>}
+
+                        <div>{output}</div>
+                        <div ref={plotRef} className="mt-4" style={{ width: '100%', minHeight: '300px', display: 'none' }}></div>
                     </div>
                 </div>
             );
@@ -473,7 +567,7 @@
             return (
                 <div className="space-y-6">
                     {questions.map((q, i) => (
-                        <div key={i} className="quiz-container bg-white p-6 rounded-lg border border-gray-200">
+                        <div key={i} className="quiz-container">
                             <h4 className="font-bold text-slate-800 mb-3">{q.q}</h4>
                             <div className="space-y-2">
                                 {q.options.map((opt, j) => (
@@ -484,9 +578,9 @@
                                             newAns[i] = j;
                                             setSelected(newAns);
                                         }}
-                                        className={`quiz-option p-3 rounded cursor-pointer border-2 transition-all ${selected[i] === j
-                                                ? (j === q.a ? 'border-green-500 bg-green-50 text-green-800' : 'border-red-500 bg-red-50 text-red-800')
-                                                : 'border-gray-200 hover:bg-gray-50'
+                                        className={`quiz-option ${selected[i] === j
+                                            ? (j === q.a ? 'correct' : 'wrong')
+                                            : ''
                                             }`}
                                     >
                                         {opt}
@@ -505,7 +599,7 @@
         // 1. Basic CNN
         ReactDOM.createRoot(document.getElementById('code-01')).render(
             <CodeRunner filename="l304-example-01.py"
-                code={`model = Sequential()
+                initialCode={`model = Sequential()
 model.add(Reshape((28,28,1), input_shape=(28,28)))
 model.add(Conv2D(16, kernel_size=(5,5), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2,2)))
@@ -514,44 +608,44 @@ model.add(Dropout(0.2))
 model.add(Dense(10, activation='softmax'))
 
 model.fit(...)`}
-                outputText={`Epoch 20/20
+                staticOutput={`Epoch 20/20
 Test Loss: 0.03842, Test Acc: 0.98820`} />
         );
 
         // 2. CNN Variation 1
         ReactDOM.createRoot(document.getElementById('code-01a')).render(
             <CodeRunner filename="l304-example-01a.py"
-                code={`# Two Conv Layers
+                initialCode={`# Two Conv Layers
 model.add(Conv2D(32, kernel_size=(5,5), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2,2)))
 model.add(Conv2D(32, kernel_size=(5,5), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2,2)))
 model.add(Flatten())...`}
-                outputText={`Epoch 20/20
+                staticOutput={`Epoch 20/20
 Test Acc: 0.99360 (Excellent!)`} />
         );
 
         // 3. CNN Variation 2
         ReactDOM.createRoot(document.getElementById('code-01b')).render(
             <CodeRunner filename="l304-example-01b.py"
-                code={`# 16 filters vs 16 filters (smaller model)
+                initialCode={`# 16 filters vs 16 filters (smaller model)
 model.add(Conv2D(16, kernel_size=(5,5), activation='relu'))
 # ...
 model.add(Conv2D(16, kernel_size=(5,5), activation='relu'))
 # ...`}
-                outputText={`Test Acc: 0.99220`} />
+                staticOutput={`Test Acc: 0.99220`} />
         );
 
         // 4. MIDI Decode
         ReactDOM.createRoot(document.getElementById('code-02')).render(
             <CodeRunner filename="l304-example-02.py"
-                code={`from midi_phraser import *
+                initialCode={`from midi_phraser import *
 data = decode_midi('mozk219a.mid')
 
 for idx, chord in enumerate(data):
     print('#%d: %s' % (idx,chord))
     if idx > 5: break`}
-                outputText={`#0: c3.e3.g3
+                staticOutput={`#0: c3.e3.g3
 #1: c3.e3.g3
 #2: c3.e3.g3
 ...`} />
@@ -560,19 +654,19 @@ for idx, chord in enumerate(data):
         // 5. Utility
         ReactDOM.createRoot(document.getElementById('code-03')).render(
             <CodeRunner filename="l304-example-03.py"
-                code={`all_chords = sorted(set(data))
+                initialCode={`all_chords = sorted(set(data))
 chords_to_idx = dict(...)
 
 print('Total # of chords:', n_chords)
 print('Encoded data:', [chords_to_idx[p] for p in data[:10]])`}
-                outputText={`Total # of chords: 68
+                staticOutput={`Total # of chords: 68
 Encoded data: [12, 12, 12, 45, 23, ...]`} />
         );
 
         // 6. FF7 Data
         ReactDOM.createRoot(document.getElementById('code-04')).render(
             <CodeRunner filename="l304-example-04.py"
-                code={`data = decode_midi('ff7prelu.mid')
+                initialCode={`data = decode_midi('ff7prelu.mid')
 length = 128
 x_train, y_train = [], []
 
@@ -581,54 +675,54 @@ for idx in range(len(data)-length):
     sequence = data[idx:idx+length]
     next = data[idx+length]
     # ... append to train list ...`}
-                outputText={`Total # of chords: 52
+                staticOutput={`Total # of chords: 52
 Total # of notes: 2548`} />
         );
 
         // 7. FF7 Model
         ReactDOM.createRoot(document.getElementById('code-04a')).render(
             <CodeRunner filename="l304-example-04a.py"
-                code={`model.add(Embedding(n_chords, 128, input_length=length))
+                initialCode={`model.add(Embedding(n_chords, 128, input_length=length))
 model.add(LSTM(128, return_sequences=True))
 model.add(Dropout(0.3))
 model.add(LSTM(128))
 # ...
 model.fit(x, y)
 # Generate music ...`}
-                outputText={`Generated sequence (512 notes):
+                staticOutput={`Generated sequence (512 notes):
 c3.e4 a2.c3.a3 c3.e4 ... (Music string output)`} />
         );
 
         // 8. Mozart Data
         ReactDOM.createRoot(document.getElementById('code-05')).render(
             <CodeRunner filename="l304-example-05.py"
-                code={`sources = ['mozk216a.mid', 'mozk216b.mid', ...]
+                initialCode={`sources = ['mozk216a.mid', 'mozk216b.mid', ...]
 all_data = []
 for src in sources:
     data = decode_midi(src, 2)
     all_data.append(data)
 # ... prepare big dataset ...`}
-                outputText={`Total # of chords: 419
+                staticOutput={`Total # of chords: 419
 Total # of training samples: 14215`} />
         );
 
         // 9. Mozart Gen
         ReactDOM.createRoot(document.getElementById('code-05a')).render(
             <CodeRunner filename="l304-example-05a.py"
-                code={`# Larger LSTM for Mozart
+                initialCode={`# Larger LSTM for Mozart
 model.add(LSTM(256, return_sequences=True))
 model.add(LSTM(256))
 # ...
 model.load_weights('weights-ex05.h5')
 # Generate with temperature=0.5`}
-                outputText={`Generated Mozart-style sequence:
+                staticOutput={`Generated Mozart-style sequence:
 d4.f#4.a4 g4.b4 d3.f#3.a3 ...`} />
         );
 
         // 10. MIDI Phraser
         ReactDOM.createRoot(document.getElementById('code-midi')).render(
             <CodeRunner filename="midi_phraser.py"
-                code={`# Utility functions for MIDI processing
+                initialCode={`# Utility functions for MIDI processing
 def decode_midi(filename, maxnotes=0):
     mid_in = MidiFile(filename)
     # ... logic to parse notes ...
@@ -636,23 +730,23 @@ def decode_midi(filename, maxnotes=0):
 
 def encode_midi(filename, data, tempo_set=500000):
     # ... logic to write MIDI ...`}
-                outputText={`(Utility Module Loaded)`} />
+                staticOutput={`(Utility Module Loaded)`} />
         );
 
         // 11. Font Data Vis
         ReactDOM.createRoot(document.getElementById('code-06')).render(
             <CodeRunner filename="l304-example-06.py"
-                code={`data = np.load('font_data.npy')
+                initialCode={`data = np.load('font_data.npy')
 # Plot random font characters
 plt.imshow(data[np.random.randint(4808)], cmap='Greys')
 # ... plotting loop ...`}
-                outputText={`[Plotting 10x10 Grid of Characters]`} />
+                staticOutput={`[Plotting 10x10 Grid of Characters]`} />
         );
 
         // 12. Simple GAN
         ReactDOM.createRoot(document.getElementById('code-07')).render(
             <CodeRunner filename="l304-example-07.py"
-                code={`# Discriminator (Dense)
+                initialCode={`# Discriminator (Dense)
 discriminator.add(Dense(512))
 # ...
 # Generator (Dense)
@@ -662,7 +756,7 @@ generator.add(Dense(256, input_dim=128))
 for epoch in range(20000):
     # Train D on real & fake
     # Train G via combined model`}
-                outputText={`Epoch: 20000
+                staticOutput={`Epoch: 20000
 D loss: 0.61, G loss: 0.95
 (Generates blurry but recognizable characters)`} />
         );
@@ -670,7 +764,7 @@ D loss: 0.61, G loss: 0.95
         // 13. DCGAN
         ReactDOM.createRoot(document.getElementById('code-08')).render(
             <CodeRunner filename="l304-example-08.py"
-                code={`# DCGAN (Convolutional)
+                initialCode={`# DCGAN (Convolutional)
 discriminator.add(Conv2D(64, kernel_size=4, strides=2))
 # ...
 generator.add(UpSampling2D())
@@ -679,7 +773,7 @@ generator.add(Conv2D(64, ...))
 # Training
 for epoch in range(3000):
     # ...`}
-                outputText={`Epoch: 3000
+                staticOutput={`Epoch: 3000
 D loss: 0.55, G loss: 1.20
 (Generates sharp, high-quality characters)`} />
         );
