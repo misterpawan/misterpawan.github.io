@@ -546,7 +546,7 @@
                     setOutput(staticOutput || "Done (no output).");
                     if (staticPlotData && plotRef.current) {
                         plotRef.current.style.display = 'block';
-                        // Plotly logic would go here
+                        Plotly.newPlot(plotRef.current, staticPlotData.data, staticPlotData.layout);
                     }
                 }, 1200);
             };
