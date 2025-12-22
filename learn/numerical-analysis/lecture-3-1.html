@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 3-1: Machine Learning - The Complete Guide 🤖</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ntu: {
+                            blue: '#1e3a8a',
+                            light: '#dbeafe',
+                            code: '#282c34',
+                            accent: '#f59e0b',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        .slide-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .code-container {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 0;
+            background: #282c34;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            min-height: 350px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .code-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 400px;
+            }
+        }
+
+        .code-editor {
+            padding: 1rem;
+            color: #abb2bf;
+            font-size: 0.8rem;
+            overflow: auto;
+            border-right: 1px solid #3e4451;
+            position: relative;
+        }
+
+        .output-panel {
+            padding: 1rem;
+            background: #21252b;
+            color: #98c379;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8rem;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .run-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e11d48;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: bold;
+            border: none;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .run-btn:hover {
+            background: #be123c;
+        }
+
+        .math-box {
+            background: #f1f5f9;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            overflow-x: auto;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #282c34;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #5c6370;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5263;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="font-bold text-xl text-ntu-blue flex items-center gap-2">
+                <span>🤖</span> Lecture 3-1: Machine Learning
+            </span>
+            <div class="hidden md:flex space-x-1 text-sm font-medium text-slate-600">
+                <a href="#intro" class="px-3 py-1 hover:bg-gray-100 rounded">Intro</a>
+                <a href="#mnist" class="px-3 py-1 hover:bg-gray-100 rounded">MNIST Data</a>
+                <a href="#roc" class="px-3 py-1 hover:bg-gray-100 rounded">Features & ROC</a>
+                <a href="#lda" class="px-3 py-1 hover:bg-gray-100 rounded">Fisher's & LDA</a>
+                <a href="#svm" class="px-3 py-1 hover:bg-gray-100 rounded">SVM</a>
+                <a href="#nonlinear" class="px-3 py-1 hover:bg-gray-100 rounded">Non-Linear</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-24 pb-16 text-center px-4 bg-gradient-to-b from-blue-50 to-transparent">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Brief on Machine Learning
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+            From basic data loading to separating cats & dogs (and zeros from ones). <br>
+            <span class="text-sm text-ntu-blue font-mono">Lecture 3-1 • Kai-Feng Chen • NTU</span>
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+
+        <section id="intro" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">1. The Hype: AI vs ML vs DL 🤔</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 2-7</span>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                    <h3 class="font-bold text-blue-800 mb-4 text-lg">The Hierarchy 🧅</h3>
+                    <ul class="space-y-3 relative border-l-2 border-blue-200 ml-3 pl-6">
+                        <li class="relative">
+                            <span class="absolute -left-[33px] bg-blue-500 w-4 h-4 rounded-full mt-1"></span>
+                            <strong>AI:</strong> Mimicking human behavior (1950s+).
+                        </li>
+                        <li class="relative">
+                            <span class="absolute -left-[33px] bg-blue-400 w-4 h-4 rounded-full mt-1"></span>
+                            <strong>Machine Learning (ML):</strong> Learning from data without explicit programming
+                            (1980s+).
+                        </li>
+                        <li class="relative">
+                            <span class="absolute -left-[33px] bg-blue-300 w-4 h-4 rounded-full mt-1"></span>
+                            <strong>Deep Learning (DL):</strong> Neural Networks with many layers (2010s+).
+                        </li>
+                    </ul>
+                </div>
+                <div class="flex flex-col justify-center items-center text-center">
+                    <div class="text-6xl mb-4">🧠 ➡️ 💻</div>
+                    <p class="text-sm text-gray-500 italic">"Machine learning gives computers the ability to learn
+                        without being explicitly programmed."</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mnist" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">2. Loading MNIST Data 👋</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 8-13</span>
+            </div>
+
+            <p class="mb-4">Before we analyze, we must load the data. We use the famous MNIST dataset of handwritten
+                digits.</p>
+
+            <div id="code-01" class="code-container"></div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-2">Visualizing a Single Digit</h3>
+                    <p class="text-sm text-gray-600 mb-2">Let's plot the first sample to verify it's a digit.</p>
+                    <div id="code-01a" class="code-container" style="min-height: 250px;"></div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-2">Separating 0 and 1</h3>
+                    <p class="text-sm text-gray-600 mb-2">We filter the dataset to keep only zeros and ones.</p>
+                    <div id="code-01b" class="code-container" style="min-height: 250px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roc" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">3. Feature Extraction & ROC 📉</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 14-23</span>
+            </div>
+
+            <p class="mb-4">
+                Raw pixels are hard to classify directly. Let's create features!
+                <br><strong>Idea:</strong> Zeros have a hole in the middle. Ones are solid.
+            </p>
+
+            <div id="code-02a" class="code-container"></div>
+
+            <div class="mt-8 mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Calculating AUC (Area Under Curve)</h3>
+                <p class="text-gray-600">The AUC tells us which feature is better. 1.0 is perfect.</p>
+            </div>
+
+            <div id="code-02b" class="code-container"></div>
+
+        </section>
+
+        <section id="lda" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">4. Fisher's Discriminant & LDA 📐</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 24-37</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+                <div>
+                    <p class="mb-4">
+                        Fisher's Discriminant finds the best linear combination of features to separate classes by
+                        maximizing the distance between means ($\mu$) and minimizing variance ($\Sigma$).
+                    </p>
+                    <div class="math-box text-sm text-center">
+                        $$ \vec{w} \propto (\Sigma_0 + \Sigma_1)^{-1}(\vec{\mu}_1 - \vec{\mu}_0) $$
+                    </div>
+                </div>
+                <div>
+                    <div id="code-03" class="code-container" style="min-height: 200px; margin-top: 0;"></div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="font-bold text-gray-700 mb-2">Visualizing Fisher's Separation</h4>
+                <div id="code-03a" class="code-container"></div>
+            </div>
+
+            <hr class="my-8 border-gray-200">
+
+            <div class="mb-4">
+                <h3 class="text-xl font-bold text-slate-800">LDA with Scikit-Learn</h3>
+                <p class="text-gray-600">Now let's use the professional tool. We can also use it for dimensionality
+                    reduction (e.g. 784 pixels -> 2D).</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div id="code-04" class="code-container"></div>
+                <div id="code-04b" class="code-container"></div>
+            </div>
+        </section>
+
+        <section id="svm" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">5. Support Vector Machines (SVM) ⚔️</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 40-49</span>
+            </div>
+
+            <p class="mb-4">
+                SVM maximizes the <strong>margin</strong> between classes. It focuses on the edge cases (Support
+                Vectors).
+            </p>
+
+            <div id="code-05" class="code-container"></div>
+
+            <div class="mt-8 mb-4">
+                <h3 class="text-xl font-bold text-slate-800">Visualizing the Decision Boundary</h3>
+                <p class="text-gray-600">The hyperplane that separates 0s and 1s.</p>
+            </div>
+
+            <div id="code-05a" class="code-container"></div>
+
+            <div class="mt-8 mb-4">
+                <h3 class="text-xl font-bold text-slate-800">The Grand Finale: Full MNIST Classification</h3>
+                <p class="text-gray-600">Classifying all 10 digits using SVM.</p>
+            </div>
+
+            <div id="code-06" class="code-container"></div>
+        </section>
+
+        <section id="nonlinear" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">6. The Non-Linear Problem 🍩</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 51-54</span>
+            </div>
+
+            <p class="mb-4">
+                What if data isn't linearly separable? (Like a red dot inside a blue ring). We need the <strong>Kernel
+                    Trick</strong>.
+            </p>
+
+            <div id="code-07" class="code-container"></div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-8">
+                <div>
+                    <h4 class="font-bold text-red-600 mb-2">Linear Kernel (Fail)</h4>
+                    <div id="code-07a" class="code-container"></div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-green-600 mb-2">RBF Kernel (Success)</h4>
+                    <div id="code-07b" class="code-container"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t py-12 text-center text-sm text-gray-400 mt-12">
+        <p>Numerical Analysis Lecture 3-1 • Kai-Feng Chen • National Taiwan University</p>
+    </footer>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const CodeRunner = ({ id, filename, code, outputText, plotId }) => {
+            const [isRunning, setIsRunning] = useState(false);
+            const [outputVisible, setOutputVisible] = useState(false);
+
+            const handleRun = () => {
+                setIsRunning(true);
+                setOutputVisible(false);
+                setTimeout(() => {
+                    setIsRunning(false);
+                    setOutputVisible(true);
+                }, 800);
+            };
+
+            return (
+                <div>
+                    <div className="flex justify-between items-end mb-1 px-1">
+                        <span className="text-xs font-mono text-gray-500">{filename}</span>
+                    </div>
+                    <div className="code-container">
+                        <div className="code-editor">
+                            <button onClick={handleRun} disabled={isRunning} className="run-btn">
+                                {isRunning ? 'Running...' : '▶ Run Code'}
+                            </button>
+                            <pre><code className="language-python">{code}</code></pre>
+                        </div>
+                        <div className="output-panel">
+                            {!outputVisible && !isRunning && <div className="text-gray-500 italic">Click Run...</div>}
+                            {isRunning && <div className="text-ntu-accent animate-pulse">Processing...</div>}
+                            {outputVisible && (
+                                <div className="w-full h-full flex flex-col">
+                                    <div className="w-full border-b border-gray-700 pb-2 mb-2 text-xs text-gray-400">Output</div>
+                                    <pre className="whitespace-pre-wrap text-xs">{outputText}</pre>
+                                    {plotId && (
+                                        <div className="mt-2 w-full flex-grow bg-black rounded border border-gray-700 flex items-center justify-center relative overflow-hidden group">
+                                            <div className="text-gray-500 text-xs italic z-10">[Plot Window]</div>
+                                            <img src={`https://dummyimage.com/400x300/000/fff.png&text=${plotId}`} className="absolute inset-0 w-full h-full object-contain opacity-50 group-hover:opacity-100 transition" />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- RENDERING EXAMPLES ---
+
+        // 1. Load Data
+        ReactDOM.createRoot(document.getElementById('code-01')).render(
+            <CodeRunner filename="l301-example-01.py" plotId="NO_PLOT"
+                code={`import numpy as np\nmnist = np.load('mnist.npz')\nx_train = mnist['x_train']\ny_train = mnist['y_train']\nprint('x shape:', x_train.shape)\nprint('y shape:', y_train.shape)\nprint('1st y:', y_train[0])`}
+                outputText={`x shape: (60000, 28, 28)\ny shape: (60000,)\n1st y: 5`}
+            />
+        );
+        // 2. Show One
+        ReactDOM.createRoot(document.getElementById('code-01a')).render(
+            <CodeRunner filename="l301-example-01a.py" plotId="Digit_5"
+                code={`import matplotlib.pyplot as plt\nplt.imshow(x_train[0], cmap='Greys')\nplt.show()`}
+                outputText={`[Plotting digit 5...]`}
+            />
+        );
+        // 3. Show Grid
+        ReactDOM.createRoot(document.getElementById('code-01b')).render(
+            <CodeRunner filename="l301-example-01b.py" plotId="Grid_0_1"
+                code={`# Filter 0s and 1s\nzero_and_one = x_train[y_train <= 1]\n# Plot first 6\nfor i in range(6):\n    plt.subplot(3,2,i+1)\n    plt.imshow(zero_and_one[i], cmap='Greys')\nplt.show()`}
+                outputText={`[Plotting grid of 0s and 1s...]`}
+            />
+        );
+        // 4. ROC Plot
+        ReactDOM.createRoot(document.getElementById('code-02a')).render(
+            <CodeRunner filename="l301-example-02a.py" plotId="ROC_Curve"
+                code={`# Calculate ROC points\nroc_y = [(all_mean1 < th).sum()/len(all_mean1) for th in thresholds]\nroc_x = [(all_mean0 < th).sum()/len(all_mean0) for th in thresholds]\n\nplt.plot(roc_x, roc_y)\nplt.show()`}
+                outputText={`[Plotting ROC Curve...]`}
+            />
+        );
+        // 5. AUC Calc
+        ReactDOM.createRoot(document.getElementById('code-02b')).render(
+            <CodeRunner filename="l301-example-02b.py"
+                code={`# Trapezoidal Rule for AUC\nauc1 = 0.\nfor i in range(199):\n    h = abs(roc1_x[i+1]-roc1_x[i])\n    auc1 += h*(roc1_y[i+1]+roc1_y[i])*0.5\n\nprint('AUC (Full Mean):', auc1)\nprint('AUC (Center Mean):', auc2)`}
+                outputText={`AUC (Full Mean): 0.9835\nAUC (Center Mean): 0.9385`}
+            />
+        );
+        // 6. Manual Fisher
+        ReactDOM.createRoot(document.getElementById('code-03')).render(
+            <CodeRunner filename="l301-example-03.py"
+                code={`# Manual Fisher's Discriminant\nweight = np.dot(linalg.inv(cov1+cov0), mu1-mu0)\nweight /= np.sqrt((weight**2).sum())\nprint('Resulting weights:', weight)`}
+                outputText={`Resulting weights: [-0.9766  0.2149]`}
+            />
+        );
+        // 7. Fisher Hist
+        ReactDOM.createRoot(document.getElementById('code-03a')).render(
+            <CodeRunner filename="l301-example-03a.py" plotId="Fisher_Hist"
+                code={`out0 = (var0.T*weight).sum(axis=1)\nout1 = (var1.T*weight).sum(axis=1)\n\nplt.hist(out0, color='y')\nplt.hist(out1, color='g')\nplt.show()`}
+                outputText={`[Plotting separated histograms...]`}
+            />
+        );
+        // 8. Sklearn LDA
+        ReactDOM.createRoot(document.getElementById('code-04')).render(
+            <CodeRunner filename="l301-example-04.py" plotId="LDA_Hist"
+                code={`from sklearn.discriminant_analysis import LinearDiscriminantAnalysis\n\nclf = LinearDiscriminantAnalysis()\nf_train = clf.fit_transform(x_train, y_train)\n\nprint('Train Score:', clf.score(x_train, y_train))\nprint('Test Score:', clf.score(x_test, y_test))\n\nplt.hist(f_train[y_train==0], color='y')\nplt.hist(f_train[y_train==1], color='g')`}
+                outputText={`Train Score: 0.9829\nTest Score: 0.9867`}
+            />
+        );
+        // 9. Sklearn Scatter
+        ReactDOM.createRoot(document.getElementById('code-04b')).render(
+            <CodeRunner filename="l301-example-04b.py" plotId="Scatter_789"
+                code={`# LDA for Dim Reduction (7,8,9)\nclf = LinearDiscriminantAnalysis(n_components=2)\nf_train = clf.fit_transform(x_train, y_train)\n\nfor i in range(7,10):\n    plt.scatter(f_train[:,0][y==i], f_train[:,1][y==i])\nplt.show()`}
+                outputText={`[Plotting 3 distinct clusters...]`}
+            />
+        );
+        // 10. Linear SVM
+        ReactDOM.createRoot(document.getElementById('code-05')).render(
+            <CodeRunner filename="l301-example-05.py"
+                code={`from sklearn import svm\nclf = svm.SVC(kernel='linear', C=1.0)\nclf.fit(x_train, y_train)\nprint('Train:', clf.score(x_train, y_train))\nprint('Test:', clf.score(x_test, y_test))`}
+                outputText={`Train: 0.9926\nTest: 0.9948`}
+            />
+        );
+        // 11. SVM Contour
+        ReactDOM.createRoot(document.getElementById('code-05a')).render(
+            <CodeRunner filename="l301-example-05a.py" plotId="SVM_Contour"
+                code={`zv = clf.predict(np.c_[xv.ravel(), yv.ravel()])\nplt.contourf(xv, yv, zv.reshape(xv.shape))\nplt.scatter(x_train[:,0], x_train[:,1], c=y_train)\nplt.show()`}
+                outputText={`[Plotting Linear Decision Boundary...]`}
+            />
+        );
+        // 12. Full MNIST
+        ReactDOM.createRoot(document.getElementById('code-06')).render(
+            <CodeRunner filename="l301-example-06.py" plotId="Full_Grid"
+                code={`clf = svm.SVC(kernel='linear')\nclf.fit(x_train_full, y_train_full)\np_test = clf.predict(x_test_full)\n\n# Plot grid, red text if wrong\nfor i in range(100):\n    if y[i]!=p[i]: color='red'\n    plt.text(..., color=color)`}
+                outputText={`Train Score: 0.9969\nTest Score: 0.9170\n[Showing 100 digits with predictions]`}
+            />
+        );
+        // 13. Doughnut Data
+        ReactDOM.createRoot(document.getElementById('code-07')).render(
+            <CodeRunner filename="l301-example-07.py" plotId="Doughnuts"
+                code={`# Generate Concentric Data\nx_train = np.c_[rho*np.cos(phi), rho*np.sin(phi)]\nplt.scatter(x_train[:,0], x_train[:,1], c=y_train)\nplt.show()`}
+                outputText={`[Plotting Red Ring and Blue Core...]`}
+            />
+        );
+        // 14. Linear Fail
+        ReactDOM.createRoot(document.getElementById('code-07a')).render(
+            <CodeRunner filename="l301-example-07a.py" plotId="Linear_Fail"
+                code={`clf = svm.SVC(kernel='linear')\nclf.fit(x, y)\nprint('Score:', clf.score(x, y))\nplt.contourf(...) # Shows split down middle`}
+                outputText={`Score: 0.5024 (Fail)`}
+            />
+        );
+        // 15. RBF Success
+        ReactDOM.createRoot(document.getElementById('code-07b')).render(
+            <CodeRunner filename="l301-example-07b.py" plotId="RBF_Success"
+                code={`clf = svm.SVC(kernel='rbf')\nclf.fit(x, y)\nprint('Score:', clf.score(x, y))\nplt.contourf(...) # Shows circle boundary`}
+                outputText={`Score: 0.9754 (Success!)`}
+            />
+        );
+
+        // Highlight
+        document.addEventListener("DOMContentLoaded", function () {
+            hljs.highlightAll();
+            renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }] });
+        });
+    </script>
+</body>
+
+</html>
