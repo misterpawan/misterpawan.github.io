@@ -461,6 +461,7 @@
             const [code, setCode] = useState(initialCode);
             const [output, setOutput] = useState("");
             const [status, setStatus] = useState("idle");
+            const [audioError, setAudioError] = useState(false);
             const textareaRef = useRef(null);
             const preRef = useRef(null);
             const plotRef = useRef(null);
@@ -475,6 +476,7 @@
             const handleRun = () => {
                 setStatus("running");
                 setOutput("");
+                setAudioError(false);
                 if (plotRef.current) {
                     plotRef.current.innerHTML = "";
                     plotRef.current.style.display = 'none';
@@ -541,11 +543,22 @@
 
                         {status === 'success' && generatedAudio && (
                             <div className="mt-4 p-3 bg-green-50 rounded border border-green-200 flex items-center gap-3">
-                                <span className="bg-green-200 text-green-700 p-1.5 rounded-full text-xs">🎵</span>
-                                <div className="flex-grow">
-                                    <div className="text-xs font-bold text-green-700 uppercase mb-1">Generated Output Audio</div>
-                                    <audio controls src={generatedAudio} className="w-full h-8"></audio>
-                                </div>
+                                {audioError ? (
+                                    <div className="text-red-500 text-xs">⚠️ Audio failed to load. Browser may block external media.</div>
+                                ) : (
+                                    <>
+                                        <span className="bg-green-200 text-green-700 p-1.5 rounded-full text-xs">🎵</span>
+                                        <div className="flex-grow">
+                                            <div className="text-xs font-bold text-green-700 uppercase mb-1">Generated Output Audio</div>
+                                            <audio
+                                                controls
+                                                src={generatedAudio}
+                                                className="w-full h-8"
+                                                onError={() => setAudioError(true)}
+                                            ></audio>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         )}
 
@@ -694,7 +707,7 @@ model.fit(x, y)
 # Generate music ...`}
                 staticOutput={`Generated sequence (512 notes):
 c3.e4 a2.c3.a3 c3.e4 ... (Music string output)`}
-                generatedAudio="https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e0/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg.mp3" />
+                generatedAudio="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
         );
 
         // 8. Mozart Data
