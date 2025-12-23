@@ -320,11 +320,11 @@
                 content: `
                     <ul class="space-y-4">
                         <li>
-                            <strong>Empty Set ($\\{ \\}$ or $\\phi$):</strong> A set with no elements.
-                            <br><span class="text-sm text-gray-500">Example: $\{x \\in \\mathbb{R} \\mid x^2 = -1\} = \\phi$</span>
+                            <strong>Empty Set ($\\{ \\}$ or $\\emptyset$):</strong> A set with no elements.
+                            <br><span class="text-sm text-gray-500">Example: $\{x \\in \\mathbb{R} \\mid x^2 = -1\} = \\emptyset$</span>
                         </li>
                         <li>
-                            <strong>Disjoint Sets:</strong> Sets $A$ and $B$ are disjoint iff $A \\cap B = \\phi$.
+                            <strong>Disjoint Sets:</strong> Sets $A$ and $B$ are disjoint iff $A \\cap B = \\emptyset$.
                         </li>
                     </ul>
                     <div class="mt-4 p-4 border bg-white">
@@ -340,7 +340,7 @@
                 tag: "Advanced Types",
                 content: `
                     <p>Sets $A_1, A_2, A_3...$ are <strong>mutually disjoint</strong> (pairwise disjoint) if no two sets share any elements.</p>
-                    <p class="my-2 bg-slate-200 p-2 text-center">$A_i \\cap A_j = \\phi$ whenever $i \\neq j$.</p>
+                    <p class="my-2 bg-slate-200 p-2 text-center">$A_i \\cap A_j = \\emptyset$ whenever $i \\neq j$.</p>
                     
                     <h4 class="font-bold mt-4">Problem:</h4>
                     <p>Are these sets mutually disjoint?</p>
@@ -384,8 +384,8 @@
                     <div class="mt-6 bg-purple-50 p-4 rounded">
                         <h4 class="font-bold">Problem:</h4>
                         <p>Find $P(\\{x,y\\})$.</p>
-                        <p class="mt-2"><strong>Solution:</strong> The subsets are $\\phi, \\{x\\}, \\{y\\}, \\{x,y\\}$.</p>
-                        <p>So $P(\\{x,y\\}) = \\{\\phi, \\{x\\}, \\{y\\}, \\{x,y\\}\\}$.</p>
+                        <p class="mt-2"><strong>Solution:</strong> The subsets are $\\emptyset, \\{x\\}, \\{y\\}, \\{x,y\\}$.</p>
+                        <p>So $P(\\{x,y\\}) = \\{\\emptyset, \\{x\\}, \\{y\\}, \\{x,y\\}\\}$.</p>
                     </div>
                 `
             },
@@ -454,7 +454,7 @@
                                 <tr class="border-b"><td class="p-2">Associative</td><td class="p-2">$(A \\cup B) \\cup C = A \\cup (B \\cup C)$</td></tr>
                                 <tr class="border-b"><td class="p-2 font-bold text-blue-600">Distributive</td><td class="p-2">$A \\cap (B \\cup C) = (A \\cap B) \\cup (A \\cap C)$</td></tr>
                                 <tr class="border-b"><td class="p-2 font-bold text-blue-600">De Morgan's</td><td class="p-2">$(A \\cup B)' = A' \\cap B'$</td></tr>
-                                <tr class="border-b"><td class="p-2">Identity</td><td class="p-2">$A \\cup \\phi = A$, $A \\cap U = A$</td></tr>
+                                <tr class="border-b"><td class="p-2">Identity</td><td class="p-2">$A \\cup \\emptyset = A$, $A \\cap U = A$</td></tr>
                                 <tr class="border-b"><td class="p-2">Set Difference</td><td class="p-2">$A - B = A \\cap B'$</td></tr>
                             </tbody>
                         </table>
@@ -548,14 +548,14 @@
                 type: "proof",
                 tag: "Contradiction",
                 content: `
-                    <p><strong>Proposition:</strong> The empty set $\\phi$ is a subset of every set $A$. ($\phi \\subseteq A$)</p>
+                    <p><strong>Proposition:</strong> The empty set $\\emptyset$ is a subset of every set $A$. ($\phi \\subseteq A$)</p>
                     
                     <h4 class="font-bold mt-4 text-purple-700">Proof by Contradiction:</h4>
                     <ul class="list-disc pl-6 space-y-2">
-                        <li>Suppose $\\phi \\not\\subseteq A$.</li>
-                        <li>By definition of "not subset", there must exist an element $x$ such that $x \\in \\phi$ and $x \\notin A$.</li>
-                        <li>But $\\phi$ has <strong>no elements</strong>. It is impossible to find such an $x$.</li>
-                        <li>Contradiction! Therefore, $\\phi \\subseteq A$.</li>
+                        <li>Suppose $\\emptyset \\not\\subseteq A$.</li>
+                        <li>By definition of "not subset", there must exist an element $x$ such that $x \\in \\emptyset$ and $x \\notin A$.</li>
+                        <li>But $\\emptyset$ has <strong>no elements</strong>. It is impossible to find such an $x$.</li>
+                        <li>Contradiction! Therefore, $\\emptyset \\subseteq A$.</li>
                     </ul>
                 `
             },
@@ -582,13 +582,13 @@
                 type: "proof",
                 tag: "Contradiction",
                 content: `
-                    <p><strong>Proposition:</strong> $A \\cap \\phi = \\phi$.</p>
+                    <p><strong>Proposition:</strong> $A \\cap \\emptyset = \\emptyset$.</p>
                     
                     <h4 class="font-bold mt-4">Proof by Contradiction:</h4>
-                    <p>Suppose there is an element $x$ such that $x \\in A \\cap \\phi$.</p>
-                    <p>Then $x \\in A$ AND $x \\in \\phi$.</p>
-                    <p>It is impossible for $x \\in \\phi$ because the empty set has no elements.</p>
-                    <p>Contradiction! Thus $A \\cap \\phi = \\phi$.</p>
+                    <p>Suppose there is an element $x$ such that $x \\in A \\cap \\emptyset$.</p>
+                    <p>Then $x \\in A$ AND $x \\in \\emptyset$.</p>
+                    <p>It is impossible for $x \\in \\emptyset$ because the empty set has no elements.</p>
+                    <p>Contradiction! Thus $A \\cap \\emptyset = \\emptyset$.</p>
                 `
             },
             {
@@ -597,17 +597,17 @@
                 type: "proof",
                 tag: "Contradiction",
                 content: `
-                    <p><strong>Proposition:</strong> If $A \\subseteq B$ and $B \\subseteq C'$, then $A \\cap C = \\phi$.</p>
+                    <p><strong>Proposition:</strong> If $A \\subseteq B$ and $B \\subseteq C'$, then $A \\cap C = \\emptyset$.</p>
                     
                     <h4 class="font-bold mt-4 text-purple-700">Proof by Contradiction:</h4>
                     <ol class="list-decimal pl-6 space-y-2">
-                        <li>Suppose $A \\cap C \\neq \\phi$. Then there exists an element $x \\in A \\cap C$.</li>
+                        <li>Suppose $A \\cap C \\neq \\emptyset$. Then there exists an element $x \\in A \\cap C$.</li>
                         <li>So $x \\in A$ and $x \\in C$.</li>
                         <li>Since $x \\in A$ and $A \\subseteq B$, then $x \\in B$.</li>
                         <li>Since $x \\in B$ and $B \\subseteq C'$, then $x \\in C'$.</li>
                         <li>By definition of complement, $x \\in C'$ means $x \\notin C$.</li>
                         <li><strong>Contradiction:</strong> We found $x \\in C$ (step 2) and $x \\notin C$ (step 5).</li>
-                        <li>Therefore, $A \\cap C = \\phi$.</li>
+                        <li>Therefore, $A \\cap C = \\emptyset$.</li>
                     </ol>
                 `
             },
@@ -622,12 +622,12 @@
                     <h4 class="font-bold mt-4">Disproof:</h4>
                     <p>We only need one specific case where this fails.</p>
                     <div class="bg-orange-50 p-4 rounded mt-2 border border-orange-200">
-                        <p>Let $A = \\{1\\}$, $B = \\phi$, $C = \\{1\\}$.</p>
+                        <p>Let $A = \\{1\\}$, $B = \\emptyset$, $C = \\{1\\}$.</p>
                         <ul class="list-disc pl-6 mt-2">
-                            <li>$LHS$: $(A-B) \\cup (B-C) = (\\{1\\} - \\phi) \\cup (\\phi - \\{1\\}) = \\{1\\} \\cup \\phi = \\{1\\}$.</li>
-                            <li>$RHS$: $A - C = \\{1\\} - \\{1\\} = \\phi$.</li>
+                            <li>$LHS$: $(A-B) \\cup (B-C) = (\\{1\\} - \\emptyset) \\cup (\\emptyset - \\{1\\}) = \\{1\\} \\cup \\emptyset = \\{1\\}$.</li>
+                            <li>$RHS$: $A - C = \\{1\\} - \\{1\\} = \\emptyset$.</li>
                         </ul>
-                        <p class="mt-2 font-bold text-red-600">$\\{1\\} \\neq \\phi$. The proposition is false.</p>
+                        <p class="mt-2 font-bold text-red-600">$\\{1\\} \\neq \\emptyset$. The proposition is false.</p>
                     </div>
                 `
             },
