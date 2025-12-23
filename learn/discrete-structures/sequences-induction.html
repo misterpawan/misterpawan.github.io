@@ -781,7 +781,25 @@
             // Update Text
             cardTitle.innerText = data.title;
             cardTag.innerText = data.tag;
-            cardBody.innerHTML = `<div class="fade-in">${data.content}</div>`;
+
+            // Build Content HTML
+            let contentHtml = `<div class="fade-in space-y-4">${data.content}`;
+
+            // Add Next Lesson Button on Last Slide
+            if (index === lessonData.length - 1) {
+                contentHtml += `
+                    <div class="mt-12 pt-8 border-t border-slate-200 text-center">
+                        <p class="text-slate-500 mb-4 font-medium">✨ You've completed the lesson!</p>
+                        <a href="sets.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-0.5">
+                            Next: Set Theory
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                        </a>
+                    </div>
+                `;
+            }
+            contentHtml += `</div>`;
+
+            cardBody.innerHTML = contentHtml;
             slideCounter.innerText = `${index + 1} / ${lessonData.length}`;
 
             // Update Styles based on Type

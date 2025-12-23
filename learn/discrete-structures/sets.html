@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics: Sets</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <style>
+        /* Custom Scrollbar */
+        .card-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .card-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .card-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Type specific border colors */
+        .type-def {
+            border-left: 6px solid #3b82f6;
+        }
+
+        /* Blue */
+        .type-proof {
+            border-left: 6px solid #8b5cf6;
+        }
+
+        /* Purple */
+        .type-example {
+            border-left: 6px solid #10b981;
+        }
+
+        /* Green */
+        .type-problem {
+            border-left: 6px solid #f59e0b;
+        }
+
+        /* Orange */
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
+
+    <header class="bg-white shadow-sm z-10 p-4 flex justify-between items-center shrink-0">
+        <div>
+            <h1 class="text-xl font-bold text-slate-900">Set Theory</h1>
+            <p class="text-xs text-slate-500">Discrete Mathematics</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <span id="slide-counter" class="text-sm font-mono text-slate-500">1 / --</span>
+            <div class="flex gap-2">
+                <button onclick="prevSlide()" class="p-2 rounded-full hover:bg-slate-200 transition"
+                    aria-label="Previous">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button onclick="nextSlide()" class="p-2 rounded-full hover:bg-slate-200 transition" aria-label="Next">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex justify-center items-center p-4 md:p-8 overflow-hidden relative">
+
+        <aside
+            class="hidden lg:block w-72 absolute left-8 top-8 bottom-8 bg-white rounded-xl shadow-lg overflow-y-auto p-4 z-0">
+            <h3 class="font-bold text-slate-700 mb-4 border-b pb-2">Lesson Topics</h3>
+            <ul id="toc-list" class="space-y-2 text-sm">
+            </ul>
+        </aside>
+
+        <div id="card-container"
+            class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl h-full max-h-[85vh] flex flex-col relative z-10 lg:ml-80 transition-all duration-300">
+
+            <div id="card-header" class="p-6 border-b shrink-0 type-def bg-slate-50 rounded-t-2xl">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span id="card-tag"
+                            class="inline-block px-2 py-1 text-xs font-semibold rounded uppercase tracking-wide bg-blue-100 text-blue-700 mb-2">Definition</span>
+                        <h2 id="card-title" class="text-2xl md:text-3xl font-bold text-slate-800">Title Placeholder</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div id="card-body" class="p-6 md:p-10 overflow-y-auto card-content text-lg leading-relaxed space-y-6">
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const lessonData = [
+            {
+                id: 1,
+                title: "What is a set?",
+                type: "def",
+                tag: "Definition",
+                content: `
+                    <p class="text-xl font-medium">A set is a collection of related items.</p>
+                    <div class="mt-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h4 class="font-bold text-slate-700 mb-2">Examples</h4>
+                        <ul class="list-disc pl-6 space-y-2 font-mono text-sm md:text-base">
+                            <li>$A = \\{1, 2, 3, 4, 5\\}$</li>
+                            <li>$P = \\{2, 3, 5, 7, 11, 13, 17, ...\\}$ (Primes)</li>
+                            <li>$S$ is a set of square numbers</li>
+                            <li>$B = \\{m \\in \\mathbb{Z} \\mid m = 7n + 100 \\text{ for some } n \\in \\mathbb{Z}\\}$ (Set Builder Notation)</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                title: "Subsets",
+                type: "def",
+                tag: "Definition",
+                content: `
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-blue-500 pl-4 bg-blue-50 p-2 rounded-r">
+                            <strong class="text-blue-700">Subset ($A \\subseteq B$):</strong><br>
+                            $A \\subseteq B \\iff \\forall x$, if $x \\in A$ then $x \\in B$.
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4 bg-red-50 p-2 rounded-r">
+                            <strong class="text-red-700">Not a Subset ($A \\not\\subseteq B$):</strong><br>
+                            $A \\not\\subseteq B \\iff \\exists x$ such that $x \\in A$ and $x \\notin B$.
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4 bg-purple-50 p-2 rounded-r">
+                            <strong class="text-purple-700">Proper Subset ($A \\subset B$):</strong><br>
+                            1. $A \\subseteq B$<br>
+                            2. $\\exists x$ such that $x \\in B$ and $x \\notin A$.
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-bold mb-2">Check your understanding:</h4>
+                        <p>Let $A = \\{1\\}$ and $B = \\{1, \\{1\\}\\}$.</p>
+                        <ul class="list-disc pl-6">
+                            <li>Is $A \\subseteq B$? (Yes, 1 is in B)</li>
+                            <li>Is $A \\subset B$? (Yes, $\{1\}$ is in B but not A)</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "Set Equality",
+                type: "def",
+                tag: "Definition",
+                content: `
+                    <p>Given sets $A$ and $B$, $A$ equals $B$ ($A=B$) if and only if every element of $A$ is in $B$ and every element of $B$ is in $A$.</p>
+                    <p class="text-center text-xl my-4 bg-gray-100 p-2 rounded border">$A = B \\iff A \\subseteq B \\text{ and } B \\subseteq A$</p>
+                    
+                    <h4 class="font-bold mt-4">Problem:</h4>
+                    <p>Let $A = \\{m \\in \\mathbb{Z} \\mid m = 2a \\text{ for some integer } a\\}$</p>
+                    <p>Let $B = \\{n \\in \\mathbb{Z} \\mid n = 2b - 2 \\text{ for some integer } b\\}$</p>
+                    <p class="mt-2"><strong>Is $A = B$?</strong></p>
+                    <p class="text-sm text-gray-500 italic mt-1">Hint: Both describe the set of even integers.</p>
+                `
+            },
+            {
+                id: 4,
+                title: "Venn Diagrams",
+                type: "def",
+                tag: "Visualization",
+                content: `
+                    
+                    <p>Relationship between a small number of sets can be represented by pictures called Venn diagrams.</p>
+                    
+                    <h4 class="font-bold mt-6 text-orange-700">Problem:</h4>
+                    <p>Draw a Venn diagram representing sets of numbers: $N$ (Natural), $W$ (Whole), $Q$ (Rational), $R$ (Real).</p>
+                    <p class="text-sm bg-orange-50 p-2 rounded mt-2"><strong>Solution:</strong> These are nested sets. $N \\subseteq W \\subseteq \\mathbb{Z} \\subseteq Q \\subseteq R$. It would look like concentric circles.</p>
+                `
+            },
+            {
+                id: 5,
+                title: "Set Operations",
+                type: "def",
+                tag: "Operations",
+                content: `
+                    
+                    <p>Let $A$ and $B$ be subsets of a universal set $U$.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-slate-50 p-3 rounded border">
+                            <strong class="text-blue-600">Union ($A \\cup B$)</strong>
+                            <p class="text-sm mt-1">Elements in at least one of A or B.</p>
+                            <p class="font-mono text-xs mt-1">$\\{x \\in U \\mid x \\in A \\text{ or } x \\in B\\}$</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border">
+                            <strong class="text-blue-600">Intersection ($A \\cap B$)</strong>
+                            <p class="text-sm mt-1">Elements common to both A and B.</p>
+                            <p class="font-mono text-xs mt-1">$\\{x \\in U \\mid x \\in A \\text{ and } x \\in B\\}$</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border">
+                            <strong class="text-blue-600">Difference ($B - A$)</strong>
+                            <p class="text-sm mt-1">Elements in B but not in A.</p>
+                            <p class="font-mono text-xs mt-1">$\\{x \\in U \\mid x \\in B \\text{ and } x \\notin A\\}$</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border">
+                            <strong class="text-blue-600">Complement ($A'$)</strong>
+                            <p class="text-sm mt-1">Elements in U that are not in A.</p>
+                            <p class="font-mono text-xs mt-1">$\\{x \\in U \\mid x \\notin A\\}$</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 6,
+                title: "Problem: Set Operations",
+                type: "problem",
+                tag: "Practice",
+                content: `
+                    <p>Let $U = \\{a,b,c,d,e,f,g\\}$.</p>
+                    <p>Let $A = \\{a,c,e,g\\}$ and $B = \\{d,e,f,g\\}$.</p>
+                    <div class="mt-4 space-y-2">
+                        <p><strong>Find:</strong></p>
+                        <ul class="list-disc pl-6">
+                            <li>$A \\cup B = \\{a,c,d,e,f,g\\}$</li>
+                            <li>$A \\cap B = \\{e,g\\}$</li>
+                            <li>$B - A = \\{d,f\\}$</li>
+                            <li>$A' = \\{b,d,f\\}$</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 7,
+                title: "Interval Notation",
+                type: "def",
+                tag: "Notation",
+                content: `
+                    <p>Given real numbers $a$ and $b$ with $a \\le b$:</p>
+                    <ul class="space-y-2 mt-4 font-mono text-sm">
+                        <li><strong>Open:</strong> $(a,b) = \\{x \\in \\mathbb{R} \\mid a < x < b\\}$</li>
+                        <li><strong>Closed:</strong> $[a,b] = \\{x \\in \\mathbb{R} \\mid a \\le x \\le b\\}$</li>
+                        <li><strong>Half-open:</strong> $(a,b] = \\{x \\in \\mathbb{R} \\mid a < x \\le b\\}$</li>
+                        <li><strong>Unbounded:</strong> $[a, \\infty) = \\{x \\in \\mathbb{R} \\mid x \\ge a\\}$</li>
+                    </ul>
+                    
+                    <div class="mt-6 bg-yellow-50 p-4 border border-yellow-200 rounded">
+                        <h4 class="font-bold text-yellow-800">Problem</h4>
+                        <p>$A = (-1, 0]$ and $B = [0, 1)$. Find $A \\cup B$ and $A \\cap B$.</p>
+                        <p class="mt-2 text-sm"><strong>Solution:</strong> $A \\cup B = (-1, 1)$, $A \\cap B = \\{0\\}$</p>
+                    </div>
+                `
+            },
+            {
+                id: 8,
+                title: "Generalized Operations",
+                type: "def",
+                tag: "Notation",
+                content: `
+                    <p>Given sets $A_0, A_1, A_2, ...$</p>
+                    <div class="my-4 space-y-4">
+                        <div class="p-3 bg-gray-50 rounded">
+                            <strong>Finite Union:</strong> $\\bigcup_{i=0}^{n} A_i$
+                            <p class="text-sm text-gray-600">x is in at least one $A_i$ where $0 \\le i \\le n$.</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded">
+                            <strong>Infinite Intersection:</strong> $\\bigcap_{i=0}^{\infty} A_i$
+                            <p class="text-sm text-gray-600">x is in ALL $A_i$ for every whole number $i$.</p>
+                        </div>
+                    </div>
+                    
+                    <p class="font-bold">Example:</p>
+                    <p>Let $A_i = (-1/i, 1/i)$. Then $\\bigcap_{i=1}^{\infty} A_i = \\{0\\}$.</p>
+                `
+            },
+            {
+                id: 9,
+                title: "Empty & Disjoint Sets",
+                type: "def",
+                tag: "Types",
+                content: `
+                    <ul class="space-y-4">
+                        <li>
+                            <strong>Empty Set ($\\{ \\}$ or $\\phi$):</strong> A set with no elements.
+                            <br><span class="text-sm text-gray-500">Example: $\{x \\in \\mathbb{R} \\mid x^2 = -1\} = \\phi$</span>
+                        </li>
+                        <li>
+                            <strong>Disjoint Sets:</strong> Sets $A$ and $B$ are disjoint iff $A \\cap B = \\phi$.
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-4 border bg-white">
+                        <strong>Problem:</strong> Are $A=\\{1,3,5\\}$ and $B=\\{2,4,6\\}$ disjoint?
+                        <br><strong>Ans:</strong> Yes, intersection is empty.
+                    </div>
+                `
+            },
+            {
+                id: 10,
+                title: "Mutually Disjoint Sets",
+                type: "def",
+                tag: "Advanced Types",
+                content: `
+                    <p>Sets $A_1, A_2, A_3...$ are <strong>mutually disjoint</strong> (pairwise disjoint) if no two sets share any elements.</p>
+                    <p class="my-2 bg-slate-200 p-2 text-center">$A_i \\cap A_j = \\phi$ whenever $i \\neq j$.</p>
+                    
+                    <h4 class="font-bold mt-4">Problem:</h4>
+                    <p>Are these sets mutually disjoint?</p>
+                    <ul class="list-disc pl-6 space-y-2 mt-2">
+                        <li>$A_1=\\{3,5\\}, A_2=\\{1,4,6\\}, A_3=\\{2\\}$ <span class="text-green-600 font-bold">(Yes)</span></li>
+                        <li>$B_1=\\{2,4,6\\}, B_2=\\{3,7\\}, B_3=\\{4,5\\}$ <span class="text-red-600 font-bold">(No, $B_1 \\cap B_3 = \\{4\\}$)</span></li>
+                    </ul>
+                `
+            },
+            {
+                id: 11,
+                title: "Partitions",
+                type: "def",
+                tag: "Structure",
+                content: `
+                    <p>A collection of nonempty sets $\\{A_1, A_2...\\}$ is a <strong>partition</strong> of $A$ iff:</p>
+                    <ol class="list-decimal pl-6 mt-2">
+                        <li>$A$ is the union of all $A_i$.</li>
+                        <li>The sets are mutually disjoint.</li>
+                    </ol>
+                    
+                    <h4 class="font-bold mt-6">Problem:</h4>
+                    <p>Is $\\{T_0, T_1, T_2\\}$ a partition of $\\mathbb{Z}$?</p>
+                    <ul class="text-sm font-mono mt-2 bg-gray-50 p-2">
+                        <li>$T_0 = \\{n \\mid n = 3k\\}$ (Remainders 0)</li>
+                        <li>$T_1 = \\{n \\mid n = 3k+1\\}$ (Remainders 1)</li>
+                        <li>$T_2 = \\{n \\mid n = 3k+2\\}$ (Remainders 2)</li>
+                    </ul>
+                    <p class="mt-2"><strong>Answer:</strong> Yes. Every integer has a unique remainder mod 3.</p>
+                `
+            },
+            {
+                id: 12,
+                title: "Power Set",
+                type: "def",
+                tag: "Structure",
+                content: `
+                    <h4 class="font-bold text-lg text-purple-700">Power Set $P(A)$</h4>
+                    <p>The set of all subsets of A.</p>
+                    
+                    <div class="mt-6 bg-purple-50 p-4 rounded">
+                        <h4 class="font-bold">Problem:</h4>
+                        <p>Find $P(\\{x,y\\})$.</p>
+                        <p class="mt-2"><strong>Solution:</strong> The subsets are $\\phi, \\{x\\}, \\{y\\}, \\{x,y\\}$.</p>
+                        <p>So $P(\\{x,y\\}) = \\{\\phi, \\{x\\}, \\{y\\}, \\{x,y\\}\\}$.</p>
+                    </div>
+                `
+            },
+            {
+                id: 13,
+                title: "Ordered n-tuples",
+                type: "def",
+                tag: "Structure",
+                content: `
+                    <p>An ordered list of elements $(x_1, x_2, ..., x_n)$.</p>
+                    <p class="mt-2"><strong>Equality:</strong> Two n-tuples are equal iff every corresponding element is equal ($x_1=y_1, x_2=y_2...$).</p>
+                    
+                    <h4 class="font-bold mt-6">Problems:</h4>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Is $(1,2,3,4) = (1,2,4,3)$? <strong>No</strong> (Order matters).</li>
+                        <li>Is $(3, (-2)^2, 1/2) = (\\sqrt{9}, 4, 3/6)$? <strong>Yes</strong> (Values are equal).</li>
+                        <li>Is $((1,2), 3) = (1,2,3)$? <strong>No</strong> (2-tuple vs 3-tuple).</li>
+                    </ul>
+                `
+            },
+            {
+                id: 14,
+                title: "Cartesian Product",
+                type: "def",
+                tag: "Structure",
+                content: `
+                    <h4 class="font-bold text-lg text-indigo-700">Cartesian Product</h4>
+                    <p>$A_1 \\times A_2 \\times ... \\times A_n$ is the set of all ordered n-tuples $(a_1, a_2, ..., a_n)$ where $a_i \\in A_i$.</p>
+                    
+                    <div class="mt-6 bg-indigo-50 p-4 rounded">
+                        <h4 class="font-bold">Problem:</h4>
+                        <p>Let $A_1 = \\{x,y\\}, A_2 = \\{1,2,3\\}$. Find $A_1 \\times A_2$.</p>
+                        <p class="mt-2 text-sm break-all">$\\{(x,1), (x,2), (x,3), (y,1), (y,2), (y,3)\\}$</p>
+                    </div>
+                `
+            },
+            {
+                id: 15,
+                title: "Procedural Definitions (Logic)",
+                type: "def",
+                tag: "Logic",
+                content: `
+                    <p>To prove set theorems, we translate set operations into logical statements.</p>
+                    <ul class="mt-4 space-y-3 font-mono text-sm">
+                        <li>$x \\in X \\cup Y \\iff x \\in X \\lor x \\in Y$</li>
+                        <li>$x \\in X \\cap Y \\iff x \\in X \\land x \\in Y$</li>
+                        <li>$x \\in X - Y \\iff x \\in X \\land x \\notin Y$</li>
+                        <li>$x \\in X' \\iff x \\notin X$</li>
+                        <li>$(x,y) \\in X \\times Y \\iff x \\in X \\land y \\in Y$</li>
+                    </ul>
+                `
+            },
+            {
+                id: 16,
+                title: "Set Identities (The Laws)",
+                type: "def",
+                tag: "Laws",
+                content: `
+                    <div class="overflow-x-auto text-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 border-b"><th class="p-2">Law Name</th><th class="p-2">Identity</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b"><td class="p-2">Commutative</td><td class="p-2">$A \\cup B = B \\cup A$</td></tr>
+                                <tr class="border-b"><td class="p-2">Associative</td><td class="p-2">$(A \\cup B) \\cup C = A \\cup (B \\cup C)$</td></tr>
+                                <tr class="border-b"><td class="p-2 font-bold text-blue-600">Distributive</td><td class="p-2">$A \\cap (B \\cup C) = (A \\cap B) \\cup (A \\cap C)$</td></tr>
+                                <tr class="border-b"><td class="p-2 font-bold text-blue-600">De Morgan's</td><td class="p-2">$(A \\cup B)' = A' \\cap B'$</td></tr>
+                                <tr class="border-b"><td class="p-2">Identity</td><td class="p-2">$A \\cup \\phi = A$, $A \\cap U = A$</td></tr>
+                                <tr class="border-b"><td class="p-2">Set Difference</td><td class="p-2">$A - B = A \\cap B'$</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            },
+            {
+                id: 17,
+                title: "Proof Method: Element Argument",
+                type: "proof",
+                tag: "Methodology",
+                content: `
+                    <p class="mb-4">This is the standard way to prove set relationships.</p>
+                    
+                    <div class="bg-green-50 p-4 border-l-4 border-green-500 mb-4">
+                        <h4 class="font-bold">To prove $X \\subseteq Y$:</h4>
+                        <ol class="list-decimal pl-6">
+                            <li>Suppose $x$ is a particular but arbitrarily chosen element of $X$.</li>
+                            <li>Show that $x$ is an element of $Y$.</li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-purple-50 p-4 border-l-4 border-purple-500">
+                        <h4 class="font-bold">To prove $X = Y$:</h4>
+                        <ol class="list-decimal pl-6">
+                            <li>Prove $X \\subseteq Y$.</li>
+                            <li>Prove $Y \\subseteq X$.</li>
+                        </ol>
+                    </div>
+                `
+            },
+            {
+                id: 18,
+                title: "Proof Ex 1: Distributive Law",
+                type: "proof",
+                tag: "Element Argument",
+                content: `
+                    <p><strong>Prove:</strong> $A \\cup (B \\cap C) = (A \\cup B) \\cap (A \\cup C)$</p>
+                    <p class="text-sm text-gray-500 mb-4">We must prove subsets in both directions.</p>
+                    
+                    <h4 class="font-bold">Part 1: $(\\subseteq)$</h4>
+                    <p>Suppose $x \\in A \\cup (B \\cap C)$. Then $x \\in A$ or $x \\in B \\cap C$.</p>
+                    <ul class="list-disc pl-6 mb-4 text-sm">
+                        <li><strong>Case 1 ($x \\in A$):</strong> Then $x \\in A \\cup B$ and $x \\in A \\cup C$. So $x \\in (A \\cup B) \\cap (A \\cup C)$.</li>
+                        <li><strong>Case 2 ($x \\in B \\cap C$):</strong> Then $x \\in B$ and $x \\in C$. Thus $x \\in A \\cup B$ and $x \\in A \\cup C$. So $x \\in (A \\cup B) \\cap (A \\cup C)$.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 19,
+                title: "Proof Ex 2: De Morgan's Law",
+                type: "proof",
+                tag: "Element Argument",
+                content: `
+                    <p><strong>Prove:</strong> $(A \\cup B)' = A' \\cap B'$</p>
+                    
+                    <h4 class="font-bold mt-4">Part 1: $(A \\cup B)' \\subseteq A' \\cap B'$</h4>
+                    <ol class="list-decimal pl-6 space-y-2 text-sm">
+                        <li>Suppose $x \\in (A \\cup B)'$.</li>
+                        <li>By def of complement, $x \\notin A \\cup B$.</li>
+                        <li>By De Morgan's logic law: It is false that ($x \\in A$ or $x \\in B$).</li>
+                        <li>Therefore, $x \\notin A$ AND $x \\notin B$.</li>
+                        <li>So $x \\in A'$ and $x \\in B'$.</li>
+                        <li>Thus $x \\in A' \\cap B'$.</li>
+                    </ol>
+                `
+            },
+            {
+                id: 20,
+                title: "Proof Ex 3: Subset Property",
+                type: "proof",
+                tag: "Element Argument",
+                content: `
+                    <p><strong>Proposition:</strong> If $A \\subseteq B$, then $A \\cap B = A$.</p>
+                    
+                    <h4 class="font-bold mt-4">Proof:</h4>
+                    <p>We know $A \\cap B \\subseteq A$ is always true by definition of intersection.</p>
+                    <p class="mt-2"><strong>We need to prove $A \\subseteq A \\cap B$:</strong></p>
+                    <ol class="list-decimal pl-6 space-y-1">
+                        <li>Suppose $x \\in A$.</li>
+                        <li>Since we are given $A \\subseteq B$, then $x \\in B$.</li>
+                        <li>Since $x \\in A$ and $x \\in B$, then $x \\in A \\cap B$.</li>
+                        <li>Therefore, $A \\subseteq A \\cap B$.</li>
+                    </ol>
+                    <p class="mt-2 font-bold text-green-700">Conclusion: $A = A \\cap B$.</p>
+                `
+            },
+            {
+                id: 21,
+                title: "Proof Ex 4: The Empty Set",
+                type: "proof",
+                tag: "Contradiction",
+                content: `
+                    <p><strong>Proposition:</strong> The empty set $\\phi$ is a subset of every set $A$. ($\phi \\subseteq A$)</p>
+                    
+                    <h4 class="font-bold mt-4 text-purple-700">Proof by Contradiction:</h4>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Suppose $\\phi \\not\\subseteq A$.</li>
+                        <li>By definition of "not subset", there must exist an element $x$ such that $x \\in \\phi$ and $x \\notin A$.</li>
+                        <li>But $\\phi$ has <strong>no elements</strong>. It is impossible to find such an $x$.</li>
+                        <li>Contradiction! Therefore, $\\phi \\subseteq A$.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 22,
+                title: "Proof Ex 5: Uniqueness of Empty Set",
+                type: "proof",
+                tag: "Logic",
+                content: `
+                    <p><strong>Proposition:</strong> There is only one set with no elements.</p>
+                    
+                    <h4 class="font-bold mt-4">Proof:</h4>
+                    <p>Suppose $E_1$ and $E_2$ are both sets with no elements.</p>
+                    <ol class="list-decimal pl-6 mt-2">
+                        <li>Since $E_1$ has no elements, $E_1 \\subseteq E_2$ (Previous Proposition).</li>
+                        <li>Since $E_2$ has no elements, $E_2 \\subseteq E_1$.</li>
+                        <li>Since subsets go both ways, $E_1 = E_2$.</li>
+                    </ol>
+                `
+            },
+            {
+                id: 23,
+                title: "Proof Ex 6: Intersection with Empty Set",
+                type: "proof",
+                tag: "Contradiction",
+                content: `
+                    <p><strong>Proposition:</strong> $A \\cap \\phi = \\phi$.</p>
+                    
+                    <h4 class="font-bold mt-4">Proof by Contradiction:</h4>
+                    <p>Suppose there is an element $x$ such that $x \\in A \\cap \\phi$.</p>
+                    <p>Then $x \\in A$ AND $x \\in \\phi$.</p>
+                    <p>It is impossible for $x \\in \\phi$ because the empty set has no elements.</p>
+                    <p>Contradiction! Thus $A \\cap \\phi = \\phi$.</p>
+                `
+            },
+            {
+                id: 24,
+                title: "Proof Ex 7: Disjointness",
+                type: "proof",
+                tag: "Contradiction",
+                content: `
+                    <p><strong>Proposition:</strong> If $A \\subseteq B$ and $B \\subseteq C'$, then $A \\cap C = \\phi$.</p>
+                    
+                    <h4 class="font-bold mt-4 text-purple-700">Proof by Contradiction:</h4>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>Suppose $A \\cap C \\neq \\phi$. Then there exists an element $x \\in A \\cap C$.</li>
+                        <li>So $x \\in A$ and $x \\in C$.</li>
+                        <li>Since $x \\in A$ and $A \\subseteq B$, then $x \\in B$.</li>
+                        <li>Since $x \\in B$ and $B \\subseteq C'$, then $x \\in C'$.</li>
+                        <li>By definition of complement, $x \\in C'$ means $x \\notin C$.</li>
+                        <li><strong>Contradiction:</strong> We found $x \\in C$ (step 2) and $x \\notin C$ (step 5).</li>
+                        <li>Therefore, $A \\cap C = \\phi$.</li>
+                    </ol>
+                `
+            },
+            {
+                id: 25,
+                title: "Proof by Counterexample",
+                type: "example",
+                tag: "Disproof",
+                content: `
+                    <p><strong>Proposition (False):</strong> $(A - B) \\cup (B - C) = A - C$.</p>
+                    
+                    <h4 class="font-bold mt-4">Disproof:</h4>
+                    <p>We only need one specific case where this fails.</p>
+                    <div class="bg-orange-50 p-4 rounded mt-2 border border-orange-200">
+                        <p>Let $A = \\{1\\}$, $B = \\phi$, $C = \\{1\\}$.</p>
+                        <ul class="list-disc pl-6 mt-2">
+                            <li>$LHS$: $(A-B) \\cup (B-C) = (\\{1\\} - \\phi) \\cup (\\phi - \\{1\\}) = \\{1\\} \\cup \\phi = \\{1\\}$.</li>
+                            <li>$RHS$: $A - C = \\{1\\} - \\{1\\} = \\phi$.</li>
+                        </ul>
+                        <p class="mt-2 font-bold text-red-600">$\\{1\\} \\neq \\phi$. The proposition is false.</p>
+                    </div>
+                `
+            },
+            {
+                id: 26,
+                title: "Induction: Power Set Size",
+                type: "proof",
+                tag: "Induction",
+                content: `
+                    <p><strong>Proposition:</strong> If a set $X$ has $n$ elements, then $P(X)$ has $2^n$ elements.</p>
+                    
+                    <ul class="space-y-4 mt-4">
+                        <li><strong>Basis Step ($n=0$):</strong> The empty set has 0 elements. Its only subset is itself. $2^0 = 1$. True.</li>
+                        <li><strong>Induction Step:</strong> Assume true for $k$ elements. Consider set $X$ with $k+1$ elements.
+                            <div class="pl-4 border-l-2 border-gray-300 mt-2 text-sm">
+                                Pick an element $a \\in X$. Subsets of $X$ either contain $a$ or they don't.<br>
+                                1. Subsets without $a$: These are subsets of $X-\\{a\\}$ (size $k$). Count = $2^k$.<br>
+                                2. Subsets with $a$: Take any subset from step 1 and add $a$. Count = $2^k$.<br>
+                                Total = $2^k + 2^k = 2 \\cdot 2^k = 2^{k+1}$.
+                            </div>
+                        </li>
+                    </ul>
+                `
+            },
+            {
+                id: 27,
+                title: "Algebraic Proof Ex 1",
+                type: "proof",
+                tag: "Algebra",
+                content: `
+                    <p>We can prove set identities using established laws (like algebra) rather than element arguments.</p>
+                    
+                    <h4 class="font-bold mt-4">Example: Simplify $(A \\cup B) - C$</h4>
+                    <p>Goal: Show it equals $(A - C) \\cup (B - C)$.</p>
+                    
+                    <div class="font-mono text-sm bg-slate-800 text-white p-4 rounded mt-2">
+                        (A ∪ B) - C <br>
+                        = (A ∪ B) ∩ C'          (Set Diff Law)<br>
+                        = C' ∩ (A ∪ B)          (Commutative)<br>
+                        = (C' ∩ A) ∪ (C' ∩ B)   (Distributive)<br>
+                        = (A ∩ C') ∪ (B ∩ C')   (Commutative)<br>
+                        = (A - C) ∪ (B - C)     (Set Diff Law)
+                    </div>
+                `
+            },
+            {
+                id: 28,
+                title: "Algebraic Proof Ex 2",
+                type: "proof",
+                tag: "Algebra",
+                content: `
+                    <p><strong>Example:</strong> Simplify $A - (A \\cap B)$.</p>
+                    <p>Goal: Show it equals $A - B$.</p>
+                    
+                    <div class="font-mono text-sm bg-slate-800 text-white p-4 rounded mt-2">
+                        A - (A ∩ B) <br>
+                        = A ∩ (A ∩ B)'          (Set Diff Law)<br>
+                        = A ∩ (A' ∪ B')         (De Morgan)<br>
+                        = (A ∩ A') ∪ (A ∩ B')   (Distributive)<br>
+                        = ϕ ∪ (A ∩ B')          (Complement Law)<br>
+                        = A ∩ B'                (Identity Law)<br>
+                        = A - B                 (Set Diff Law)
+                    </div>
+                `
+            }
+        ];
+
+        // State
+        let currentSlideIndex = 0;
+
+        // Elements
+        const cardTitle = document.getElementById('card-title');
+        const cardBody = document.getElementById('card-body');
+        const cardTag = document.getElementById('card-tag');
+        const cardHeader = document.getElementById('card-header');
+        const slideCounter = document.getElementById('slide-counter');
+        const tocList = document.getElementById('toc-list');
+        const cardContainer = document.getElementById('card-container');
+
+        // Init
+        function init() {
+            renderTOC();
+            loadSlide(0);
+
+            // Keyboard Nav
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "ArrowRight") nextSlide();
+                if (e.key === "ArrowLeft") prevSlide();
+            });
+
+            // Touch Navigation (Swipe)
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchEndX = 0;
+            let touchEndY = 0;
+
+            document.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                touchEndY = e.changedTouches[0].screenY;
+                handleGesture();
+            }, { passive: true });
+
+            function handleGesture() {
+                const xDiff = touchEndX - touchStartX;
+                const yDiff = touchEndY - touchStartY;
+
+                if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > 50) {
+                    if (xDiff > 0) prevSlide();
+                    else nextSlide();
+                }
+            }
+        }
+
+        // Render Sidebar
+        function renderTOC() {
+            tocList.innerHTML = lessonData.map((slide, index) => `
+                <li>
+                    <button onclick="loadSlide(${index})" class="text-left w-full p-2 hover:bg-slate-100 rounded transition ${index === currentSlideIndex ? 'font-bold text-blue-600 bg-blue-50' : 'text-slate-600'}">
+                        ${index + 1}. ${slide.title}
+                    </button>
+                </li>
+            `).join('');
+        }
+
+        // Load Slide
+        function loadSlide(index) {
+            if (index < 0 || index >= lessonData.length) return;
+
+            currentSlideIndex = index;
+            const data = lessonData[index];
+
+            // Update Content
+            cardTitle.innerText = data.title;
+            cardTag.innerText = data.tag;
+
+            let contentHtml = `<div class="fade-in space-y-4">${data.content}`;
+
+            // Add Next Lesson Links (Placeholder/Home)
+            if (index === lessonData.length - 1) {
+                contentHtml += `
+                    <div class="mt-12 pt-8 border-t border-slate-200 text-center">
+                        <p class="text-slate-500 mb-4 font-medium">✨ You've completed the Set Theory lesson!</p>
+                        <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition">
+                            Back to Course Home
+                        </a>
+                    </div>
+                `;
+            }
+            contentHtml += `</div>`;
+
+            cardBody.innerHTML = contentHtml;
+            slideCounter.innerText = `${index + 1} / ${lessonData.length}`;
+
+            // Update Styles based on type
+            const typeStyles = {
+                'def': { border: 'type-def', bg: 'bg-blue-50', tag: 'bg-blue-100 text-blue-700' },
+                'proof': { border: 'type-proof', bg: 'bg-purple-50', tag: 'bg-purple-100 text-purple-700' },
+                'example': { border: 'type-example', bg: 'bg-green-50', tag: 'bg-green-100 text-green-700' },
+                'problem': { border: 'type-problem', bg: 'bg-orange-50', tag: 'bg-orange-100 text-orange-700' }
+            };
+
+            const style = typeStyles[data.type] || typeStyles['def'];
+
+            cardHeader.className = `p-6 border-b shrink-0 rounded-t-2xl transition-colors duration-300 ${style.border} ${style.bg}`;
+            cardTag.className = `inline-block px-2 py-1 text-xs font-semibold rounded uppercase tracking-wide mb-2 transition-colors duration-300 ${style.tag}`;
+
+            // Highlight Sidebar
+            renderTOC();
+
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise([cardBody, cardTitle]);
+            }
+        }
+
+        function nextSlide() {
+            loadSlide(currentSlideIndex + 1);
+        }
+
+        function prevSlide() {
+            loadSlide(currentSlideIndex - 1);
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
+
+</html>
