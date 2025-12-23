@@ -274,8 +274,19 @@
             renderSlide(currentSlide);
         }
 
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            renderSlide(currentSlide);
+        }
+
         // Initialize
         renderSlide(0);
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight") nextSlide();
+            if (e.key === "ArrowLeft") prevSlide();
+        });
 
         // Auto-advance slideshow
         setInterval(nextSlide, 6000);
