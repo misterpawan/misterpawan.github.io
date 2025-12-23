@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics: Sequences & Induction</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <style>
+        /* Custom Scrollbar for Card Content */
+        .card-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .card-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .card-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Type specific border colors */
+        .type-concept {
+            border-left: 6px solid #3b82f6;
+        }
+
+        /* Blue */
+        .type-proof {
+            border-left: 6px solid #22c55e;
+        }
+
+        /* Green */
+        .type-fallacy {
+            border-left: 6px solid #ef4444;
+        }
+
+        /* Red */
+        .type-problem {
+            border-left: 6px solid #f59e0b;
+        }
+
+        /* Orange */
+        .type-recursion {
+            border-left: 6px solid #8b5cf6;
+        }
+
+        /* Purple */
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
+
+    <header class="bg-white shadow-sm z-10 p-4 flex justify-between items-center shrink-0">
+        <div>
+            <h1 class="text-xl font-bold text-slate-900">Sequences, Induction & Recursion</h1>
+            <p class="text-xs text-slate-500">Discrete Mathematics</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <span id="slide-counter" class="text-sm font-mono text-slate-500">1 / --</span>
+            <div class="flex gap-2">
+                <button onclick="prevSlide()" class="p-2 rounded-full hover:bg-slate-200 transition"
+                    aria-label="Previous">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button onclick="nextSlide()" class="p-2 rounded-full hover:bg-slate-200 transition" aria-label="Next">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex justify-center items-center p-4 md:p-8 overflow-hidden relative">
+
+        <aside
+            class="hidden lg:block w-72 absolute left-8 top-8 bottom-8 bg-white rounded-xl shadow-lg overflow-y-auto p-4 z-0">
+            <h3 class="font-bold text-slate-700 mb-4 border-b pb-2">Lesson Modules</h3>
+            <ul id="toc-list" class="space-y-2 text-sm">
+            </ul>
+        </aside>
+
+        <div id="card-container"
+            class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl h-full max-h-[85vh] flex flex-col relative z-10 lg:ml-80 transition-all duration-300">
+
+            <div id="card-header" class="p-6 border-b shrink-0 type-concept bg-slate-50 rounded-t-2xl">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span id="card-tag"
+                            class="inline-block px-2 py-1 text-xs font-semibold rounded uppercase tracking-wide bg-blue-100 text-blue-700 mb-2">Concept</span>
+                        <h2 id="card-title" class="text-2xl md:text-3xl font-bold text-slate-800">Title Placeholder</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div id="card-body" class="p-6 md:p-10 overflow-y-auto card-content text-lg leading-relaxed space-y-6">
+            </div>
+
+            <div class="p-4 border-t bg-slate-50 text-center text-sm text-slate-400 shrink-0 rounded-b-2xl">
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Data Structure based on PDF Content
+        const lessonData = [
+            {
+                id: 1,
+                title: "Introduction",
+                type: "concept",
+                tag: "Overview",
+                content: `
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold">Contents</h3>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li>Basic Concepts on Sequences</li>
+                            <li>Ordinary Mathematical Induction</li>
+                            <li>Strong Mathematical Induction</li>
+                            <li>Recursion</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                title: "Basic Concepts: Sequences",
+                type: "concept",
+                tag: "Definition",
+                content: `
+                    <h4 class="font-bold">What are sequences?</h4>
+                    <ul class="list-disc pl-6 space-y-4 mt-2">
+                        <li>
+                            <strong>Finite sequence:</strong> $a_{m}, a_{m+1}, a_{m+2}, ..., a_{n}$<br>
+                            <em>Example:</em> $1^1, 2^2, 3^2, ..., 100^2$
+                        </li>
+                        <li>
+                            <strong>Infinite sequence:</strong> $a_{m}, a_{m+1}, a_{m+2}, ...$<br>
+                            <em>Example:</em> $\\frac{1}{1}, \\frac{1}{2}, \\frac{1}{3}, ...$
+                        </li>
+                    </ul>
+                    <div class="bg-blue-50 p-4 rounded mt-4">
+                        <strong>Term Formulas:</strong>
+                        <ul class="list-disc pl-6 mt-2">
+                            <li><strong>Closed-form:</strong> $a_k = f(k)$ (e.g., $a_k = \\frac{k}{k+1}$)</li>
+                            <li><strong>Recursive:</strong> $a_k = g(k, a_{k-1}, ...)$ (e.g., $a_k = a_{k-1} + (k-1)a_{k-2}$)</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "Sequence Growth & Patterns",
+                type: "concept",
+                tag: "Properties",
+                content: `
+                    <h4 class="font-bold">Types of Growth</h4>
+                    <ul class="list-disc pl-6 space-y-2 mt-2">
+                        <li><strong>Increasing sequence:</strong> e.g., $2, 3, 5, 7, 11, ...$</li>
+                        <li><strong>Decreasing sequence:</strong> e.g., $\\frac{1}{1}, \\frac{1}{2}, \\frac{1}{3}, ...$</li>
+                        <li><strong>Oscillating sequence:</strong> e.g., $1, -1, 1, -1, ...$</li>
+                    </ul>
+                    <h4 class="font-bold mt-6">Problem Solving Types</h4>
+                    <ul class="list-disc pl-6 space-y-2 mt-2">
+                        <li>Compute $a_k$ given the sequence $a_1, a_2, ...$</li>
+                        <li>Compute the sequence given the formula $a_k$</li>
+                    </ul>
+                `
+            },
+            {
+                id: 4,
+                title: "Sums and Products",
+                type: "concept",
+                tag: "Notation",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="border p-4 rounded bg-slate-50">
+                            <h4 class="font-bold text-blue-600">Summation ($\\sum$)</h4>
+                            <p class="mt-2">$\\sum_{k=m}^{n}a_{k}=a_{m}+a_{m+1}+...+a_{n}$</p>
+                            <p class="text-sm text-slate-500 mt-2">$k$: index, $m$: lower limit, $n$: upper limit</p>
+                        </div>
+                        <div class="border p-4 rounded bg-slate-50">
+                            <h4 class="font-bold text-blue-600">Product ($\\prod$)</h4>
+                            <p class="mt-2">$\\prod_{k=m}^{n}a_{k}=a_{m}\\cdot a_{m+1}\\cdot ...\\cdot a_{n}$</p>
+                            <p class="text-sm text-slate-500 mt-2">$k$: index, $m$: lower limit, $n$: upper limit</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <h4 class="font-bold">Properties</h4>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li>Splitting sums: $\\sum_{k=m}^{n}a_{k}=\\sum_{k=m}^{i}a_{k}+\\sum_{k=i+1}^{n}a_{k}$</li>
+                            <li>Constant factor: $c\\cdot\\sum a_{k}=\\sum (c\\cdot a_{k})$</li>
+                            <li>Addition: $\\sum a_{k} + \\sum b_{k} = \\sum (a_k + b_k)$</li>
+                            <li>Product of Products: $(\\prod a_k) \\cdot (\\prod b_k) = \\prod (a_k \\cdot b_k)$</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 5,
+                title: "Change of Variable & Factorials",
+                type: "concept",
+                tag: "Techniques",
+                content: `
+                    <h4 class="font-bold">Change of Variable Example</h4>
+                    <p class="my-2">$\\sum_{k=0}^{99}\\frac{(-1)^{k}}{k+1} = \\sum_{j=0}^{99}\\frac{(-1)^{j}}{j+1} = \\sum_{i=1}^{100}\\frac{(-1)^{i-1}}{i}$</p>
+                    <p class="text-sm text-slate-500">(Using substitutions $j=k$ and $i=j+1$)</p>
+                    
+                    <hr class="my-6">
+                    
+                    <h4 class="font-bold">Factorial Function ($n!$)</h4>
+                    <p class="mt-2">Recursive definition:</p>
+                    $$ n! = \\begin{cases} 1 & \\text{if } n=0 \\\\ n \\cdot (n-1)! & \\text{if } n>0 \\end{cases} $$
+                `
+            },
+            {
+                id: 6,
+                title: "Ordinary Mathematical Induction",
+                type: "proof",
+                tag: "Logic",
+                content: `
+                    
+                    <p class="mb-4">Mathematical induction is an aesthetically beautiful and insanely powerful proof technique.</p>
+                    
+                    <h4 class="font-bold">Core Idea: The Domino Effect</h4>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>A starting domino falls.</li>
+                        <li>If a domino falls, the successive domino falls.</li>
+                        <li>Therefore, every domino falls.</li>
+                    </ul>
+
+                    <div class="bg-green-50 p-4 rounded border-l-4 border-green-500 mt-6">
+                        <h4 class="font-bold text-green-800">The Principle</h4>
+                        <p>To prove a property $P(n)$ is true for all integers $n \\ge a$:</p>
+                        <ol class="list-decimal pl-6 mt-2 space-y-2">
+                            <li><strong>Basis Step:</strong> Show that $P(a)$ is true.</li>
+                            <li><strong>Induction Step:</strong> Assume $P(k)$ is true for some $k \\ge a$ (Inductive Hypothesis). Prove that $P(k+1)$ is true.</li>
+                        </ol>
+                    </div>
+                `
+            },
+            {
+                id: 7,
+                title: "Induction Example: Sum of n Integers",
+                type: "proof",
+                tag: "Example",
+                content: `
+                    <div class="mb-4 p-4 bg-gray-100 rounded">
+                        <strong>Proposition:</strong> $1+2+...+n = \\frac{n(n+1)}{2}$ for all integers $n \\ge 1$.
+                    </div>
+                    
+                    <h4 class="font-bold">Proof</h4>
+                    <p>Let $P(n)$ denote the equation above.</p>
+                    <ul class="space-y-4 mt-2">
+                        <li><strong>Basis Step:</strong> $P(1)$ is true because $1 = \\frac{1(1+1)}{2}$.</li>
+                        <li><strong>Induction Step:</strong> Assume $P(k)$ is true: $1+...+k = \\frac{k(k+1)}{2}$.</li>
+                        <li>
+                            <strong>Goal:</strong> Prove $P(k+1)$: $1+...+(k+1) = \\frac{(k+1)(k+2)}{2}$.
+                            <div class="mt-2 pl-4 border-l-2 border-slate-300">
+                                $LHS = (1+...+k) + (k+1)$<br>
+                                $= \\frac{k(k+1)}{2} + (k+1)$ (by Hypothesis)<br>
+                                $= (k+1)(\\frac{k}{2} + 1)$<br>
+                                $= \\frac{(k+1)(k+2)}{2} = RHS$
+                            </div>
+                        </li>
+                    </ul>
+                `
+            },
+            {
+                id: 8,
+                title: "Induction Examples: Products & Sums",
+                type: "proof",
+                tag: "More Examples",
+                content: `
+                    <h4 class="font-bold">Example 1: Product Sequence</h4>
+                    <p>Proposition: $(1-\\frac{1}{2})...(1-\\frac{1}{n}) = \\frac{1}{n}$ for $n \\ge 2$.</p>
+                    <div class="pl-4 border-l-2 border-slate-300 mb-6">
+                        Basis: $P(2)$ is true $(1-1/2 = 1/2)$.<br>
+                        Step: Assume $P(k)$. <br>
+                        $P(k+1) LHS = [\\text{product to } k] \\cdot (1-\\frac{1}{k+1}) = \\frac{1}{k} \\cdot \\frac{k}{k+1} = \\frac{1}{k+1}$.
+                    </div>
+
+                    <h4 class="font-bold">Example 2: Sum of Fractions</h4>
+                    <p>Proposition: $\\frac{1}{1\\cdot 2} + ... + \\frac{1}{n(n+1)} = \\frac{n}{n+1}$ for $n \\ge 1$.</p>
+                    <div class="pl-4 border-l-2 border-slate-300">
+                        Step: $LHS = \\frac{k}{k+1} + \\frac{1}{(k+1)(k+2)} = \\frac{k(k+2)+1}{(k+1)(k+2)} = \\frac{(k+1)^2}{(k+1)(k+2)} = \\frac{k+1}{k+2}$.
+                    </div>
+                `
+            },
+            {
+                id: 9,
+                title: "Practice Problems",
+                type: "problem",
+                tag: "Exercise",
+                content: `
+                    <p>Prove the following for all integers $n \\ge 1$:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>$1+3+...+(2n-1) = n^2$</li>
+                        <li>$1^2+2^2+...+n^2 = \\frac{n(n+1)(2n+1)}{6}$</li>
+                        <li>$1^3+2^3+...+n^3 = (\\frac{n(n+1)}{2})^2$</li>
+                        <li>$\\sum_{i=1}^{n}i(i+1)(i+2) = \\frac{n(n+1)(n+2)(n+3)}{4}$</li>
+                        <li>$111...1$ ($n$ times) $= \\frac{10^n - 1}{9}$</li>
+                    </ul>
+                `
+            },
+            {
+                id: 10,
+                title: "Induction with Sequences (Fibonacci & Geometric)",
+                type: "proof",
+                tag: "Applications",
+                content: `
+                    <h4 class="font-bold">Fibonacci Identity</h4>
+                    <p>Given $F(n) = F(n-1) + F(n-2)$, prove $\\sum_{i=0}^{n} F(i)^2 = F(n)F(n+1)$.</p>
+                    <p class="text-sm mt-2"><strong>Key Step:</strong> $LHS_{k+1} = F(k)F(k+1) + F(k+1)^2 = F(k+1)(F(k)+F(k+1)) = F(k+1)F(k+2)$.</p>
+                    
+                    <hr class="my-6">
+                    
+                    <h4 class="font-bold">Geometric Series</h4>
+                    <p>Prove $1+r+...+r^n = \\frac{r^{n+1}-1}{r-1}$.</p>
+                    <p class="text-sm mt-2"><strong>Key Step:</strong> $\\frac{r^{k+1}-1}{r-1} + r^{k+1} = \\frac{r^{k+1}-1 + r^{k+1}(r-1)}{r-1} = \\frac{r^{k+2}-1}{r-1}$.</p>
+                `
+            },
+            {
+                id: 11,
+                title: "Divisibility Proofs",
+                type: "proof",
+                tag: "Number Theory",
+                content: `
+                    <div class="mb-4">
+                        <strong>Proposition:</strong> $2^{2n}-1$ is divisible by 3 for $n \\ge 0$.
+                    </div>
+                    <ul class="space-y-2">
+                        <li><strong>Basis:</strong> $n=0 \\implies 1-1=0$, divisible by 3.</li>
+                        <li><strong>Step:</strong> Assume $2^{2k}-1 = 3r$.</li>
+                        <li>$2^{2(k+1)}-1 = 4 \\cdot 2^{2k} - 1 = 3 \\cdot 2^{2k} + (2^{2k}-1)$</li>
+                        <li>$= 3 \\cdot 2^{2k} + 3r = 3(2^{2k}+r)$. Divisible by 3!</li>
+                    </ul>
+
+                    <div class="mt-6 bg-orange-50 p-4 border-l-4 border-orange-400">
+                        <strong>Generalization:</strong> $x^n - y^n$ is divisible by $x-y$ for $x \\neq y$.
+                        <p class="text-sm mt-1">Proof uses $x^{k+1}-y^{k+1} = x(x^k-y^k) + y^k(x-y)$.</p>
+                    </div>
+                `
+            },
+            {
+                id: 12,
+                title: "Inequality Proofs",
+                type: "proof",
+                tag: "Inequalities",
+                content: `
+                    <h4 class="font-bold">Example 7: Factorial vs Exponent</h4>
+                    <p>Prove $2^n < n!$ for $n \\ge 4$.</p>
+                    <p class="mt-2"><strong>Step:</strong> $2^{k+1} = 2 \\cdot 2^k < 2 \\cdot k!$.<br>
+                    Since $k \\ge 4$, $2 < k+1$. Thus $2 \\cdot k! < (k+1)k! = (k+1)!$.</p>
+                    
+                    <hr class="my-6">
+                    
+                    <h4 class="font-bold">Example 8: Polynomial vs Exponent</h4>
+                    <p>Prove $n^2 < 2^n$ for $n \\ge 5$.</p>
+                    <p class="mt-2"><strong>Step:</strong> $(k+1)^2 = k^2 + 2k + 1$.<br>
+                    Using $k \\ge 5$, we can show $2k+1 < k^2$. Thus $(k+1)^2 < 2k^2 < 2 \\cdot 2^k = 2^{k+1}$.</p>
+                `
+            },
+            {
+                id: 13,
+                title: "Visual Induction: Tromino Tiling",
+                type: "proof",
+                tag: "Visual Proof",
+                content: `
+                    
+                    <div class="mb-4">
+                        <strong>Proposition:</strong> If one square is removed from a $2^n \\times 2^n$ board, the rest can be covered by L-shaped trominoes.
+                    </div>
+                    
+                    <h4 class="font-bold">Proof Strategy:</h4>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li><strong>Basis:</strong> $2^1 \\times 2^1$ board minus 1 square is exactly an L-tromino.</li>
+                        <li><strong>Step:</strong> Split $2^{k+1} \\times 2^{k+1}$ board into four $2^k$ quadrants.</li>
+                        <li>Place one tromino at the center to cover the corners of the three quadrants that <em>don't</em> have the missing square.</li>
+                        <li>Now all four quadrants have exactly one "missing" square (either the original or covered by the center tromino).</li>
+                        <li>By Inductive Hypothesis, all four can be tiled.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 14,
+                title: "Induction Example 10: Fuel Stations",
+                type: "proof",
+                tag: "Logic Puzzle",
+                content: `
+                    
+                    <p><strong>Problem:</strong> Given stations on a circular road with total fuel sufficient for one loop, prove there exists a starting point to complete the loop with an empty tank.</p>
+                    
+                    <h4 class="font-bold mt-4">Proof by Induction:</h4>
+                    <p><strong>Step:</strong> Consider $k+1$ stations. Find a station $A$ that can reach the next station $X$. Merge $A$ and $X$ into a single station with their combined fuel.</p>
+                    <p>This reduces the problem to $k$ stations. By hypothesis, a valid start exists. Un-merge $A$ and $X$; the path remains valid.</p>
+                `
+            },
+            {
+                id: 15,
+                title: "Common Pitfalls & Fallacies",
+                type: "fallacy",
+                tag: "Warning",
+                content: `
+                    <h4 class="font-bold text-red-600">Fallacy 1: All dogs are the same color</h4>
+                    <p><strong>Argument:</strong> Remove 1 dog, rest are same color. Swap a dog, rest are same color. Overlap implies all are same.</p>
+                    <p><strong>Flaw:</strong> The sets $\{d_1, ..., d_k\}$ and $\{d_2, ..., d_{k+1}\}$ do not overlap when $k+1 = 2$ (i.e., basis step to next step fails).</p>
+
+                    <h4 class="font-bold text-red-600 mt-6">Fallacy 2: Sorites Paradox (Sand Heap)</h4>
+                    <p><strong>Argument:</strong> 1 grain is not a heap. If $n$ isn't, $n+1$ isn't. So sand never makes a heap.</p>
+                    <p><strong>Flaw:</strong> "Heap" is not a well-defined mathematical property.</p>
+
+                    <h4 class="font-bold text-red-600 mt-6">Fallacy 3: Non-living Atoms</h4>
+                    <p><strong>Argument:</strong> Atoms are non-living. Adding one atom doesn't create life. Therefore we are non-living.</p>
+                    <p><strong>Flaw:</strong> Emergent properties in complex systems are not captured by simple induction on count.</p>
+                `
+            },
+            {
+                id: 16,
+                title: "Strong Mathematical Induction",
+                type: "concept",
+                tag: "Advanced Logic",
+                content: `
+                    <h4 class="font-bold">Definition</h4>
+                    <p>To prove $P(n)$ for $n \\ge a$:</p>
+                    <ol class="list-decimal pl-6 mt-2 space-y-2">
+                        <li><strong>Basis:</strong> Show $P(a), P(a+1), ..., P(b)$ are true.</li>
+                        <li><strong>Induction:</strong> Assume $P(a), P(a+1), ..., P(k)$ are <strong>ALL</strong> true (Strong Hypothesis). Prove $P(k+1)$.</li>
+                    </ol>
+                    <p class="mt-4 text-sm bg-purple-50 p-2 rounded">Ordinary and Strong induction are equivalent, but Strong is often more natural for recursion.</p>
+                `
+            },
+            {
+                id: 17,
+                title: "Strong Induction Examples",
+                type: "proof",
+                tag: "Recursion",
+                content: `
+                    <h4 class="font-bold">Example 1: Sequence</h4>
+                    <p>Sequence: $a_0=0, a_1=4, a_k = 6a_{k-1} - 5a_{k-2}$. Prove $a_n = 5^n - 1$.</p>
+                    <p><strong>Proof:</strong> Use Strong Induction because $a_{k+1}$ depends on two previous terms ($k$ and $k-1$).</p>
+                    <p>$a_{k+1} = 6(5^k-1) - 5(5^{k-1}-1) = 6 \\cdot 5^k - 6 - 5^k + 5 = 5 \\cdot 5^k - 1 = 5^{k+1}-1$.</p>
+
+                    <h4 class="font-bold mt-6">Example 2: Prime Divisibility</h4>
+                    <p>Proposition: Any integer $n > 1$ is divisible by a prime.</p>
+                    <p><strong>Proof:</strong> If $k+1$ is prime, done. If composite, $k+1 = ab$. By Strong Hypothesis, $a$ is divisible by a prime $p$. Thus $k+1$ is divisible by $p$.</p>
+                `
+            },
+            {
+                id: 18,
+                title: "Practice: Recurrence Relations",
+                type: "problem",
+                tag: "Exercise",
+                content: `
+                    <p>Prove the following properties for sequences defined recursively:</p>
+                    <ul class="list-disc pl-6 space-y-4">
+                        <li>
+                            $a_0=12, a_1=29, a_k=5a_{k-1}-6a_{k-2}$. <br>
+                            Prove $a_n = 5\\cdot 3^n + 7\\cdot 2^n$.
+                        </li>
+                        <li>
+                            $a_1=3, a_2=5, a_k=3a_{k-1}-2a_{k-2}$. <br>
+                            Prove $a_n = 2^n + 1$.
+                        </li>
+                        <li>
+                            $a_0=1, a_1=2, a_2=3, a_k=a_{k-1}+a_{k-2}+a_{k-3}$. <br>
+                            Prove $a_n \\le 3^n$.
+                        </li>
+                    </ul>
+                `
+            },
+            {
+                id: 19,
+                title: "The Postage Stamp Problem",
+                type: "proof",
+                tag: "Classic Problem",
+                content: `
+                    <p><strong>Proposition:</strong> Any postage $n \\ge 8$ cents can be formed with 3-cent and 5-cent coins.</p>
+                    
+                    <h4 class="font-bold mt-4">Attempt 1 (Flawed Ordinary Induction)</h4>
+                    <p>Try to go from $k$ to $k+1$ by swapping coins. Swapping a 5 for two 3s works ($+1$), but requires a 5 to exist. Swapping three 3s for two 5s works ($+1$), but requires three 3s. This requires multiple cases.</p>
+
+                    <h4 class="font-bold mt-4 text-green-700">Attempt 2 (Strong Induction)</h4>
+                    <p><strong>Basis:</strong> Prove true for $n=8, 9, 10$ explicitly.</p>
+                    <p><strong>Step:</strong> To form $k+1$, simply take the solution for $k-2$ (which exists by Strong Hypothesis since $k-2 \\ge 8$) and add a 3-cent coin.</p>
+                `
+            },
+            {
+                id: 20,
+                title: "Practice: Teams & Fibonacci Bounds",
+                type: "problem",
+                tag: "Exercise",
+                content: `
+                    <ul class="list-disc pl-6 space-y-4">
+                        <li>Any collection of $n$ people can be divided into teams of 5 and 6 for all $n \\ge 35$.</li>
+                        <li>Every amount of postage of 12 cents or more can be formed using 4-cent and 5-cent stamps.</li>
+                        <li>
+                            For Fibonacci numbers ($f_n$):
+                            <ul class="list-circle pl-6 mt-2">
+                                <li>$f_n \\le (7/4)^n$ for $n \\ge 0$.</li>
+                                <li>$f_n \\ge (3/2)^{n-1}$ for $n \\ge 1$.</li>
+                                <li>$f_n = (p^n - q^n)/\\sqrt{5}$ where $p,q = (1 \\pm \\sqrt{5})/2$.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                `
+            },
+            {
+                id: 21,
+                title: "Recursion",
+                type: "recursion",
+                tag: "Algorithms",
+                content: `
+                    <p>Recursive functions define a term using previous terms.</p>
+                    <ul class="list-disc pl-6 space-y-4 mt-4">
+                        <li><strong>Factorial:</strong> $f(n) = n \\cdot f(n-1)$.</li>
+                        <li><strong>Fibonacci:</strong> $F(n) = F(n-1) + F(n-2)$.</li>
+                        <li><strong>Catalan:</strong> $C(n) = \\frac{4n-2}{n+1} C(n-1)$.</li>
+                        <li><strong>Product:</strong> $M(m,n) = M(m, n-1) + m$.</li>
+                    </ul>
+                    
+                    <div class="mt-6 border p-4 bg-gray-50">
+                        <h4 class="font-bold">The Process</h4>
+                        Observe Patterns $\\to$ Discover Recursion $\\to$ Guess Formula $\\to$ Prove by Induction $\\to$ Write Program.
+                    </div>
+                `
+            },
+            {
+                id: 22,
+                title: "Arithmetic & Geometric Sequences",
+                type: "concept",
+                tag: "Applications",
+                content: `
+                    <h4 class="font-bold">Arithmetic Sequence (Linear)</h4>
+                    <p>$a_n = a_{n-1} + d \\implies a_n = a + nd$.</p>
+                    <p><strong>Example (Skydiving):</strong> Speed increases by 9.8 m/s per sec. $s_{60} = 0 + 9.8(60) = 588$ m/s.</p>
+
+                    <hr class="my-6">
+
+                    <h4 class="font-bold">Geometric Sequence (Exponential)</h4>
+                    <p>$a_k = r a_{k-1} \\implies a_n = a r^n$.</p>
+                    <p><strong>Example (Compound Interest):</strong> $A_k = (1.03)A_{k-1} \\implies A_{21} = 100,000(1.03)^{21} \\approx 186,029$.</p>
+                `
+            },
+            {
+                id: 23,
+                title: "Towers of Hanoi",
+                type: "recursion",
+                tag: "Visual Algorithm",
+                content: `
+                    
+                    <p><strong>Goal:</strong> Move $k$ disks from Peg A to Peg C, never placing a larger disk on a smaller one.</p>
+                    
+                    <h4 class="font-bold mt-4">Recursive Algorithm</h4>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>Move top $k-1$ disks from A to B.</li>
+                        <li>Move bottom disk from A to C.</li>
+                        <li>Move top $k-1$ disks from B to C.</li>
+                    </ol>
+
+                    <div class="mt-4 bg-purple-50 p-4 rounded">
+                        <p><strong>Recurrence:</strong> $M(k) = 2M(k-1) + 1$.</p>
+                        <p><strong>Closed Form:</strong> $M(k) = 2^k - 1$.</p>
+                    </div>
+                `
+            },
+            {
+                id: 24,
+                title: "Greatest Common Divisor (Euclidean Algorithm)",
+                type: "recursion",
+                tag: "Algorithm",
+                content: `
+                    
+                    <p><strong>Definition:</strong> GCD is the largest integer dividing both $a$ and $b$.</p>
+                    
+                    <h4 class="font-bold mt-4">Recurrence Relation</h4>
+                    $$ GCD(a, b) = \\begin{cases} a & \\text{if } b=0 \\\\ GCD(b, a \\pmod b) & \\text{if } b \\ge 1 \\end{cases} $$
+                    
+                    <p class="mt-4"><strong>Example:</strong> GCD(1071, 462)</p>
+                    <p class="font-mono text-sm bg-gray-100 p-2">
+                        = GCD(462, 147)<br>
+                        = GCD(147, 21)<br>
+                        = GCD(21, 0) -> 21
+                    </p>
+                `
+            },
+            {
+                id: 25,
+                title: "Advanced: Sum of Inverse Squares",
+                type: "proof",
+                tag: "Bound Analysis",
+                content: `
+                    <h4 class="font-bold">Problem</h4>
+                    <p>Prove $\\sum_{i=1}^n \\frac{1}{i^2} < 2$ for all $n \\ge 1$.</p>
+                    <p><strong>Strategy:</strong> Prove a stronger statement: $\\sum_{i=1}^n \\frac{1}{i^2} < 2 - \\frac{1}{n}$.</p>
+                    
+                    <h4 class="font-bold mt-4">Induction Step</h4>
+                    <p>$LHS(k+1) < 2 - \\frac{1}{k} + \\frac{1}{(k+1)^2}$</p>
+                    <p>$= 2 - \\frac{(k+1)^2 - k}{k(k+1)^2} = 2 - \\frac{k^2+k+1}{k(k+1)^2}$</p>
+                    <p>$< 2 - \\frac{k(k+1)}{k(k+1)^2} = 2 - \\frac{1}{k+1} = RHS$.</p>
+                `
+            },
+            {
+                id: 26,
+                title: "Advanced: $x^n + 1/x^n$ is Integer",
+                type: "proof",
+                tag: "Strong Induction",
+                content: `
+                    <p><strong>Given:</strong> $x + 1/x$ is an integer. Prove $x^n + 1/x^n$ is an integer for all $n$.</p>
+                    
+                    <h4 class="font-bold mt-4">Proof</h4>
+                    <p><strong>Inductive Step:</strong> Uses Strong Induction on $k$ and $k-1$.</p>
+                    <p>Key Identity:</p>
+                    $$(x^k + \\frac{1}{x^k})(x + \\frac{1}{x}) = (x^{k+1} + \\frac{1}{x^{k+1}}) + (x^{k-1} + \\frac{1}{x^{k-1}})$$
+                    <p>Rearranging:</p>
+                    $$x^{k+1} + \\frac{1}{x^{k+1}} = \\text{Integer} \\cdot \\text{Integer} - \\text{Integer}$$
+                `
+            },
+            {
+                id: 27,
+                title: "Advanced: Breaking Chocolate & Stairs",
+                type: "problem",
+                tag: "Combinatorics",
+                content: `
+                    <h4 class="font-bold">Chocolate Bar</h4>
+                    
+                    <p>Breaking a bar of $n$ pieces requires $n-1$ breaks.</p>
+                    <p><em>Proof:</em> Break into two pieces size $j$ and $k+1-j$. Total breaks $= 1 + (j-1) + (k-j) = k$.</p>
+
+                    <h4 class="font-bold mt-6">Staircase Problem</h4>
+                    
+                    <p>Ways to climb $n$ stairs taking at most $b$ steps at a time.</p>
+                    <p>$S_k = S_{k-1} + S_{k-2} + ... + S_{k-b}$ for $k > b$.</p>
+                    <p>For $k \\le b$, $S_k = 2^{k-1}$.</p>
+                `
+            },
+            {
+                id: 28,
+                title: "Advanced: McCarthy's 91 Function",
+                type: "concept",
+                tag: "Nested Recursion",
+                content: `
+                    <p><strong>Definition:</strong></p>
+                    $$ M(n) = \\begin{cases} n-10 & \\text{if } n \\ge 101 \\\\ M(M(n+11)) & \\text{if } n \\le 100 \\end{cases} $$
+                    
+                    <p class="mt-4"><strong>Proposition:</strong> $M(n) = 91$ for all $n \\le 100$.</p>
+                    <p><strong>Proof Key:</strong></p>
+                    <p>Basis: For $90 \\le n \\le 100$, $M(n) = M(M(n+11)) = M(n+11-10) = M(n+1)$... leads to $M(101) = 91$.</p>
+                    <p>Step: For $n < 90$, $M(n) = M(M(n+11))$. Since $n+11 < 101$, apply hypothesis to inner term.</p>
+                `
+            },
+            {
+                id: 29,
+                title: "Advanced: Continued Fractions",
+                type: "proof",
+                tag: "Rational Numbers",
+                content: `
+                    <p><strong>Proposition:</strong> Every rational number can be written as a continued fraction.</p>
+                    $$ a_1 + \\frac{1}{a_2 + \\frac{1}{a_3 + ...}} $$
+                    
+                    <h4 class="font-bold mt-4">Proof by Induction on Denominator $d$</h4>
+                    <p>For $n/d$, write $n = qd + r$.</p>
+                    <p>$\\frac{n}{d} = q + \\frac{r}{d} = q + \\frac{1}{d/r}$.</p>
+                    <p>Since $r < d$, the fraction $d/r$ has a smaller denominator. By hypothesis, $d/r$ is a continued fraction. Thus $n/d$ is too.</p>
+                `
+            }
+        ];
+
+        // State Management
+        let currentSlideIndex = 0;
+
+        // DOM Elements
+        const cardTitle = document.getElementById('card-title');
+        const cardBody = document.getElementById('card-body');
+        const cardTag = document.getElementById('card-tag');
+        const cardHeader = document.getElementById('card-header');
+        const slideCounter = document.getElementById('slide-counter');
+        const tocList = document.getElementById('toc-list');
+        const cardContainer = document.getElementById('card-container');
+
+        // Initialization
+        function init() {
+            renderTOC();
+            loadSlide(0);
+
+            // Keyboard Navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "ArrowRight") nextSlide();
+                if (e.key === "ArrowLeft") prevSlide();
+            });
+
+            // Touch Navigation (Swipe)
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchEndX = 0;
+            let touchEndY = 0;
+
+            document.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                touchEndY = e.changedTouches[0].screenY;
+                handleGesture();
+            }, { passive: true });
+
+            function handleGesture() {
+                const xDiff = touchEndX - touchStartX;
+                const yDiff = touchEndY - touchStartY;
+
+                if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > 50) {
+                    if (xDiff > 0) prevSlide();
+                    else nextSlide();
+                }
+            }
+        }
+
+        // Render Table of Contents
+        function renderTOC() {
+            tocList.innerHTML = lessonData.map((slide, index) => `
+                <li>
+                    <button onclick="loadSlide(${index})" class="text-left w-full p-2 hover:bg-slate-100 rounded transition flex items-center gap-2 ${index === currentSlideIndex ? 'font-bold text-blue-600 bg-blue-50' : 'text-slate-600'}">
+                        <span class="text-xs font-mono opacity-50">${index + 1}.</span>
+                        <span>${slide.title}</span>
+                    </button>
+                </li>
+            `).join('');
+        }
+
+        // Load specific slide
+        function loadSlide(index) {
+            if (index < 0 || index >= lessonData.length) return;
+
+            currentSlideIndex = index;
+            const data = lessonData[index];
+
+            // Update Text
+            cardTitle.innerText = data.title;
+            cardTag.innerText = data.tag;
+            cardBody.innerHTML = `<div class="fade-in">${data.content}</div>`;
+            slideCounter.innerText = `${index + 1} / ${lessonData.length}`;
+
+            // Update Styles based on Type
+            const typeColors = {
+                concept: { bg: 'bg-slate-50', border: 'type-concept', tag: 'bg-blue-100 text-blue-700' },
+                proof: { bg: 'bg-green-50', border: 'type-proof', tag: 'bg-green-100 text-green-700' },
+                fallacy: { bg: 'bg-red-50', border: 'type-fallacy', tag: 'bg-red-100 text-red-700' },
+                problem: { bg: 'bg-orange-50', border: 'type-problem', tag: 'bg-orange-100 text-orange-700' },
+                recursion: { bg: 'bg-purple-50', border: 'type-recursion', tag: 'bg-purple-100 text-purple-700' }
+            };
+
+            const style = typeColors[data.type] || typeColors.concept;
+
+            cardHeader.className = `p-6 border-b shrink-0 rounded-t-2xl transition-colors duration-300 ${style.border} ${style.bg}`;
+            cardTag.className = `inline-block px-2 py-1 text-xs font-semibold rounded uppercase tracking-wide mb-2 transition-colors duration-300 ${style.tag}`;
+
+            // Re-render TOC highlight
+            renderTOC();
+
+            // Trigger MathJax Typesetting
+            if (window.MathJax) {
+                MathJax.typesetPromise([cardBody]);
+            }
+        }
+
+        function nextSlide() {
+            loadSlide(currentSlideIndex + 1);
+        }
+
+        function prevSlide() {
+            loadSlide(currentSlideIndex - 1);
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
+
+</html>
