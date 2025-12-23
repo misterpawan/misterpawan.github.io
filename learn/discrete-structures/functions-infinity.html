@@ -548,6 +548,9 @@
                 div.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
             });
 
+            const nextLessonDiv = document.getElementById('next-lesson-container');
+            if (nextLessonDiv) nextLessonDiv.remove();
+
             for (let i = 1; i <= total; i++) {
                 const name = 'q' + i;
                 const options = document.getElementsByName(name);
@@ -569,6 +572,21 @@
             resultDisplay.textContent = `Score: ${score} / ${total}`;
             resultDisplay.classList.remove('hidden');
             resultDisplay.classList.add('animate-bounce');
+
+            if (score === total) {
+                const quizSection = document.getElementById('quiz');
+                const nextBtn = document.createElement('div');
+                nextBtn.id = 'next-lesson-container';
+                nextBtn.className = 'mt-8 text-center fade-in';
+                nextBtn.innerHTML = `
+                    <p class="text-slate-600 mb-4">🎉 Excellent! You've mastered functions.</p>
+                    <a href="relations.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-0.5">
+                        Next: Relations
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                    </a>
+                `;
+                quizSection.querySelector('.p-6:last-child').appendChild(nextBtn);
+            }
 
             document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
         }

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics: Relations</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .svg-container {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: white;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-slate-900 text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl">Discrete Math: Relations</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Intro</a>
+                        <a href="#binary" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Binary</a>
+                        <a href="#properties"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Properties</a>
+                        <a href="#equivalence"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Equivalence</a>
+                        <a href="#modular"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Modular</a>
+                        <a href="#quiz"
+                            class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header id="intro" class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-900">Relations</h1>
+            <p class="mt-4 text-xl text-slate-600">Mappings, Properties, Equivalence Classes & Modular Arithmetic</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 fade-in">
+            <h2 class="text-2xl font-bold text-blue-700 mb-6 border-b pb-2">1. Functions vs. Relations</h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">The Distinction</h3>
+                    <p class="mb-4 text-slate-600">A function maps each input to exactly one output. A relation
+                        generalizes this: an input can map to multiple outputs, or none.</p>
+
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4 text-sm">
+                        <p class="font-bold text-red-800">Not Functions (Relations):</p>
+                        <ul class="list-disc pl-5 mt-1 space-y-1">
+                            <li>$x < y$ (One number is less than infinitely many others)</li>
+                            <li>$x$ is a parent of $y$ (A parent can have multiple children)</li>
+                            <li>Matrix $A$ is orthogonal to Matrix $B$</li>
+                            <li>Triangle $t_1$ congruent to $t_2$</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-3 rounded text-center">
+                            <p class="font-bold text-green-600 text-sm mb-1">Function ($y=x^2$)</p>
+                            <svg class="svg-container" viewBox="-10 -2 20 12">
+                                <line x1="-10" y1="0" x2="10" y2="0" stroke="#cbd5e1" stroke-width="0.2" />
+                                <line x1="0" y1="-2" x2="0" y2="10" stroke="#cbd5e1" stroke-width="0.2" />
+                                <path d="M -3 9 Q 0 0 3 9" stroke="green" fill="none" stroke-width="0.5" />
+                            </svg>
+                            <p class="text-xs text-slate-500 mt-1">Passes Vertical Line Test</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded text-center">
+                            <p class="font-bold text-blue-600 text-sm mb-1">Relation ($x=y^2$)</p>
+                            <svg class="svg-container" viewBox="-2 -5 12 10">
+                                <line x1="-2" y1="0" x2="10" y2="0" stroke="#cbd5e1" stroke-width="0.2" />
+                                <line x1="0" y1="-5" x2="0" y2="5" stroke="#cbd5e1" stroke-width="0.2" />
+                                <path d="M 9 -3 Q 0 0 9 3" stroke="blue" fill="none" stroke-width="0.5" />
+                            </svg>
+                            <p class="text-xs text-slate-500 mt-1">Fails Vertical Line Test</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="binary" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 fade-in">
+            <h2 class="text-2xl font-bold text-blue-700 mb-6 border-b pb-2">2. Binary Relations & Inverses</h2>
+
+            <div class="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                <h3 class="font-bold text-blue-800">Definition</h3>
+                <p>A binary relation $R$ from set $A$ to set $B$ is a subset of $A \times B$. <br>
+                    The <strong>inverse relation</strong> $R^{-1}$ flips the pairs: $R^{-1} = \{(y, x) \in B \times A
+                    \mid (x, y) \in R\}$.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-bold text-lg mb-2">Finite Example</h4>
+                    <p class="text-sm text-slate-600 mb-2"><strong>Set A:</strong> {2, 3, 4} | <strong>Set B:</strong>
+                        {2, 6, 8}</p>
+                    <p class="text-sm text-slate-600 mb-4"><strong>Relation R:</strong> $a$ divides $b$ ($a|b$)</p>
+
+                    <div class="flex justify-between text-sm font-mono bg-slate-100 p-3 rounded">
+                        <div>
+                            <p class="font-bold text-slate-500">R</p>
+                            <p>(2,2)</p>
+                            <p>(2,6)</p>
+                            <p>(2,8)</p>
+                            <p>(3,6)</p>
+                            <p>(4,8)</p>
+                        </div>
+                        <div class="text-2xl text-slate-300 self-center">⇄</div>
+                        <div>
+                            <p class="font-bold text-slate-500">R⁻¹</p>
+                            <p>(2,2)</p>
+                            <p>(6,2)</p>
+                            <p>(8,2)</p>
+                            <p>(6,3)</p>
+                            <p>(8,4)</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2 text-right">Inverse Meaning: $b$ is a multiple of $a$.</p>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-bold text-lg mb-2">Infinite Example</h4>
+                    <p class="text-sm text-slate-600 mb-2"><strong>Relation:</strong> $v = 2|u|$ on $\mathbb{R} \times
+                        \mathbb{R}$.</p>
+                    <div class="flex gap-2">
+                        <div class="w-1/2 text-center">
+                            <p class="text-xs font-bold mb-1">Graph R ($v=2|u|$)</p>
+                            <svg class="svg-container h-32" viewBox="-5 -1 10 12">
+                                <path d="M -4 8 L 0 0 L 4 8" stroke="blue" fill="none" stroke-width="0.5" />
+                                <line x1="-5" y1="0" x2="5" y2="0" stroke="black" stroke-width="0.2" />
+                                <line x1="0" y1="-1" x2="0" y2="10" stroke="black" stroke-width="0.2" />
+                            </svg>
+                        </div>
+                        <div class="w-1/2 text-center">
+                            <p class="text-xs font-bold mb-1">Graph R⁻¹ ($u=2|v|$)</p>
+                            <svg class="svg-container h-32" viewBox="-1 -5 12 10">
+                                <path d="M 8 -4 L 0 0 L 8 4" stroke="red" fill="none" stroke-width="0.5" />
+                                <line x1="-1" y1="0" x2="10" y2="0" stroke="black" stroke-width="0.2" />
+                                <line x1="0" y1="-5" x2="0" y2="5" stroke="black" stroke-width="0.2" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2 text-right">R⁻¹ is not a function (fails vertical line test).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="properties" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 fade-in">
+            <h2 class="text-2xl font-bold text-blue-700 mb-6 border-b pb-2">3. Properties of Relations</h2>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-slate-50 p-4 rounded hover:bg-slate-100 transition">
+                    <h4 class="font-bold text-indigo-700">Reflexive</h4>
+                    <p class="text-sm mt-1">$(x,x) \in R$ for all $x$.</p>
+                    <p class="text-xs text-slate-500 mt-2">"Every element loops to itself."</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded hover:bg-slate-100 transition">
+                    <h4 class="font-bold text-indigo-700">Symmetric</h4>
+                    <p class="text-sm mt-1">If $(x,y) \in R$, then $(y,x) \in R$.</p>
+                    <p class="text-xs text-slate-500 mt-2">"Arrows go both ways."</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded hover:bg-slate-100 transition">
+                    <h4 class="font-bold text-indigo-700">Transitive</h4>
+                    <p class="text-sm mt-1">If $(x,y) \in R$ and $(y,z) \in R$, then $(x,z) \in R$.</p>
+                    <p class="text-xs text-slate-500 mt-2">"Direct paths exist for indirect routes."</p>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <h4 class="font-bold text-yellow-800">Analyze R on set {0, 1, 2, 3}</h4>
+                <p class="text-sm text-yellow-800 mb-2">R = {(0,0), (0,1), (0,3), (1,0), (1,1), (2,2), (3,0), (3,3)}</p>
+                <div class="grid grid-cols-3 gap-4 text-center text-sm">
+                    <div class="bg-white p-2 rounded shadow-sm">
+                        <span class="font-bold">Reflexive?</span><br>
+                        <span class="text-green-600 font-bold">YES</span><br>
+                        (0,0)..(3,3) all present.
+                    </div>
+                    <div class="bg-white p-2 rounded shadow-sm">
+                        <span class="font-bold">Symmetric?</span><br>
+                        <span class="text-green-600 font-bold">YES</span><br>
+                        (0,1)↔(1,0), (0,3)↔(3,0).
+                    </div>
+                    <div class="bg-white p-2 rounded shadow-sm">
+                        <span class="font-bold">Transitive?</span><br>
+                        <span class="text-red-600 font-bold">NO</span><br>
+                        (1,0) & (0,3) exist, but <strong>(1,3) is missing</strong>.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="equivalence" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 fade-in">
+            <h2 class="text-2xl font-bold text-blue-700 mb-6 border-b pb-2">4. Equivalence Relations</h2>
+            <p class="mb-4">A relation is an <strong>Equivalence Relation</strong> if it is Reflexive, Symmetric, and
+                Transitive. It partitions a set into disjoint <strong>Equivalence Classes</strong>.</p>
+
+            <div class="space-y-6">
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg text-slate-800">Example: "Least Element" on Power Set</h3>
+                    <p class="text-sm text-slate-600 mb-2">Let $X$ be the power set of $\{1, 2, 3\}$. Relation $R$: $A R
+                        B \iff \min(A) = \min(B)$.</p>
+
+                    <div class="bg-slate-50 p-3 rounded text-sm">
+                        <p class="font-bold mb-1">Equivalence Classes:</p>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>[{1}] (Min is 1):</strong> $\{1\}, \{1,2\}, \{1,3\}, \{1,2,3\}$</li>
+                            <li><strong>[{2}] (Min is 2):</strong> $\{2\}, \{2,3\}$</li>
+                            <li><strong>[{3}] (Min is 3):</strong> $\{3\}$</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg text-slate-800">Example: Congruence Modulo $n$</h3>
+                    <p class="text-sm text-slate-600 mb-2">$a \equiv b \pmod n \iff n \mid (a-b)$. This partitions
+                        integers into $n$ classes.</p>
+
+                    <div class="bg-slate-50 p-3 rounded text-sm grid grid-cols-3 gap-2 text-center">
+                        <div class="border p-2 bg-white">
+                            <strong>[0]</strong><br>
+                            {..., -3, 0, 3, 6...}
+                        </div>
+                        <div class="border p-2 bg-white">
+                            <strong>[1]</strong><br>
+                            {..., -2, 1, 4, 7...}
+                        </div>
+                        <div class="border p-2 bg-white">
+                            <strong>[2]</strong><br>
+                            {..., -1, 2, 5, 8...}
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 text-right mt-1">Example for Mod 3</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="modular" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 fade-in">
+            <h2 class="text-2xl font-bold text-blue-700 mb-6 border-b pb-2">5. Modular Arithmetic Applications</h2>
+
+            <div class="space-y-8">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-2">1. Finding the Last Digit</h3>
+                        <p class="text-sm text-slate-600 mb-2">Find the units digit of $1483^{8650}$.</p>
+                        <div class="bg-indigo-50 p-4 rounded text-sm space-y-2">
+                            <p>1. We need $3^{8650} \pmod{10}$.</p>
+                            <p>2. Pattern of powers of 3: <br> $3^1=3, 3^2=9, 3^3=7, 3^4=1$. (Cycle of 4)</p>
+                            <p>3. Exponent $8650 = 4(2162) + 2$. Remainder is 2.</p>
+                            <p>4. $3^{8650} \equiv 3^2 \equiv \mathbf{9}$.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-2">2. Inconsistent Systems</h3>
+                        <p class="text-sm text-slate-600 mb-2">Solve $16x + 12y = 32$ and $40x - 9y = 7$.</p>
+                        <div class="bg-red-50 p-4 rounded text-sm space-y-2 border border-red-100">
+                            <p><strong>Apply Mod 3:</strong></p>
+                            <p>Eq 1: $16 \equiv 1, 12 \equiv 0, 32 \equiv 2$. <br> $\implies 1x + 0y \equiv 2 \implies
+                                \mathbf{x \equiv 2}$.</p>
+                            <p>Eq 2: $40 \equiv 1, -9 \equiv 0, 7 \equiv 1$. <br> $\implies 1x + 0y \equiv 1 \implies
+                                \mathbf{x \equiv 1}$.</p>
+                            <p class="text-red-700 font-bold">Contradiction! $x$ cannot be 1 and 2. No integer solution.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t pt-6">
+                    <h3 class="font-bold text-lg mb-2">3. Universal Product Code (UPC) Check Digit</h3>
+                    <p class="text-sm text-slate-600 mb-4">Code: <strong>88442334010</strong>. Find the 12th digit.</p>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-gray-100 p-4 rounded font-mono text-sm">
+                            <p class="font-bold text-slate-500 mb-2">Formula:</p>
+                            <p>$k = 3(\text{Sum Odd Pos}) + (\text{Sum Even Pos})$</p>
+                            <p>$a_{12} = (210 - k) \pmod{10}$</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded text-sm">
+                            <p><strong>Odd (1,3,5...):</strong> $8+4+2+3+0+0 = 17$</p>
+                            <p><strong>Even (2,4,6...):</strong> $8+4+3+4+1 = 20$</p>
+                            <p>$k = 3(17) + 20 = 51 + 20 = 71$.</p>
+                            <p>$a_{12} = (210 - 71) \pmod{10} = 139 \pmod{10} = \mathbf{9}$.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="bg-slate-900 text-white rounded-xl shadow-lg p-8 fade-in">
+            <h2 class="text-3xl font-bold mb-6 text-center">Review Quiz</h2>
+
+            <form id="quizForm" class="space-y-6 max-w-2xl mx-auto">
+                <div class="bg-slate-800 p-4 rounded-lg">
+                    <p class="font-bold mb-3">1. Is the relation $R = \{(x,y) \in \mathbb{R}^2 \mid x < y\}$
+                            reflexive?</p>
+                            <label class="block cursor-pointer p-2 hover:bg-slate-700 rounded"><input type="radio"
+                                    name="q1" value="no" class="mr-2"> No, because $x \nless x$.</label>
+                            <label class="block cursor-pointer p-2 hover:bg-slate-700 rounded"><input type="radio"
+                                    name="q1" value="yes" class="mr-2"> Yes, all numbers are related to
+                                themselves.</label>
+                </div>
+
+                <div class="bg-slate-800 p-4 rounded-lg">
+                    <p class="font-bold mb-3">2. If a relation is an Equivalence Relation, it partitions the set into:
+                    </p>
+                    <label class="block cursor-pointer p-2 hover:bg-slate-700 rounded"><input type="radio" name="q2"
+                            value="wrong" class="mr-2"> Overlapping subsets</label>
+                    <label class="block cursor-pointer p-2 hover:bg-slate-700 rounded"><input type="radio" name="q2"
+                            value="correct" class="mr-2"> Disjoint Equivalence Classes</label>
+                </div>
+
+                <div class="bg-slate-800 p-4 rounded-lg">
+                    <p class="font-bold mb-3">3. What is the value of $3^{4k+3} \pmod{10}$?</p>
+                    <label class="block cursor-pointer p-2 hover:bg-slate-700 rounded"><input type="radio" name="q3"
+                            value="1" class="mr-2"> 1</label>
+                    <label class="block cursor-pointer p-2 hover:bg-slate-700 rounded"><input type="radio" name="q3"
+                            value="3" class="mr-2"> 3</label>
+                    <label class="block cursor-pointer p-2 hover:bg-slate-700 rounded"><input type="radio" name="q3"
+                            value="7" class="mr-2"> 7</label>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button type="button" onclick="checkQuiz()"
+                        class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-8 rounded-full transition transform hover:scale-105 shadow-lg">
+                        Check Answers
+                    </button>
+
+                    <a href="index.html"
+                        class="inline-block mt-8 text-slate-400 hover:text-white transition underline">Back to Course
+                        Home</a>
+                </div>
+
+                <div id="quizResult" class="hidden mt-4 text-center font-bold text-xl"></div>
+            </form>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8 text-center text-slate-500 text-sm mt-12">
+        <p>&copy; Discrete Math Lesson Series</p>
+    </footer>
+
+    <script>
+        function checkQuiz() {
+            const form = document.getElementById('quizForm');
+            let score = 0;
+            const total = 3;
+
+            // Q1 Correct: No
+            if (form.querySelector('input[name="q1"][value="no"]').checked) score++;
+
+            // Q2 Correct: Disjoint
+            if (form.querySelector('input[name="q2"][value="correct"]').checked) score++;
+
+            // Q3 Correct: 7 (3^3 = 27)
+            if (form.querySelector('input[name="q3"][value="7"]').checked) score++;
+
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.classList.remove('hidden');
+            if (score === total) {
+                resultDiv.className = "mt-4 text-center font-bold text-xl text-green-400";
+                resultDiv.innerHTML = `Perfect! ${score}/${total}`;
+            } else {
+                resultDiv.className = "mt-4 text-center font-bold text-xl text-yellow-400";
+                resultDiv.innerHTML = `You got ${score}/${total}. Try again!`;
+            }
+        }
+    </script>
+</body>
+
+</html>
