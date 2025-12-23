@@ -644,7 +644,7 @@
             },
             {
                 id: 26,
-                title: "Advanced: $x^n + 1/x^n$ is Integer",
+                title: "Advanced: $x^n + \\frac{1}{x^n}$ is Integer",
                 type: "proof",
                 tag: "Strong Induction",
                 content: `
@@ -803,9 +803,11 @@
 
             // Trigger MathJax Typesetting
             if (window.MathJax) {
-                MathJax.typesetPromise([cardBody]);
+                // Ensure title is also typeset
+                MathJax.typesetPromise([cardBody, cardTitle]);
             }
         }
+
 
         function nextSlide() {
             loadSlide(currentSlideIndex + 1);

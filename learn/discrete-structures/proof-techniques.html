@@ -623,7 +623,8 @@
 
             // Trigger MathJax Typesetting
             if (window.MathJax) {
-                MathJax.typesetPromise([cardBody]);
+                // Ensure title is also typeset
+                MathJax.typesetPromise([cardBody, cardTitle]);
             }
         }
 
