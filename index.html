@@ -190,8 +190,7 @@
       <button onclick="showSection('mentor')"
         class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500">Mentor</button>
       <a href="cv.html" target="_blank"
-        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 flex items-center">CV
-        <span id="cv-last-updated" class="ml-1 text-xs opacity-75"></span></a>
+        class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 flex items-center">CV</a>
       <a href="learn/index.html"
         class="nav-btn px-4 py-2 rounded-xl hover:bg-orange-100 dark:hover:bg-gray-700 transition font-medium text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 flex items-center">Learn</a>
     </div>
@@ -2452,33 +2451,6 @@
 
   <!-- 1. Main Navigation -->
   <script>
-    // Automatic CV Last Updated Date
-    async function updateCVDate() {
-      const cvDateSpan = document.getElementById('cv-last-updated');
-      if (cvDateSpan) {
-        try {
-          const response = await fetch('cv.html', { method: 'HEAD' });
-          const lastMod = response.headers.get('Last-Modified');
-          const date = lastMod ? new Date(lastMod) : new Date(); // Fallback to today if header missing
-
-          const day = date.getDate();
-          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          const month = months[date.getMonth()];
-          const year = date.getFullYear().toString().slice(-2);
-          cvDateSpan.textContent = `(${day} ${month} ${year})`;
-        } catch (e) {
-          // Fallback for local files or fetch errors
-          const now = new Date();
-          const day = now.getDate();
-          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          const month = months[now.getMonth()];
-          const year = now.getFullYear().toString().slice(-2);
-          cvDateSpan.textContent = `(${day} ${month} ${year})`;
-        }
-      }
-    }
-    document.addEventListener('DOMContentLoaded', updateCVDate);
-
     // Existing functions...
     function showSection(sectionId) {
       const target = document.getElementById(sectionId + '-section');
