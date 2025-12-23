@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics: Functions & Infinity</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .diagram-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .set-oval {
+            border: 2px solid #334155;
+            border-radius: 30px;
+            padding: 15px;
+            min-width: 80px;
+            text-align: center;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #64748b;
+        }
+
+        .proof-box {
+            border-left: 4px solid #3b82f6;
+            background-color: #eff6ff;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .counter-box {
+            border-left: 4px solid #ef4444;
+            background-color: #fef2f2;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .visual-box {
+            border-left: 4px solid #8b5cf6;
+            background-color: #f5f3ff;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .quiz-option {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background-color: #f1f5f9;
+        }
+
+        .zigzag-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            text-align: center;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800">
+
+    <nav class="bg-slate-900 text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl tracking-tight">Discrete Math: Functions</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#types" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Types</a>
+                        <a href="#composition"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Composition</a>
+                        <a href="#cardinality"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Cardinality</a>
+                        <a href="#advanced" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Advanced
+                            Proofs</a>
+                        <a href="#quiz"
+                            class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Functions & Infinite Sets</h1>
+            <p class="mt-4 text-xl text-slate-600">From One-to-One Mappings to Uncountable Infinities</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <section id="types" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-blue-600 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">1. Types of Functions</h2>
+            </div>
+
+            <div class="bg-white shadow rounded-xl overflow-hidden">
+                <div class="p-6 bg-slate-50 border-b border-slate-100">
+                    <h3 class="text-xl font-bold text-slate-800">One-to-One (Injective)</h3>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1">
+                            <p class="text-slate-600 mb-4">A function $F: X \to Y$ is one-to-one if distinct inputs map
+                                to distinct outputs. No two arrows point to the same dot.</p>
+                            <div class="bg-blue-50 p-4 rounded border-l-4 border-blue-500 text-sm">
+                                <strong>Formal Definition:</strong><br>
+                                $\forall x_1, x_2 \in X$, if $F(x_1) = F(x_2)$, then $x_1 = x_2$.
+                            </div>
+                        </div>
+                        <div class="flex-1 diagram-container">
+                            <div class="text-center">
+                                <div class="set-oval space-y-2">
+                                    <div
+                                        class="bg-blue-100 rounded-full w-6 h-6 mx-auto text-xs flex items-center justify-center">
+                                        1</div>
+                                    <div
+                                        class="bg-blue-100 rounded-full w-6 h-6 mx-auto text-xs flex items-center justify-center">
+                                        2</div>
+                                </div>
+                            </div>
+                            <div class="arrow">$\rightarrow$</div>
+                            <div class="text-center">
+                                <div class="set-oval space-y-2">
+                                    <div
+                                        class="bg-red-100 rounded-full w-6 h-6 mx-auto text-xs flex items-center justify-center">
+                                        A</div>
+                                    <div
+                                        class="bg-red-100 rounded-full w-6 h-6 mx-auto text-xs flex items-center justify-center">
+                                        B</div>
+                                    <div
+                                        class="bg-red-100 rounded-full w-6 h-6 mx-auto text-xs flex items-center justify-center">
+                                        C</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 border-t pt-4">
+                        <h4 class="font-bold text-sm uppercase text-slate-500 mb-2">Proof Example</h4>
+                        <p class="mb-2">Is $f(x) = 4x - 1$ one-to-one?</p>
+                        <div class="proof-box">
+                            <p>Suppose $f(x_1) = f(x_2)$.</p>
+                            <p>$\implies 4x_1 - 1 = 4x_2 - 1$</p>
+                            <p>$\implies 4x_1 = 4x_2$</p>
+                            <p>$\implies x_1 = x_2$. <strong>Yes.</strong></p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h4 class="font-bold text-sm uppercase text-slate-500 mb-2">Counter Example</h4>
+                        <p class="mb-2">Is $g(n) = n^2$ one-to-one on $\mathbb{Z}$?</p>
+                        <div class="counter-box">
+                            <p>Let $n_1 = 1, n_2 = -1$.</p>
+                            <p>$g(1) = 1$ and $g(-1) = 1$.</p>
+                            <p>$g(n_1) = g(n_2)$ but $n_1 \neq n_2$. <strong>No.</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-xl overflow-hidden">
+                <div class="p-6 bg-slate-50 border-b border-slate-100">
+                    <h3 class="text-xl font-bold text-slate-800">Onto (Surjective)</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-slate-600 mb-4">A function is onto if every element in the codomain is "hit" by at
+                        least one element from the domain.</p>
+                    <div class="bg-purple-50 p-4 rounded border-l-4 border-purple-500 text-sm mb-4">
+                        <strong>Formal Definition:</strong><br>
+                        $\forall y \in Y, \exists x \in X$ such that $F(x) = y$.
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold">Proof Strategy</h4>
+                            <p class="text-sm text-slate-600 mb-2">Start with an arbitrary $y$. Construct specific $x$
+                                that maps to it.</p>
+                            <div class="proof-box">
+                                <p><strong>Problem:</strong> Is $f(x) = 4x-1$ onto?</p>
+                                <p>Let $y \in \mathbb{R}$. We need $4x-1 = y$.</p>
+                                <p>Solving for $x$: $x = (y+1)/4$.</p>
+                                <p>Since $(y+1)/4$ is a real number, $x$ exists. <strong>Yes.</strong></p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Counterexample Strategy</h4>
+                            <p class="text-sm text-slate-600 mb-2">Find a $y$ that cannot be generated.</p>
+                            <div class="counter-box">
+                                <p><strong>Problem:</strong> Is $g(n) = 4n-1$ onto for $\mathbb{Z}$?</p>
+                                <p>Try to reach $y=0$.</p>
+                                <p>$4n-1 = 0 \implies n = 1/4$.</p>
+                                <p>$1/4$ is not an integer. 0 is never hit. <strong>No.</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-xl overflow-hidden">
+                <div class="p-6 bg-slate-50 border-b border-slate-100">
+                    <h3 class="text-xl font-bold text-slate-800">One-to-One Correspondence (Bijection)</h3>
+                </div>
+                <div class="p-6">
+                    <p class="mb-4">A function is a bijection if it is <strong>both</strong> one-to-one and onto. This
+                        implies an <strong>Inverse Function</strong> exists.</p>
+
+                    <div class="bg-green-50 p-4 rounded border-l-4 border-green-500 mb-4">
+                        <strong>Inverse Definition:</strong> $F^{-1}(y) = x \iff F(x) = y$.
+                    </div>
+
+                    <h4 class="font-bold text-slate-700">Example: Coordinate Geometry</h4>
+                    <p class="mb-2">Define $F(x,y) = (x+y, x-y)$. Is it a bijection?</p>
+                    <div class="proof-box">
+                        <p><strong>1. One-to-One:</strong> Assume $F(x_1, y_1) = F(x_2, y_2)$.</p>
+                        <p>$\implies x_1+y_1 = x_2+y_2$ and $x_1-y_1 = x_2-y_2$. Adding equations gives $2x_1=2x_2
+                            \implies x_1=x_2$. Subtracting gives $y_1=y_2$.</p>
+                        <p><strong>2. Onto:</strong> Given $(u,v)$, find $(x,y)$.</p>
+                        <p>Set $x+y=u, x-y=v$. Solving gives $x=(u+v)/2, y=(u-v)/2$. These exist in $\mathbb{R}$.</p>
+                        <p class="mt-2 font-bold text-green-700">Conclusion: It is a bijection.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="composition" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-purple-600 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">2. Composition of Functions</h2>
+            </div>
+
+            <div class="bg-white shadow rounded-xl p-6">
+                <div class="flex justify-center items-center gap-4 mb-6">
+                    <span class="font-bold text-xl">X</span>
+                    <span class="text-2xl">$\xrightarrow{f}$</span>
+                    <span class="font-bold text-xl">Y</span>
+                    <span class="text-2xl">$\xrightarrow{g}$</span>
+                    <span class="font-bold text-xl">Z</span>
+                </div>
+                <div class="bg-slate-50 p-4 rounded text-center border mb-6">
+                    <p class="text-lg">$(g \circ f)(x) = g(f(x))$</p>
+                    <p class="text-sm text-slate-500">"g composed with f" means apply f first, then g.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold mb-2">Example Calculation</h4>
+                        <p>$f(n) = n+1$ (Successor)</p>
+                        <p>$g(n) = n^2$ (Square)</p>
+                        <div class="mt-2 p-3 bg-gray-50 rounded border">
+                            <p>$(g \circ f)(n) = g(n+1) = (n+1)^2$</p>
+                            <p>$(f \circ g)(n) = f(n^2) = n^2+1$</p>
+                            <p class="text-red-600 font-bold mt-1 text-sm">Order matters! $g \circ f \neq f \circ g$</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2">Key Properties</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                            <li><strong>Identity:</strong> $f \circ I_X = f$ and $I_Y \circ f = f$.</li>
+                            <li><strong>Inverse:</strong> $f^{-1} \circ f = I_X$ (Identity on Domain).</li>
+                            <li>If $f, g$ are one-to-one, $g \circ f$ is one-to-one.</li>
+                            <li>If $f, g$ are onto, $g \circ f$ is onto.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cardinality" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-red-600 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">3. Infinite Sets & Cardinality</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-bold text-lg mb-2 text-blue-700">Countable Sets</h3>
+                    <p class="text-sm mb-4">Sets that have the same size ("cardinality") as the natural numbers
+                        $\mathbb{N}$. You can list them: 1st, 2nd, 3rd...</p>
+                    <ul class="text-sm list-disc pl-5 bg-blue-50 p-3 rounded">
+                        <li>$\mathbb{N}$ (Natural Numbers)</li>
+                        <li>$\mathbb{Z}$ (Integers)</li>
+                        <li>$\mathbb{Z}^{even}$ (Even Integers)</li>
+                        <li>$\mathbb{Q}^+$ (Rational Numbers)</li>
+                    </ul>
+                </div>
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-bold text-lg mb-2 text-red-700">Uncountable Sets</h3>
+                    <p class="text-sm mb-4">Sets that are strictly larger than $\mathbb{N}$. You cannot list them; any
+                        list will miss elements.</p>
+                    <ul class="text-sm list-disc pl-5 bg-red-50 p-3 rounded">
+                        <li>$\mathbb{R}$ (Real Numbers)</li>
+                        <li>Intervals like $(0,1)$ or $[0,1]$</li>
+                        <li>Set of all infinite binary sequences</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-4">Paradox: Integers vs. Even Integers</h3>
+                <p class="mb-4">Intuitively, there are half as many even numbers as integers. But mathematically, they
+                    have the <strong>same cardinality</strong>!</p>
+                <div class="visual-box">
+                    <p class="font-bold text-purple-900 mb-2">The One-to-One Correspondence:</p>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p class="font-bold">$\mathbb{Z}$</p>
+                            <p>... -2, -1, 0, 1, 2 ...</p>
+                        </div>
+                        <div>
+                            <p class="font-bold">$\mathbb{Z}^{even}$</p>
+                            <p>... -4, -2, 0, 2, 4 ...</p>
+                        </div>
+                    </div>
+                    <p class="text-center mt-4 font-mono bg-white p-2 rounded border">Function: $f(n) = 2n$</p>
+                    <p class="text-sm text-center mt-2">Since $f$ is a bijection, $|\mathbb{Z}| = |\mathbb{Z}^{even}|$.
+                        An infinite set can have the same size as its proper subset!</p>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-4">Proof: Rational Numbers are Countable</h3>
+                <p class="mb-4">How do we list fractions? We can't just do $1/1, 1/2, 1/3...$ because we'd never get to
+                    $2/1$. Instead, we use Cantor's <strong>Zig-Zag</strong> method.</p>
+
+                <div class="bg-slate-50 p-4 rounded border overflow-x-auto">
+                    <div class="zigzag-grid text-sm text-slate-500">
+                        <span>1/1</span> <span>1/2</span> <span>1/3</span> <span>1/4</span> <span>...</span>
+                        <span>2/1</span> <span>2/2</span> <span>2/3</span> <span>...</span> <span></span>
+                        <span>3/1</span> <span>3/2</span> <span>...</span> <span></span> <span></span>
+                        <span>4/1</span> <span>...</span> <span></span> <span></span> <span></span>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-sm font-medium">Path: 1/1 $\to$ 1/2 $\to$ 2/1 $\to$ 3/1 $\to$ 2/2 $\to$ 1/3 $\to$
+                            ...</p>
+                        <p class="text-xs text-slate-400 mt-1">(Skip duplicates like 2/2 if strictly counting values)
+                        </p>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm">Since we can create a path that eventually hits every fraction, we can map them
+                    to $1, 2, 3...$. Thus, $|\mathbb{Q}^+| = |\mathbb{N}|$.</p>
+            </div>
+        </section>
+
+        <section id="advanced" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-yellow-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">4. Advanced Visual Proofs</h2>
+            </div>
+
+            <div class="bg-gray-900 text-white shadow-xl rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-4 text-yellow-400">1. Uncountability of Real Numbers (Cantor's
+                    Diagonalization)</h3>
+                <p class="mb-4 text-gray-300">Proof that $[0, 1]$ is uncountable. Assume for contradiction we CAN list
+                    all real numbers:</p>
+                <div class="font-mono text-sm space-y-1 bg-gray-800 p-4 rounded border border-gray-700">
+                    <p>1: 0.<span class="text-red-400 font-bold">d₁₁</span>d₁₂d₁₃...</p>
+                    <p>2: 0.d₂₁<span class="text-red-400 font-bold">d₂₂</span>d₂₃...</p>
+                    <p>3: 0.d₃₁d₃₂<span class="text-red-400 font-bold">d₃₃</span>...</p>
+                </div>
+                <p class="mt-4">Construct a new number $D = 0.x_1x_2x_3...$ where $x_i = 1$ if $d_{ii} \neq 1$, else
+                    $2$.</p>
+                <p class="mt-2 text-yellow-200 font-medium">This number $D$ differs from the $n$-th number in the list
+                    at the $n$-th digit. Therefore, $D$ is missing from the list. Contradiction!</p>
+            </div>
+
+            <div class="bg-white shadow rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-4">2. Geometric Bijection: $(0,1) \leftrightarrow \mathbb{R}$</h3>
+                <p class="mb-4">How can a small segment have as many points as the infinite line? <strong>Stereographic
+                        Projection</strong>.</p>
+
+                <div class="visual-box bg-indigo-50 border-indigo-300">
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="w-64 h-32 border-t-2 border-l-2 border-r-2 border-slate-400 rounded-t-full relative mb-8">
+                            <span class="absolute -top-6 left-1/2 -translate-x-1/2 font-bold">Circle (S)</span>
+                            <div class="absolute top-0 left-1/2 w-0.5 h-40 bg-red-400 rotate-45 origin-top"></div>
+                        </div>
+                        <div class="w-full h-0.5 bg-black relative">
+                            <span class="absolute top-2 left-1/2 -translate-x-1/2 font-bold">Real Line
+                                ($\mathbb{R}$)</span>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-700">Imagine bending the interval $(0,1)$ into a semi-circle.
+                        Place a light source at the center. Every point on the circle casts a shadow on unique point on
+                        the infinite line below. This is a bijection.</p>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-4">3. Why Computer Programs are Countable</h3>
+                <p class="mb-4">Every computer program is just a finite string of text (code).</p>
+                <ul class="list-decimal pl-6 space-y-2 text-sm">
+                    <li>Convert the program text into binary (using ASCII).</li>
+                    <li>Treat this binary string as a number.</li>
+                    <li>Sort all valid programs by length, then by value.</li>
+                    <li>This creates a list: Program 1, Program 2, Program 3...</li>
+                </ul>
+                <p class="mt-4 text-green-700 font-bold bg-green-50 p-3 rounded">Conclusion: The set of all possible
+                    computer programs is Countable.</p>
+            </div>
+        </section>
+
+        <section id="quiz" class="bg-white shadow rounded-lg overflow-hidden border-t-4 border-blue-600">
+            <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">Quiz: Test Your Knowledge</h2>
+                <span id="score-display" class="hidden text-xl font-bold text-blue-600"></span>
+            </div>
+            <div class="p-6">
+                <form id="quiz-form" class="space-y-8">
+
+                    <div class="space-y-3">
+                        <p class="font-bold text-lg">1. If $f: \mathbb{R} \to \mathbb{R}$ is defined by $f(x) = x^3$, is
+                            it a bijection?</p>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q1" value="correct" class="mr-2"> Yes, it is one-to-one and onto.
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q1" value="wrong" class="mr-2"> No, it is not one-to-one.
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q1" value="wrong" class="mr-2"> No, it is not onto.
+                        </label>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="font-bold text-lg">2. What is the cardinality of the set of even integers
+                            $\mathbb{Z}^{even}$?</p>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q2" value="wrong" class="mr-2"> Half the size of $\mathbb{Z}$.
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q2" value="correct" class="mr-2"> The same as $\mathbb{Z}$
+                            (Countable).
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q2" value="wrong" class="mr-2"> Uncountable.
+                        </label>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="font-bold text-lg">3. Given $f(x) = x+1$ and $g(x) = 2x$, what is $(f \circ g)(x)$?
+                        </p>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q3" value="wrong" class="mr-2"> $2x + 2$
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q3" value="correct" class="mr-2"> $2x + 1$
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q3" value="wrong" class="mr-2"> $3x + 1$
+                        </label>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="font-bold text-lg">4. Which of these sets is Uncountable?</p>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q4" value="correct" class="mr-2"> The set of all functions from
+                            $\mathbb{N} \to \{0,1\}$.
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q4" value="wrong" class="mr-2"> The set of all computer programs
+                            in Python.
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q4" value="wrong" class="mr-2"> The set of rational numbers
+                            $\mathbb{Q}$.
+                        </label>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="font-bold text-lg">5. What technique proves that the Real numbers are uncountable?</p>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q5" value="wrong" class="mr-2"> Zig-Zag Enumeration.
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q5" value="correct" class="mr-2"> Cantor's Diagonalization
+                            Argument.
+                        </label>
+                        <label class="block quiz-option p-3 rounded border border-gray-200">
+                            <input type="radio" name="q5" value="wrong" class="mr-2"> Mathematical Induction.
+                        </label>
+                    </div>
+
+                    <button type="button" onclick="checkQuiz()"
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition w-full md:w-auto">
+                        Submit Answers
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center mt-12">
+        <p>&copy; Discrete Math Lesson.</p>
+    </footer>
+
+    <script>
+        function checkQuiz() {
+            let score = 0;
+            const total = 5;
+            const form = document.getElementById('quiz-form');
+            const resultDisplay = document.getElementById('score-display');
+
+            // Visual reset
+            document.querySelectorAll('.quiz-option').forEach(div => {
+                div.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+            });
+
+            for (let i = 1; i <= total; i++) {
+                const name = 'q' + i;
+                const options = document.getElementsByName(name);
+                let answered = false;
+
+                options.forEach(option => {
+                    if (option.checked) {
+                        answered = true;
+                        if (option.value === 'correct') {
+                            score++;
+                            option.parentElement.classList.add('bg-green-100', 'border-green-500');
+                        } else {
+                            option.parentElement.classList.add('bg-red-100', 'border-red-500');
+                        }
+                    }
+                });
+            }
+
+            resultDisplay.textContent = `Score: ${score} / ${total}`;
+            resultDisplay.classList.remove('hidden');
+            resultDisplay.classList.add('animate-bounce');
+
+            document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>

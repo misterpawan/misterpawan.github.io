@@ -775,9 +775,16 @@
                 contentHtml += `
                     <div class="mt-12 pt-8 border-t border-slate-200 text-center">
                         <p class="text-slate-500 mb-4 font-medium">✨ You've completed the Set Theory lesson!</p>
-                        <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition">
-                            Back to Course Home
-                        </a>
+                        <div class="flex flex-col md:flex-row gap-4 justify-center">
+                            <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                                Course Home
+                            </a>
+                            <a href="functions-infinity.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-0.5">
+                                Next: Functions & Infinity
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                            </a>
+                        </div>
                     </div>
                 `;
             }
