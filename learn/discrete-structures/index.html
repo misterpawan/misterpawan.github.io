@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Structures | Not Your Average Math Class</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        },
+                        accent: '#f43f5e',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slide-in': 'slideIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateX(20px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .slide-content.active {
+            display: flex;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .slide-content {
+            display: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body class="selection:bg-accent selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 start-0 border-b border-gray-700/30 bg-gray-900/50 backdrop-blur-md">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="../index.html" class="flex items-center space-x-3 rtl:space-x-reverse hover:opacity-80 transition">
+                <span
+                    class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">Discrete
+                    Structures</span>
+            </a>
+            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                <ul
+                    class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+                    <li>
+                        <a href="../index.html"
+                            class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-400 md:p-0 dark:text-white md:dark:text-blue-500"
+                            aria-current="page">Back to Hub</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 min-h-screen flex items-center justify-center relative overflow-hidden">
+
+        <!-- Decoration blobs -->
+        <div
+            class="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float">
+        </div>
+        <div class="absolute top-20 right-10 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"
+            style="animation-delay: 2s"></div>
+        <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"
+            style="animation-delay: 4s"></div>
+
+        <div class="container mx-auto px-4 z-10">
+
+            <div
+                class="glass-panel max-w-6xl mx-auto rounded-3xl overflow-hidden min-h-[600px] flex flex-col md:flex-row shadow-2xl">
+
+                <!-- Left Panel: Text & Context -->
+                <div
+                    class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center border-r border-white/10 bg-black/20">
+                    <div id="text-container">
+                        <!-- Dynamic Text Injected Here -->
+                    </div>
+
+                    <!-- Navigation Dots -->
+                    <div class="flex space-x-3 mt-8" id="dots-container">
+                        <!-- Dots Injected Here -->
+                    </div>
+
+                    <!-- Coming Soon Badge -->
+                    <div
+                        class="mt-12 inline-flex items-center space-x-2 bg-white/5 rounded-full px-4 py-2 w-fit border border-white/10">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        <span class="text-sm font-medium text-gray-300">Lessons Coming Soon</span>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Visuals -->
+                <div
+                    class="w-full md:w-1/2 p-4 md:p-8 bg-black/40 flex items-center justify-center relative overflow-hidden">
+                    <div id="image-container" class="w-full h-full flex items-center justify-center">
+                        <!-- Dynamic Images Injected Here -->
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const slides = [
+            {
+                title: "Wait, is your logic sound?",
+                subtitle: "Logic Theory",
+                questions: [
+                    "Can you prove Pythagoras' theorem logically? No, really.",
+                    "Is your cat actually planning world domination? (Maybe.)",
+                    "If P implies Q, and Q implies R, does P imply free pizza?"
+                ],
+                description: "Dive into the fundamental language of mathematics. Learn how to construct valid arguments, debug your reasoning, and finally win arguments on the internet (results not guaranteed).",
+                image: "assets/logic-cat.png",
+                color: "text-yellow-400"
+            },
+            {
+                title: "Is this your friend group?",
+                subtitle: "Groups, Rings, & Fields",
+                questions: [
+                    "What does Galois have to do with politics?",
+                    "Can a set of emojis form a Group?",
+                    "Why are mathematicians obsessed with 'Fields' that have no grass?"
+                ],
+                description: "Abstract Algebra isn't just about solving for x. It's about symmetries, structures, and the hidden patterns that govern the universe... and maybe your social circle.",
+                image: "assets/algebra-friends.png",
+                color: "text-pink-400"
+            },
+            {
+                title: "Connecting the dots...",
+                subtitle: "Graph Theory",
+                questions: [
+                    "Can you visit every bridge in Königsberg without crossing one twice?",
+                    "Visualizing social networks: Why are you only 6 degrees separated from Kevin Bacon?",
+                    "Is the internet just one giant, messy graph?"
+                ],
+                description: "From Google Maps to social media algorithms, Graph Theory connects everything. Learn about nodes, edges, paths, and why trees in math grow upside down.",
+                image: "assets/graph-theory.png",
+                color: "text-cyan-400"
+            },
+            {
+                title: "How many ways to win?",
+                subtitle: "Combinatorics",
+                questions: [
+                    "What are the odds of winning the lottery vs being struck by lightning?",
+                    "In how many ways can you arrange your bookshelf?",
+                    "Permutations vs Combinations: Only one cares about order. Which one are you?"
+                ],
+                description: "The art of counting without actually counting. Master the science of choices, arrangements, and probabilities. Warning: May cause obsessive compulsion to calculate odds in everyday life.",
+                image: "assets/combinatorics.png",
+                color: "text-green-400"
+            }
+        ];
+
+        let currentSlide = 0;
+        const textContainer = document.getElementById('text-container');
+        const imageContainer = document.getElementById('image-container');
+        const dotsContainer = document.getElementById('dots-container');
+
+        function renderSlide(index) {
+            const slide = slides[index];
+
+            // Render Text
+            textContainer.innerHTML = `
+                <div class="slide-text animate-slide-in">
+                    <h5 class="text-sm font-bold uppercase tracking-widest mb-2 ${slide.color}">${slide.subtitle}</h5>
+                    <h1 class="text-4xl md:text-5xl font-black mb-6 leading-tight">${slide.title}</h1>
+                    <ul class="space-y-4 mb-8">
+                        ${slide.questions.map(q => `
+                            <li class="flex items-start">
+                                <span class="mr-3 text-lg">🤔</span>
+                                <span class="text-lg text-gray-300 font-light">${q}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <p class="text-gray-400 border-l-4 border-white/20 pl-4 italic">
+                        "${slide.description}"
+                    </p>
+                </div>
+            `;
+
+            // Render Image
+            imageContainer.innerHTML = `
+                <img src="${slide.image}" alt="${slide.subtitle}" class="animate-float max-w-full max-h-[500px] object-contain drop-shadow-2xl rounded-xl hover:scale-105 transition duration-500">
+            `;
+
+            // Update Dots
+            updateDots(index);
+        }
+
+        function updateDots(index) {
+            dotsContainer.innerHTML = slides.map((_, i) => `
+                <button onclick="goToSlide(${i})" class="w-3 h-3 rounded-full transition-all duration-300 ${i === index ? 'bg-white scale-125' : 'bg-white/30 hover:bg-white/50'}"></button>
+            `).join('');
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            renderSlide(currentSlide);
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            renderSlide(currentSlide);
+        }
+
+        // Initialize
+        renderSlide(0);
+
+        // Auto-advance slideshow
+        setInterval(nextSlide, 6000);
+
+    </script>
+</body>
+
+</html>
