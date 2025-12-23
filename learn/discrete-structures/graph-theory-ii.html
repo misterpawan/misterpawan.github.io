@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics: Connectivity & Isomorphism</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .graph-node {
+            fill: black;
+            stroke: none;
+            cursor: pointer;
+        }
+
+        .graph-node:hover {
+            fill: #f59e0b;
+        }
+
+        .graph-label {
+            font-size: 14px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .svg-container {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: white;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-slate-900 text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-xl tracking-tight">Discrete Math: Connectivity</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Intro</a>
+                        <a href="#walks" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Walks</a>
+                        <a href="#connectivity"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Connectivity</a>
+                        <a href="#traversals"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Traversals</a>
+                        <a href="#measures"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Measures</a>
+                        <a href="#isomorphism"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Isomorphism</a>
+                        <a href="#quiz"
+                            class="bg-amber-600 hover:bg-amber-700 px-3 py-2 rounded-md text-sm font-medium">Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header id="intro" class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 text-center fade-in">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Walks, Trees & Isomorphism</h1>
+            <p class="text-lg text-slate-600">Connectivity, Traversals, and Graph Measures</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <section id="walks" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-blue-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">1. Walks, Trails & Paths</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-10">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-6 border-b pb-2">Definitions</h3>
+                    <ul class="space-y-6 text-sm">
+                        <li class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <span class="text-blue-800 font-bold block mb-1 text-lg">Walk</span>
+                            An alternating sequence of vertices and edges $\langle v_0, e_1, v_1, ..., v_n \rangle$.
+                            <br><strong>Length:</strong> Number of edges (steps).
+                            <br><strong>Closed:</strong> Starts and ends at same vertex.
+                            <br><strong>Trivial:</strong> Length 0 (single vertex).
+                        </li>
+                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <span class="text-slate-800 font-bold block mb-1 text-lg">Trail</span>
+                            A walk with <span class="font-bold text-blue-600">no repeated edges</span>.
+                        </li>
+                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <span class="text-slate-800 font-bold block mb-1 text-lg">Path</span>
+                            A trail with <span class="font-bold text-blue-600">no repeated vertices</span> (except
+                            start/end).
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 flex flex-col items-center">
+                    <h3 class="text-lg font-bold text-slate-700 mb-4">Interactive Analysis</h3>
+
+                    <svg width="300" height="150" viewBox="0 0 300 150" class="mb-6 mx-auto">
+                        <line x1="50" y1="50" x2="50" y2="120" stroke="black" stroke-width="2" />
+                        <path d="M 150 75 Q 120 25 150 75" fill="none" stroke="black" stroke-width="2" />
+                        <line x1="150" y1="75" x2="250" y2="25" stroke="black" stroke-width="2" />
+                        <line x1="150" y1="75" x2="250" y2="125" stroke="black" stroke-width="2" />
+                        <path d="M 250 25 Q 230 75 250 125" fill="none" stroke="black" stroke-width="2" />
+                        <line x1="250" y1="25" x2="250" y2="125" stroke="black" stroke-width="2" />
+                        <path d="M 250 25 Q 270 75 250 125" fill="none" stroke="black" stroke-width="2" />
+                        <path d="M 250 25 Q 250 -15 280 5 Q 270 35 250 25" fill="none" stroke="black"
+                            stroke-width="2" />
+                        <circle cx="50" cy="50" r="10" class="graph-node" /><text x="40" y="55"
+                            class="graph-label">y</text>
+                        <circle cx="50" cy="120" r="10" class="graph-node" /><text x="40" y="125"
+                            class="graph-label">z</text>
+                        <circle cx="100" cy="50" r="10" class="graph-node" /><text x="110" y="55"
+                            class="graph-label">x</text>
+
+                        <circle cx="150" cy="75" r="10" class="graph-node" /><text x="140" y="80"
+                            class="graph-label">u</text>
+                        <circle cx="250" cy="25" r="10" class="graph-node" /><text x="260" y="20"
+                            class="graph-label">v</text>
+                        <circle cx="250" cy="125" r="10" class="graph-node" /><text x="260" y="130"
+                            class="graph-label">w</text>
+                    </svg>
+
+                    <div class="w-full space-y-2">
+                        <div class="bg-slate-50 rounded p-3 text-sm">
+                            <button onclick="toggleInfo('q1')"
+                                class="flex justify-between w-full text-left font-medium text-slate-700 hover:text-blue-600">
+                                <span>Is (y, z, y, z) a valid walk?</span>
+                                <span class="text-amber-500 font-bold">+</span>
+                            </button>
+                            <p id="q1" class="hidden mt-2 text-green-700 text-xs border-l-2 border-green-500 pl-3">
+                                Yes. It is an alternating sequence of adjacent vertices. Length = 3.
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 rounded p-3 text-sm">
+                            <button onclick="toggleInfo('q2')"
+                                class="flex justify-between w-full text-left font-medium text-slate-700 hover:text-blue-600">
+                                <span>Can there be a walk of arbitrary length?</span>
+                                <span class="text-amber-500 font-bold">+</span>
+                            </button>
+                            <p id="q2" class="hidden mt-2 text-green-700 text-xs border-l-2 border-green-500 pl-3">
+                                Yes. The graph contains cycles (loops on u, v) which can be traversed infinitely.
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 rounded p-3 text-sm">
+                            <button onclick="toggleInfo('q3')"
+                                class="flex justify-between w-full text-left font-medium text-slate-700 hover:text-blue-600">
+                                <span>What is Distance $d(x,y)$?</span>
+                                <span class="text-amber-500 font-bold">+</span>
+                            </button>
+                            <p id="q3" class="hidden mt-2 text-green-700 text-xs border-l-2 border-green-500 pl-3">
+                                $\infty$. Vertices x and y are in different components (disconnected).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="connectivity" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-green-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">2. Connectivity</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-t-4 border-t-green-500">
+                    <h4 class="font-bold text-lg text-green-700 mb-2">Connected Graph</h4>
+                    <p class="text-sm text-slate-600">For every pair of vertices $u, v$, there exists a walk between
+                        them. Disconnected graphs are made of <strong>components</strong>.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-t-4 border-t-green-500">
+                    <h4 class="font-bold text-lg text-green-700 mb-2">Distance $d(u,v)$</h4>
+                    <p class="text-sm text-slate-600">The length of the <strong>shortest</strong> path between $u$ and
+                        $v$. If no path exists, distance is $\infty$.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-t-4 border-t-green-500">
+                    <h4 class="font-bold text-lg text-green-700 mb-2">Reachability</h4>
+                    <p class="text-sm text-slate-600">Vertex $v$ is reachable from $u$ if a walk exists from $u$ to $v$.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="traversals" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-purple-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">3. Traversals: Euler & Hamilton</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold text-purple-700">Eulerian</h3>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded font-bold">Focus:
+                            Edges</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-600 mb-4">
+                        <li><strong>Trail:</strong> Visit every edge exactly once.</li>
+                        <li><strong>Tour:</strong> Closed trail (start = end).</li>
+                        <li><strong>Graph:</strong> Has an Eulerian Tour.</li>
+                        <li class="pt-2 text-slate-800 italic font-semibold">Condition: Connected + All vertices even
+                            degree.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-bold text-pink-600">Hamiltonian</h3>
+                        <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded font-bold">Focus:
+                            Vertices</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-600 mb-4">
+                        <li><strong>Cycle:</strong> Visit every vertex exactly once.</li>
+                        <li><strong>Graph:</strong> Has a Hamiltonian cycle.</li>
+                        <li class="pt-2 text-slate-800 italic font-semibold">Condition: Hard to determine (NP-Complete).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="measures" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-orange-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">4. Graph Measures</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="flex justify-center bg-slate-50 rounded-xl p-4 border border-slate-100">
+                        <svg width="300" height="200" viewBox="0 0 300 200">
+                            <polygon points="50,100 120,50 120,150" fill="none" stroke="black" stroke-width="2" />
+                            <line x1="120" y1="50" x2="120" y2="150" stroke="black" stroke-width="2" />
+                            <line x1="120" y1="50" x2="170" y2="100" stroke="black" stroke-width="2" />
+                            <line x1="120" y1="50" x2="250" y2="100" stroke="black" stroke-width="2" />
+                            <line x1="120" y1="150" x2="250" y2="100" stroke="black" stroke-width="2" />
+                            <line x1="250" y1="100" x2="250" y2="50" stroke="black" stroke-width="2" />
+                            <line x1="250" y1="100" x2="250" y2="150" stroke="black" stroke-width="2" />
+
+                            <circle cx="50" cy="100" r="6" class="graph-node" /><text x="40" y="105"
+                                class="graph-label">u</text>
+                            <circle cx="120" cy="50" r="6" class="graph-node" /><text x="110" y="45"
+                                class="graph-label">x</text>
+                            <circle cx="120" cy="150" r="6" class="graph-node" /><text x="110" y="165"
+                                class="graph-label">y</text>
+
+                            <circle cx="170" cy="100" r="6" class="graph-node" />
+                            <circle cx="250" cy="100" r="6" class="graph-node" /><text x="260" y="105"
+                                class="graph-label">w</text>
+                            <circle cx="250" cy="50" r="6" class="graph-node" /><text x="260" y="55"
+                                class="graph-label">v</text>
+                            <circle cx="250" cy="150" r="6" class="graph-node" />
+                        </svg>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                            <h5 class="text-orange-800 font-bold mb-2">Definitions</h5>
+                            <p class="text-xs text-slate-700 mb-1"><strong>Eccentricity $ecc(v)$:</strong> Max dist from
+                                $v$.</p>
+                            <p class="text-xs text-slate-700 mb-1"><strong>Diameter:</strong> Max eccentricity (Longest
+                                shortest path).</p>
+                            <p class="text-xs text-slate-700"><strong>Radius:</strong> Min eccentricity.</p>
+                            <p class="text-xs text-slate-700"><strong>Central Vertex:</strong> Vertex where $ecc(v) =
+                                Radius$.</p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <button onclick="toggleInfo('m1')"
+                                class="w-full text-left bg-slate-100 hover:bg-slate-200 p-2 rounded text-sm text-slate-800 transition font-medium">
+                                1. What is the Diameter?
+                            </button>
+                            <div id="m1"
+                                class="hidden bg-white p-2 rounded text-xs text-green-600 border border-green-200 pl-3">
+                                4 (e.g., from u to v).
+                            </div>
+
+                            <button onclick="toggleInfo('m2')"
+                                class="w-full text-left bg-slate-100 hover:bg-slate-200 p-2 rounded text-sm text-slate-800 transition font-medium">
+                                2. What are the Central Vertices?
+                            </button>
+                            <div id="m2"
+                                class="hidden bg-white p-2 rounded text-xs text-green-600 border border-green-200 pl-3">
+                                Vertices with min eccentricity (Radius = 2). Likely 'x' in this structure.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="isomorphism" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-teal-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">5. Graph Isomorphism</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+                <p class="text-slate-600 text-center mb-8">Two graphs are <strong>isomorphic</strong> if they are
+                    structurally identical—only the labels differ. There exists a bijection $V_G \to V_H$ preserving
+                    adjacency.</p>
+
+                <div class="flex justify-around items-center gap-4 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                    <div class="text-center">
+                        <svg width="100" height="150" viewBox="0 0 100 150">
+                            <line x1="20" y1="20" x2="80" y2="20" stroke="#0d9488" />
+                            <line x1="20" y1="20" x2="80" y2="60" stroke="#0d9488" />
+                            <line x1="20" y1="100" x2="80" y2="100" stroke="#0d9488" />
+                            <circle cx="20" cy="20" r="5" class="graph-node" /><text x="5" y="25"
+                                class="graph-label">1</text>
+                            <circle cx="80" cy="20" r="5" class="graph-node" /><text x="90" y="25"
+                                class="graph-label">2</text>
+                            <circle cx="20" cy="100" r="5" class="graph-node" /><text x="5" y="105"
+                                class="graph-label">3</text>
+                            <circle cx="80" cy="100" r="5" class="graph-node" /><text x="90" y="105"
+                                class="graph-label">4</text>
+                        </svg>
+                        <p class="text-teal-700 font-bold text-sm mt-2">Graph G</p>
+                    </div>
+
+                    <div class="text-3xl text-slate-400">$\cong$</div>
+
+                    <div class="text-center">
+                        <svg width="100" height="150" viewBox="0 0 100 150">
+                            <circle cx="50" cy="75" r="40" fill="none" stroke="#0d9488" />
+                            <line x1="50" y1="35" x2="50" y2="115" stroke="#0d9488" />
+                            <circle cx="50" cy="35" r="5" class="graph-node" /><text x="50" y="25"
+                                class="graph-label">s</text>
+                            <circle cx="90" cy="75" r="5" class="graph-node" /><text x="95" y="75"
+                                class="graph-label">t</text>
+                            <circle cx="50" cy="115" r="5" class="graph-node" /><text x="50" y="130"
+                                class="graph-label">u</text>
+                            <circle cx="10" cy="75" r="5" class="graph-node" /><text x="0" y="75"
+                                class="graph-label">v</text>
+                        </svg>
+                        <p class="text-teal-700 font-bold text-sm mt-2">Graph H</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="toggleInfo('iso')"
+                        class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded shadow transition">
+                        Reveal Bijection
+                    </button>
+                    <div id="iso"
+                        class="hidden mt-4 bg-slate-100 p-4 rounded text-sm text-slate-700 font-mono border border-slate-200 in-line-block">
+                        1 $\to$ s <br>
+                        2 $\to$ t <br>
+                        3 $\to$ u <br>
+                        4 $\to$ v <br>
+                        (Neighborhoods map bijectively)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="py-12 bg-slate-900 text-white rounded-xl shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">Final Quiz 🧠</h2>
+                <p class="text-slate-400">Test your connectivity knowledge.</p>
+            </div>
+
+            <form id="quizForm" class="space-y-6 max-w-2xl mx-auto">
+                <div class="space-y-2">
+                    <p class="font-medium">1. A trail is a walk with:</p>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q1" value="wrong" class="mr-2"> No repeated vertices.</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q1" value="correct" class="mr-2"> No repeated edges.</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q1" value="wrong" class="mr-2"> Start vertex = End vertex.</label>
+                </div>
+
+                <div class="space-y-2 pt-4 border-t border-slate-700">
+                    <p class="font-medium">2. The Girth of an acyclic graph is:</p>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q2" value="wrong" class="mr-2"> 0</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q2" value="wrong" class="mr-2"> 1</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q2" value="correct" class="mr-2"> Undefined</label>
+                </div>
+
+                <div class="space-y-2 pt-4 border-t border-slate-700">
+                    <p class="font-medium">3. An Eulerian graph must have:</p>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q3" value="correct" class="mr-2"> All vertices of even degree.</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q3" value="wrong" class="mr-2"> A cycle visiting every vertex once.</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q3" value="wrong" class="mr-2"> No cycles.</label>
+                </div>
+
+                <div class="space-y-2 pt-4 border-t border-slate-700">
+                    <p class="font-medium">4. The distance $d(u,v)$ between disconnected vertices is:</p>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q4" value="wrong" class="mr-2"> 0</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q4" value="wrong" class="mr-2"> Undefined</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q4" value="correct" class="mr-2"> $\infty$</label>
+                </div>
+
+                <div class="space-y-2 pt-4 border-t border-slate-700">
+                    <p class="font-medium">5. Two graphs are isomorphic if:</p>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q5" value="wrong" class="mr-2"> They look identical.</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q5" value="correct" class="mr-2"> There is a bijection preserving adjacency.</label>
+                    <label class="block bg-slate-800 p-3 rounded cursor-pointer hover:bg-slate-700"><input type="radio"
+                            name="q5" value="wrong" class="mr-2"> They have the same number of edges only.</label>
+                </div>
+
+                <div class="text-center pt-8">
+                    <button type="button" onclick="checkFinalQuiz()"
+                        class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg">
+                        Check Answers
+                    </button>
+                    <div id="quizResult" class="hidden mt-4 font-bold text-xl"></div>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 py-8 text-center text-slate-500 text-sm">
+        <p>&copy; Discrete Math Lesson Series</p>
+    </footer>
+
+    <script>
+        function toggleInfo(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('fade-in');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        function checkFinalQuiz() {
+            const form = document.getElementById('quizForm');
+            let score = 0;
+            const total = 5;
+
+            const q1 = form.querySelector('input[name="q1"]:checked');
+            if (q1 && q1.value === 'correct') score++;
+
+            const q2 = form.querySelector('input[name="q2"]:checked');
+            if (q2 && q2.value === 'correct') score++;
+
+            const q3 = form.querySelector('input[name="q3"]:checked');
+            if (q3 && q3.value === 'correct') score++;
+
+            const q4 = form.querySelector('input[name="q4"]:checked');
+            if (q4 && q4.value === 'correct') score++;
+
+            const q5 = form.querySelector('input[name="q5"]:checked');
+            if (q5 && q5.value === 'correct') score++;
+
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.classList.remove('hidden');
+
+            if (score === total) {
+                resultDiv.className = "mt-4 text-green-400";
+                resultDiv.innerHTML = `Perfect! ${score}/${total}`;
+            } else {
+                resultDiv.className = "mt-4 text-yellow-400";
+                resultDiv.innerHTML = `You got ${score}/${total}. Try again!`;
+            }
+        }
+    </script>
+</body>
+
+</html>
