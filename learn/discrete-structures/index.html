@@ -131,11 +131,20 @@
         <div class="container mx-auto px-4 z-10">
 
             <div
-                class="glass-panel max-w-6xl mx-auto rounded-3xl overflow-hidden min-h-[800px] md:h-[750px] flex flex-col md:flex-row shadow-2xl">
+                class="glass-panel max-w-6xl mx-auto rounded-3xl overflow-hidden h-[900px] md:h-[750px] flex flex-col-reverse md:flex-row shadow-2xl">
+
+                <!-- Left Panel: Text & Context (Bottom on mobile/Left on Desktop if standard, or I should check existing order) -->
+                <!-- Existing order: Text then Image. -->
+                <!-- Flex-col puts Text top, Image bottom. -->
+                <!-- I will keep Flex-col: Text Top, Image Bottom? Or flex-col-reverse? -->
+                <!-- Usually Header Image is nice. Let's stick to Text Top for now as it has the 'Start Learning' button? -->
+                <!-- Actually, user might want image on top? The user layout was Text First in code (Left Panel). -->
+                <!-- So on mobile flex-col: Text is Top. Image is Bottom. -->
+                <!-- Let's stick to that for now. -->
 
                 <!-- Left Panel: Text & Context -->
                 <div
-                    class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center border-r border-white/10 bg-black/20 overflow-y-auto">
+                    class="w-full md:w-1/2 flex-1 p-8 md:p-12 flex flex-col justify-center border-r border-white/10 bg-black/20 overflow-y-auto">
                     <div id="text-container">
                         <!-- Dynamic Text Injected Here -->
                     </div>
@@ -159,7 +168,7 @@
 
                 <!-- Right Panel: Visuals -->
                 <div
-                    class="w-full md:w-1/2 p-4 md:p-8 bg-black/40 flex items-center justify-center relative overflow-hidden">
+                    class="w-full md:w-1/2 h-64 md:h-auto shrink-0 p-4 md:p-8 bg-black/40 flex items-center justify-center relative overflow-hidden">
                     <div id="image-container" class="w-full h-full flex items-center justify-center">
                         <!-- Dynamic Images Injected Here -->
                     </div>
