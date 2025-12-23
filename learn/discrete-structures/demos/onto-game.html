@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Onto Mapping Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Smooth transitions for interactive elements */
+        .node-btn {
+            transition: all 0.2s ease;
+        }
+
+        .node-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .selected {
+            background-color: #2563eb !important;
+            box-shadow: 0 0 0 4px #bfdbfe;
+            transform: scale(1.1);
+        }
+
+        .mapped {
+            opacity: 0.6;
+        }
+
+        /* Game Container Layout */
+        #game-board {
+            position: relative;
+            width: 400px;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+        /* SVG Layer needs to be on top but click-through */
+        #lines-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Columns for Set A and Set B */
+        .column {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        #col-a {
+            left: 40px;
+            top: 20px;
+        }
+
+        #col-b {
+            right: 40px;
+            top: 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 font-sans text-slate-800 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-2xl">
+
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold mb-2">Onto Function Challenge</h1>
+            <span id="stage-badge"
+                class="inline-block px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-semibold">
+                Stage 1: Create an Onto Map
+            </span>
+            <p id="instruction" class="text-slate-500 mt-2 text-sm">
+                Connect every element in Set A so that <b>every</b> element in Set B is covered.
+            </p>
+        </div>
+
+        <div id="game-board" class="bg-slate-50 rounded-lg border border-slate-200">
+            <svg id="lines-layer">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                    </marker>
+                </defs>
+            </svg>
+
+            <div id="col-a" class="column"></div>
+            <div id="col-b" class="column"></div>
+        </div>
+
+        <div id="feedback" class="mt-4 p-3 rounded-lg hidden text-center font-medium text-sm"></div>
+
+        <div class="flex gap-4 mt-6">
+            <button onclick="resetGame()"
+                class="flex-1 px-4 py-2 border-2 border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 font-bold">
+                Reset
+            </button>
+            <button id="action-btn" onclick="checkSolution()"
+                class="flex-[2] px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 font-bold transition-all">
+                Check Answer
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            stage: 1, // 1 = Onto, 2 = Not Onto
+            mappings: {}, // { "0": "2", "1": "0" ... }  (Source Index -> Target Index)
+            selectedSource: null,
+            sizeA: 4,
+            sizeB: 3
+        };
+
+        // --- DOM Elements ---
+        const colA = document.getElementById('col-a');
+        const colB = document.getElementById('col-b');
+        const svgLayer = document.getElementById('lines-layer');
+        const feedbackEl = document.getElementById('feedback');
+        const actionBtn = document.getElementById('action-btn');
+        const badgeEl = document.getElementById('stage-badge');
+        const instrEl = document.getElementById('instruction');
+
+        // --- Initialization ---
+        function initBoard() {
+            colA.innerHTML = '';
+            colB.innerHTML = '';
+
+            // Update sizes based on stage
+            if (state.stage === 1) {
+                state.sizeA = 4;
+                state.sizeB = 3;
+            } else {
+                state.sizeA = 3;
+                state.sizeB = 4;
+            }
+
+            // Create Buttons for Set A
+            for (let i = 0; i < state.sizeA; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'node-btn w-12 h-12 rounded-full bg-blue-500 text-white font-bold shadow-md';
+                btn.textContent = `A${i + 1}`;
+                btn.onclick = () => handleSourceClick(i);
+                btn.id = `btn-a-${i}`;
+                colA.appendChild(btn);
+            }
+
+            // Create Buttons for Set B
+            for (let i = 0; i < state.sizeB; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'node-btn w-12 h-12 rounded-full bg-emerald-500 text-white font-bold shadow-md';
+                btn.textContent = `B${i + 1}`;
+                btn.onclick = () => handleTargetClick(i);
+                btn.id = `btn-b-${i}`;
+                colB.appendChild(btn);
+            }
+
+            // Adjust column positions based on size to keep them somewhat centered
+            const offsetA = (350 - (state.sizeA * 68)) / 2;
+            const offsetB = (350 - (state.sizeB * 68)) / 2;
+            colA.style.top = `${offsetA}px`;
+            colB.style.top = `${offsetB}px`;
+
+            render();
+        }
+
+        // --- Interaction Handlers ---
+        function handleSourceClick(index) {
+            if (state.selectedSource === index) {
+                state.selectedSource = null;
+            } else {
+                if (state.mappings[index] !== undefined) {
+                    delete state.mappings[index];
+                }
+                state.selectedSource = index;
+            }
+            hideFeedback();
+            render();
+        }
+
+        function handleTargetClick(index) {
+            if (state.selectedSource === null) {
+                showFeedback('error', 'Select a blue circle from Set A first!');
+                return;
+            }
+
+            state.mappings[state.selectedSource] = index;
+            state.selectedSource = null;
+            hideFeedback();
+            render();
+        }
+
+        // --- Rendering ---
+        function render() {
+            for (let i = 0; i < state.sizeA; i++) {
+                const btnA = document.getElementById(`btn-a-${i}`);
+                btnA.className = 'node-btn w-12 h-12 rounded-full bg-blue-500 text-white font-bold shadow-md';
+                if (state.selectedSource === i) {
+                    btnA.classList.add('selected');
+                } else if (state.mappings[i] !== undefined) {
+                    btnA.classList.add('mapped');
+                }
+            }
+
+            const lines = svgLayer.querySelectorAll('line');
+            lines.forEach(line => line.remove());
+
+            const offsetA = (350 - (state.sizeA * 68)) / 2;
+            const offsetB = (350 - (state.sizeB * 68)) / 2;
+
+            Object.entries(state.mappings).forEach(([sourceIdx, targetIdx]) => {
+                const yStart = offsetA + 25 + (parseInt(sourceIdx) * 68);
+                const yEnd = offsetB + 25 + (parseInt(targetIdx) * 68);
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', '65');
+                line.setAttribute('y1', yStart);
+                line.setAttribute('x2', '335');
+                line.setAttribute('y2', yEnd);
+                line.setAttribute('stroke', '#64748b');
+                line.setAttribute('stroke-width', '3');
+                line.setAttribute('marker-end', 'url(#arrowhead)');
+
+                svgLayer.appendChild(line);
+            });
+        }
+
+        // --- Game Logic ---
+        function checkSolution() {
+            const sources = Object.keys(state.mappings);
+            const targetsApplied = new Set(Object.values(state.mappings));
+
+            if (sources.length < state.sizeA) {
+                showFeedback('error', 'Not complete! Every element in Set A needs an arrow.');
+                return;
+            }
+
+            const isOnto = targetsApplied.size === state.sizeB;
+
+            if (state.stage === 1) {
+                if (isOnto) {
+                    showFeedback('success', 'Correct! Every element in Set B is reached.');
+                    setButtonState('next');
+                } else {
+                    showFeedback('error', 'Incorrect. At least one element in Set B is not covered.');
+                }
+            } else {
+                if (!isOnto) {
+                    showFeedback('success', 'Correct! This map is not onto because some targets are unreachable.');
+                    setButtonState('finish');
+                } else {
+                    showFeedback('error', 'Oops! This is still an onto function. Try to avoid hitting at least one element in B.');
+                }
+            }
+        }
+
+        function nextStage() {
+            state.stage = 2;
+            state.mappings = {};
+            state.selectedSource = null;
+            badgeEl.innerText = 'Stage 2: Create a Map that is NOT Onto';
+            badgeEl.className = 'inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold';
+            instrEl.innerHTML = 'Connect every element in A, but ensure <b>at least one</b> element in B is not covered.';
+            setButtonState('check');
+            initBoard();
+        }
+
+        function resetGame() {
+            state.mappings = {};
+            state.selectedSource = null;
+            hideFeedback();
+            render();
+            if (actionBtn.textContent === 'Lesson Complete!') {
+                location.reload();
+            } else {
+                setButtonState('check');
+            }
+        }
+
+        function showFeedback(type, msg) {
+            feedbackEl.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-blue-100', 'text-blue-800');
+            if (type === 'success') {
+                feedbackEl.classList.add('bg-green-100', 'text-green-800');
+            } else if (type === 'error') {
+                feedbackEl.classList.add('bg-red-100', 'text-red-800');
+            } else {
+                feedbackEl.classList.add('bg-blue-100', 'text-blue-800');
+            }
+            feedbackEl.innerText = msg;
+            feedbackEl.classList.remove('hidden');
+        }
+
+        function hideFeedback() {
+            feedbackEl.classList.add('hidden');
+        }
+
+        function setButtonState(stateType) {
+            if (stateType === 'next') {
+                actionBtn.textContent = 'Next Challenge →';
+                actionBtn.onclick = nextStage;
+                actionBtn.classList.add('bg-blue-600', 'animate-pulse');
+            } else if (stateType === 'finish') {
+                actionBtn.textContent = 'Lesson Complete!';
+                actionBtn.onclick = null;
+                actionBtn.className = 'flex-[2] px-6 py-2 bg-green-600 text-white rounded-lg font-bold cursor-default';
+            } else {
+                actionBtn.textContent = 'Check Answer';
+                actionBtn.onclick = checkSolution;
+                actionBtn.classList.remove('bg-blue-600', 'animate-pulse', 'bg-green-600');
+                actionBtn.classList.add('bg-slate-800');
+            }
+        }
+
+        initBoard();
+    </script>
+</body>
+
+</html>
