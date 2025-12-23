@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics: Graph Theory</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .graph-node {
+            fill: black;
+            stroke: none;
+            cursor: pointer;
+        }
+
+        .graph-node:hover {
+            fill: #4f46e5;
+        }
+
+        .graph-label {
+            font-size: 14px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-slate-900 text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-xl tracking-tight">Discrete Math: Graphs</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Intro</a>
+                        <a href="#basics" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Basics</a>
+                        <a href="#terminology"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Terminology</a>
+                        <a href="#digraphs"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Digraphs</a>
+                        <a href="#analysis"
+                            class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Analysis</a>
+                        <a href="#specs" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Specs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header id="intro" class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 text-center fade-in">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Graph Theory Models</h1>
+            <p class="text-lg text-slate-600">Definitions, Models, and Representations</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <section id="basics" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-blue-600 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">1. Graph Basics</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 bg-slate-50 border-b border-slate-100">
+                    <h3 class="text-xl font-bold text-slate-800">Definition of a Graph</h3>
+                </div>
+                <div class="p-6 grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="text-lg leading-relaxed mb-4">A graph $G=(V;E)$ consists of:</p>
+                        <ul class="list-disc pl-5 space-y-2 mb-4 marker:text-blue-500">
+                            <li><strong>V (Vertices):</strong> Finite set of nodes (points).</li>
+                            <li><strong>E (Edges):</strong> Finite set of links connecting vertices.</li>
+                        </ul>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 text-sm">
+                            <p><strong>Endpoints:</strong> The vertices associated with an edge.</p>
+                            <p><strong>Neighbor:</strong> A vertex joined by an edge to another vertex.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-lg p-6 border border-slate-200 text-center">
+                        <svg width="200" height="200" viewBox="0 0 100 100" class="mx-auto">
+                            <line x1="20" y1="20" x2="80" y2="20" stroke="black" stroke-width="2" />
+                            <line x1="80" y1="20" x2="80" y2="80" stroke="black" stroke-width="2" />
+                            <line x1="80" y1="80" x2="20" y2="80" stroke="black" stroke-width="2" />
+                            <line x1="20" y1="80" x2="20" y2="20" stroke="black" stroke-width="2" />
+                            <line x1="20" y1="20" x2="80" y2="80" stroke="black" stroke-width="2" />
+
+                            <circle cx="20" cy="20" r="5" class="graph-node" />
+                            <text x="10" y="15" class="graph-label">p</text>
+                            <circle cx="80" cy="20" r="5" class="graph-node" />
+                            <text x="85" y="15" class="graph-label">q</text>
+                            <circle cx="80" cy="80" r="5" class="graph-node" />
+                            <text x="85" y="90" class="graph-label">s</text>
+                            <circle cx="20" cy="80" r="5" class="graph-node" />
+                            <text x="10" y="90" class="graph-label">r</text>
+                        </svg>
+                        <p class="font-bold text-sm mt-2">Graph A (Simple Graph)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="terminology" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-green-600 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">2. Terminology & Classification</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h4 class="font-bold text-lg text-green-700 mb-4">Types of Edges</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="p-2 bg-green-50 rounded"><strong>Proper Edge:</strong> Joins two distinct vertices.
+                        </li>
+                        <li class="p-2 bg-green-50 rounded"><strong>Self-loop:</strong> Joins a vertex to itself.</li>
+                        <li class="p-2 bg-green-50 rounded"><strong>Multi-edge:</strong> Two or more edges with
+                            identical endpoints.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h4 class="font-bold text-lg text-green-700 mb-4">Types of Graphs</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="p-2 bg-slate-50 rounded"><strong>Simple Graph:</strong> No self-loops, no
+                            multi-edges.</li>
+                        <li class="p-2 bg-slate-50 rounded"><strong>Multi-graph:</strong> Has multi-edges but NO
+                            self-loops.</li>
+                        <li class="p-2 bg-slate-50 rounded"><strong>General Graph:</strong> May have self-loops and
+                            multi-edges.</li>
+                        <li class="p-2 bg-yellow-50 rounded border border-yellow-100"><strong>Null Graph:</strong> Empty
+                            vertex/edge sets. <br> <strong>Trivial Graph:</strong> 1 vertex, 0 edges.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h4 class="font-bold text-lg mb-4">Neighborhoods</h4>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <p class="text-sm text-slate-600 mb-4">
+                            <strong>Open Neighborhood $N(v)$:</strong> Set of all neighbors of $v$.<br>
+                            <strong>Closed Neighborhood $N[v]$:</strong> $N(v) \cup \{v\}$.
+                        </p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded border border-slate-200">
+                        <p class="font-bold text-sm mb-2">Practice on Graph A (above):</p>
+                        <div class="flex gap-4 text-sm">
+                            <button onclick="toggleInfo('n-p')"
+                                class="px-3 py-1 bg-white border rounded shadow-sm text-blue-600 hover:bg-blue-50">Find
+                                $N(p)$</button>
+                            <span id="n-p" class="hidden py-1 font-mono">{q, r, s}</span>
+                        </div>
+                        <div class="flex gap-4 text-sm mt-2">
+                            <button onclick="toggleInfo('nc-p')"
+                                class="px-3 py-1 bg-white border rounded shadow-sm text-blue-600 hover:bg-blue-50">Find
+                                $N[p]$</button>
+                            <span id="nc-p" class="hidden py-1 font-mono">{p, q, r, s}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="digraphs" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-purple-600 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">3. Directed Graphs (Digraphs)</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-xl text-slate-800 mb-4">Definitions</h3>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li><strong>Arc (Directed Edge):</strong> Has a Tail and a Head.</li>
+                            <li><strong>Oppositely Directed:</strong> Same vertices, opposite direction.</li>
+                            <li><strong>Multi-arc:</strong> Same tail and same head.</li>
+                            <li><strong>Mixed Graph:</strong> Contains both directed and undirected edges.</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex-1 text-center bg-purple-50 rounded-xl p-6">
+                        <svg width="250" height="200" viewBox="0 0 200 200" class="mx-auto">
+                            <defs>
+                                <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+                                </marker>
+                            </defs>
+                            <circle cx="50" cy="100" r="6" class="graph-node" /> <text x="35" y="105"
+                                class="graph-label">u</text>
+                            <circle cx="150" cy="50" r="6" class="graph-node" /> <text x="160" y="50"
+                                class="graph-label">v</text>
+                            <circle cx="150" cy="150" r="6" class="graph-node" /> <text x="160" y="155"
+                                class="graph-label">w</text>
+
+                            <line x1="50" y1="100" x2="142" y2="54" stroke="black" stroke-width="1.5"
+                                marker-end="url(#arrow)" /> <text x="100" y="70" class="text-xs font-bold">c</text>
+
+                            <line x1="150" y1="150" x2="58" y2="104" stroke="black" stroke-width="1.5"
+                                marker-end="url(#arrow)" /> <text x="100" y="140" class="text-xs font-bold">d</text>
+
+                            <path d="M 150 50 Q 130 100 150 150" fill="none" stroke="black" marker-end="url(#arrow)" />
+                            <text x="135" y="100" class="text-xs font-bold">f</text>
+
+                            <path d="M 150 50 Q 170 100 150 150" fill="none" stroke="black" marker-end="url(#arrow)" />
+                            <text x="165" y="100" class="text-xs font-bold">g</text>
+
+                            <line x1="150" y1="150" x2="150" y2="58" stroke="black" stroke-width="1.5"
+                                marker-end="url(#arrow)" /> <text x="140" y="100" class="text-xs font-bold">h</text>
+
+                            <path d="M 150 50 C 130 10, 170 10, 150 50" fill="none" stroke="black"
+                                marker-end="url(#arrow)" />
+                            <text x="150" y="25" class="text-xs font-bold">k</text>
+                        </svg>
+                        <p class="font-bold text-sm mt-2 text-purple-800">Graph D: General Digraph</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analysis" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-orange-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">4. Interactive Analysis</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h4 class="font-bold text-lg mb-4 border-b pb-2">Analyze Graph B (General)</h4>
+
+                    <div class="flex justify-center mb-4">
+                        <svg width="180" height="120" viewBox="0 0 150 100">
+                            <circle cx="30" cy="50" r="12" fill="none" stroke="black" />
+                            <circle cx="100" cy="10" r="10" fill="none" stroke="black" />
+                            <line x1="45" y1="50" x2="100" y2="20" stroke="black" />
+                            <line x1="45" y1="50" x2="100" y2="80" stroke="black" />
+                            <path d="M 100 20 Q 90 50 100 80" fill="none" stroke="black" />
+                            <path d="M 100 20 Q 110 50 100 80" fill="none" stroke="black" />
+                            <line x1="100" y1="20" x2="100" y2="80" stroke="black" />
+
+                            <circle cx="45" cy="50" r="4" fill="black" /><text x="35" y="55" font-size="12">u</text>
+                            <circle cx="100" cy="20" r="4" fill="black" /><text x="110" y="20" font-size="12">v</text>
+                            <circle cx="100" cy="80" r="4" fill="black" /><text x="110" y="80" font-size="12">w</text>
+                        </svg>
+                    </div>
+
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span>How many self-loops?</span>
+                            <button onclick="toggleInfo('ans-b1')"
+                                class="text-orange-600 font-bold hover:underline">Check</button>
+                        </div>
+                        <div id="ans-b1" class="hidden text-right font-mono text-slate-500">2 (on u and v)</div>
+
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span>How many multi-edges?</span>
+                            <button onclick="toggleInfo('ans-b2')"
+                                class="text-orange-600 font-bold hover:underline">Check</button>
+                        </div>
+                        <div id="ans-b2" class="hidden text-right font-mono text-slate-500">1 set (between v and w,
+                            multiplicity 3)</div>
+
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span>Make it simple?</span>
+                            <button onclick="toggleInfo('ans-b3')"
+                                class="text-orange-600 font-bold hover:underline">Check</button>
+                        </div>
+                        <div id="ans-b3" class="hidden text-right font-mono text-slate-500">Remove loops (a,b,k) and
+                            extra edges (g,h)</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h4 class="font-bold text-lg mb-4 border-b pb-2">Analyze Graph D (Digraph)</h4>
+                    <p class="text-sm text-slate-500 mb-4 italic">Refer to Graph D visual in Section 3.</p>
+
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span>Identify Opposite Arcs</span>
+                            <button onclick="toggleInfo('ans-d1')"
+                                class="text-purple-600 font-bold hover:underline">Check</button>
+                        </div>
+                        <div id="ans-d1" class="hidden text-right font-mono text-slate-500">Arc 'h' is opposite to 'f'
+                            and 'g'</div>
+
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span>Identify Multi-arcs</span>
+                            <button onclick="toggleInfo('ans-d2')"
+                                class="text-purple-600 font-bold hover:underline">Check</button>
+                        </div>
+                        <div id="ans-d2" class="hidden text-right font-mono text-slate-500">Arcs 'f' and 'g' (both v->w)
+                        </div>
+
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span>Is it a simple digraph?</span>
+                            <button onclick="toggleInfo('ans-d3')"
+                                class="text-purple-600 font-bold hover:underline">Check</button>
+                        </div>
+                        <div id="ans-d3" class="hidden text-right font-mono text-slate-500">No (contains loops &
+                            multi-arcs)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="specs" class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-red-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">5. Formal Specifications</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h3 class="font-bold text-lg mb-2">1. Adjacency Table (Simple Graphs)</h3>
+                <p class="text-sm text-slate-600 mb-4">Used for simple graphs like Graph A. Lists neighbors for each
+                    vertex.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-500 border rounded">
+                        <thead class="bg-slate-50 text-slate-700 uppercase">
+                            <tr>
+                                <th class="px-4 py-2">Vertex</th>
+                                <th class="px-4 py-2">Neighbors</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td>p</td>
+                                <td>q, r, s</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td>q</td>
+                                <td>p, s</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td>r</td>
+                                <td>p, s</td>
+                            </tr>
+                            <tr>
+                                <td>s</td>
+                                <td>p, q, r</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h3 class="font-bold text-lg mb-2">2. Incidence Table (General Graphs)</h3>
+                <p class="text-sm text-slate-600 mb-4">Used for general graphs (Graph B). Columns are edges, rows list
+                    endpoints.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-center border rounded">
+                        <thead class="bg-slate-50 font-bold">
+                            <tr>
+                                <th class="p-2 border">Edge</th>
+                                <th class="p-2 border">a</th>
+                                <th class="p-2 border">b</th>
+                                <th class="p-2 border">c</th>
+                                <th class="p-2 border">d</th>
+                                <th class="p-2 border">f</th>
+                                <th class="p-2 border">g</th>
+                                <th class="p-2 border">h</th>
+                                <th class="p-2 border">k</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="p-2 font-bold border">Endpts</td>
+                                <td class="p-2 border">u<br>u</td>
+                                <td class="p-2 border">u<br>u</td>
+                                <td class="p-2 border">u<br>v</td>
+                                <td class="p-2 border">u<br>w</td>
+                                <td class="p-2 border">v<br>w</td>
+                                <td class="p-2 border">v<br>w</td>
+                                <td class="p-2 border">v<br>w</td>
+                                <td class="p-2 border">v<br>v</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h3 class="font-bold text-lg mb-2">3. Digraph Specs (Head & Tail)</h3>
+                <p class="text-sm text-slate-600 mb-4">For digraphs (Graph D), we specify Head ($v^h$) and Tail.</p>
+                <div class="p-4 bg-slate-50 rounded border font-mono text-sm space-y-1">
+                    <p>Edge c: Head(c) = v, Tail(c) = u</p>
+                    <p>Edge g: Head(g) = w, Tail(g) = v</p>
+                    <p>Edge h: Head(h) = v, Tail(h) = w</p>
+                    <p>Edge k: Head(k) = v, Tail(k) = v</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-8">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-1 bg-yellow-500 rounded"></div>
+                <h2 class="text-3xl font-bold text-slate-800">6. Real World Models</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <h4 class="font-bold text-lg text-slate-800">Roadmap Model</h4>
+                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Mixed Graph</span>
+                    <p class="text-sm text-slate-600 mt-3">Vertices are landmarks. Directed edges are one-way streets;
+                        undirected are two-way.</p>
+                    <div class="mt-4 text-4xl text-center">🗺️</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <h4 class="font-bold text-lg text-slate-800">Corporate Hierarchy</h4>
+                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Digraph</span>
+                    <p class="text-sm text-slate-600 mt-3">Vertices are staff. Edges represent reporting lines
+                        (Supervisors -> Staff).</p>
+                    <div class="mt-4 text-4xl text-center">🏢</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm">
+        <p>&copy; Discrete Mathematics Course.</p>
+    </footer>
+
+    <script>
+        function toggleInfo(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('fade-in');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>
