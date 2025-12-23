@@ -122,10 +122,10 @@ const OneToOneMappingGame = () => {
             </div>
 
             {/* Game Area */}
-            <div className="relative flex justify-between w-full max-w-md mb-8" style={{ minHeight: '300px' }}>
+            <div className="relative flex justify-between w-full max-w-md mb-8">
 
                 {/* SVG Layer for Arrows */}
-                <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+                <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" style={{ minHeight: '240px' }}>
                     <defs>
                         <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                             <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
@@ -151,7 +151,7 @@ const OneToOneMappingGame = () => {
                 </svg>
 
                 {/* Set A Column */}
-                <div className="flex flex-col gap-6 z-10">
+                <div className="flex flex-col gap-8 z-10">
                     <h3 className="text-center font-bold text-slate-700">Set A</h3>
                     {setA.map((node) => (
                         <button
@@ -169,7 +169,7 @@ const OneToOneMappingGame = () => {
                 </div>
 
                 {/* Set B Column */}
-                <div className="flex flex-col gap-6 z-10">
+                <div className="flex flex-col gap-8 z-10">
                     <h3 className="text-center font-bold text-slate-700">Set B</h3>
                     {setB.map((node) => (
                         <button
@@ -206,19 +206,19 @@ const OneToOneMappingGame = () => {
                     {!isSuccess ? (
                         <button
                             onClick={checkSolution}
-                            className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 font-bold flex-[2]"
+                            className="flex-2 w-full px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 font-bold"
                         >
                             Check Answer
                         </button>
                     ) : stage === 1 ? (
                         <button
                             onClick={nextStage}
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold animate-pulse flex-[2]"
+                            className="flex-2 w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold animate-pulse"
                         >
                             Next Challenge →
                         </button>
                     ) : (
-                        <div className="text-center px-6 py-2 font-bold text-green-600 flex-[2]">
+                        <div className="flex-2 w-full text-center px-6 py-2 font-bold text-green-600">
                             Lesson Complete! 🎉
                         </div>
                     )}
