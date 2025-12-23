@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics: Proof Techniques</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <style>
+        /* Custom Scrollbar for Card Content */
+        .card-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .card-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .card-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Type specific border colors */
+        .type-def {
+            border-left: 6px solid #3b82f6;
+        }
+
+        /* Blue */
+        .type-proof {
+            border-left: 6px solid #22c55e;
+        }
+
+        /* Green */
+        .type-bogus {
+            border-left: 6px solid #ef4444;
+        }
+
+        /* Red */
+        .type-intro {
+            border-left: 6px solid #a855f7;
+        }
+
+        /* Purple */
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
+
+    <header class="bg-white shadow-sm z-10 p-4 flex justify-between items-center shrink-0">
+        <div>
+            <h1 class="text-xl font-bold text-slate-900">Proof Techniques</h1>
+            <p class="text-xs text-slate-500">Discrete Mathematics &middot; [cite_start]Stony Brook University [cite: 1,
+                3]</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <span id="slide-counter" class="text-sm font-mono text-slate-500">1 / --</span>
+            <div class="flex gap-2">
+                <button onclick="prevSlide()" class="p-2 rounded-full hover:bg-slate-200 transition"
+                    aria-label="Previous">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button onclick="nextSlide()" class="p-2 rounded-full hover:bg-slate-200 transition" aria-label="Next">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex justify-center items-center p-4 md:p-8 overflow-hidden relative">
+
+        <aside
+            class="hidden lg:block w-64 absolute left-8 top-8 bottom-8 bg-white rounded-xl shadow-lg overflow-y-auto p-4 z-0">
+            <h3 class="font-bold text-slate-700 mb-4 border-b pb-2">Jump to Section</h3>
+            <ul id="toc-list" class="space-y-2 text-sm">
+            </ul>
+        </aside>
+
+        <div id="card-container"
+            class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl h-full max-h-[85vh] flex flex-col relative z-10 lg:ml-72 transition-all duration-300">
+
+            <div id="card-header" class="p-6 border-b shrink-0 type-intro bg-slate-50 rounded-t-2xl">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span id="card-tag"
+                            class="inline-block px-2 py-1 text-xs font-semibold rounded uppercase tracking-wide bg-purple-100 text-purple-700 mb-2">Introduction</span>
+                        <h2 id="card-title" class="text-2xl md:text-3xl font-bold text-slate-800">Title Placeholder</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div id="card-body" class="p-6 md:p-10 overflow-y-auto card-content text-lg leading-relaxed space-y-6">
+            </div>
+
+            <div class="p-4 border-t bg-slate-50 text-center text-sm text-slate-400 shrink-0 rounded-b-2xl">
+                [cite_start]Source: Discrete Mathematics Slides [cite: 1]
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Data Structure based on PDF Content
+        // Note: Builds/Animations are consolidated into single logical cards for web readability.
+        const lessonData = [
+            {
+                id: 1,
+                title: "Course Overview",
+                type: "intro",
+                tag: "Introduction",
+                content: `
+                    <div class="text-center space-y-4">
+                        <h3 class="text-2xl font-bold">Discrete Mathematics: Proof Techniques</h3>
+                        [cite_start]<p class="text-slate-600">Pramod Ganapathi<br>Department of Computer Science<br>State University of New York at Stony Brook [cite: 3]</p>
+                        <p class="text-sm text-slate-400">March 21, 2022</p>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                title: "What is a Proof?",
+                type: "def",
+                tag: "Definition",
+                content: `
+                    [cite_start]<p class="text-xl font-medium">A proof is a method for establishing the truth of a statement. [cite: 12]</p>
+                    <div class="mt-6 overflow-x-auto">
+                        <table class="min-w-full text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 border-b-2 border-slate-300">
+                                    <th class="p-2 text-left">Rigor</th>
+                                    <th class="p-2 text-left">Truth Type</th>
+                                    <th class="p-2 text-left">Field</th>
+                                    <th class="p-2 text-left">Truth Teller</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b"><td class="p-2">0</td><td class="p-2">Word of God</td><td class="p-2">Religion</td><td class="p-2">God/Priests</td></tr>
+                                <tr class="border-b"><td class="p-2">1</td><td class="p-2">Authoritative</td><td class="p-2">Business/School</td><td class="p-2">Boss/Teacher</td></tr>
+                                <tr class="border-b"><td class="p-2">2</td><td class="p-2">Legal Truth</td><td class="p-2">Judiciary</td><td class="p-2">Judge/Law</td></tr>
+                                <tr class="border-b"><td class="p-2">3</td><td class="p-2">Philosophical</td><td class="p-2">Philosophy</td><td class="p-2">Plausible argument</td></tr>
+                                <tr class="border-b"><td class="p-2">4</td><td class="p-2">Scientific</td><td class="p-2">Physical Science</td><td class="p-2">Experiment</td></tr>
+                                <tr class="border-b"><td class="p-2 font-bold bg-blue-50">6</td><td class="p-2 font-bold bg-blue-50">Mathematical</td><td class="p-2 font-bold bg-blue-50">Mathematics</td><td class="p-2 font-bold bg-blue-50">Logical Deduction</td></tr>
+                            </tbody>
+                        </table>
+                        [cite_start]<p class="text-xs text-slate-400 mt-2">[cite: 13]</p>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "Mathematical Proof Definition",
+                type: "def",
+                tag: "Definition",
+                content: `
+                    <ul class="list-disc pl-6 space-y-4">
+                        [cite_start]<li>A mathematical proof is a verification for establishing the truth of a proposition by a chain of logical deductions from a set of axioms. [cite: 16]</li>
+                    </ul>
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mt-4">
+                        <h4 class="font-bold text-blue-800">Key Concepts</h4>
+                        <ul class="list-decimal pl-5 mt-2 space-y-2">
+                            <li><strong>Proposition:</strong> Covered in logic.</li>
+                            <li><strong>Axiom:</strong> A proposition assumed to be true. [cite_start]<br><em class="text-sm">Example: If $a=b$, then $b=a$. [cite: 23]</em></li>
+                            [cite_start]<li><strong>Logical Deduction:</strong> The process of moving from axioms to truth (Axiomatic Method). [cite: 25]</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                title: "Why care for Mathematical proofs?",
+                type: "intro",
+                tag: "Context",
+                content: `
+                    [cite_start]<p class="mb-4">The current world ceases to function without math proofs. [cite: 28]</p>
+                    <p class="mb-2">Hierarchy of Reliance (Reduction Tree):</p>
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="bg-blue-100 px-4 py-2 rounded">Humanities</div>
+                        <div>↓</div>
+                        <div class="bg-blue-100 px-4 py-2 rounded">Psychology</div>
+                        <div>↓</div>
+                        <div class="bg-blue-100 px-4 py-2 rounded">Biology</div>
+                        <div>↓</div>
+                        <div class="bg-blue-100 px-4 py-2 rounded">Chemistry</div>
+                        <div>↓</div>
+                        <div class="bg-blue-100 px-4 py-2 rounded">Physics</div>
+                        <div>↓</div>
+                        <div class="bg-red-100 px-4 py-2 rounded font-bold border border-red-400">Mathematics & CS</div>
+                    </div>
+                    [cite_start][cite: 31-36]
+                `
+            },
+            {
+                id: 5,
+                title: "Methods of Mathematical Proof",
+                type: "def",
+                tag: "Overview",
+                content: `
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b"><th class="p-3">Statement Type</th><th class="p-3">Methods</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3"><strong>Proving existential statements</strong><br>(Disproving universal)</td>
+                                <td class="p-3">Constructive Proof<br>Non-constructive Proof</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3"><strong>Proving universal statements</strong><br>(Disproving existential)</td>
+                                <td class="p-3">
+                                    <ul class="list-disc pl-4">
+                                        <li>Direct proof</li>
+                                        <li>Proof by mathematical induction</li>
+                                        <li>Proof by exhaustion (cases)</li>
+                                        <li>Proof by contradiction</li>
+                                        <li>Proof by contraposition</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    [cite_start][cite: 38]
+                `
+            },
+            {
+                id: 6,
+                title: "Number Theory Basics",
+                type: "def",
+                tag: "Background",
+                content: `
+                    [cite_start]<p><strong>Number theory</strong> is the branch of mathematics dealing with integers. [cite: 41]</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-gray-50 p-3 rounded">
+                            [cite_start]<strong>Natural (N):</strong> $\{1, 2, 3, ...\}$ [cite: 44]
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded">
+                            [cite_start]<strong>Whole (W):</strong> $\{0, 1, 2, ...\}$ [cite: 46]
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded">
+                            [cite_start]<strong>Integers (Z):</strong> $\{0, \pm1, \pm2, ...\}$ [cite: 48]
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded">
+                            [cite_start]<strong>Rational (Q):</strong> Ratio of integers with non-zero denominator. [cite: 59]
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded">
+                            [cite_start]<strong>Real (R):</strong> Infinite decimal representations. [cite: 61]
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 7,
+                title: "Definitions: Even & Odd",
+                type: "def",
+                tag: "Definition",
+                content: `
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-bold">Even Numbers</h4>
+                            <p>An integer $n$ is even iff $n$ equals twice some integer.</p>
+                            [cite_start]<p class="bg-slate-100 p-2 rounded mt-2 font-mono text-sm">Formally: $n \text{ is even} \Leftrightarrow \exists k \in \mathbb{Z}, n = 2k$ [cite: 70]</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-bold">Odd Numbers</h4>
+                            <p>An integer $n$ is odd iff $n$ equals twice some integer plus 1.</p>
+                            [cite_start]<p class="bg-slate-100 p-2 rounded mt-2 font-mono text-sm">Formally: $n \text{ is odd} \Leftrightarrow \exists k \in \mathbb{Z}, n = 2k+1$ [cite: 73]</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 8,
+                title: "Direct Proof: Even + Odd = Odd",
+                type: "proof",
+                tag: "Direct Proof",
+                content: `
+                    <div class="bg-green-50 p-4 rounded border-green-200 border mb-4">
+                        [cite_start]<strong>Proposition:</strong> The sum of an even integer and an odd integer is odd. [cite: 251]
+                    </div>
+                    <h4 class="font-bold mb-2">Proof:</h4>
+                    <p>Suppose $a$ is even and $b$ is odd. Then:</p>
+                    <div class="pl-4 border-l-2 border-slate-300 space-y-2 mt-2 font-mono text-sm md:text-base">
+                        <p>$a = 2m$ (defn. of even)</p>
+                        <p>$b = 2n + 1$ (defn. of odd)</p>
+                        <p>$a + b = (2m) + (2n + 1)$</p>
+                        <p>$= 2(m + n) + 1$ (taking 2 as common factor)</p>
+                        <p>$= 2p + 1$ (where $p = m+n$ is an integer)</p>
+                    </div>
+                    [cite_start]<p class="mt-4">Since $a+b$ is of the form $2p+1$, it is <strong>odd</strong>. [cite: 252-260]</p>
+                `
+            },
+            {
+                id: 9,
+                title: "Direct Proof: Square of Odd is Odd",
+                type: "proof",
+                tag: "Direct Proof",
+                content: `
+                    <div class="bg-green-50 p-4 rounded border-green-200 border mb-4">
+                        [cite_start]<strong>Proposition:</strong> The square of an odd integer is odd. [cite: 274]
+                    </div>
+                    <h4 class="font-bold mb-2">Proof:</h4>
+                    <p>Let $n$ be an odd integer.</p>
+                    <div class="pl-4 border-l-2 border-slate-300 space-y-2 mt-2 font-mono text-sm md:text-base">
+                        <p>$n = 2k + 1$ (defn. of odd)</p>
+                        <p>$n^2 = (2k + 1)^2$ (squaring)</p>
+                        <p>$= 4k^2 + 4k + 1$ (expanding binomial)</p>
+                        <p>$= 2(2k^2 + 2k) + 1$ (factoring 2)</p>
+                        <p>$= 2j + 1$ (let $j = 2k^2 + 2k$, which is an integer)</p>
+                    </div>
+                    [cite_start]<p class="mt-4">Therefore, $n^2$ is odd. [cite: 276-287]</p>
+                `
+            },
+            {
+                id: 10,
+                title: "Geometric Intuition: Odd Squares",
+                type: "intro",
+                tag: "Visual Proof",
+                content: `
+                    <p class="mb-4">We can visualize $(k+1)^2 - k^2 = 2k + 1$.</p>
+                    <div class="flex justify-center p-6 bg-slate-50 rounded-xl">
+                        [Image representation based on slide 28: A large square grid. A smaller square of size $k \times k$ is shaded blue. The remaining 'border' cells (L-shape) are shaded pink, representing $2k+1$.]
+                    </div>
+                    [cite_start]<p class="text-center text-sm text-slate-500 mt-2">Visualizing the difference of squares [cite: 322]</p>
+                `
+            },
+            {
+                id: 11,
+                title: "Proof by Negation (Counterexample)",
+                type: "proof",
+                tag: "Counterexample",
+                content: `
+                    <p class="mb-4">To prove a statement <strong>False</strong>, we often find a single counterexample.</p>
+                    <div class="bg-red-50 p-4 rounded border-red-200 border mb-4">
+                        [cite_start]<strong>Proposition (False):</strong> For all natural numbers $n$, $2^n + 1$ is prime. [cite: 529]
+                    </div>
+                    <h4 class="font-bold mb-2">Investigation:</h4>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>$n=1 \rightarrow 2^1+1 = 3$ (Prime)</li>
+                        <li>$n=2 \rightarrow 2^2+1 = 5$ (Prime)</li>
+                        <li>$n=3 \rightarrow 2^3+1 = 9$ (Composite!)</li>
+                    </ul>
+                    <p class="mt-4 font-bold">Counterexample found at $n=3$. [cite_start]The proposition is false. [cite: 558]</p>
+                `
+            },
+            {
+                id: 12,
+                title: "Euler's Polynomial Counterexample",
+                type: "proof",
+                tag: "Counterexample",
+                content: `
+                    <div class="bg-red-50 p-4 rounded border-red-200 border mb-4">
+                        [cite_start]<strong>Proposition (False):</strong> $n^2 + n + 41$ is prime for any whole number $n$. [cite: 565]
+                    </div>
+                    <p class="mb-2">It works for $n=0, 1, 2, 3...$ all the way up to $n=39$.</p>
+                    <p class="mb-2"><strong>Counterexample at $n=40$:</strong></p>
+                    <p class="font-mono bg-slate-100 p-2">$40^2 + 40 + 41 = 40(40+1) + 41 = 40(41) + 41 = 41(40+1) = 41^2$</p>
+                    [cite_start]<p class="mt-2">Since $41^2$ has factors other than 1 and itself, it is composite. [cite: 595]</p>
+                `
+            },
+            {
+                id: 13,
+                title: "Proof by Contraposition",
+                type: "proof",
+                tag: "Contrapositive",
+                content: `
+                    <p class="mb-4">Instead of proving $P \Rightarrow Q$, we prove the logically equivalent contrapositive: $\neg Q \Rightarrow \neg P$.</p>
+                    <div class="bg-green-50 p-4 rounded border-green-200 border mb-4">
+                        [cite_start]<strong>Proposition:</strong> If $n^2$ is odd, then $n$ is odd. [cite: 658]
+                    </div>
+                    <h4 class="font-bold mb-2">Proof (by Contraposition):</h4>
+                    <p>We prove: <strong>If $n$ is even, then $n^2$ is even.</strong></p>
+                    <div class="pl-4 border-l-2 border-slate-300 space-y-2 mt-2 font-mono text-sm md:text-base">
+                        <p>$n = 2k$ (defn. of even)</p>
+                        <p>$n^2 = (2k)^2 = 4k^2$</p>
+                        <p>$n^2 = 2(2k^2)$</p>
+                        <p>$n^2 = 2j$ (where $j=2k^2$ is an integer)</p>
+                    </div>
+                    <p class="mt-4">Thus $n^2$ is even. [cite_start]Since the contrapositive is true, the original statement is true. [cite: 661-668]</p>
+                `
+            },
+            {
+                id: 14,
+                title: "Proof by Contradiction: Greatest Integer",
+                type: "proof",
+                tag: "Contradiction",
+                content: `
+                    <div class="bg-green-50 p-4 rounded border-green-200 border mb-4">
+                        [cite_start]<strong>Proposition:</strong> There is no greatest integer. [cite: 895]
+                    </div>
+                    <h4 class="font-bold mb-2">Proof:</h4>
+                    <p>1. <strong>Assume the negation:</strong> Suppose there <em>is</em> a greatest integer $N$.</p>
+                    <p>2. [cite_start]This means $N \ge n$ for every integer $n$. [cite: 898]</p>
+                    <p>3. Consider $M = N + 1$.</p>
+                    <p>4. $M$ is an integer (closed under addition), and clearly $M > N$.</p>
+                    <p>5. This contradicts the assumption that $N$ is the greatest.</p>
+                    <p class="mt-4 font-bold text-red-600">Contradiction! [cite_start]Therefore, the original proposition is true. [cite: 903]</p>
+                `
+            },
+            {
+                id: 15,
+                title: "Proof by Contradiction: Irrationality of √2",
+                type: "proof",
+                tag: "Contradiction",
+                content: `
+                    <div class="bg-green-50 p-4 rounded border-green-200 border mb-4">
+                        [cite_start]<strong>Proposition:</strong> $\\sqrt{2}$ is irrational. [cite: 909]
+                    </div>
+                    <h4 class="font-bold mb-2">Proof:</h4>
+                    <p>Suppose $\\sqrt{2}$ is rational. [cite_start]Then $\\sqrt{2} = m/n$ in simplest form (no common factors). [cite: 911]</p>
+                    <div class="pl-4 border-l-2 border-slate-300 space-y-2 mt-2 font-mono text-sm md:text-base">
+                        <p>$2 = m^2 / n^2 \\Rightarrow m^2 = 2n^2$</p>
+                        <p>Thus $m^2$ is even $\\Rightarrow m$ is even ($m=2k$).</p>
+                        <p>Substitute back: $(2k)^2 = 2n^2 \\Rightarrow 4k^2 = 2n^2 \\Rightarrow n^2 = 2k^2$.</p>
+                        <p>Thus $n^2$ is even $\\Rightarrow n$ is even.</p>
+                    </div>
+                    [cite_start]<p class="mt-4">If both $m$ and $n$ are even, they share a factor of 2. This contradicts the assumption they were in simplest form. [cite: 931]</p>
+                `
+            },
+            {
+                id: 16,
+                title: "Infinitude of Primes",
+                type: "proof",
+                tag: "Contradiction",
+                content: `
+                    <div class="bg-green-50 p-4 rounded border-green-200 border mb-4">
+                        [cite_start]<strong>Proposition:</strong> The set of prime numbers is infinite. [cite: 954]
+                    </div>
+                    <h4 class="font-bold mb-2">Proof (Euclid):</h4>
+                    <p>Assume there are only finite primes $\{p_1, p_2, ..., p_n\}$.</p>
+                    [cite_start]<p>Consider $N = p_1 p_2 ... p_n + 1$. [cite: 967]</p>
+                    <ul class="list-disc pl-6 mt-2 space-y-2">
+                        <li>$N$ must be divisible by some prime $p$ (Fundamental Theorem of Arithmetic).</li>
+                        <li>However, dividing $N$ by any $p_i$ in our list leaves a remainder of 1.</li>
+                        <li>So $N$ is not divisible by any prime in our "finite" list.</li>
+                    </ul>
+                    <p class="mt-4">This is a contradiction. [cite_start]There must be a prime not in the list. [cite: 974]</p>
+                `
+            },
+            {
+                id: 17,
+                title: "Proof by Cases: Division",
+                type: "proof",
+                tag: "Cases",
+                content: `
+                    <div class="bg-green-50 p-4 rounded border-green-200 border mb-4">
+                        [cite_start]<strong>Proposition:</strong> There is no integer solution to $(x^2 - y^2) \\mod 4 = 2$. [cite: 1059]
+                    </div>
+                    <p>We analyze parity (even/odd) of $x$ and $y$. Four cases:</p>
+                    <ul class="space-y-3 mt-4">
+                        <li class="bg-slate-50 p-2 rounded"><strong>1. Even/Even:</strong> $x=2m, y=2n \Rightarrow x^2-y^2 = 4(m^2-n^2) \equiv 0 \mod 4$.</li>
+                        <li class="bg-slate-50 p-2 rounded"><strong>2. Even/Odd:</strong> $x=2m, y=2n+1 \Rightarrow x^2-y^2 = 4(...) - 1 \equiv 3 \mod 4$.</li>
+                        <li class="bg-slate-50 p-2 rounded"><strong>3. Odd/Even:</strong> $x=2m+1, y=2n \Rightarrow x^2-y^2 = 4(...) + 1 \equiv 1 \mod 4$.</li>
+                        <li class="bg-slate-50 p-2 rounded"><strong>4. Odd/Odd:</strong> $x=2m+1, y=2n+1 \Rightarrow x^2-y^2 = 4(...) \equiv 0 \mod 4$.</li>
+                    </ul>
+                    [cite_start]<p class="mt-4">In no case is the result 2. [cite: 1064]</p>
+                `
+            },
+            {
+                id: 18,
+                title: "Bogus Proofs: The Danger of Division by Zero",
+                type: "bogus",
+                tag: "Fallacy",
+                content: `
+                    <div class="bg-red-50 p-4 rounded border-red-200 border mb-4">
+                        [cite_start]<strong>Bogus Claim:</strong> $1 = 2$ [cite: 1090]
+                    </div>
+                    <p class="font-mono text-sm bg-slate-100 p-4 rounded">
+                        Let a = b<br>
+                        ab = b²<br>
+                        ab - a² = b² - a²<br>
+                        a(b - a) = (b + a)(b - a)<br>
+                        a = b + a  <span class="text-red-600 font-bold"><-- ERROR HERE</span><br>
+                        ... 1 = 2
+                    </p>
+                    <p class="mt-4 font-bold text-red-600">The Error:</p>
+                    <p>Since $a = b$, the term $(b - a)$ is zero. [cite_start]Dividing by zero is undefined. [cite: 1091]</p>
+                `
+            }
+        ];
+
+        // State Management
+        let currentSlideIndex = 0;
+
+        // DOM Elements
+        const cardTitle = document.getElementById('card-title');
+        const cardBody = document.getElementById('card-body');
+        const cardTag = document.getElementById('card-tag');
+        const cardHeader = document.getElementById('card-header');
+        const slideCounter = document.getElementById('slide-counter');
+        const tocList = document.getElementById('toc-list');
+        const cardContainer = document.getElementById('card-container');
+
+        // Initialization
+        function init() {
+            renderTOC();
+            loadSlide(0);
+
+            // Keyboard Navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "ArrowRight") nextSlide();
+                if (e.key === "ArrowLeft") prevSlide();
+            });
+        }
+
+        // Render Table of Contents
+        function renderTOC() {
+            tocList.innerHTML = lessonData.map((slide, index) => `
+                <li>
+                    <button onclick="loadSlide(${index})" class="text-left w-full p-2 hover:bg-slate-100 rounded transition ${index === currentSlideIndex ? 'font-bold text-blue-600 bg-blue-50' : 'text-slate-600'}">
+                        ${index + 1}. ${slide.title}
+                    </button>
+                </li>
+            `).join('');
+        }
+
+        // Load specific slide
+        function loadSlide(index) {
+            if (index < 0 || index >= lessonData.length) return;
+
+            currentSlideIndex = index;
+            const data = lessonData[index];
+
+            // Update Text
+            cardTitle.innerText = data.title;
+            cardTag.innerText = data.tag;
+            cardBody.innerHTML = `<div class="fade-in">${data.content}</div>`;
+            slideCounter.innerText = `${index + 1} / ${lessonData.length}`;
+
+            // Update Styles based on Type
+            cardHeader.className = `p-6 border-b shrink-0 rounded-t-2xl transition-colors duration-300 type-${data.type} ${data.type === 'def' ? 'bg-blue-50' :
+                    data.type === 'proof' ? 'bg-green-50' :
+                        data.type === 'bogus' ? 'bg-red-50' : 'bg-purple-50'
+                }`;
+
+            cardTag.className = `inline-block px-2 py-1 text-xs font-semibold rounded uppercase tracking-wide mb-2 transition-colors duration-300 ${data.type === 'def' ? 'bg-blue-100 text-blue-700' :
+                    data.type === 'proof' ? 'bg-green-100 text-green-700' :
+                        data.type === 'bogus' ? 'bg-red-100 text-red-700' : 'bg-purple-100 text-purple-700'
+                }`;
+
+            // Re-render TOC highlight
+            renderTOC();
+
+            // Trigger MathJax Typesetting
+            if (window.MathJax) {
+                MathJax.typesetPromise([cardBody]);
+            }
+        }
+
+        function nextSlide() {
+            loadSlide(currentSlideIndex + 1);
+        }
+
+        function prevSlide() {
+            loadSlide(currentSlideIndex - 1);
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
+
+</html>
