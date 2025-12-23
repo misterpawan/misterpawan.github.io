@@ -20,23 +20,67 @@
 
             @page {
                 size: A4;
-                margin: 15mm;
+                margin: 0;
             }
 
             .a4-page {
-                box-shadow: none !important;
                 margin: 0 !important;
-                width: 100% !important;
+                padding: 15mm 20mm !important;
+                width: 210mm !important;
+                height: 297mm !important;
                 page-break-after: always;
+                box-shadow: none !important;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+
+            h2 {
+                margin-top: 0.75rem !important;
+                margin-bottom: 0.5rem !important;
+                font-size: 1.1rem !important;
+            }
+
+            h3 {
+                margin-top: 0.5rem !important;
+                margin-bottom: 0.25rem !important;
+                font-size: 1rem !important;
+            }
+
+            p {
+                margin-bottom: 0.4rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            ul {
+                font-size: 0.85rem !important;
+            }
+
+            .space-y-3> :not([hidden])~ :not([hidden]) {
+                margin-top: 0.5rem !important;
+            }
+
+            .space-y-1> :not([hidden])~ :not([hidden]) {
+                margin-top: 0.2rem !important;
+            }
+
+            header h1 {
+                font-size: 2rem !important;
+            }
+
+            header {
+                margin-bottom: 1rem !important;
+                padding-bottom: 0.5rem !important;
             }
         }
 
         .a4-page {
             width: 210mm;
+            min-height: 297mm;
             background: white;
             margin: 2rem auto;
             padding: 20mm;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
         }
 
         h2 {
