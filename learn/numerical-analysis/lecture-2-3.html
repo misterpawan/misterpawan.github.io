@@ -675,40 +675,107 @@ print(f"Exact: {exact}")
 print(f"Rich.: {fp_richardson}")
 print(f"Error: {abs(fp_richardson - exact):.2e}")`;
 
-        const codeTrap = `import math
-def f(x): return x - x**2 + x**3 - x**4 + math.sin(x*13.)/13.
-def fint(x):
-    return x**2/2. - x**3/3. + x**4/4. - x**5/5. - math.cos(x*13.)/169.
+        const codeTrap = `import numpy as np
+import matplotlib.pyplot as plt
 
-fint_exact = fint(1.2)-fint(0.)
-area, x, h = 0., 0., 1E-3
-f0 = f1 = f(x)   
-while x<1.2-h*0.5:
-    f0, f1 = f1, f(x+h)
-    x += h	
-    area += f0+f1
-area *= h/2.
-	
-print('Exact: %.16f, Numerical: %.16f, diff: %.16f' \\
-% (fint_exact,area,abs(fint_exact-area)))`;
-
-        const codeSimp = `import math
 def f(x):
-    return x - x**2 + x**3 - x**4 + math.sin(x*13.)/13.
-def fint(x):
-    return x**2/2. - x**3/3. + x**4/4. - x**5/5. - math.cos(x*13.)/169.
+    return x - x**2 + x**3 - x**4 + np.sin(x*13.)/13.
 
-fint_exact = fint(1.2)-fint(0.)
-area, x, h = 0., 0., 1E-3
-f0 = f1 = f2 = f(x)   
-while x<1.2-h*0.5:
-    f0, f1, f2 = f2, f(x+h), f(x+h*2.)
-    x += h*2.	
-    area += f0+f1*4.+f2
-area *= h/3.
-	
-print('Exact: %.16f, Numerical: %.16f, diff: %.16f' \\
-% (fint_exact,area,abs(fint_exact-area)))`;
+def fint(x):
+    return x**2/2. - x**3/3. + x**4/4. - x**5/5. - np.cos(x*13.)/169.
+
+a, b = 0.0, 1.2
+n = 10 # Number of trapezoids
+h = (b-a)/n
+
+# Exact Integral
+exact = fint(b) - fint(a)
+
+# Trapezoidal Calculation
+x = np.linspace(a, b, n+1)
+y = f(x)
+area = (h/2) * (y[0] + 2*np.sum(y[1:-1]) + y[-1])
+
+print(f"Exact: {exact:.6f}")
+print(f"Trapezoidal: {area:.6f}")
+print(f"Error: {abs(exact-area):.6e}")
+
+# Plotting
+x_plot = np.linspace(a-0.1, b+0.1, 200)
+y_plot = f(x_plot)
+
+plt.figure(figsize=(8, 5))
+plt.plot(x_plot, y_plot, 'b-', label='f(x)')
+
+# Plot Trapezoids
+for i in range(n):
+    xs = [x[i], x[i], x[i+1], x[i+1]]
+    ys = [0, f(x[i]), f(x[i+1]), 0]
+    plt.fill(xs, ys, 'r', edgecolor='r', alpha=0.2)
+    # Draw top line explicitly
+    plt.plot([x[i], x[i+1]], [y[i], y[i+1]], 'r-', lw=1)
+
+plt.plot(x, y, 'ro', label='Sample Points')
+plt.title(f'Trapezoidal Rule (n={n})')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.axhline(0, color='black', linewidth=1)
+plt.show()`;
+
+        const codeSimp = `import numpy as np
+import matplotlib.pyplot as plt
+
+def f(x):
+    return x - x**2 + x**3 - x**4 + np.sin(x*13.)/13.
+
+def fint(x):
+    return x**2/2. - x**3/3. + x**4/4. - x**5/5. - np.cos(x*13.)/169.
+
+a, b = 0.0, 1.2
+n = 6 # Number of intervals (must be even)
+h = (b-a)/n
+
+# Exact Integral
+exact = fint(b) - fint(a)
+
+# Simpson's Calculation
+x = np.linspace(a, b, n+1)
+y = f(x)
+area = (h/3) * (y[0] + 4*np.sum(y[1:n:2]) + 2*np.sum(y[2:n-1:2]) + y[n])
+
+print(f"Exact: {exact:.6f}")
+print(f"Simpson's: {area:.6f}")
+print(f"Error: {abs(exact-area):.6e}")
+
+# Plotting
+x_plot = np.linspace(a-0.1, b+0.1, 200)
+y_plot = f(x_plot)
+
+plt.figure(figsize=(8, 5))
+plt.plot(x_plot, y_plot, 'b-', label='f(x)')
+
+# Plot Parabolas
+for i in range(0, n, 2):
+    # Interpolate quadratic over the pair of intervals
+    x_interval = np.linspace(x[i], x[i+2], 50)
+    xw = x[i:i+3]
+    yw = y[i:i+3]
+    
+    # Lagrange Basis Polynomials
+    L0 = (x_interval - xw[1])*(x_interval - xw[2]) / ((xw[0]-xw[1])*(xw[0]-xw[2]))
+    L1 = (x_interval - xw[0])*(x_interval - xw[2]) / ((xw[1]-xw[0])*(xw[1]-xw[2]))
+    L2 = (x_interval - xw[0])*(x_interval - xw[1]) / ((xw[2]-xw[0])*(xw[2]-xw[1]))
+    y_interval = yw[0]*L0 + yw[1]*L1 + yw[2]*L2
+    
+    plt.fill_between(x_interval, y_interval, color='g', alpha=0.2)
+    plt.plot(x_interval, y_interval, 'g--', alpha=0.5)
+
+plt.plot(x, y, 'go', label='Sample Points')
+plt.title(f"Simpson's Rule (n={n})")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.axhline(0, color='black', linewidth=1)
+plt.show()`;
 
         const codeGauss = `import math
 
