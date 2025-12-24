@@ -378,12 +378,22 @@
             <div class="mb-12">
                 <h3 class="text-xl font-bold text-slate-800 mb-2">Trapezoidal Rule</h3>
                 <p class="text-sm text-slate-600 mb-2">Connect the dots with lines. Calculate area of trapezoids.</p>
+                <div class="math-box text-center mb-4">
+                    $$ \int_a^b f(x) dx \approx \frac{h}{2} [f(x_0) + 2f(x_1) + \dots + 2f(x_{n-1}) + f(x_n)] $$
+                </div>
                 <div id="trapezoidal-root"></div>
                 <div id="code-trap"></div>
             </div>
+        </section>
+
+        <section id="simpsons" class="slide-card">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-ntu-blue">5.1 Simpson's Rule 🍩</h2>
+                <span class="bg-gray-100 px-3 py-1 rounded text-xs font-mono text-gray-500">Slides 31-40 (Cont.)</span>
+            </div>
 
             <div class="mb-6">
-                <h3 class="text-xl font-bold text-slate-800 mb-2">Simpson's Rule 🍩</h3>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Simpson's Rule</h3>
                 <p class="text-sm text-slate-600 mb-2">Connect dots with parabolas. Weights: 1, 4, 1.</p>
                 <div id="simpson-root"></div>
                 <div id="code-simp"></div>
