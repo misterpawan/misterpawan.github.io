@@ -373,12 +373,14 @@
             <div class="mb-12">
                 <h3 class="text-xl font-bold text-slate-800 mb-2">Trapezoidal Rule</h3>
                 <p class="text-sm text-slate-600 mb-2">Connect the dots with lines. Calculate area of trapezoids.</p>
+                <div id="trapezoidal-root"></div>
                 <div id="code-trap"></div>
             </div>
 
             <div class="mb-6">
                 <h3 class="text-xl font-bold text-slate-800 mb-2">Simpson's Rule 🍩</h3>
                 <p class="text-sm text-slate-600 mb-2">Connect dots with parabolas. Weights: 1, 4, 1.</p>
+                <div id="simpson-root"></div>
                 <div id="code-simp"></div>
             </div>
         </section>
@@ -395,6 +397,7 @@
                     <p class="text-sm text-slate-600 mb-4">
                         Pick smart points $x_i$ and weights $w_i$. Integration becomes exact for polynomials.
                     </p>
+                    <div id="gaussian-root"></div>
                     <div id="code-gauss"></div>
                 </div>
                 <div>
@@ -834,6 +837,7 @@ print('SciPy Quad: %.16f (Error est: %.1e)' % (quad,quaderr))`;
             ]
         });
     </script>
+    <script type="text/babel" src="assets/lecture-2-3-interactive.js"></script>
 </body>
 
 </html>
