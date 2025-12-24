@@ -180,6 +180,10 @@
         }
 
         /* Teach Mode Styles */
+        html.teach-mode-active {
+            font-size: 200%;
+        }
+
         body.teach-mode {
             overflow: hidden;
             background: black;
@@ -445,6 +449,7 @@
         function toggleTeachMode() {
             isTeachMode = !isTeachMode;
             document.body.classList.toggle('teach-mode');
+            document.documentElement.classList.toggle('teach-mode-active');
 
             if (isTeachMode) {
                 updateCurrentSlideFromScroll();
