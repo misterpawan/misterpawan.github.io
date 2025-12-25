@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Lagrange Interpolation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            margin-bottom: 15px;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .instruction {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        canvas {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            touch-action: none;
+            /* Prevent scrolling on mobile while touching canvas */
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        /* Math display styling */
+        .math-container {
+            margin-top: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            background: #eef;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Lagrange Interpolation Playground</h2>
+
+    <div class="controls">
+        <div class="instruction">
+            <strong>Click points</strong> on the graph to toggle them. <br>
+            The red curve is the Lagrange polynomial built <em>only</em> from the blue points.
+        </div>
+    </div>
+
+    <canvas id="plotCanvas" width="800" height="500"></canvas>
+
+    <div class="math-container" id="statusText">
+        Degree: 4 (5 points selected)
+    </div>
+
+    <button onclick="generateData()">Generate New Random Data</button>
+
+    <script>
+        const canvas = document.getElementById('plotCanvas');
+        const ctx = canvas.getContext('2d');
+        const statusText = document.getElementById('statusText');
+
+        // Configuration
+        const NUM_POINTS = 5;
+        const POINT_RADIUS = 8;
+        const CLICK_TOLERANCE = 15;
+        const PADDING = 50;
+
+        // State
+        let points = []; // Array of objects {x, y, t_val, y_val, active}
+
+        // Helper: Map data space (0-1) to screen space
+        function toScreen(t, y) {
+            const w = canvas.width - 2 * PADDING;
+            const h = canvas.height - 2 * PADDING;
+            return {
+                x: PADDING + t * w,
+                y: canvas.height - (PADDING + y * h) // Flip Y for cartesian
+            };
+        }
+
+        // Helper: Map screen space to data space (0-1) - mostly for finding closest point
+        function toData(x, screenY) {
+            const w = canvas.width - 2 * PADDING;
+            const h = canvas.height - 2 * PADDING;
+            return {
+                t: (x - PADDING) / w,
+                y: (canvas.height - screenY - PADDING) / h
+            };
+        }
+
+        function generateData() {
+            points = [];
+            // Generate sorted t values to keep points moving left-to-right
+            let t_values = [];
+            for (let i = 0; i < NUM_POINTS; i++) {
+                // Keep t somewhat spread out
+                t_values.push(Math.random());
+            }
+            t_values.sort((a, b) => a - b);
+
+            // Assign t and random y
+            for (let i = 0; i < NUM_POINTS; i++) {
+                // Normalize t slightly better to fill width
+                // Force first and last closer to edges for better visual
+                let t = t_values[i];
+
+                // Random y between 0.1 and 0.9 to stay well within canvas
+                let y = 0.1 + Math.random() * 0.8;
+
+                points.push({
+                    t: t,
+                    y: y,
+                    active: true // All selected by default
+                });
+            }
+            draw();
+        }
+
+        // Lagrange Basis Polynomial L_j(t)
+        function lagrangeBasis(t, j, activePoints) {
+            let result = 1;
+            let xj = activePoints[j].t;
+
+            for (let k = 0; k < activePoints.length; k++) {
+                if (k !== j) {
+                    let xk = activePoints[k].t;
+                    result *= (t - xk) / (xj - xk);
+                }
+            }
+            return result;
+        }
+
+        // Full Lagrange Polynomial P(t)
+        function lagrangePoly(t, activePoints) {
+            if (activePoints.length === 0) return 0; // Baseline
+
+            let sum = 0;
+            for (let j = 0; j < activePoints.length; j++) {
+                let yj = activePoints[j].y;
+                sum += yj * lagrangeBasis(t, j, activePoints);
+            }
+            return sum;
+        }
+
+        function draw() {
+            // Clear background
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Axes / Grid (Subtle)
+            ctx.strokeStyle = '#eee';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            // Horizontal lines
+            for (let i = 0; i <= 10; i++) {
+                let y = PADDING + (canvas.height - 2 * PADDING) * (i / 10);
+                ctx.moveTo(PADDING, y);
+                ctx.lineTo(canvas.width - PADDING, y);
+            }
+            ctx.stroke();
+
+            // Get active points for calculation
+            const activePoints = points.filter(p => p.active);
+
+            // Update Text
+            if (activePoints.length === 0) {
+                statusText.innerText = "Select at least 1 point.";
+            } else {
+                statusText.innerText = `Points Selected: ${activePoints.length} | Polynomial Degree: ${activePoints.length - 1}`;
+            }
+
+            // 1. Draw the Interpolation Curve
+            if (activePoints.length > 0) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#e74c3c'; // Red curve
+                ctx.lineWidth = 3;
+
+                // Iterate across the screen width in small steps
+                for (let px = PADDING; px <= canvas.width - PADDING; px += 2) {
+                    // Convert screen x to data t
+                    let t = (px - PADDING) / (canvas.width - 2 * PADDING);
+
+                    // Calculate interpolated y
+                    let y = lagrangePoly(t, activePoints);
+
+                    // Convert back to screen coordinates
+                    let pos = toScreen(t, y);
+
+                    if (px === PADDING) ctx.moveTo(pos.x, pos.y);
+                    else ctx.lineTo(pos.x, pos.y);
+                }
+                ctx.stroke();
+            }
+
+            // 2. Draw Points
+            points.forEach(p => {
+                let pos = toScreen(p.t, p.y);
+
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, POINT_RADIUS, 0, Math.PI * 2);
+
+                if (p.active) {
+                    ctx.fillStyle = '#4a90e2'; // Blue for active
+                    ctx.strokeStyle = '#2c3e50';
+                } else {
+                    ctx.fillStyle = '#bdc3c7'; // Grey for inactive
+                    ctx.strokeStyle = '#7f8c8d';
+                }
+
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw ghost circle for hit area (optional visual cue)
+            });
+        }
+
+        // Interaction: Handle Clicks
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            // Check if clicked near a point
+            points.forEach(p => {
+                let pos = toScreen(p.t, p.y);
+                let dist = Math.sqrt((clickX - pos.x) ** 2 + (clickY - pos.y) ** 2);
+
+                if (dist <= CLICK_TOLERANCE) {
+                    p.active = !p.active; // Toggle
+                    draw();
+                }
+            });
+        });
+
+        // Initialize
+        generateData();
+
+    </script>
+</body>
+
+</html>
