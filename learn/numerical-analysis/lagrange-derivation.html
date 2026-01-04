@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intuitive Derivation of Lagrange Polynomials</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9fb;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-top: 25px;
+        }
+
+        .concept-box {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .example-box {
+            background-color: #f4f6f7;
+            border: 1px solid #bdc3c7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .blue {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .step {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background: #34495e;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.8em;
+            flex-shrink: 0;
+        }
+
+        /* MathJax overrides to fit container */
+        mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Intuitive Derivation: Lagrange Interpolation</h1>
+
+        <p>
+            Normally, finding a curve that passes through specific points involves solving a complex system of linear
+            equations.
+            <strong>Lagrange Interpolation</strong> offers a smarter way: instead of solving equations, we
+            construct the answer piece by piece using a concept similar to a "Switchboard."
+        </p>
+
+        <div class="concept-box">
+            <strong>The Core Idea:</strong><br>
+            We want to build a separate "sub-polynomial" for each data point that acts like a switch:
+            <ul>
+                <li>It is <strong>ON (value = 1)</strong> at its own specific time \(t\).</li>
+                <li>It is <strong>OFF (value = 0)</strong> at every other data point's time.</li>
+            </ul>
+        </div>
+
+        <h2>1. Simple Example: 2 Points</h2>
+        <p>Suppose we have two data points: <span class="blue">\((t_0, y_0)\)</span> and <span class="highlight">\((t_1,
+                y_1)\)</span>.</p>
+        <p>We need a line \(P(t)\) that passes through both.</p>
+
+        <h3>Step A: The First Switch \(L_0(t)\)</h3>
+        <p>We want a function \(L_0(t)\) that is <strong>1</strong> at \(t_0\) and <strong>0</strong> at \(t_1\).</p>
+
+        <div class="example-box">
+            <div class="step">
+                <span class="step-number">1</span>
+                <div>
+                    <strong>Make it Zero:</strong> To force it to be zero at \(t_1\), we include the term \((t -
+                    t_1)\).<br>
+                    <em>Check:</em> If \(t = t_1\), then \((t_1 - t_1) = 0\). Success.
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <div>
+                    <strong>Make it One:</strong> Currently, at \(t_0\), the value is \((t_0 - t_1)\), which is just
+                    some number.
+                    To make it equal 1, we divide by that exact number.<br>
+                    $$L_0(t) = \frac{t - t_1}{t_0 - t_1}$$
+                </div>
+            </div>
+        </div>
+
+        <h3>Step B: The Second Switch \(L_1(t)\)</h3>
+        <p>Now we want a function \(L_1(t)\) that is <strong>0</strong> at \(t_0\) and <strong>1</strong> at \(t_1\).
+        </p>
+        <p>Using the same logic, we flip the terms:</p>
+        $$L_1(t) = \frac{t - t_0}{t_1 - t_0}$$
+
+        <h3>Step C: Combine with Heights</h3>
+        <p>Now we just scale each switch by the desired height (\(y\)) and add them up:</p>
+        $$P(t) = y_0 \cdot L_0(t) + y_1 \cdot L_1(t)$$
+        $$P(t) = y_0 \frac{t - t_1}{t_0 - t_1} + y_1 \frac{t - t_0}{t_1 - t_0}$$
+
+        <hr>
+
+        <h2>2. Generalizing to \(n\) Points</h2>
+        <p>Imagine we have many points: \((t_0, y_0), (t_1, y_1), \dots, (t_n, y_n)\).</p>
+        <p>For any specific point \(j\), we want to build a switch \(L_j(t)\) that is:</p>
+        <ul>
+            <li><strong>0</strong> at all other \(t_k\) (where \(k \neq j\))</li>
+            <li><strong>1</strong> at exactly \(t_j\)</li>
+        </ul>
+
+        <h3>Constructing the Numerator (The "Zero" Maker)</h3>
+        <p>To make the polynomial zero at all other points, we just multiply linear terms for every other point:</p>
+        $$(t - t_0)(t - t_1)\dots(t - t_{j-1})(t - t_{j+1})\dots(t - t_n)$$
+        <p>We write this compactly using the product symbol \(\Pi\):</p>
+        $$\text{Numerator} = \prod_{k \neq j} (t - t_k)$$
+
+        <h3>Constructing the Denominator (The "One" Maker)</h3>
+        <p>To ensure the value is 1 when \(t = t_j\), we divide the numerator by itself, but evaluated at \(t_j\):</p>
+        $$\text{Denominator} = \prod_{k \neq j} (t_j - t_k)$$
+
+        <h3>The Basis Polynomial</h3>
+        <p>Putting it together, the basis polynomial for point \(j\) is:</p>
+        $$L_j(t) = \prod_{k \neq j} \frac{t - t_k}{t_j - t_k}$$
+
+        <h2>3. The Final Formula</h2>
+        <p>Since each switch \(L_j(t)\) handles the value for point \(j\) independently without affecting the others,
+            the final interpolation polynomial is simply the weighted sum of all switches:</p>
+
+        <div class="concept-box" style="text-align: center; border-left: 5px solid #e74c3c;">
+            $$P(t) = \sum_{j=0}^{n} y_j L_j(t)$$
+        </div>
+
+    </div>
+
+</body>
+
+</html>
