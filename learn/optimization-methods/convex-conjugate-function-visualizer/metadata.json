@@ -1,0 +1,5 @@
+{
+  "name": "Convex Conjugate Function Visualizer",
+  "description": "An interactive educational tool to visualize the concept of the convex conjugate function. It animates the relationship between a function and its conjugate, illustrating the duality between a function's value and its tangent's slope, similar to time-frequency duality.",
+  "requestFramePermissions": []
+}
