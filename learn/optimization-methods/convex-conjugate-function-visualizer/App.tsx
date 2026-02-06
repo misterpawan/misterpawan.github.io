@@ -44,7 +44,7 @@ const App: React.FC = () => {
       }
     };
   }, [isPlaying, animate]);
-  
+
   useEffect(() => {
     // Reset slope when function changes
     setSlope(FUNCTIONS[selectedFuncKey].conjugateDomain[0]);
@@ -56,7 +56,7 @@ const App: React.FC = () => {
   const yIntercept = -conjugateValue;
 
   return (
-    <div className="bg-slate-900 text-slate-200 min-h-screen font-sans flex flex-col">
+    <div className="bg-slate-900 text-slate-200 min-h-0 w-full h-full font-sans flex flex-col">
       <Header />
       <main className="flex-grow container mx-auto p-4 flex flex-col gap-6">
         <div className="bg-slate-800 p-6 rounded-xl shadow-lg">
@@ -90,30 +90,30 @@ const App: React.FC = () => {
           <div className="bg-slate-800 p-4 rounded-xl shadow-lg flex flex-col">
             <h3 className="text-lg font-semibold text-center mb-2">Original Function: <span className="font-mono text-lime-400">f(x)</span></h3>
             <div className="flex-grow">
-                <FunctionPlot
+              <FunctionPlot
                 funcDef={selectedFunc}
                 slope={slope}
                 tangentPointX={x0}
                 yIntercept={yIntercept}
-                />
+              />
             </div>
-             <div className="text-center mt-2 text-sm text-slate-400 h-12">
-                <p>Tangent point <span className="font-mono text-cyan-400">x₀ ≈ {isFinite(x0) ? x0.toFixed(2) : 'N/A'}</span></p>
-                <p>Tangent line: <span className="font-mono text-cyan-400">y = {slope.toFixed(2)}x - {conjugateValue.toFixed(2)}</span></p>
+            <div className="text-center mt-2 text-sm text-slate-400 h-12">
+              <p>Tangent point <span className="font-mono text-cyan-400">x₀ ≈ {isFinite(x0) ? x0.toFixed(2) : 'N/A'}</span></p>
+              <p>Tangent line: <span className="font-mono text-cyan-400">y = {slope.toFixed(2)}x - {conjugateValue.toFixed(2)}</span></p>
             </div>
           </div>
           <div className="bg-slate-800 p-4 rounded-xl shadow-lg flex flex-col">
             <h3 className="text-lg font-semibold text-center mb-2">Conjugate Function: <span className="font-mono text-lime-400">f*(y) = sup(yx - f(x))</span></h3>
             <div className="flex-grow">
-                <ConjugatePlot
+              <ConjugatePlot
                 funcDef={selectedFunc}
                 currentSlope={slope}
                 conjugateValue={conjugateValue}
-                />
+              />
             </div>
             <div className="text-center mt-2 text-sm text-slate-400 h-12">
-                <p>Current slope <span className="font-mono text-cyan-400">y ≈ {slope.toFixed(2)}</span></p>
-                <p>Conjugate value <span className="font-mono text-cyan-400">f*(y) ≈ {isFinite(conjugateValue) ? conjugateValue.toFixed(2) : '∞'}</span></p>
+              <p>Current slope <span className="font-mono text-cyan-400">y ≈ {slope.toFixed(2)}</span></p>
+              <p>Conjugate value <span className="font-mono text-cyan-400">f*(y) ≈ {isFinite(conjugateValue) ? conjugateValue.toFixed(2) : '∞'}</span></p>
             </div>
           </div>
         </div>
